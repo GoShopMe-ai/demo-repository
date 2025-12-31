@@ -43,3 +43,4 @@ Returns user earnings only (referrals).
 
 ## DELETE /users/me/wishlist/{product_id}
 
+

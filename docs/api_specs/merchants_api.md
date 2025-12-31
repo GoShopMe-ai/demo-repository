@@ -16,3 +16,4 @@ Triggers catalog ingestion.
 
 Returns platform commission rate.
 
+

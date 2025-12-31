@@ -42,3 +42,4 @@
 | created_at | timestamp | |
 | removed_at | timestamp | Nullable (soft remove) |
 
+

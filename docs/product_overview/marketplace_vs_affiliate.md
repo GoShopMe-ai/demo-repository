@@ -124,3 +124,4 @@ Affiliate extends coverage, but does not define the business.
 GoShopMe is an AI-powered shopping marketplace with merchant integrations, using affiliate flows only as a fallback when inventory is unavailable.
 
 
+

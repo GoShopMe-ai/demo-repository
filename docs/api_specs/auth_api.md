@@ -31,3 +31,4 @@ Returns JWT with role claims.
 Admin-only authentication
 Roles: admin | finance | operations | support | content | analyst
 
+

@@ -59,3 +59,4 @@ If an order status becomes returned, all related Commission Events are cancelled
 | status | enum | pending / completed |
 | processed_at | timestamp | |
 
+

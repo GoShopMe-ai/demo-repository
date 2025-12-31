@@ -348,3 +348,4 @@ RETURN_NOT_ELIGIBLE → explain limitation in chat
 
 EARNINGS_NOT_ELIGIBLE → update earnings UI immediately
 
+

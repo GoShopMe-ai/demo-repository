@@ -69,3 +69,4 @@
 | onboarding_channel | enum | facebook, instagram, tiktok, organic, share_link |
 | created_at | timestamp | Immutable |
 
+
