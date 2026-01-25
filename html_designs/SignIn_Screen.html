@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'shine-primary': '#939BFB',
+                        'shine-accent': '#F96226'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/heroicons@2.0.16/24/outline/index.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for social auth icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        window.FontAwesomeConfig = {
+            autoReplaceSvg: 'nest'
+        };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        * { 
+            font-family: 'DM Sans', 
+                         'Karla',
+                         -apple-system,
+                         BlinkMacSystemFont,
+                         'Segoe UI',
+                         Roboto,
+                         'Helvetica Neue',
+                         Arial,
+                         'Noto Sans',
+                         sans-serif; 
+        }
+
+        .dm-sans { 
+            font-family: 'DM Sans', 
+                         'Karla',
+                         -apple-system,
+                         BlinkMacSystemFont,
+                         'Segoe UI',
+                         Roboto,
+                         'Helvetica Neue',
+                         Arial,
+                         'Noto Sans',
+                         sans-serif; 
+        }
+
+        .poppins { 
+            font-family: 'Poppins',
+                         -apple-system,
+                         BlinkMacSystemFont,
+                         'Segoe UI',
+                         Roboto,
+                         'Helvetica Neue',
+                         Arial,
+                         sans-serif; 
+        }
+    </style>
+</head>
+<body class="bg-[#F6F6F6]">
+    <div id="auth-screen" class="relative w-full max-w-[390px] mx-auto h-[844px] max-h-screen bg-white flex flex-col overflow-y-auto">
+      <!-- Main Content -->
+      <div class="relative flex-1 flex flex-col items-center px-5 py-8 min-h-full">
+        <!-- Logo Section -->
+        <div id="auth-logo" class="w-full text-center mb-8">
+          <h2 class="poppins text-xl font-semibold text-gray-900 mb-2">
+            Welcome back!</h2>
+          <p class="dm-sans text-sm text-gray-500">Sign in to enjoy effortless
+            shopping</p>
+        </div><!-- Auth Options -->
+        <div id="social-auth" class="w-full space-y-3 mb-6"><button class="w-full flex items-center justify-center space-x-3 py-3 px-4 rounded-full border-2 border-[#939BFB]/30 bg-white hover:bg-[#939BFB]/10 transition-colors"><i class="fab fa-google text-lg text-gray-700"></i><span class="text-gray-900 font-medium text-sm dm-sans">Continue with
+              Google</span></button><button class="w-full flex items-center justify-center space-x-3 py-3 px-4 rounded-full border-2 border-[#939BFB]/30 bg-white hover:bg-[#939BFB]/10 transition-colors"><i class="fab fa-instagram text-lg text-gray-700"></i><span class="text-gray-900 font-medium text-sm dm-sans">Continue with
+              Instagram</span></button><button class="w-full flex items-center justify-center space-x-3 py-3 px-4 rounded-full border-2 border-[#939BFB]/30 bg-white hover:bg-[#939BFB]/10 transition-colors"><i class="fab fa-tiktok text-lg text-gray-700"></i><span class="text-gray-900 font-medium text-sm dm-sans">Continue with
+              TikTok</span></button></div><!-- Divider -->
+        <div class="w-full flex items-center justify-center space-x-4 mb-6">
+          <div class="flex-1 h-px bg-gray-200"></div><span class="text-gray-500 text-xs dm-sans">or</span>
+          <div class="flex-1 h-px bg-gray-200"></div>
+        </div><!-- Email Form -->
+        <form id="email-auth" class="w-full space-y-4 mb-6">
+  <div class="space-y-2"><label for="email" class="block text-xs text-gray-600 font-medium dm-sans">Email</label><input type="email" id="email" placeholder="Enter your email" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#939BFB] focus:ring-2 focus:ring-[#939BFB]/20 outline-none transition-all text-sm bg-gray-50 dm-sans">
+  </div>
+  <div class="space-y-2"><label for="password" class="block text-xs text-gray-600 font-medium dm-sans">Password</label>
+    <div class="relative"><input type="password" id="password" placeholder="Enter your password" class="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 focus:border-[#939BFB] focus:ring-2 focus:ring-[#939BFB]/20 outline-none transition-all text-sm bg-gray-50 dm-sans"><button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors">
+      <svg id="toggleIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+    </button></div>
+  </div>
+  <div class="flex justify-end"><span class="text-xs text-[#939BFB] hover:underline cursor-pointer font-medium dm-sans">Forgot Password?</span></div>
+  <div class="flex justify-center"><button type="submit" class="w-4/5 bg-[#939BFB] text-white font-medium py-3 rounded-full transition-all text-sm hover:bg-[#939BFB]/90 dm-sans">Sign In</button></div>
+</form><!-- Sign Up Link -->
+        <div class="flex items-center justify-center space-x-2 pb-8"><span class="text-gray-500 text-sm dm-sans">Don't have an account?</span><span class="text-[#939BFB] font-medium hover:underline cursor-pointer text-sm dm-sans">Sign
+            Up</span></div>
+      </div>
+    </div>
+    <script>
+      function togglePassword()
+      {
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        if (passwordInput.type === 'password')
+        {
+          passwordInput.type = 'text';
+          toggleIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 11-4.243-4.243m4.242 4.242L9.88 9.88"/>';
+        }
+        else
+        {
+          passwordInput.type = 'password';
+          toggleIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>';
+        }
+      }
+    </script>
+  
+
+</body></html>
