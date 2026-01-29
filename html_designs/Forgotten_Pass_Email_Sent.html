@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset link sent – GoShopMe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'shine-primary': '#939BFB',
+                        'shine-accent': '#F96226'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        * {
+            font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+        }
+        .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif; }
+        .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+    </style>
+</head>
+<body class="bg-[#F6F6F6]">
+    <div id="auth-screen" class="relative w-full max-w-[390px] mx-auto min-h-screen bg-white overflow-y-auto shadow-2xl">
+        <div class="absolute inset-0 bg-gradient-to-b from-[#B7C7FF]/10 to-white"></div>
+
+        <div class="relative flex flex-col items-center px-6 py-12">
+            <!-- Back Button -->
+            <div class="absolute top-6 left-6">
+                <button type="button" class="text-gray-600 hover:text-gray-800 transition-colors" aria-label="Go back">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Logo Section -->
+            <div id="auth-logo" class="w-full text-center mb-12">
+                <div class="mb-4">
+                    <img class="w-20 h-20 mx-auto object-contain" src="" data-logo alt="GoShopMe logo">
+                </div>
+                <h2 class="poppins text-2xl font-bold text-gray-800 mb-2">We've sent a reset link to your email.</h2>
+                <p class="dm-sans text-gray-600">No worries — we'll help you reset it in a few seconds.</p>
+            </div>
+
+            <!-- Resend Email Section -->
+            <div id="resend-section" class="w-full text-center space-y-4 mb-8">
+                <p class="dm-sans text-gray-500 text-sm">If you haven't received an e-mail please check in your Spam folder</p>
+                <div class="flex flex-col items-center space-y-2">
+                    <p class="dm-sans text-gray-600">Resend email in: <span id="timer" class="text-shine-primary font-semibold">60</span>s</p>
+                    <button id="resend-button" class="dm-sans text-shine-primary font-semibold disabled:text-gray-400" disabled>Resend email</button>
+                </div>
+            </div>
+
+            <!-- Sign In Link -->
+            <div class="flex items-center justify-center space-x-2">
+                <span class="dm-sans text-gray-600">Remember your password?</span>
+                <span class="poppins text-shine-primary font-semibold hover:underline cursor-pointer">Sign In</span>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div id="toast-success" class="hidden fixed bottom-20 left-1/2 -translate-x-1/2 bg-green-50 text-green-700 px-6 py-3 rounded-full shadow-lg dm-sans text-sm z-50">
+            <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5 flex-shrink-0 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>We've sent a reset link to your email.</span>
+            </div>
+        </div>
+        <div id="toast-error" class="hidden fixed bottom-20 left-1/2 -translate-x-1/2 bg-red-50 text-red-700 px-6 py-3 rounded-full shadow-lg dm-sans text-sm z-50">
+            <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5 flex-shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                <span>We couldn't find an account with that email.</span>
+            </div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#B7C7FF]/10 to-transparent pointer-events-none"></div>
+    </div>
+
+    <script>
+        (function() {
+            var timeLeft = 60;
+            var timerDisplay = document.getElementById('timer');
+            var resendButton = document.getElementById('resend-button');
+            var timerParagraph = timerDisplay && timerDisplay.parentElement;
+
+            function runTimer() {
+                timeLeft = 60;
+                if (timerDisplay) timerDisplay.textContent = timeLeft;
+                if (timerParagraph) timerParagraph.classList.remove('hidden');
+                if (resendButton) resendButton.disabled = true;
+
+                var countdown = setInterval(function() {
+                    timeLeft--;
+                    if (timerDisplay) timerDisplay.textContent = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(countdown);
+                        if (resendButton) resendButton.disabled = false;
+                        if (timerParagraph) timerParagraph.classList.add('hidden');
+                    }
+                }, 1000);
+            }
+
+            if (resendButton) {
+                resendButton.addEventListener('click', function() {
+                    if (!this.disabled) runTimer();
+                });
+            }
+            runTimer();
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoShopMe Welcome</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'shine-primary': '#939BFB',
+                        'shine-accent': '#F96226'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/heroicons@2.0.16/24/outline/index.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        * { 
+            font-family: 'DM Sans', 
+                         'Karla',
+                         -apple-system,
+                         BlinkMacSystemFont,
+                         'Segoe UI',
+                         Roboto,
+                         'Helvetica Neue',
+                         Arial,
+                         'Noto Sans',
+                         sans-serif; 
+        }
+
+        .dm-sans { 
+            font-family: 'DM Sans', 
+                         'Karla',
+                         -apple-system,
+                         BlinkMacSystemFont,
+                         'Segoe UI',
+                         Roboto,
+                         'Helvetica Neue',
+                         Arial,
+                         'Noto Sans',
+                         sans-serif; 
+        }
+
+        .poppins { 
+            font-family: 'Poppins',
+                         -apple-system,
+                         BlinkMacSystemFont,
+                         'Segoe UI',
+                         Roboto,
+                         'Helvetica Neue',
+                         Arial,
+                         sans-serif; 
+        }
+
+        .chat-bubble-shai {
+            border-top-left-radius: 0.25rem;
+            border-top-right-radius: 1.5rem;
+            border-bottom-right-radius: 1.5rem;
+            border-bottom-left-radius: 1.5rem;
+        }
+
+        .chat-bubble-user {
+            border-top-left-radius: 1.5rem;
+            border-top-right-radius: 0.25rem;
+            border-bottom-right-radius: 1.5rem;
+            border-bottom-left-radius: 1.5rem;
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            opacity: 0;
+            animation: fade-in-up 0.6s ease-out forwards;
+        }
+
+        @keyframes pulse-slow {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .animate-pulse-slow {
+            animation: pulse-slow 3s ease-in-out infinite;
+        }
+
+        /* Video player: vertical 9:16 (social/mobile), fits screen without taking full space */
+        #video_player_container {
+            aspect-ratio: 9 / 16;
+            max-width: 260px;
+            max-height: 40vh;
+            width: min(260px, 22.5vh);
+        }
+    </style>
+</head>
+<body class="bg-[#F6F6F6] antialiased">
+    <div class="min-h-screen flex justify-center">
+        <main id="welcome_screen" class="w-full max-w-[390px] min-h-screen bg-white flex flex-col overflow-hidden shadow-2xl relative">
+            <header data-backend-symbol-id="u2lz0YVYry4y4DrmcmQ9" id="header" class="pt-10 pb-4 px-5 flex-shrink-0 flex justify-center">
+                <img src="" data-logo alt="GoShopMe Logo" class="h-10 w-auto object-contain">
+            </header>
+            <section id="hero_section" class="text-center px-5 pb-2 flex-shrink-0">
+                <h2 class="poppins text-2xl font-bold text-gray-900 leading-tight">Meet ShAI.</h2>
+                <h3 class="poppins text-xl font-semibold text-gray-900 mt-1">Your AI personal shopper.</h3>
+                <div class="mt-3">
+                    <p class="dm-sans text-base font-medium text-gray-800 leading-snug">See it. Send it. Buy it.</p>
+                    <p class="dm-sans text-base font-medium text-gray-800">No scrolling. No guessing.</p>
+                </div>
+            </section>
+            <section id="subline_section" class="px-5 pb-3 flex-shrink-0">
+                <p class="dm-sans text-sm text-gray-600 text-center leading-relaxed">
+                    From screenshots, videos, or real life → ShAI finds the right item, in your size, at the best price.
+                </p>
+            </section>
+            <section id="video_section" class="px-5 pb-3 flex-shrink-0 flex justify-center">
+                <!-- Vertical 9:16 aspect for social/mobile video; fits screen without taking full space -->
+                <div id="video_player_container" class="bg-black rounded-2xl overflow-hidden border border-gray-100 relative shadow-lg">
+                    <video 
+                        id="presentation_video"
+                        class="w-full h-full object-cover"
+                        controls
+                        playsinline
+                        poster=""
+                        data-video-poster>
+                        <source src="" data-video-source type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </section>
+            <section id="benefits_section" class="px-5 pb-3 flex-shrink-0">
+                <div class="space-y-3">
+                    <div id="benefit_1" class="flex items-start gap-3">
+                        <div class="flex-shrink-0 w-8 h-8 bg-shine-primary/10 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 text-shine-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                            </svg>
+                        </div>
+                        <p class="dm-sans text-sm text-gray-700 leading-relaxed pt-1">
+                            Recreate outfits from Instagram, TikTok, or real life
+                        </p>
+                    </div>
+                    <div id="benefit_2" class="flex items-start gap-3">
+                        <div class="flex-shrink-0 w-8 h-8 bg-shine-primary/10 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 text-shine-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                            </svg>
+                        </div>
+                        <p class="dm-sans text-sm text-gray-700 leading-relaxed pt-1">
+                            Find exact matches, cheaper alternatives, or full outfits
+                        </p>
+                    </div>
+                    <div id="benefit_3" class="flex items-start gap-3">
+                        <div class="flex-shrink-0 w-8 h-8 bg-shine-primary/10 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 text-shine-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                            </svg>
+                        </div>
+                        <p class="dm-sans text-sm text-gray-700 leading-relaxed pt-1">
+                            Shop together in chat — ShAI + your friends
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <section id="trust_section" class="px-5 pb-4 flex-shrink-0"></section>
+            <footer id="footer" class="px-5 pb-8 pt-2 flex-shrink-0 mt-auto">
+                <div id="cta_section" class="flex flex-col items-center space-y-3">
+                    <button id="get_started_button" class="w-4/5 bg-shine-primary text-white font-medium py-3 rounded-full transition-all text-base shadow-sm hover:shadow-md hover:bg-shine-primary/90 dm-sans">
+                        Get started
+                    </button>
+                    <div id="secondary_option" class="text-center">
+                        <p class="text-sm text-gray-500 dm-sans">
+                            Already have an account? <span class="font-medium text-shine-primary cursor-pointer hover:underline">Sign in</span>
+                        </p>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Function to populate logo
+        window.populateLogo = function(logoUrl) {
+            const logoImg = document.querySelector('[data-logo]');
+            if (logoImg) {
+                logoImg.src = logoUrl;
+                logoImg.onerror = function() {
+                    console.warn('Failed to load logo:', logoUrl);
+                };
+                console.log(`✓ Updated logo with: ${logoUrl}`);
+                return true;
+            } else {
+                console.warn('Logo element not found');
+                return false;
+            }
+        };
+
+        // Function to populate welcome video
+        window.populateWelcomeVideo = function(videoUrl, posterUrl) {
+            const video = document.getElementById('presentation_video');
+            if (!video) {
+                console.warn('Video element not found');
+                return false;
+            }
+            const source = video.querySelector('[data-video-source]');
+            if (!source) {
+                console.warn('Video source element not found');
+                return false;
+            }
+
+            // Set video source
+            if (videoUrl) {
+                source.src = videoUrl;
+                video.load(); // Reload video element with new source
+            }
+
+            // Set poster image
+            if (posterUrl) {
+                video.poster = posterUrl;
+            }
+
+            video.onerror = function() {
+                console.warn('Failed to load video:', videoUrl);
+            };
+
+            console.log(`✓ Updated welcome video with:`);
+            console.log(`  - Video URL: ${videoUrl || 'not set'}`);
+            console.log(`  - Poster URL: ${posterUrl || 'not set'}`);
+            return true;
+        };
+
+        // Console test commands
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('%c=== WELCOME SCREEN TEST COMMANDS ===', 'color: #939BFB; font-weight: bold; font-size: 16px;');
+            console.log('');
+            console.log('%c1. Populate Logo (from database):', 'color: #F96226; font-weight: bold; font-size: 12px;');
+            console.log('populateLogo("/api/uploads/logo/goshopme-logo.png");');
+            console.log('// Or with full URL:');
+            console.log('populateLogo("https://your-cdn.com/uploads/logo/goshopme-logo.png");');
+            console.log('');
+            console.log('%c2. Populate Welcome Video (from database):', 'color: #F96226; font-weight: bold; font-size: 12px;');
+            console.log('populateWelcomeVideo("/api/uploads/videos/welcome-presentation.mp4", "/api/uploads/thumbnails/welcome-thumbnail.jpg");');
+            console.log('// Or with full URLs:');
+            console.log('populateWelcomeVideo("https://your-cdn.com/uploads/videos/welcome-presentation.mp4", "https://your-cdn.com/uploads/thumbnails/welcome-thumbnail.jpg");');
+            console.log('');
+            console.log('%c3. TEST WITH WORKING PLACEHOLDER VIDEO (copy and paste to test):', 'color: #10B981; font-weight: bold; font-size: 14px;');
+            console.log(`// Test with a working video URL
+populateLogo("https://via.placeholder.com/150x50/939BFB/FFFFFF?text=GoShopMe");
+populateWelcomeVideo("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg");`);
+            console.log('');
+            console.log('%c4. Alternative Test Video:', 'color: #10B981; font-weight: bold; font-size: 12px;');
+            console.log('populateWelcomeVideo("https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4", "https://via.placeholder.com/800x450/939BFB/FFFFFF?text=Welcome+Video");');
+            console.log('');
+            console.log('%c=== END TEST COMMANDS ===', 'color: #939BFB; font-weight: bold; font-size: 14px;');
+        });
+        
+        // Verify functions are loaded
+        console.log('Welcome Screen functions loaded:', {
+            populateLogo: typeof window.populateLogo,
+            populateWelcomeVideo: typeof window.populateWelcomeVideo
+        });
+    </script>
+</body>
+</html>

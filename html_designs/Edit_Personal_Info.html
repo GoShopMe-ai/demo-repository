@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Personal Info – GoShopMe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { 'shine-primary': '#939BFB', 'shine-accent': '#F96226' }
+          }
+        }
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        * { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-[#F6F6F6] dm-sans">
+<div class="w-full max-w-[390px] mx-auto min-h-screen bg-white shadow-2xl relative">
+    <div id="header" class="sticky top-0 bg-white z-50 px-5 py-4 border-b border-gray-100">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <button onclick="history.back()" class="text-gray-600">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+                    </svg>
+                </button>
+                <h1 class="text-xl font-semibold poppins text-gray-900">Edit Personal Info</h1>
+            </div>
+            <button type="button" id="save-btn" class="text-shine-primary font-semibold dm-sans">Save</button>
+        </div>
+    </div>
+
+    <main class="pt-16 pb-20 bg-white">
+        <div class="px-5 py-6">
+            <!-- Profile Picture: initials until user uploads -->
+            <div class="flex justify-center mb-8">
+                <div class="relative">
+                    <div id="profile-avatar-initials" class="w-24 h-24 rounded-full bg-shine-primary flex items-center justify-center text-white text-2xl font-semibold dm-sans flex-shrink-0" aria-hidden="true">SJ</div>
+                    <img id="profile-avatar-image" class="w-24 h-24 rounded-full object-cover hidden" alt="Profile" />
+                    <input type="file" id="profile-photo-input" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" aria-label="Upload or take photo">
+                    <button type="button" id="profile-camera-btn" class="absolute bottom-0 right-0 bg-white border-2 border-shine-primary p-2 rounded-full shadow-md pointer-events-none z-20" aria-label="Change photo">
+                        <svg class="w-5 h-5 text-shine-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form Fields -->
+            <form id="edit-profile-form" class="space-y-6">
+                <!-- Name Fields -->
+                <div class="flex gap-3">
+                    <div class="flex-1">
+<label class="block text-sm text-gray-600 mb-2 dm-sans">First Name</label>
+                    <input type="text" value="Sarah" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-shine-primary focus:outline-none dm-sans" required>
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm text-gray-600 mb-2 dm-sans">Last Name</label>
+                    <input type="text" value="Johnson" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-shine-primary focus:outline-none dm-sans" required>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label class="block text-sm text-gray-600 mb-2 dm-sans">Email Address</label>
+                    <input type="email" id="email-input" value="sarah.j@email.com" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-shine-primary focus:outline-none dm-sans" required placeholder="you@example.com" autocomplete="email">
+                    <span id="email-error" class="text-red-500 text-sm mt-1 dm-sans hidden" role="alert"></span>
+                </div>
+
+                <!-- Password Field -->
+                <div>
+                    <label class="block text-sm text-gray-600 mb-2 dm-sans">Password</label>
+                    <div class="relative">
+                        <input type="password" value="********" id="password-input" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-shine-primary focus:outline-none pr-12 dm-sans" minlength="8" placeholder="Min 8 chars, upper, lower, number, symbol" autocomplete="current-password">
+                        <button type="button" onclick="togglePassword('password-input')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" aria-label="Toggle password visibility">
+                            <svg id="toggleIcon-password-input" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <span id="password-error" class="text-red-500 text-sm mt-1 dm-sans hidden" role="alert"></span>
+                    <!-- Password strength & requirements (shown only when user types in password) -->
+                    <div id="edit-password-strength" class="space-y-2 mt-2 hidden">
+                        <div class="flex gap-1">
+                            <div class="h-1 flex-1 rounded-full bg-gray-200"></div>
+                            <div class="h-1 flex-1 rounded-full bg-gray-200"></div>
+                            <div class="h-1 flex-1 rounded-full bg-gray-200"></div>
+                            <div class="h-1 flex-1 rounded-full bg-gray-200"></div>
+                        </div>
+                        <p class="text-sm text-gray-500 dm-sans">Password strength: Weak</p>
+                    </div>
+                    <div id="edit-password-requirements" class="space-y-2 mt-2 hidden">
+                        <p class="text-sm text-gray-600 dm-sans">Password must contain:</p>
+                        <div class="space-y-1">
+                            <div class="flex items-center space-x-2 text-sm">
+                                <svg id="edit-req-1" class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                <span class="text-gray-400 dm-sans">At least 8 characters</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm">
+                                <svg id="edit-req-2" class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                <span class="text-gray-400 dm-sans">Uppercase and lowercase letters</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm">
+                                <svg id="edit-req-3" class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                <span class="text-gray-400 dm-sans">One number</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm">
+                                <svg id="edit-req-4" class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                <span class="text-gray-400 dm-sans">One symbol (e.g. !@#$%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phone Number -->
+                <div>
+                    <label class="block text-sm text-gray-600 mb-2 dm-sans">Mobile Number</label>
+                    <div class="flex gap-2">
+                        <div class="relative flex-shrink-0 w-[8.5rem]">
+                            <select id="phone-country-code" class="w-full appearance-none pl-3 pr-9 py-3 rounded-lg border border-gray-200 focus:border-shine-primary focus:outline-none dm-sans text-sm bg-white cursor-pointer">
+                                <option value="+93">Afghanistan +93</option>
+                                <option value="+355">Albania +355</option>
+                                <option value="+213">Algeria +213</option>
+                                <option value="+376">Andorra +376</option>
+                                <option value="+244">Angola +244</option>
+                                <option value="+1264">Anguilla +1264</option>
+                                <option value="+1268">Antigua +1268</option>
+                                <option value="+54">Argentina +54</option>
+                                <option value="+374">Armenia +374</option>
+                                <option value="+297">Aruba +297</option>
+                                <option value="+61">Australia +61</option>
+                                <option value="+43">Austria +43</option>
+                                <option value="+994">Azerbaijan +994</option>
+                                <option value="+1242">Bahamas +1242</option>
+                                <option value="+973">Bahrain +973</option>
+                                <option value="+880">Bangladesh +880</option>
+                                <option value="+1246">Barbados +1246</option>
+                                <option value="+375">Belarus +375</option>
+                                <option value="+32">Belgium +32</option>
+                                <option value="+501">Belize +501</option>
+                                <option value="+229">Benin +229</option>
+                                <option value="+1441">Bermuda +1441</option>
+                                <option value="+975">Bhutan +975</option>
+                                <option value="+591">Bolivia +591</option>
+                                <option value="+387">Bosnia +387</option>
+                                <option value="+267">Botswana +267</option>
+                                <option value="+55">Brazil +55</option>
+                                <option value="+673">Brunei +673</option>
+                                <option value="+359">Bulgaria +359</option>
+                                <option value="+226">Burkina Faso +226</option>
+                                <option value="+257">Burundi +257</option>
+                                <option value="+855">Cambodia +855</option>
+                                <option value="+237">Cameroon +237</option>
+                                <option value="+1">Canada +1</option>
+                                <option value="+238">Cape Verde +238</option>
+                                <option value="+1345">Cayman Islands +1345</option>
+                                <option value="+236">Central African Rep +236</option>
+                                <option value="+235">Chad +235</option>
+                                <option value="+56">Chile +56</option>
+                                <option value="+86">China +86</option>
+                                <option value="+57">Colombia +57</option>
+                                <option value="+269">Comoros +269</option>
+                                <option value="+242">Congo +242</option>
+                                <option value="+243">Congo DR +243</option>
+                                <option value="+682">Cook Islands +682</option>
+                                <option value="+506">Costa Rica +506</option>
+                                <option value="+385">Croatia +385</option>
+                                <option value="+53">Cuba +53</option>
+                                <option value="+357">Cyprus +357</option>
+                                <option value="+420">Czech Republic +420</option>
+                                <option value="+45">Denmark +45</option>
+                                <option value="+253">Djibouti +253</option>
+                                <option value="+1767">Dominica +1767</option>
+                                <option value="+1809">Dominican Rep +1809</option>
+                                <option value="+593">Ecuador +593</option>
+                                <option value="+20">Egypt +20</option>
+                                <option value="+503">El Salvador +503</option>
+                                <option value="+240">Equatorial Guinea +240</option>
+                                <option value="+291">Eritrea +291</option>
+                                <option value="+372">Estonia +372</option>
+                                <option value="+251">Ethiopia +251</option>
+                                <option value="+500">Falkland Islands +500</option>
+                                <option value="+298">Faroe Islands +298</option>
+                                <option value="+679">Fiji +679</option>
+                                <option value="+358">Finland +358</option>
+                                <option value="+33">France +33</option>
+                                <option value="+594">French Guiana +594</option>
+                                <option value="+689">French Polynesia +689</option>
+                                <option value="+241">Gabon +241</option>
+                                <option value="+220">Gambia +220</option>
+                                <option value="+995">Georgia +995</option>
+                                <option value="+49">Germany +49</option>
+                                <option value="+233">Ghana +233</option>
+                                <option value="+350">Gibraltar +350</option>
+                                <option value="+30">Greece +30</option>
+                                <option value="+299">Greenland +299</option>
+                                <option value="+1473">Grenada +1473</option>
+                                <option value="+590">Guadeloupe +590</option>
+                                <option value="+1671">Guam +1671</option>
+                                <option value="+502">Guatemala +502</option>
+                                <option value="+224">Guinea +224</option>
+                                <option value="+245">Guinea-Bissau +245</option>
+                                <option value="+592">Guyana +592</option>
+                                <option value="+509">Haiti +509</option>
+                                <option value="+504">Honduras +504</option>
+                                <option value="+852">Hong Kong +852</option>
+                                <option value="+36">Hungary +36</option>
+                                <option value="+354">Iceland +354</option>
+                                <option value="+91">India +91</option>
+                                <option value="+62">Indonesia +62</option>
+                                <option value="+98">Iran +98</option>
+                                <option value="+964">Iraq +964</option>
+                                <option value="+353">Ireland +353</option>
+                                <option value="+972">Israel +972</option>
+                                <option value="+39">Italy +39</option>
+                                <option value="+225">Ivory Coast +225</option>
+                                <option value="+1876">Jamaica +1876</option>
+                                <option value="+81">Japan +81</option>
+                                <option value="+962">Jordan +962</option>
+                                <option value="+7">Kazakhstan +7</option>
+                                <option value="+254">Kenya +254</option>
+                                <option value="+686">Kiribati +686</option>
+                                <option value="+383">Kosovo +383</option>
+                                <option value="+965">Kuwait +965</option>
+                                <option value="+996">Kyrgyzstan +996</option>
+                                <option value="+856">Laos +856</option>
+                                <option value="+371">Latvia +371</option>
+                                <option value="+961">Lebanon +961</option>
+                                <option value="+266">Lesotho +266</option>
+                                <option value="+231">Liberia +231</option>
+                                <option value="+218">Libya +218</option>
+                                <option value="+423">Liechtenstein +423</option>
+                                <option value="+370">Lithuania +370</option>
+                                <option value="+352">Luxembourg +352</option>
+                                <option value="+853">Macau +853</option>
+                                <option value="+389">North Macedonia +389</option>
+                                <option value="+261">Madagascar +261</option>
+                                <option value="+265">Malawi +265</option>
+                                <option value="+60">Malaysia +60</option>
+                                <option value="+960">Maldives +960</option>
+                                <option value="+223">Mali +223</option>
+                                <option value="+356">Malta +356</option>
+                                <option value="+692">Marshall Islands +692</option>
+                                <option value="+596">Martinique +596</option>
+                                <option value="+222">Mauritania +222</option>
+                                <option value="+230">Mauritius +230</option>
+                                <option value="+262">Mayotte +262</option>
+                                <option value="+52">Mexico +52</option>
+                                <option value="+691">Micronesia +691</option>
+                                <option value="+373">Moldova +373</option>
+                                <option value="+377">Monaco +377</option>
+                                <option value="+976">Mongolia +976</option>
+                                <option value="+382">Montenegro +382</option>
+                                <option value="+1664">Montserrat +1664</option>
+                                <option value="+212">Morocco +212</option>
+                                <option value="+258">Mozambique +258</option>
+                                <option value="+95">Myanmar +95</option>
+                                <option value="+264">Namibia +264</option>
+                                <option value="+674">Nauru +674</option>
+                                <option value="+977">Nepal +977</option>
+                                <option value="+31">Netherlands +31</option>
+                                <option value="+687">New Caledonia +687</option>
+                                <option value="+64">New Zealand +64</option>
+                                <option value="+505">Nicaragua +505</option>
+                                <option value="+227">Niger +227</option>
+                                <option value="+234">Nigeria +234</option>
+                                <option value="+683">Niue +683</option>
+                                <option value="+672">Norfolk Island +672</option>
+                                <option value="+850">North Korea +850</option>
+                                <option value="+1670">Northern Mariana +1670</option>
+                                <option value="+47">Norway +47</option>
+                                <option value="+968">Oman +968</option>
+                                <option value="+92">Pakistan +92</option>
+                                <option value="+680">Palau +680</option>
+                                <option value="+970">Palestine +970</option>
+                                <option value="+507">Panama +507</option>
+                                <option value="+675">Papua New Guinea +675</option>
+                                <option value="+595">Paraguay +595</option>
+                                <option value="+51">Peru +51</option>
+                                <option value="+63">Philippines +63</option>
+                                <option value="+48">Poland +48</option>
+                                <option value="+351">Portugal +351</option>
+                                <option value="+1787">Puerto Rico +1787</option>
+                                <option value="+974">Qatar +974</option>
+                                <option value="+262">Réunion +262</option>
+                                <option value="+40">Romania +40</option>
+                                <option value="+7">Russia +7</option>
+                                <option value="+250">Rwanda +250</option>
+                                <option value="+590">Saint Martin +590</option>
+                                <option value="+685">Samoa +685</option>
+                                <option value="+378">San Marino +378</option>
+                                <option value="+239">São Tomé +239</option>
+                                <option value="+966">Saudi Arabia +966</option>
+                                <option value="+221">Senegal +221</option>
+                                <option value="+381">Serbia +381</option>
+                                <option value="+248">Seychelles +248</option>
+                                <option value="+232">Sierra Leone +232</option>
+                                <option value="+65">Singapore +65</option>
+                                <option value="+1721">Sint Maarten +1721</option>
+                                <option value="+421">Slovakia +421</option>
+                                <option value="+386">Slovenia +386</option>
+                                <option value="+677">Solomon Islands +677</option>
+                                <option value="+252">Somalia +252</option>
+                                <option value="+27">South Africa +27</option>
+                                <option value="+82">South Korea +82</option>
+                                <option value="+211">South Sudan +211</option>
+                                <option value="+34">Spain +34</option>
+                                <option value="+94">Sri Lanka +94</option>
+                                <option value="+249">Sudan +249</option>
+                                <option value="+597">Suriname +597</option>
+                                <option value="+268">Swaziland +268</option>
+                                <option value="+46">Sweden +46</option>
+                                <option value="+41">Switzerland +41</option>
+                                <option value="+963">Syria +963</option>
+                                <option value="+886">Taiwan +886</option>
+                                <option value="+992">Tajikistan +992</option>
+                                <option value="+255">Tanzania +255</option>
+                                <option value="+66">Thailand +66</option>
+                                <option value="+670">Timor-Leste +670</option>
+                                <option value="+228">Togo +228</option>
+                                <option value="+690">Tokelau +690</option>
+                                <option value="+676">Tonga +676</option>
+                                <option value="+1868">Trinidad +1868</option>
+                                <option value="+216">Tunisia +216</option>
+                                <option value="+90">Turkey +90</option>
+                                <option value="+993">Turkmenistan +993</option>
+                                <option value="+1649">Turks and Caicos +1649</option>
+                                <option value="+688">Tuvalu +688</option>
+                                <option value="+256">Uganda +256</option>
+                                <option value="+380">Ukraine +380</option>
+                                <option value="+971">UAE +971</option>
+                                <option value="+44">UK +44</option>
+                                <option value="+1" selected>USA +1</option>
+                                <option value="+598">Uruguay +598</option>
+                                <option value="+998">Uzbekistan +998</option>
+                                <option value="+678">Vanuatu +678</option>
+                                <option value="+379">Vatican City +379</option>
+                                <option value="+58">Venezuela +58</option>
+                                <option value="+84">Vietnam +84</option>
+                                <option value="+1340">US Virgin Islands +1340</option>
+                                <option value="+967">Yemen +967</option>
+                                <option value="+260">Zambia +260</option>
+                                <option value="+263">Zimbabwe +263</option>
+                            </select>
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 9l-7 7-7-7"/></svg>
+                            </span>
+                        </div>
+                        <input type="tel" id="phone-number-input" value="555 123 4567" placeholder="555 123 4567" class="flex-1 px-4 py-3 rounded-lg border border-gray-200 focus:border-shine-primary focus:outline-none dm-sans" required maxlength="20">
+                    </div>
+                </div>
+
+                <!-- Birthday -->
+                <div>
+                    <label class="block text-sm text-gray-600 mb-2 dm-sans">Birthday (Optional)</label>
+                    <input type="date" id="birthday-input" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-shine-primary focus:outline-none dm-sans" max="">
+                    <span id="birthday-error" class="text-red-500 text-sm mt-1 dm-sans hidden" role="alert"></span>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] border-t border-gray-100 bg-white px-4 py-3 z-50">
+    <div class="flex justify-around items-center">
+        <button class="flex flex-col items-center min-w-[60px] text-gray-500 hover:text-shine-primary transition-colors">
+            <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+            </svg>
+            <span class="text-xs dm-sans">Home</span>
+        </button>
+        <button class="flex flex-col items-center min-w-[60px] text-gray-500 hover:text-shine-primary transition-colors">
+            <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"></path>
+            </svg>
+            <span class="text-xs dm-sans">Picks</span>
+        </button>
+        <button class="flex flex-col items-center min-w-[60px] text-gray-500 hover:text-shine-primary transition-colors">
+            <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
+            </svg>
+            <span class="text-xs dm-sans">Wishlist</span>
+        </button>
+        <button class="flex flex-col items-center min-w-[60px] text-shine-primary">
+            <span id="bottom-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+            </span>
+            <img id="bottom-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile">
+            <span class="text-xs dm-sans">Profile</span>
+        </button>
+    </div>
+</nav>
+</div>
+
+    <!-- Save confirmation modal -->
+    <div id="save-confirm-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/50 p-4">
+        <div class="w-full max-w-[340px] rounded-2xl bg-white p-6 shadow-xl">
+            <h3 class="poppins text-lg font-semibold text-gray-900 mb-2">Save changes?</h3>
+            <p class="dm-sans text-sm text-gray-600 mb-6">Your profile will be updated with the new information.</p>
+            <div class="flex gap-3">
+                <button type="button" id="save-modal-cancel" class="flex-1 py-3 rounded-xl border border-gray-200 text-gray-700 font-medium dm-sans">Cancel</button>
+                <button type="button" id="save-modal-confirm" class="flex-1 py-3 rounded-xl bg-shine-primary text-white font-medium dm-sans">Save</button>
+            </div>
+        </div>
+    </div>
+    <!-- Success popup -->
+    <div id="save-success-popup" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/50 p-4">
+        <div class="w-full max-w-[340px] rounded-2xl bg-white p-6 shadow-xl text-center">
+            <div class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <h3 class="poppins text-lg font-semibold text-gray-900 mb-2">Changes saved</h3>
+            <p class="dm-sans text-sm text-gray-600 mb-6">Your profile has been updated successfully.</p>
+            <button type="button" id="save-success-ok" class="w-full py-3 rounded-xl bg-shine-primary text-white font-medium dm-sans">OK</button>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(inputId) {
+                var passwordInput = document.getElementById(inputId);
+                var toggleIcon = document.getElementById('toggleIcon-' + inputId);
+                if (!passwordInput || !toggleIcon) return;
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 11-4.243-4.243m4.242 4.242L9.88 9.88"/>';
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>';
+                }
+            }
+            window.togglePassword = togglePassword;
+
+            (function() {
+            // Profile photo: show initials until upload; file input opens native camera/images
+            var profileInput = document.getElementById('profile-photo-input');
+            var profileInitials = document.getElementById('profile-avatar-initials');
+            var profileImage = document.getElementById('profile-avatar-image');
+            var firstNameInput = document.querySelector('#edit-profile-form input[type="text"]');
+            var lastNameInput = document.querySelectorAll('#edit-profile-form input[type="text"]')[1];
+
+            function getInitials() {
+                var first = (firstNameInput && firstNameInput.value.trim()) ? firstNameInput.value.trim().charAt(0) : 'S';
+                var second = (lastNameInput && lastNameInput.value.trim()) ? lastNameInput.value.trim().charAt(0) : 'J';
+                return (first + second).toUpperCase();
+            }
+
+            function updateInitials() {
+                if (!profileInitials) return;
+                if (profileImage && !profileImage.classList.contains('hidden')) return;
+                profileInitials.textContent = getInitials();
+            }
+
+            function updateBottomNavProfile(photoDataUrl) {
+                var navIcon = document.getElementById('bottom-nav-profile-icon');
+                var navPhoto = document.getElementById('bottom-nav-profile-photo');
+                if (!navIcon || !navPhoto) return;
+                if (photoDataUrl) {
+                    navPhoto.src = photoDataUrl;
+                    navPhoto.classList.remove('hidden');
+                    navIcon.classList.add('hidden');
+                } else {
+                    navPhoto.src = '';
+                    navPhoto.classList.add('hidden');
+                    navIcon.classList.remove('hidden');
+                }
+            }
+
+            if (profileInput) {
+                profileInput.addEventListener('change', function() {
+                    var file = this.files && this.files[0];
+                    if (!file || !file.type.match(/^image\//)) return;
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var dataUrl = e.target.result;
+                        profileImage.src = dataUrl;
+                        profileImage.classList.remove('hidden');
+                        profileInitials.classList.add('hidden');
+                        try { localStorage.setItem('profilePhoto', dataUrl); } catch (err) {}
+                        updateBottomNavProfile(dataUrl);
+                    };
+                    reader.readAsDataURL(file);
+                    this.value = '';
+                });
+            }
+
+            // On load: check localStorage for saved profile photo; show icon if none, show photo if saved
+            (function() {
+                var saved = null;
+                try { saved = localStorage.getItem('profilePhoto'); } catch (err) {}
+                updateBottomNavProfile(saved || null);
+            })();
+
+            if (firstNameInput) firstNameInput.addEventListener('input', updateInitials);
+            if (lastNameInput) lastNameInput.addEventListener('input', updateInitials);
+
+            // Password strength & requirements (same as Create_New_Password)
+            function checkPasswordStrengthEdit(password) {
+                var strength = 0;
+                if (password.length >= 8) strength++;
+                if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^a-zA-Z0-9]/.test(password)) strength++;
+                return strength;
+            }
+            function updatePasswordRequirementsEdit(password) {
+                var hasLength = password.length >= 8;
+                var hasLower = /[a-z]/.test(password);
+                var hasUpper = /[A-Z]/.test(password);
+                var hasNumber = /[0-9]/.test(password);
+                var hasSymbol = /[^a-zA-Z0-9]/.test(password);
+                var reqs = [
+                    { el: document.getElementById('edit-req-1'), met: hasLength },
+                    { el: document.getElementById('edit-req-2'), met: hasLower && hasUpper },
+                    { el: document.getElementById('edit-req-3'), met: hasNumber },
+                    { el: document.getElementById('edit-req-4'), met: hasSymbol }
+                ];
+                var checkSvg = '<path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>';
+                var crossSvg = '<path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>';
+                reqs.forEach(function(r) {
+                    if (!r.el) return;
+                    r.el.innerHTML = r.met ? checkSvg : crossSvg;
+                    r.el.classList.remove(r.met ? 'text-gray-300' : 'text-green-500');
+                    r.el.classList.add(r.met ? 'text-green-500' : 'text-gray-300');
+                });
+            }
+            var passwordInputEdit = document.getElementById('password-input');
+            var editStrengthEl = document.getElementById('edit-password-strength');
+            var editReqsEl = document.getElementById('edit-password-requirements');
+            if (passwordInputEdit) {
+                passwordInputEdit.addEventListener('input', function() {
+                    var password = this.value;
+                    if (password.length > 0) {
+                        if (editStrengthEl) editStrengthEl.classList.remove('hidden');
+                        if (editReqsEl) editReqsEl.classList.remove('hidden');
+                    } else {
+                        if (editStrengthEl) editStrengthEl.classList.add('hidden');
+                        if (editReqsEl) editReqsEl.classList.add('hidden');
+                    }
+                    var strength = checkPasswordStrengthEdit(password);
+                    var bars = document.querySelectorAll('#edit-password-strength .rounded-full');
+                    var strengthText = document.querySelector('#edit-password-strength p');
+                    if (bars.length) {
+                        bars.forEach(function(bar, index) {
+                            if (index < strength) {
+                                bar.className = 'h-1 flex-1 rounded-full ' +
+                                    (strength === 1 ? 'bg-red-200' : strength === 2 ? 'bg-orange-200' : strength === 3 ? 'bg-yellow-200' : 'bg-green-200');
+                            } else {
+                                bar.className = 'h-1 flex-1 rounded-full bg-gray-200';
+                            }
+                        });
+                    }
+                    if (strengthText) {
+                        strengthText.textContent = 'Password strength: ' +
+                            (strength === 0 ? 'Weak' : strength === 1 ? 'Weak' : strength === 2 ? 'Fair' : strength === 3 ? 'Good' : 'Strong');
+                    }
+                    updatePasswordRequirementsEdit(password);
+                });
+            }
+
+            // Save confirmation flow
+            var saveBtn = document.getElementById('save-btn');
+            var saveModal = document.getElementById('save-confirm-modal');
+            var saveSuccessPopup = document.getElementById('save-success-popup');
+            var saveModalCancel = document.getElementById('save-modal-cancel');
+            var saveModalConfirm = document.getElementById('save-modal-confirm');
+            var saveSuccessOk = document.getElementById('save-success-ok');
+
+            function showSaveModal() {
+                if (saveModal) {
+                    saveModal.classList.remove('hidden');
+                    saveModal.classList.add('flex');
+                }
+            }
+            function hideSaveModal() {
+                if (saveModal) {
+                    saveModal.classList.add('hidden');
+                    saveModal.classList.remove('flex');
+                }
+            }
+            function showSuccessPopup() {
+                if (saveSuccessPopup) {
+                    saveSuccessPopup.classList.remove('hidden');
+                    saveSuccessPopup.classList.add('flex');
+                }
+            }
+            function hideSuccessPopup() {
+                if (saveSuccessPopup) {
+                    saveSuccessPopup.classList.add('hidden');
+                    saveSuccessPopup.classList.remove('flex');
+                }
+            }
+
+            // Set birthday max to 18 years ago
+            var birthdayInput = document.getElementById('birthday-input');
+            if (birthdayInput) {
+                var today = new Date();
+                var maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+                birthdayInput.setAttribute('max', maxDate.toISOString().split('T')[0]);
+            }
+
+            function hideFieldError(id) {
+                var el = document.getElementById(id);
+                if (el) { el.classList.add('hidden'); el.textContent = ''; }
+            }
+            function showFieldError(id, message) {
+                var el = document.getElementById(id);
+                if (el) { el.textContent = message; el.classList.remove('hidden'); }
+            }
+
+            function validateEmail() {
+                var input = document.getElementById('email-input');
+                var value = (input && input.value) ? input.value.trim() : '';
+                hideFieldError('email-error');
+                if (!value) return false;
+                var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!re.test(value)) {
+                    showFieldError('email-error', 'Please enter a valid email address.');
+                    return false;
+                }
+                return true;
+            }
+
+            function validatePassword() {
+                var input = document.getElementById('password-input');
+                var value = (input && input.value) ? input.value : '';
+                hideFieldError('password-error');
+                if (!value) return false;
+                if (value.length < 8) {
+                    showFieldError('password-error', 'Password must be at least 8 characters long.');
+                    return false;
+                }
+                if (!/[a-z]/.test(value)) {
+                    showFieldError('password-error', 'Password must contain at least one lowercase letter.');
+                    return false;
+                }
+                if (!/[A-Z]/.test(value)) {
+                    showFieldError('password-error', 'Password must contain at least one uppercase letter.');
+                    return false;
+                }
+                if (!/[0-9]/.test(value)) {
+                    showFieldError('password-error', 'Password must contain at least one number.');
+                    return false;
+                }
+                if (!/[^a-zA-Z0-9]/.test(value)) {
+                    showFieldError('password-error', 'Password must contain at least one symbol (e.g. !@#$%).');
+                    return false;
+                }
+                return true;
+            }
+
+            function validateBirthday() {
+                var input = document.getElementById('birthday-input');
+                var value = (input && input.value) ? input.value.trim() : '';
+                hideFieldError('birthday-error');
+                if (!value) return true;
+                var birth = new Date(value);
+                var today = new Date();
+                var age = today.getFullYear() - birth.getFullYear();
+                var m = today.getMonth() - birth.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+                if (age < 18) {
+                    showFieldError('birthday-error', 'You must be at least 18 years old.');
+                    return false;
+                }
+                return true;
+            }
+
+            function validateForm() {
+                hideFieldError('email-error');
+                hideFieldError('password-error');
+                hideFieldError('birthday-error');
+                if (!validateEmail()) return false;
+                if (!validatePassword()) return false;
+                if (!validateBirthday()) return false;
+                return true;
+            }
+
+            if (saveBtn) saveBtn.addEventListener('click', function() {
+                var form = document.getElementById('edit-profile-form');
+                if (form && !form.checkValidity()) { form.reportValidity(); return; }
+                if (!validateForm()) return;
+                showSaveModal();
+            });
+            if (saveModalCancel) saveModalCancel.addEventListener('click', hideSaveModal);
+            if (saveModalConfirm) saveModalConfirm.addEventListener('click', function() {
+                hideSaveModal();
+                showSuccessPopup();
+            });
+            if (saveSuccessOk) saveSuccessOk.addEventListener('click', function() {
+                hideSuccessPopup();
+            });
+
+            // Close modals on overlay click
+            if (saveModal) saveModal.addEventListener('click', function(e) { if (e.target === saveModal) hideSaveModal(); });
+            if (saveSuccessPopup) saveSuccessPopup.addEventListener('click', function(e) { if (e.target === saveSuccessPopup) hideSuccessPopup(); });
+        })();
+    </script>
+
+</body>
+</html>

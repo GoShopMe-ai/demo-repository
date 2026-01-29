@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders – GoShopMe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'shine-primary': '#939BFB',
+                        'shine-accent': '#F96226'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        * { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    </style>
+</head>
+<body class="bg-[#F6F6F6] dm-sans">
+<div class="w-full max-w-[390px] mx-auto min-h-screen bg-white shadow-2xl relative">
+<!-- Header -->
+<div id="header" class="sticky top-0 bg-white z-50 border-b border-gray-100">
+    <div class="px-5 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button type="button" class="p-2 text-gray-600 hover:text-gray-800 transition-colors" aria-label="Back">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+                    </svg>
+                </button>
+                <h1 class="poppins text-xl font-semibold text-gray-900">Orders</h1>
+            </div>
+            <div class="flex gap-5">
+                <button class="text-gray-600">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
+                    </svg>
+                </button>
+                <button class="text-gray-600">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<main id="main-content" class="pt-4 pb-32 px-5 bg-white">
+    <!-- Header Section -->
+    <section id="header-section" class="py-4 bg-white mb-4">
+        <p class="dm-sans text-gray-600 text-sm">Track your orders, view details, and request returns.</p>
+    </section>
+
+    <!-- Order History List -->
+    <section id="order-list" class="space-y-4">
+        <!-- Order 1 -->
+        <div id="order-1" class="bg-white rounded-lg p-4 border">
+            <div class="flex justify-between items-start mb-3">
+                <div>
+                    <h3 class="poppins font-semibold text-gray-900">#S04589</h3>
+                    <p class="text-sm text-gray-600">July 12, 2025</p>
+                </div>
+                <div class="text-right">
+                    <p class="font-semibold text-gray-900">$289.50</p>
+                    <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Delivered</span>
+                </div>
+            </div>
+            
+            <div class="border-t pt-3">
+                <div class="flex items-center gap-3 mb-3">
+                    <img class="w-12 h-12 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e3f92e89da-91c7ebe70b64c417c52b.png" alt="stylish summer dress colorful fashion product">
+                    <div class="flex-1">
+                        <p class="font-medium text-sm">Summer Floral Dress</p>
+                        <p class="text-xs text-gray-600">Size M • Qty 1</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Payment:</span>
+                        <span>Visa •••• 4242</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Tracking:</span>
+                        <span class="text-shine-primary">1Z999AA1234567890</span>
+                    </div>
+                </div>
+                
+                <div class="flex gap-2 mt-4">
+                    <button onclick="openReturnModal()" class="flex-1 py-2 border border-shine-primary text-shine-primary rounded-lg text-sm font-medium">Return</button>
+                    <button class="flex-1 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">Download Receipt</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order 2 -->
+        <div id="order-2" class="bg-white rounded-lg p-4 border">
+            <div class="flex justify-between items-start mb-3">
+                <div>
+                    <h3 class="poppins font-semibold text-gray-900">#S04578</h3>
+                    <p class="text-sm text-gray-600">July 8, 2025</p>
+                </div>
+                <div class="text-right">
+                    <p class="font-semibold text-gray-900">$156.75</p>
+                    <span class="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">In Transit</span>
+                </div>
+            </div>
+            
+            <div class="border-t pt-3">
+                <div class="flex items-center gap-3 mb-3">
+                    <img class="w-12 h-12 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/fe90b9b439-e7fb2c439c531b8e3eb3.png" alt="elegant white sneakers modern fashion shoes">
+                    <div class="flex-1">
+                        <p class="font-medium text-sm">Classic White Sneakers</p>
+                        <p class="text-xs text-gray-600">Size 8 • Qty 1</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Payment:</span>
+                        <span>Apple Pay</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Est. Delivery:</span>
+                        <span>July 15, 2025</span>
+                    </div>
+                </div>
+                
+                <div class="flex gap-2 mt-4">
+                    <button onclick="openOrderTracking()" class="flex-1 py-2 bg-primary text-white rounded-lg text-sm font-medium">Track Order</button>
+                    <button class="flex-1 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">Download Receipt</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order 3 -->
+        <div id="order-3" class="bg-white rounded-lg p-4 border">
+            <div class="flex justify-between items-start mb-3">
+                <div>
+                    <h3 class="poppins font-semibold text-gray-900">#S04561</h3>
+                    <p class="text-sm text-gray-600">June 28, 2025</p>
+                </div>
+                <div class="text-right">
+                    <p class="font-semibold text-gray-900">$420.00</p>
+                    <span class="inline-block px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">Processing</span>
+                </div>
+            </div>
+            
+            <div class="border-t pt-3">
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                        <img class="w-12 h-12 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/735d94a031-5cb1d1a892fb7ee5d735.png" alt="designer handbag luxury fashion accessory">
+                        <div class="flex-1">
+                            <p class="font-medium text-sm">Designer Leather Bag</p>
+                            <p class="text-xs text-gray-600">Black • Qty 1</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <img class="w-12 h-12 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/1e0bed3f51-bdf0bc7e52d30c4b8bda.png" alt="silk scarf elegant fashion accessory">
+                        <div class="flex-1">
+                            <p class="font-medium text-sm">Silk Pattern Scarf</p>
+                            <p class="text-xs text-gray-600">Blue • Qty 1</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2 text-sm mt-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Payment:</span>
+                        <span>Mastercard •••• 8901</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Est. Delivery:</span>
+                        <span>July 18, 2025</span>
+                    </div>
+                </div>
+                
+                <div class="flex gap-2 mt-4">
+                    <button onclick="openCancelModal()" class="flex-1 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium">Cancel Order</button>
+                    <button class="flex-1 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">Download Receipt</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order 4 (Returned) -->
+        <div id="order-4" class="bg-white rounded-lg p-4 border">
+            <div class="flex justify-between items-start mb-3">
+                <div>
+                    <h3 class="poppins font-semibold text-gray-900">#S04545</h3>
+                    <p class="text-sm text-gray-600">June 15, 2025</p>
+                </div>
+                <div class="text-right">
+                    <p class="font-semibold text-gray-900">$89.99</p>
+                    <span class="inline-block px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">Returned</span>
+                </div>
+            </div>
+            
+            <div class="border-t pt-3">
+                <div class="flex items-center gap-3 mb-3">
+                    <img class="w-12 h-12 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8edc82e22f-908ef8c4557e6b889643.png" alt="casual t-shirt basic fashion clothing">
+                    <div class="flex-1">
+                        <p class="font-medium text-sm">Basic Cotton T-Shirt</p>
+                        <p class="text-xs text-gray-600">Size L • Qty 2</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Returned:</span>
+                        <span>June 22, 2025</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Refund Status:</span>
+                        <span class="text-green-600">Processed</span>
+                    </div>
+                </div>
+                
+                <div class="flex gap-2 mt-4">
+                    <button class="flex-1 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">View Return Details</button>
+                    <button class="flex-1 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">Download Receipt</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Bottom Navigation -->
+<nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 z-40 flex justify-center">
+    <div class="w-full max-w-[390px] border-t border-gray-100 bg-white px-4 py-3 flex justify-between items-center">
+        <button class="flex flex-col items-center group min-w-[60px]">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 text-gray-400 group-hover:text-shine-primary transition-colors">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+            </svg>
+            <span class="dm-sans text-xs mt-1 text-gray-500 group-hover:text-shine-primary transition-colors">Home</span>
+        </button>
+        <button type="button" class="flex flex-col items-center group min-w-[60px]">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 text-gray-400 group-hover:text-shine-primary transition-colors">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"></path>
+            </svg>
+            <span class="text-xs mt-1 text-gray-500 group-hover:text-shine-primary transition-colors">Picks</span>
+        </button>
+        <button class="flex flex-col items-center group min-w-[60px]">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 text-gray-400 group-hover:text-shine-primary transition-colors">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
+            </svg>
+            <span class="dm-sans text-xs mt-1 text-gray-500 group-hover:text-shine-primary transition-colors">Wishlist</span>
+        </button>
+        <button type="button" class="flex flex-col items-center min-w-[60px]">
+            <span id="orders-nav-profile-icon" class="flex items-center justify-center w-6 h-6 text-shine-primary">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+            </span>
+            <img id="orders-nav-profile-photo" class="w-6 h-6 rounded-full object-cover hidden" src="" alt="Profile">
+            <span class="dm-sans text-xs mt-1 text-shine-primary">Profile</span>
+        </button>
+    </div>
+</nav>
+<script>
+// Bottom nav profile: show profile icon if no uploaded photo, else show saved photo from localStorage
+(function() {
+    var saved = null;
+    try { saved = localStorage.getItem('profilePhoto'); } catch (e) {}
+    var img = document.getElementById('orders-nav-profile-photo');
+    var icon = document.getElementById('orders-nav-profile-icon');
+    if (img && icon) {
+        if (saved) {
+            img.src = saved;
+            img.classList.remove('hidden');
+            icon.classList.add('hidden');
+        } else {
+            img.src = '';
+            img.classList.add('hidden');
+            icon.classList.remove('hidden');
+        }
+    }
+})();
+</script>
+
+<!-- Order Tracking Page (Initially Hidden) -->
+<div id="order-tracking-page" class="fixed inset-0 z-40 hidden bg-black/30 overflow-y-auto">
+    <div class="w-full max-w-[390px] mx-auto min-h-full bg-white shadow-2xl relative">
+    <!-- Header -->
+    <div class="sticky top-0 px-5 py-4 border-b border-gray-100 bg-white z-10">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button onclick="closeOrderTracking()" class="text-gray-600">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+                    </svg>
+                </button>
+                <h1 class="text-xl font-semibold poppins">Order Tracking</h1>
+            </div>
+            <div class="flex gap-5">
+                <button class="text-gray-600">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
+                    </svg>
+                </button>
+                <button class="text-gray-600">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="pt-20 pb-32 px-5">
+        <!-- Header Section -->
+        <section class="py-4 bg-white mb-4">
+            <h1 class="text-xl poppins font-semibold text-gray-900 mb-2">Order Tracking for #S04578</h1>
+            <p class="text-gray-600 dm-sans mb-3">Here's the latest update on your order.</p>
+            <span class="inline-block px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full font-medium">In Transit</span>
+        </section>
+
+        <!-- Order Details Block -->
+        <section class="px-4 mb-6">
+            <div class="bg-white rounded-lg p-4 border">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Order Date</p>
+                        <p class="font-medium">July 8, 2025</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Total</p>
+                        <p class="font-medium">$156.75</p>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600 mb-1">Delivery Address</p>
+                    <p class="font-medium">Maria Lopez<br>123 Rue Saint-Honoré<br>Paris, France</p>
+                </div>
+                <div class="flex items-center gap-3 pt-3 border-t">
+                    <img class="w-12 h-12 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/fe90b9b439-e7fb2c439c531b8e3eb3.png" alt="Classic White Sneakers">
+                    <div>
+                        <p class="font-medium text-sm">Classic White Sneakers</p>
+                        <p class="text-xs text-gray-600">Size 8 • Qty 1</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shipment Progress Timeline -->
+        <section class="px-4 mb-6">
+            <div class="bg-white rounded-lg p-4 border">
+                <h2 class="poppins font-semibold text-gray-900 mb-4">Shipment Progress</h2>
+                <div class="space-y-6">
+                    <!-- Order Placed -->
+                    <div class="flex items-start gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <div class="w-0.5 h-8 bg-green-500 mt-2"></div>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-sm text-gray-900">Order Placed</p>
+                            <p class="text-xs text-gray-600">July 8, 2025 – We've received your order.</p>
+                        </div>
+                    </div>
+
+                    <!-- Processing -->
+                    <div class="flex items-start gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <div class="w-0.5 h-8 bg-green-500 mt-2"></div>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-sm text-gray-900">Processing</p>
+                            <p class="text-xs text-gray-600">July 9, 2025 – Preparing your items.</p>
+                        </div>
+                    </div>
+
+                    <!-- Shipped -->
+                    <div class="flex items-start gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                            <div class="w-0.5 h-8 bg-gray-200 mt-2"></div>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-sm text-blue-600">Shipped</p>
+                            <p class="text-xs text-gray-600">July 10, 2025 – In transit via DHL.</p>
+                        </div>
+                    </div>
+
+                    <!-- Out for Delivery -->
+                    <div class="flex items-start gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-3 h-3 bg-gray-200 rounded-full"></div>
+                            <div class="w-0.5 h-8 bg-gray-200 mt-2"></div>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-sm text-gray-400">Out for Delivery</p>
+                            <p class="text-xs text-gray-400">Expected July 15, 2025</p>
+                        </div>
+                    </div>
+
+                    <!-- Delivered -->
+                    <div class="flex items-start gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-3 h-3 bg-gray-200 rounded-full"></div>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-sm text-gray-400">Delivered</p>
+                            <p class="text-xs text-gray-400">Package delivered.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Estimated Delivery & Tracking Links -->
+        <section class="px-4 mb-6">
+            <div class="bg-white rounded-lg p-4 border">
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Estimated Delivery</span>
+                        <span class="font-medium text-shine-primary">July 15, 2025</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Carrier</span>
+                        <span class="font-medium">DHL</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Tracking Number</span>
+                        <button class="text-shine-primary font-medium text-sm">1Z999AA1234567890</button>
+                    </div>
+                </div>
+                <button class="w-full mt-4 py-3 bg-primary text-white rounded-lg font-medium">Track on Carrier Website</button>
+            </div>
+        </section>
+
+        <!-- Support Section -->
+        <section class="px-4 mb-6">
+            <div class="bg-white rounded-lg p-4 border">
+                <p class="text-center text-gray-600 mb-4">Need help with your delivery?</p>
+                
+                <!-- ShAI Chat Interface -->
+                <div class="border border-gray-200 rounded-lg p-3">
+                    <!-- Chat Header -->
+                    <div class="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
+                        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                            <svg fill="currentColor" viewBox="0 0 640 512" class="w-4 h-4 text-white">
+                                <path d="M320 0c17.7 0 32 14.3 32 32V96H472c39.8 0 72 32.2 72 72V440c0 39.8-32.2 72-72 72H168c-39.8 0-72-32.2-72-72V168c0-39.8 32.2-72 72-72H288V32c0-17.7 14.3-32 32-32zM208 384c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H208zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H304zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H400zM264 256a40 40 0 1 0 -80 0 40 40 0 1 0 80 0zm152 40a40 40 0 1 0 0-80 40 40 0 1 0 0 80zM48 224H64V416H48c-26.5 0-48-21.5-48-48V272c0-26.5 21.5-48 48-48zm544 0c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H576V224h16z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-medium text-sm poppins">ShAI Assistant</p>
+                            <p class="text-xs text-gray-500">Online</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Sample Message -->
+                    <div class="mb-3">
+                        <div class="bg-gray-50 p-2 rounded-lg max-w-[80%]">
+                            <p class="text-sm text-gray-700">Hi! I can help you with your order tracking. What would you like to know?</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Input -->
+                    <div class="flex items-end gap-2">
+                        <div class="flex-1 relative">
+                            <input type="text" placeholder="Ask about your order..." class="w-full p-3 pr-20 border border-gray-300 rounded-lg dm-sans text-sm">
+                            <div class="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
+                                <button class="p-1.5 text-gray-400 hover:text-gray-600">
+                                    <svg fill="currentColor" viewBox="0 0 448 512" class="w-4 h-4">
+                                        <path d="M364.2 83.8c-24.4-24.4-64-24.4-88.4 0l-184 184c-42.1 42.1-42.1 110.3 0 152.4s110.3 42.1 152.4 0l152-152c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-152 152c-64 64-167.6 64-231.6 0s-64-167.6 0-231.6l184-184c46.3-46.3 121.3-46.3 167.6 0s46.3 121.3 0 167.6l-176 176c-28.6 28.6-75 28.6-103.6 0s-28.6-75 0-103.6l144-144c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-144 144c-6.7 6.7-6.7 17.7 0 24.4s17.7 6.7 24.4 0l176-176c24.4-24.4 24.4-64 0-88.4z"></path>
+                                    </svg>
+                                </button>
+                                <button class="p-1.5 text-gray-400 hover:text-gray-600">
+                                    <svg fill="currentColor" viewBox="0 0 384 512" class="w-4 h-4">
+                                        <path d="M192 0C139 0 96 43 96 96V256c0 53 43 96 96 96s96-43 96-96V96c0-53-43-96-96-96zM64 216c0-13.3-10.7-24-24-24s-24 10.7-24 24v40c0 89.1 66.2 162.7 152 174.4V464H120c-13.3 0-24 10.7-24 24s10.7 24 24 24h72 72c13.3 0 24-10.7 24-24s-10.7-24-24-24H216V430.4c85.8-11.7 152-85.3 152-174.4V216c0-13.3-10.7-24-24-24s-24 10.7-24 24v40c0 70.7-57.3 128-128 128s-128-57.3-128-128V216z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="p-3 bg-primary text-white rounded-lg hover:bg-opacity-90">
+                            <svg fill="currentColor" viewBox="0 0 512 512" class="w-4 h-4">
+                                <path d="M498.1 5.6c10.1 7 15.4 19.1 13.5 31.2l-64 416c-1.5 9.7-7.4 18.2-16 23s-18.9 5.4-28 1.6L284 427.7l-68.5 74.1c-8.9 9.7-22.9 12.9-35.2 8.1S160 493.2 160 480V396.4c0-4 1.5-7.8 4.2-10.7L331.8 202.8c5.8-6.3 5.6-16-.4-22s-15.7-6.4-22-.7L106 360.8 17.7 316.6C7.1 311.3 .3 300.7 0 288.9s5.9-22.8 16.1-28.7l448-256c10.7-6.1 23.9-5.5 34 1.4z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 border-t border-gray-100 bg-white px-4 py-3 z-40">
+        <div class="flex justify-between items-center max-w-md mx-auto">
+<button type="button" class="flex flex-col items-center group min-w-[60px]">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 text-gray-400 group-hover:text-shine-primary transition-colors">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+            </svg>
+            <span class="dm-sans text-xs mt-1 text-gray-500 group-hover:text-shine-primary transition-colors">Home</span>
+        </button>
+            <button class="flex flex-col items-center group min-w-[60px]">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 text-gray-400 group-hover:text-shine-primary transition-colors">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"></path>
+                </svg>
+                <span class="text-xs mt-1 text-gray-500 group-hover:text-shine-primary transition-colors">Picks</span>
+            </button>
+            <button class="flex flex-col items-center group min-w-[60px]">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 text-gray-400 group-hover:text-shine-primary transition-colors">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
+                </svg>
+                <span class="text-xs mt-1 text-gray-500 group-hover:text-shine-primary transition-colors">Wishlist</span>
+            </button>
+            <button class="flex flex-col items-center min-w-[60px]">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" class="w-6 h-6 rounded-full object-cover" alt="Profile">
+                <span class="text-xs mt-1 text-shine-primary">Profile</span>
+            </button>
+        </div>
+    </nav>
+    </div>
+</div>
+
+<!-- Cancel Order Modal -->
+<div id="cancel-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-center items-center">
+    <div class="w-full max-w-[390px] mx-auto px-4">
+        <div class="bg-white rounded-2xl w-full p-6">
+            <div class="text-center mb-6">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-12 h-12 text-shine-accent mx-auto mb-3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path>
+                </svg>
+                <h2 class="text-lg poppins font-semibold mb-2">Cancel Order?</h2>
+                <p class="text-sm text-gray-600 dm-sans">Are you sure you want to cancel this order? This action cannot be undone.</p>
+            </div>
+            <div class="flex gap-3">
+                <button type="button" onclick="closeCancelModal()" class="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium dm-sans">No, Keep Order</button>
+                <button type="button" onclick="confirmCancel()" class="flex-1 py-3 bg-shine-accent text-white rounded-lg font-medium dm-sans">Yes, cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Success Notification -->
+<div id="cancel-notification" class="fixed top-20 left-4 right-4 bg-accent text-white p-4 rounded-lg shadow-lg z-60 hidden transform transition-all duration-300">
+    <div class="flex items-center gap-3">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div class="flex-1">
+            <p class="font-medium poppins">Order Canceled Successfully!</p>
+            <p class="text-sm opacity-90">Your order has been canceled and you'll receive a refund within 3-5 business days.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Return Request Modal -->
+<div id="return-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-center items-end">
+    <div class="w-full max-w-[390px] mx-auto pb-4">
+        <div class="bg-white rounded-t-2xl w-full transform transition-all">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b">
+                <h2 class="text-lg poppins font-semibold">Return Request</h2>
+                <button onclick="closeReturnModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Modal Content -->
+            <div class="p-4 max-h-96 overflow-y-auto">
+                <!-- Product Selector -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Item(s) to Return</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="checkbox" class="w-4 h-4 text-shine-primary border-gray-300 rounded">
+                            <img class="w-10 h-10 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e3f92e89da-91c7ebe70b64c417c52b.png" alt="Summer Floral Dress">
+                            <div class="flex-1">
+                                <p class="font-medium text-sm">Summer Floral Dress</p>
+                                <p class="text-xs text-gray-600">Size M • $289.50</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Reason for Return -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Return</label>
+                    <select class="w-full p-3 border border-gray-300 rounded-lg bg-white dm-sans">
+                        <option value="">Select a reason</option>
+                        <option value="wrong-size">Wrong item/size received</option>
+                        <option value="damaged">Damaged item</option>
+                        <option value="changed-mind">Changed mind</option>
+                        <option value="not-match">Item doesn't match description/photos</option>
+                        <option value="not-suit">Item doesn't suit my body type</option>
+                        <option value="better-price">Better price found elsewhere</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Other Reason Text Input -->
+                <div id="other-reason" class="mb-4 hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Please specify</label>
+                    <input type="text" class="w-full p-3 border border-gray-300 rounded-lg dm-sans" placeholder="Enter reason">
+                </div>
+
+                <!-- Additional Notes -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Additional Notes (Optional)</label>
+                    <textarea class="w-full p-3 border border-gray-300 rounded-lg dm-sans h-20 resize-none" placeholder="Any additional details..."></textarea>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3">
+                    <button onclick="closeReturnModal()" class="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium">Cancel</button>
+                    <button onclick="submitReturn()" class="flex-1 py-3 bg-primary text-white rounded-lg font-medium">Submit Return</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Notification -->
+<div id="success-notification" class="fixed top-20 left-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-60 hidden transform transition-all duration-300">
+    <div class="flex items-center gap-3">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div class="flex-1">
+            <p class="font-medium poppins">Return Request Submitted!</p>
+            <p class="text-sm opacity-90">We'll process your return and send you updates via email.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+function openReturnModal() {
+    document.getElementById('return-modal').classList.remove('hidden');
+}
+
+function closeReturnModal() {
+    document.getElementById('return-modal').classList.add('hidden');
+}
+
+function submitReturn() {
+    closeReturnModal();
+    const notification = document.getElementById('success-notification');
+    notification.classList.remove('hidden');
+    setTimeout(() => {
+        notification.classList.add('hidden');
+    }, 4000);
+}
+
+function openOrderTracking() {
+    document.getElementById('order-tracking-page').classList.remove('hidden');
+}
+
+function closeOrderTracking() {
+    document.getElementById('order-tracking-page').classList.add('hidden');
+}
+
+function openCancelModal() {
+    document.getElementById('cancel-modal').classList.remove('hidden');
+}
+
+function closeCancelModal() {
+    document.getElementById('cancel-modal').classList.add('hidden');
+}
+
+function confirmCancel() {
+    closeCancelModal();
+    const notification = document.getElementById('cancel-notification');
+    notification.classList.remove('hidden');
+    setTimeout(() => {
+        notification.classList.add('hidden');
+    }, 4000);
+}
+
+document.querySelector('select').addEventListener('change', function() {
+    const otherReason = document.getElementById('other-reason');
+    if (this.value === 'other') {
+        otherReason.classList.remove('hidden');
+    } else {
+        otherReason.classList.add('hidden');
+    }
+});
+
+document.querySelectorAll('button').forEach(button => {
+    if (button.textContent.trim() === 'Track Order') {
+        button.setAttribute('onclick', 'openOrderTracking()');
+    }
+    if (button.textContent.trim() === 'Cancel Order') {
+        button.setAttribute('onclick', 'openCancelModal()');
+    }
+});
+</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Methods</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              'fuhkwang': ['Fira Sans', 'sans-serif'],
+              'madefor': ['Wix Madefor Display', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      ::-webkit-scrollbar { display: none;}
+      
+      /* Custom radio button styling */
+      input[type="radio"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid #d1d5db;
+        border-radius: 50%;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+      }
+      
+      input[type="radio"]:checked {
+        border-color: #939bfb;
+        background-color: #939bfb;
+      }
+      
+      input[type="radio"]:checked::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background-color: white;
+      }
+    </style>
+</head>
+
+<body class="bg-white font-madefor">
+    <!-- Header -->
+    <div id="header" class="fixed top-0 left-0 right-0 bg-white z-50 px-5 py-4 border-b border-gray-100">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <button class="text-gray-600">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+            </svg>
+          </button>
+          <h1 class="text-xl font-semibold font-fuhkwang text-gray-900">Payment Methods</h1>
+        </div>
+        <div class="flex gap-5">
+          <button class="text-gray-600">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
+            </svg>
+          </button>
+          <button class="text-gray-600">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="pt-20 pb-24 bg-white">
+      <!-- Header Section -->
+      <section id="payment-header" class="px-5 py-6 mb-2">
+        <h2 class="text-lg font-semibold font-fuhkwang text-gray-900 mb-2">
+          Manage Your Payment Methods</h2>
+        <p class="text-gray-600 text-sm">These payment methods are used for your
+          subscription and purchases made through ShineOut.</p>
+      </section>
+
+      <!-- Stored Payment Methods -->
+      <section id="payment-methods" class="px-5 py-6 mb-2">
+        <h3 class="text-base font-semibold font-fuhkwang mb-4 text-gray-900">
+          Your Cards</h3>
+
+        <!-- Card 1 -->
+        <div id="card-1" class="border border-gray-100 rounded-2xl p-4 mb-4 bg-white shadow-sm relative">
+          <div class="flex justify-between items-start mb-3">
+            <div class="flex items-center gap-3">
+              <input type="radio" name="default-card" checked="" class="form-radio h-5 w-5 text-[#939bfb] focus:ring-[#939bfb]">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-8 h-8 text-[#939bfb]">
+                <path fill="currentColor" d="M470.1 231.3s7.6 37.2 9.3 45H446c3.3-8.9 16-43.5 16-43.5-.2.3 3.3-9.1 5.3-14.9l2.8 13.4zM576 80v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48h480c26.5 0 48 21.5 48 48zM152.5 331.2L215.7 176h-42.5l-39.3 106-4.3-21.5-14-71.4c-2.3-9.9-9.4-12.7-18.2-13.1H32.7l-.7 3.1c15.8 4 29.9 9.8 42.2 17.1l35.8 135h42.5zm94.4.2L272.1 176h-40.2l-25.1 155.4h40.1zm139.9-50.8c.2-17.7-10.6-31.2-33.7-42.3-14.1-7.1-22.7-11.9-22.7-19.2.2-6.6 7.3-13.4 23.1-13.4 13.1-.3 22.7 2.8 29.9 5.9l3.6 1.7 5.5-33.6c-7.9-3.1-20.5-6.6-36-6.6-39.7 0-67.6 21.2-67.8 51.4-.3 22.3 20 34.7 35.2 42.2 15.5 7.6 20.8 12.6 20.8 19.3-.2 10.4-12.6 15.2-24.1 15.2-16 0-24.6-2.5-37.7-8.3l-5.3-2.5-5.6 34.9c9.4 4.3 26.8 8.1 44.8 8.3 42.2.1 69.7-20.8 70-53zM528 331.4L495.6 176h-31.1c-9.6 0-16.9 2.8-21 12.9l-59.7 142.5H426s6.9-19.2 8.4-23.3H486c1.2 5.5 4.8 23.3 4.8 23.3H528z">
+                </path>
+              </svg>
+              <div>
+                <div class="flex items-center gap-2">
+                  <p class="font-medium text-gray-900">Visa •••• 4242</p>
+                  <button class="text-gray-400 hover:text-gray-600"><i class="fas fa-pencil text-sm"></i></button>
+                </div>
+                <p class="text-sm text-gray-600">Expires 09/27</p>
+              </div>
+            </div>
+            <span class="default-badge bg-[#939bfb] text-white text-xs font-semibold px-2.5 py-1 rounded-full">Default</span>
+          </div>
+          <p class="text-sm text-gray-600 mb-3">Used for Subscription &amp;
+            Purchases</p>
+          <button class="absolute bottom-3 right-3 text-gray-400 hover:text-[#F96226] p-1"><i class="fas fa-trash text-sm"></i></button>
+        </div>
+
+        <!-- Card 2 -->
+        <div id="card-2" class="border border-gray-100 rounded-2xl p-4 mb-4 bg-white shadow-sm relative">
+          <div class="flex justify-between items-start mb-3">
+            <div class="flex items-center gap-3">
+              <input type="radio" name="default-card" class="form-radio h-5 w-5 text-[#939bfb] focus:ring-[#939bfb]">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-8 h-8 text-orange-500">
+                <path fill="currentColor" d="M304 160a160 160 0 1 0 0 320 160 160 0 1 0 0-320zM128 320a128 128 0 1 1 256 0 128 128 0 1 1 -256 0zM576 320a160 160 0 1 0 -320 0 160 160 0 1 0 320 0zM480 320a96 96 0 1 1 -192 0 96 96 0 1 1 192 0z">
+                </path>
+              </svg>
+              <div>
+                <div class="flex items-center gap-2">
+                  <p class="font-medium text-gray-900">Mastercard •••• 8888</p>
+                  <button class="text-gray-400 hover:text-gray-600"><i class="fas fa-pencil text-sm"></i></button>
+                </div>
+                <p class="text-sm text-gray-600">Expires 12/26</p>
+              </div>
+            </div>
+            <span class="default-badge bg-[#939bfb] text-white text-xs font-semibold px-2.5 py-1 rounded-full hidden">Default</span>
+          </div>
+          <p class="text-sm text-gray-600 mb-3">Purchases Only</p>
+          <button class="absolute bottom-3 right-3 text-gray-400 hover:text-[#F96226] p-1"><i class="fas fa-trash text-sm"></i></button>
+        </div>
+
+        <button class="w-3/4 mx-auto block bg-[#939bfb] hover:bg-[#838cf3] text-white py-3 rounded-full font-fuhkwang font-medium flex items-center justify-center gap-2 mt-4"><i class="fas fa-plus"></i>
+          Add New Payment Method
+        </button>
+      </section>
+
+      <!-- Security Statement -->
+      <section id="security-statement" class="px-5 py-4">
+        <div class="text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-8 h-8 text-green-500 mx-auto mb-3">
+            <path fill="currentColor" d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0zm0 66.8V444.8C394 378 431.1 230.1 432 141.4L256 66.8l0 0z">
+            </path>
+          </svg>
+          <p class="text-sm text-gray-600 mb-4">All payments are processed
+            securely. Your card details are encrypted and never stored on our
+            servers.</p>
+          <div class="flex justify-center items-center gap-4 text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-10 h-auto">
+              <path fill="currentColor" d="M470.1 231.3s7.6 37.2 9.3 45H446c3.3-8.9 16-43.5 16-43.5-.2.3 3.3-9.1 5.3-14.9l2.8 13.4zM576 80v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48h480c26.5 0 48 21.5 48 48zM152.5 331.2L215.7 176h-42.5l-39.3 106-4.3-21.5-14-71.4c-2.3-9.9-9.4-12.7-18.2-13.1H32.7l-.7 3.1c15.8 4 29.9 9.8 42.2 17.1l35.8 135h42.5zm94.4.2L272.1 176h-40.2l-25.1 155.4h40.1zm139.9-50.8c.2-17.7-10.6-31.2-33.7-42.3-14.1-7.1-22.7-11.9-22.7-19.2.2-6.6 7.3-13.4 23.1-13.4 13.1-.3 22.7 2.8 29.9 5.9l3.6 1.7 5.5-33.6c-7.9-3.1-20.5-6.6-36-6.6-39.7 0-67.6 21.2-67.8 51.4-.3 22.3 20 34.7 35.2 42.2 15.5 7.6 20.8 12.6 20.8 19.3-.2 10.4-12.6 15.2-24.1 15.2-16 0-24.6-2.5-37.7-8.3l-5.3-2.5-5.6 34.9c9.4 4.3 26.8 8.1 44.8 8.3 42.2.1 69.7-20.8 70-53zM528 331.4L495.6 176h-31.1c-9.6 0-16.9 2.8-21 12.9l-59.7 142.5H426s6.9-19.2 8.4-23.3H486c1.2 5.5 4.8 23.3 4.8 23.3H528z">
+              </path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-10 h-auto">
+              <path fill="currentColor" d="M304 160a160 160 0 1 0 0 320 160 160 0 1 0 0-320zM128 320a128 128 0 1 1 256 0 128 128 0 1 1 -256 0zM576 320a160 160 0 1 0 -320 0 160 160 0 1 0 320 0zM480 320a96 96 0 1 1 -192 0 96 96 0 1 1 192 0z">
+              </path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-10 h-auto">
+              <path fill="currentColor" d="M48 480C21.5 480 0 458.5 0 432V80C0 53.5 21.5 32 48 32H528c26.5 0 48 21.5 48 48v352c0 26.5-21.5 48-48 48H48zm133-219.1L262.7 82.4H341.3L307.6 145.6v-1.1H369.4L466.6 82.4l16.9 47.6h17.1V80H576V432c0 17.7-14.3 32-32 32H528c-17.7 0-32-14.3-32-32v-1.1h-61.9l-31.9-35.1-31.9 35.1H246.8V267.1H181z">
+              </path>
+            </svg>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Edit Card Modal -->
+    <div id="editCardModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
+      <div class="bg-white rounded-2xl shadow-lg p-6 w-11/12 max-w-sm">
+        <h3 class="text-xl font-fuhkwang font-semibold text-gray-900 mb-4">Edit
+          Card Details</h3>
+        <form>
+          <div class="mb-4"><label for="cardholderName" class="block text-sm font-medium text-gray-700 mb-1">Cardholder
+              Name</label><input type="text" id="cardholderName" value="Maria Lopez" class="w-full px-3 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-[#939bfb] focus:border-[#939bfb]">
+          </div>
+          <div class="mb-4"><label for="cardNumber" class="block text-sm font-medium text-gray-700 mb-1">Card
+              Number</label><input type="text" id="cardNumber" value="•••• •••• •••• 4242" class="w-full px-3 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-[#939bfb] focus:border-[#939bfb]">
+          </div>
+          <div class="flex gap-4 mb-4">
+            <div class="w-1/2"><label for="expiryDate" class="block text-sm font-medium text-gray-700 mb-1">Expiry</label><input type="text" id="expiryDate" placeholder="MM/YY" value="09/27" class="w-full px-3 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-[#939bfb] focus:border-[#939bfb]">
+            </div>
+            <div class="w-1/2"><label for="cvv" class="block text-sm font-medium text-gray-700 mb-1">CVV/CVC</label><input type="password" id="cvv" placeholder="•••" value="123" class="w-full px-3 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-[#939bfb] focus:border-[#939bfb]">
+            </div>
+          </div>
+          <div class="flex justify-end gap-3"><button type="button" class="px-6 py-2 bg-gray-200 text-gray-800 rounded-full font-fuhkwang font-medium hover:bg-gray-300">Cancel</button><button type="submit" class="px-6 py-2 bg-[#939bfb] text-white rounded-full font-fuhkwang font-medium hover:bg-[#838cf3]">Save
+              Card</button></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Menu -->
+    <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 py-3 px-4">
+      <div class="flex justify-between items-center max-w-md mx-auto">
+        <button class="flex flex-col items-center group min-w-[60px]">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 text-gray-400 group-hover:text-[#939bfb] group-active:text-[#939bfb] transition-colors">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+          </svg>
+          <span class="text-xs mt-1 text-gray-500 group-hover:text-[#939bfb] group-active:text-[#939bfb] transition-colors">Home</span>
+        </button>
+        <button class="flex flex-col items-center group min-w-[60px]">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 text-gray-400 group-hover:text-[#939bfb] group-active:text-[#939bfb] transition-colors">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"></path>
+          </svg>
+          <span class="text-xs mt-1 text-gray-500 group-hover:text-[#939bfb] group-active:text-[#939bfb] transition-colors">Picks</span>
+        </button>
+        <button class="flex flex-col items-center group min-w-[60px]">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 text-gray-400 group-hover:text-[#939bfb] group-active:text-[#939bfb] transition-colors">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
+          </svg>
+          <span class="text-xs mt-1 text-gray-500 group-hover:text-[#939bfb] group-active:text-[#939bfb] transition-colors">Wishlist</span>
+        </button>
+        <button class="flex flex-col items-center min-w-[60px]">
+          <span class="profile-nav-icon flex items-center justify-center w-6 h-6 text-[#939bfb]"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg></span>
+          <img class="profile-nav-photo w-6 h-6 rounded-full object-cover hidden" src="" alt="Profile">
+          <span class="text-xs mt-1 text-[#939bfb]">Profile</span>
+        </button>
+      </div>
+    </nav>
+
+    <script>
+      function updateDefaultCard(radio) {
+        document.querySelectorAll('.default-badge').forEach(badge => {
+          badge.classList.add('hidden');
+        });
+        
+        let card = radio.closest('.border.rounded-2xl');
+        if (card) {
+          let badge = card.querySelector('.default-badge');
+          if (badge) {
+            badge.classList.remove('hidden');
+          }
+        }
+      }
+
+      const editModal = document.getElementById('editCardModal');
+      
+      function openEditModal() {
+        editModal.classList.remove('hidden');
+      }
+      
+      function closeEditModal() {
+        editModal.classList.add('hidden');
+      }
+      
+      editModal.addEventListener('click', function(event) {
+        if (event.target === editModal) {
+          closeEditModal();
+        }
+      });
+    </script>
+</body>
+</html>

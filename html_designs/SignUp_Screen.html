@@ -73,30 +73,31 @@
 <div id="auth-screen" class="relative w-full max-w-[390px] mx-auto h-[844px] max-h-screen bg-white flex flex-col overflow-y-auto">
     <!-- Main Content -->
     <div class="relative flex-1 flex flex-col items-center px-6 py-8 min-h-full">
+        <!-- GoShopMe logo placeholder (top of screen) -->
+        <div class="w-full text-center mb-6">
+            <img class="h-10 w-auto mx-auto object-contain" src="" data-logo alt="GoShopMe logo" title="GoShopMe logo">
+        </div>
         <!-- Logo Section -->
-        <div id="auth-logo" class="w-full text-center mb-8">
-            <div class="mb-4">
-                <img class="w-16 h-16 mx-auto" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/c0c04f81e1-226e238f2b37fe55608f.png" alt="ShineOut logo">
-            </div>
+        <div id="auth-logo" class="w-full text-center mb-6">
             <h2 class="text-2xl font-semibold poppins text-gray-900 mb-2">Welcome !</h2>
             <p class="text-gray-500 text-base dm-sans">Sign up to enjoy effortless shopping</p>
         </div>
 
         <!-- Auth Options -->
-        <div id="social-auth" class="w-full space-y-3 mb-6">
-            <button class="w-full flex items-center justify-center space-x-3 py-3 px-4 rounded-full border-2 border-[#939BFB]/30 bg-white hover:bg-[#939BFB]/10 transition-colors">
-                <i class="fab fa-google text-lg text-gray-700"></i>
-                <span class="text-gray-700 font-medium text-base dm-sans">Continue with Google</span>
+        <div id="social-auth" class="w-full space-y-2 mb-6">
+            <button type="button" class="w-full flex items-center justify-center space-x-2 py-2.5 px-3 rounded-full border-2 border-[#939BFB]/30 bg-white hover:bg-[#939BFB]/10 transition-colors">
+                <i class="fab fa-google text-base text-gray-700"></i>
+                <span class="text-gray-700 font-medium text-xs dm-sans">Continue with Google</span>
             </button>
 
-            <button class="w-full flex items-center justify-center space-x-3 py-3 px-4 rounded-full border-2 border-[#939BFB]/30 bg-white hover:bg-[#939BFB]/10 transition-colors">
-                <i class="fab fa-instagram text-lg text-gray-700"></i>
-                <span class="text-gray-700 font-medium text-base dm-sans">Continue with Instagram</span>
+            <button type="button" class="w-full flex items-center justify-center space-x-2 py-2.5 px-3 rounded-full border-2 border-[#939BFB]/30 bg-white hover:bg-[#939BFB]/10 transition-colors">
+                <i class="fab fa-instagram text-base text-gray-700"></i>
+                <span class="text-gray-700 font-medium text-xs dm-sans">Continue with Instagram</span>
             </button>
 
-            <button class="w-full flex items-center justify-center space-x-3 py-3 px-4 rounded-full border-2 border-[#939BFB]/30 bg-white hover:bg-[#939BFB]/10 transition-colors">
-                <i class="fab fa-tiktok text-lg text-gray-700"></i>
-                <span class="text-gray-700 font-medium text-base dm-sans">Continue with TikTok</span>
+            <button type="button" class="w-full flex items-center justify-center space-x-2 py-2.5 px-3 rounded-full border-2 border-[#939BFB]/30 bg-white hover:bg-[#939BFB]/10 transition-colors">
+                <i class="fab fa-tiktok text-base text-gray-700"></i>
+                <span class="text-gray-700 font-medium text-xs dm-sans">Continue with TikTok</span>
             </button>
         </div>
 
@@ -111,19 +112,51 @@
         <form id="email-auth" class="w-full space-y-4 mb-6">
             <div class="space-y-2">
                 <label class="block text-sm text-gray-600 dm-sans" for="email">Email</label>
-                <input type="email" id="email" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB]/20 outline-none transition-colors text-base dm-sans" placeholder="Enter your email">
+                <input type="text" id="email" inputmode="email" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB]/20 outline-none transition-colors text-base dm-sans" placeholder="Enter your email" autocomplete="email">
+                <span id="email-error" class="text-red-500 text-sm mt-1 dm-sans hidden" role="alert"></span>
             </div>
             
             <div class="space-y-2">
                 <label class="block text-sm text-gray-600 dm-sans" for="password">Password</label>
                 <div class="relative">
-                    <input type="password" id="password" class="w-full px-4 py-3 pr-12 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB]/20 outline-none transition-colors text-base dm-sans" placeholder="Enter your password">
-                    <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors" onclick="togglePassword()">
+                    <input type="password" id="password" class="w-full px-4 py-3.5 pr-12 rounded-xl border border-gray-200 focus:border-shine-primary focus:ring-1 focus:ring-shine-primary outline-none transition-colors bg-gray-50 dm-sans" placeholder="Enter your password">
+                    <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors" onclick="togglePassword()">
                         <svg id="toggleIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
                     </button>
+                </div>
+                <!-- Password strength & requirements (shown only when user types in password) -->
+                <div id="signup-password-strength" class="space-y-2 mt-2 hidden">
+                    <div class="flex gap-1">
+                        <div class="h-1 flex-1 rounded-full bg-gray-200"></div>
+                        <div class="h-1 flex-1 rounded-full bg-gray-200"></div>
+                        <div class="h-1 flex-1 rounded-full bg-gray-200"></div>
+                        <div class="h-1 flex-1 rounded-full bg-gray-200"></div>
+                    </div>
+                    <p class="text-sm text-gray-500 dm-sans">Password strength: Weak</p>
+                </div>
+                <div id="signup-password-requirements" class="space-y-2 mt-2 hidden">
+                    <p class="text-sm text-gray-600 dm-sans">Password must contain:</p>
+                    <div class="space-y-1">
+                        <div class="flex items-center space-x-2 text-sm">
+                            <svg id="signup-req-1" class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            <span class="text-gray-400 dm-sans">At least 8 characters</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm">
+                            <svg id="signup-req-2" class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            <span class="text-gray-400 dm-sans">Uppercase and lowercase letters</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm">
+                            <svg id="signup-req-3" class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            <span class="text-gray-400 dm-sans">One number</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm">
+                            <svg id="signup-req-4" class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            <span class="text-gray-400 dm-sans">One symbol (e.g. !@#$%)</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -155,6 +188,96 @@ function togglePassword() {
         toggleIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>';
     }
 }
+
+// Password validation & strength (same as Create_New_Password)
+function checkPasswordStrengthSignUp(password) {
+    var strength = 0;
+    if (password.length >= 8) strength++;
+    if (password.match(/[0-9]/)) strength++;
+    if (password.match(/[^A-Za-z0-9]/)) strength++;
+    if (password.match(/[A-Z]/)) strength++;
+    return strength;
+}
+
+function updatePasswordRequirementsSignUp(password) {
+    var hasLength = password.length >= 8;
+    var hasLower = /[a-z]/.test(password);
+    var hasUpper = /[A-Z]/.test(password);
+    var hasNumber = /[0-9]/.test(password);
+    var hasSpecial = /[^a-zA-Z0-9]/.test(password);
+    var reqs = [
+        { el: document.getElementById('signup-req-1'), met: hasLength },
+        { el: document.getElementById('signup-req-2'), met: hasLower && hasUpper },
+        { el: document.getElementById('signup-req-3'), met: hasNumber },
+        { el: document.getElementById('signup-req-4'), met: hasSpecial }
+    ];
+    var checkSvg = '<path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>';
+    var crossSvg = '<path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>';
+    reqs.forEach(function(r) {
+        if (!r.el) return;
+        r.el.innerHTML = r.met ? checkSvg : crossSvg;
+        r.el.classList.remove(r.met ? 'text-gray-300' : 'text-green-500');
+        r.el.classList.add(r.met ? 'text-green-500' : 'text-gray-300');
+    });
+}
+
+document.getElementById('password').addEventListener('input', function() {
+    var password = this.value;
+    var strengthEl = document.getElementById('signup-password-strength');
+    var reqsEl = document.getElementById('signup-password-requirements');
+    if (password.length > 0) {
+        if (strengthEl) strengthEl.classList.remove('hidden');
+        if (reqsEl) reqsEl.classList.remove('hidden');
+    } else {
+        if (strengthEl) strengthEl.classList.add('hidden');
+        if (reqsEl) reqsEl.classList.add('hidden');
+    }
+    var strength = checkPasswordStrengthSignUp(password);
+    var bars = document.querySelectorAll('#signup-password-strength .rounded-full');
+    var strengthText = document.querySelector('#signup-password-strength p');
+    if (bars.length) {
+        bars.forEach(function(bar, index) {
+            if (index < strength) {
+                bar.className = 'h-1 flex-1 rounded-full ' +
+                    (strength === 1 ? 'bg-red-200' : strength === 2 ? 'bg-orange-200' : strength === 3 ? 'bg-yellow-200' : 'bg-green-200');
+            } else {
+                bar.className = 'h-1 flex-1 rounded-full bg-gray-200';
+            }
+        });
+    }
+    if (strengthText) {
+        strengthText.textContent = 'Password strength: ' +
+            (strength === 0 ? 'Weak' : strength === 1 ? 'Weak' : strength === 2 ? 'Fair' : strength === 3 ? 'Good' : 'Strong');
+    }
+    updatePasswordRequirementsSignUp(password);
+});
+
+document.getElementById('email-auth').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var emailEl = document.getElementById('email');
+    var emailErrorEl = document.getElementById('email-error');
+    var email = (emailEl && emailEl.value) ? emailEl.value.trim() : '';
+    var emailFormatRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailErrorEl) { emailErrorEl.classList.add('hidden'); emailErrorEl.textContent = ''; }
+    if (!email) {
+        if (emailErrorEl) { emailErrorEl.textContent = 'Please enter your email address.'; emailErrorEl.classList.remove('hidden'); }
+        return;
+    }
+    if (!emailFormatRegex.test(email)) {
+        if (emailErrorEl) { emailErrorEl.textContent = 'Please enter a valid email address.'; emailErrorEl.classList.remove('hidden'); }
+        return;
+    }
+    var password = (document.getElementById('password') && document.getElementById('password').value) || '';
+    var hasLength = password.length >= 8;
+    var hasLower = /[a-z]/.test(password);
+    var hasUpper = /[A-Z]/.test(password);
+    var hasNumber = /[0-9]/.test(password);
+    var hasSpecial = /[^a-zA-Z0-9]/.test(password);
+    if (!hasLength || !hasLower || !hasUpper || !hasNumber || !hasSpecial) {
+        return;
+    }
+    // Validation passed; submit to your backend (e.g. fetch or form.action + form.submit()).
+});
 </script>
 
 </body></html>

@@ -872,7 +872,10 @@
                     <span class="text-xs">Wishlist</span>
                 </button>
                 <button class="bottom-nav-btn">
-                    <img src="" data-user-avatar alt="Profile" class="w-6 h-6 rounded-full mb-1">
+                    <span id="wishlist-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1 text-shine-primary">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                    </span>
+                    <img id="wishlist-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile" data-profile-avatar>
                     <span class="text-xs">Profile</span>
                 </button>
             </div>
@@ -880,6 +883,26 @@
     </nav>
 </div>
 
+<script>
+// Bottom nav profile: show profile icon if no uploaded photo, else show saved photo from localStorage
+(function() {
+    var saved = null;
+    try { saved = localStorage.getItem('profilePhoto'); } catch (e) {}
+    var img = document.getElementById('wishlist-nav-profile-photo');
+    var icon = document.getElementById('wishlist-nav-profile-icon');
+    if (img && icon) {
+        if (saved) {
+            img.src = saved;
+            img.classList.remove('hidden');
+            icon.classList.add('hidden');
+        } else {
+            img.src = '';
+            img.classList.add('hidden');
+            icon.classList.remove('hidden');
+        }
+    }
+})();
+</script>
 <script>
 // Auto-growing textarea implementation
 (function() {
