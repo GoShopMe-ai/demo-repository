@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Bag</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'shine-primary': '#939BFB', 'shine-accent': '#F96226' },
+                    fontFamily: { 'poppins': ['Poppins', 'sans-serif'], 'dm-sans': ['DM Sans', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        .dm-sans { font-family: 'DM Sans', sans-serif; }
+        .poppins { font-family: 'Poppins', sans-serif; }
+        .icon-button svg { width: 18px; height: 18px; stroke-width: 1.5; }
+        .icon-button:hover svg { color: #939BFB; }
+        .bottom-nav-btn { display: flex; flex-direction: column; align-items: center; color: #6B7280; transition: color 0.2s ease-in-out; }
+        .bottom-nav-btn:hover, .bottom-nav-btn.active { color: #939BFB; }
+        .bottom-nav-btn:hover svg, .bottom-nav-btn:hover span, .bottom-nav-btn.active svg, .bottom-nav-btn.active span { color: #939BFB; }
+        .bottom-nav-btn svg { width: 20px; height: 20px; stroke-width: 1.5; margin-bottom: 4px; }
+        .voice-message-outgoing { background: #939BFB !important; color: white !important; margin-left: auto; }
+        .voice-message-incoming { background: #f3f4f6 !important; color: #000 !important; }
+        .voice-message-bubble { min-width: 140px; max-width: 260px; width: fit-content; display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 16px; }
+        
+        @keyframes wavePulse {
+            0%, 100% { transform: scaleY(0.5); }
+            50% { transform: scaleY(1.0); }
+        }
+
+        .wave-bar.playing {
+            animation: wavePulse 1.1s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.08s);
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.2s ease-out;
+        }
+
+        @keyframes slide-in-left {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .animate-slide-in-left {
+            animation: slide-in-left 0.3s ease-out;
+        }
+
+        @keyframes slide-in-right {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .animate-slide-in-right {
+            animation: slide-in-right 0.3s ease-out;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .animate-shimmer {
+            animation: shimmer 1.5s infinite;
+        }
+
+        .voice-message-bubble .play-btn.playing {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .voice-message-bubble.incoming .play-btn.playing {
+            background-color: rgba(17, 24, 39, 0.2);
+        }
+
+        .recording-active {
+            transition: all 0.2s ease-in-out !important;
+        }
+
+        .recording-indicator {
+            animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        #recording-tooltip {
+            animation: fadeInUp 0.2s ease-out;
+            z-index: 60;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .recording-active * {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        #cart-indicator.badge-numeric, #notif-indicator.badge-numeric {
+            min-width: 18px;
+            padding: 0 4px;
+        }
+    </style>
+    <script>
+    // Dynamic badges (match Home): cart = bag items count, notif = unread count
+    var cartCountValue = 0;
+    var notifCountValue = 0;
+    function getBadgeElements() {
+        return {
+            cartIndicator: document.getElementById('cart-indicator'),
+            cartCount: document.getElementById('cart-count'),
+            notifIndicator: document.getElementById('notif-indicator'),
+            notifCount: document.getElementById('notif-count')
+        };
+    }
+    function syncCartCountFromDOM() {
+        var nodes = document.querySelectorAll('[id^="bag-item-"]');
+        cartCountValue = nodes.length;
+    }
+    function updateCartBadge() {
+        var el = getBadgeElements();
+        if (!el.cartIndicator || !el.cartCount) return;
+        var show = cartCountValue > 0;
+        el.cartIndicator.classList.toggle('hidden', !show);
+        el.cartCount.textContent = show ? (cartCountValue > 99 ? '99+' : cartCountValue) : '';
+        el.cartIndicator.classList.toggle('badge-numeric', show && cartCountValue > 1);
+    }
+    function updateNotifBadge() {
+        try { notifCountValue = parseInt(localStorage.getItem('notifCount') || '0', 10); } catch (e) {}
+        var el = getBadgeElements();
+        if (!el.notifIndicator || !el.notifCount) return;
+        var show = notifCountValue > 0;
+        el.notifIndicator.classList.toggle('hidden', !show);
+        el.notifCount.textContent = show ? (notifCountValue > 99 ? '99+' : notifCountValue) : '';
+        el.notifIndicator.classList.toggle('badge-numeric', show && notifCountValue > 1);
+    }
+    window.updateCartBadge = updateCartBadge;
+    window.updateNotifBadge = updateNotifBadge;
+    window.syncCartCountFromDOM = syncCartCountFromDOM;
+    window.addToCart = function() { cartCountValue++; updateCartBadge(); };
+    document.addEventListener('DOMContentLoaded', function() {
+        syncCartCountFromDOM();
+        updateCartBadge();
+        updateNotifBadge();
+    });
+
+    // Dynamic chat bag preview: read actual bag items from DOM and render in chat
+    function getBagItemsFromDOM() {
+        var items = [];
+        document.querySelectorAll('[id^="bag-item-"]').forEach(function(card) {
+            var img = card.querySelector('.w-20.h-20 img, .w-20 img');
+            var brandEl = card.querySelector('.flex-1 p.text-xs.mb-1');
+            var titleEl = card.querySelector('.flex-1 h3');
+            var detailsEl = card.querySelector('.flex-1 p.text-xs.mt-1');
+            var priceEl = card.querySelector('.flex-1 .font-bold');
+            var brand = brandEl ? brandEl.textContent.trim() : '';
+            var title = titleEl ? titleEl.textContent.trim() : '';
+            var details = detailsEl ? detailsEl.textContent.trim() : '';
+            var priceDisplay = priceEl ? priceEl.textContent.trim() : '';
+            var priceNum = parseFloat(priceDisplay.replace(/[^0-9.]/g, '')) || 0;
+            items.push({ imgSrc: img ? img.src : '', brand: brand, title: title, details: details, priceNum: priceNum, priceDisplay: priceDisplay });
+        });
+        return items;
+    }
+    function renderChatBagPreview() {
+        var root = document.getElementById('chat-bag-preview-root');
+        if (!root) return;
+        var items = getBagItemsFromDOM();
+        var total = items.reduce(function(sum, i) { return sum + i.priceNum; }, 0);
+        var totalDisplay = total > 0 ? '$' + total.toFixed(2) : '$0.00';
+        var intro = items.length === 0
+            ? 'Your bag is empty. Add items from the bag to get started!'
+            : (items.length === 1 ? "Ready to checkout? You're buying:" : "Ready to checkout? You're buying:");
+        var rows = items.map(function(item) {
+            return '<div class="flex items-center space-x-2 mb-2">' +
+                '<div class="w-10 h-10 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">' +
+                '<img class="w-full h-full object-cover" src="' + (item.imgSrc || '') + '" alt="' + (item.title || '') + '">' +
+                '</div><div class="flex-1 min-w-0">' +
+                '<p class="font-medium text-xs text-gray-900 dm-sans">' + (item.title || '') + '</p>' +
+                '<p class="text-xs text-gray-500 dm-sans">' + (item.brand || '') + (item.details ? ' • ' + item.details : '') + ' • ' + (item.priceDisplay || '') + '</p>' +
+                '</div></div>';
+        }).join('');
+        root.innerHTML = '<div class="flex items-start space-x-3 mb-4">' +
+            '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">' +
+            '<img class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />' +
+            '</div><div class="flex-1">' +
+            '<div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-2 shadow-sm animate-slide-in-left">' +
+            '<p class="text-sm text-gray-900 dm-sans">' + intro + '</p></div>' +
+            (items.length > 0 ? '<div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">' + rows +
+            '<div class="border-t border-gray-200 mt-2 pt-2">' +
+            '<p class="font-semibold text-sm text-gray-900 dm-sans">Total: ' + totalDisplay + '</p></div></div>' +
+            '<div class="flex flex-wrap gap-2">' +
+            '<button id="checkout-yes-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Yes, let\'s go</button>' +
+            '<button id="edit-bag-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Edit bag</button>' +
+            '</div>' : '') +
+            '</div></div>';
+    }
+    window.renderChatBagPreview = renderChatBagPreview;
+    document.addEventListener('DOMContentLoaded', function() { renderChatBagPreview(); });
+
+    // ShAI avatar: placeholder used by default; set from DB like the logo via setShaiAvatarFromDb(url)
+    window.setShaiAvatarFromDb = function(url) {
+        if (!url) return;
+        document.querySelectorAll('.shai-avatar-img').forEach(function(img) { img.src = url; });
+    };
+    </script>
+</head>
+<body class="bg-[#F6F6F6] dm-sans">
+
+<div id="app-shell" class="relative mx-auto w-full max-w-[390px] bg-white min-h-screen dm-sans">
+<!-- Header -->
+<header id="header" class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white z-50 border-b border-gray-100">
+    <div class="flex items-center justify-between p-4">
+        <button class="w-10 h-10 flex items-center justify-center p-2">
+             <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+            </svg>
+        </button>
+        <h1 class="text-lg font-semibold text-gray-900 poppins">Shopping Bag</h1>
+        <div class="flex items-center space-x-3">
+            <button class="w-10 h-10 flex items-center justify-center p-2 relative overflow-visible">
+                <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
+                </svg>
+                <div id="notif-indicator" class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-[#F96226] rounded-full hidden flex items-center justify-center min-w-[12px]">
+                    <span id="notif-count" class="text-[10px] text-white font-medium leading-none"></span>
+                </div>
+            </button>
+            <button class="w-10 h-10 flex items-center justify-center p-2 relative overflow-visible">
+                <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z"></path>
+                </svg>
+                <div id="cart-indicator" class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-[#939BFB] rounded-full hidden flex items-center justify-center min-w-[12px] min-h-[12px]">
+                    <span id="cart-count" class="text-[10px] text-white font-medium leading-none"></span>
+                </div>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Shopping Bag Items -->
+<section id="shopping-bag-items" class="mt-20 px-4 pb-32">
+    <!-- Bag Item 1 -->
+    <div id="bag-item-1" class="bg-white rounded-xl border border-gray-100 p-4 mb-4 shadow-sm">
+        <div class="flex space-x-4">
+            <div class="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/89a9fe6304-6fe070425843fa2ba49b.png" alt="white Nike Air Max 90 sneakers">
+            </div>
+            <div class="flex-1">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Nike</p>
+                        <h3 class="font-semibold text-gray-900 text-sm">Air Max 90 Essential</h3>
+                        <p class="text-xs text-gray-500 mt-1">Size: M, Color: White</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="w-8 h-8 flex items-center justify-center wishlist-btn" onclick="toggleWishlist(this, 'bag-item-1')">
+                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path></svg>
+                        </button>
+                        <button class="w-8 h-8 flex items-center justify-center share-btn" onclick="shareItem('Air Max 90 Essential', 'Nike', '120')">
+                            <svg class="w-4 h-4 text-gray-400 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"></path></svg>
+                        </button>
+                        <button class="w-8 h-8 flex items-center justify-center delete-btn" onclick="deleteItem('bag-item-1')">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center border border-gray-200 rounded-lg">
+                            <button class="w-8 h-8 flex items-center justify-center text-gray-500">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"></path></svg>
+                            </button>
+                            <span class="px-3 text-sm font-medium">1</span>
+                            <button class="w-8 h-8 flex items-center justify-center text-gray-500">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="font-bold text-gray-900">$120</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bag Item 2 -->
+    <div id="bag-item-2" class="bg-white rounded-xl border border-gray-100 p-4 mb-4 shadow-sm">
+        <div class="flex space-x-4">
+            <div class="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/cd629eaf60-b040609181ec837c6da6.png" alt="black leather handbag minimalist design product photography">
+            </div>
+            <div class="flex-1">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Coach</p>
+                        <h3 class="font-semibold text-gray-900 text-sm">Leather Crossbody Bag</h3>
+                        <p class="text-xs text-gray-500 mt-1">Color: Black</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="w-8 h-8 flex items-center justify-center wishlist-btn" onclick="toggleWishlist(this, 'bag-item-2')">
+                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path></svg>
+                        </button>
+                        <button class="w-8 h-8 flex items-center justify-center share-btn" onclick="shareItem('Leather Crossbody Bag', 'Coach', '295')">
+                            <svg class="w-4 h-4 text-gray-400 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"></path></svg>
+                        </button>
+                        <button class="w-8 h-8 flex items-center justify-center delete-btn" onclick="deleteItem('bag-item-2')">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center border border-gray-200 rounded-lg">
+                            <button class="w-8 h-8 flex items-center justify-center text-gray-500">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"></path></svg>
+                            </button>
+                            <span class="px-3 text-sm font-medium">1</span>
+                            <button class="w-8 h-8 flex items-center justify-center text-gray-500">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="font-bold text-gray-900">$295</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div id="order-summary" class="bg-gray-50 rounded-xl p-4 mt-6">
+        <h3 class="font-semibold text-gray-900 mb-3 poppins">Order Summary</h3>
+        <div class="space-y-2">
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Subtotal (2 items)</span>
+                <span class="text-gray-900">$415</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Shipping</span>
+                <span class="text-gray-900">Free</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Tax</span>
+                <span class="text-gray-900">$33.20</span>
+            </div>
+            
+            <!-- Promo Code Section -->
+            <div class="bg-white rounded-lg border border-gray-200 p-3 mt-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-4 h-4 text-[#939BFB]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"></path></svg>
+                        <span class="text-sm font-medium text-gray-900">Promo Code</span>
+                    </div>
+                    <button id="promo-toggle" class="text-sm text-[#939BFB] font-medium">Add</button>
+                </div>
+                
+                <!-- Promo Input (Hidden by default) -->
+                <div id="promo-input-section" class="mt-3 hidden">
+                    <div class="flex space-x-2">
+                        <input type="text" id="promo-code" placeholder="Enter promo code" class="flex-1 bg-gray-50 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#939BFB]">
+                        <button id="apply-promo" class="bg-[#939BFB] text-white px-4 py-2 rounded-lg text-sm font-medium">Apply</button>
+                    </div>
+                </div>
+                
+                <!-- Applied Promo (Hidden by default) -->
+                <div id="applied-promo" class="mt-2 hidden">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span class="text-sm text-green-600 font-medium">SAVE20 Applied</span>
+                        </div>
+                        <span class="text-sm text-green-600 font-medium">-$83.00</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-2 mt-3">
+                <div class="flex justify-between">
+                    <span class="font-semibold text-gray-900">Total</span>
+                    <span class="font-bold text-gray-900 text-lg" id="total-amount">$448.20</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommended Items -->
+    <div id="recommended-items" class="mt-6">
+        <h3 class="font-semibold text-gray-900 mb-4 poppins">Complete Your Look</h3>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
+                <div class="w-full h-24 bg-gray-100 rounded-lg mb-3 overflow-hidden">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/baa5c8ec71-a22d1ba23caf17941544.png" alt="white minimalist watch product photography">
+                </div>
+                <p class="text-xs text-gray-500 mb-1">Apple</p>
+                <h4 class="font-medium text-gray-900 text-sm mb-1">Apple Watch Series 9</h4>
+                <p class="font-bold text-gray-900 text-sm">$399</p>
+                <button class="add-to-bag-btn w-full mt-2 bg-[#939BFB] text-white py-1.5 rounded-lg text-xs font-medium hover:opacity-90 transition-opacity">
+                    Add to Bag
+                </button>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
+                <div class="w-full h-24 bg-gray-100 rounded-lg mb-3 overflow-hidden">
+                    <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/f261f1931d-8483dedf427a6a44d753.png" alt="silver chain necklace jewelry product photography">
+                </div>
+                <p class="text-xs text-gray-500 mb-1">Tiffany & Co.</p>
+                <h4 class="font-medium text-gray-900 text-sm mb-1">Silver Chain Necklace</h4>
+                <p class="font-bold text-gray-900 text-sm">$175</p>
+                <button class="add-to-bag-btn w-full mt-2 bg-[#939BFB] text-white py-1.5 rounded-lg text-xs font-medium hover:opacity-90 transition-opacity">
+                    Add to Bag
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Chat Drawer Overlay -->
+<div id="chat-overlay" class="fixed inset-0 bg-black/40 z-40 hidden" aria-hidden="true"></div>
+
+<!-- Chat Drawer -->
+<div id="chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[80vh] transform transition-transform duration-300 flex flex-col">
+    <div class="flex justify-center pt-3 pb-1 flex-shrink-0">
+        <div id="drag-handle" class="w-14 h-1.5 bg-gray-300 rounded-full cursor-grab active:cursor-grabbing flex-shrink-0 hover:bg-gray-400 transition-colors touch-none" aria-label="Drag to resize chat" role="slider"></div>
+    </div>
+
+    <div id="chat-header" class="flex items-center px-4 py-3 flex-shrink-0 border-b border-gray-50">
+        <button id="back-btn" class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center mr-3 hidden hover:bg-gray-100 transition-colors">
+            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+        </button>
+        <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
+            <img id="shai-avatar" class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />
+        </div>
+        <div class="flex-1">
+            <p class="font-semibold text-gray-900 text-sm poppins" id="header-title">Shopping Bag</p>
+            <p class="text-xs text-gray-500 dm-sans" id="header-subtitle">Ready to checkout?</p>
+        </div>
+    </div>
+
+    <div id="chat-content" class="flex-1 flex flex-col min-h-0">
+        <div id="chat-messages" class="flex-1 overflow-y-auto px-4 py-2">
+            <!-- Dynamic bag preview: populated from actual shopping bag items -->
+            <div id="chat-bag-preview-root" class="mb-4">
+                <!-- JS renders ShAI message + item list + total here -->
+            </div>
+
+            <!-- Delivery Address Flow -->
+            <div id="delivery-flow" class="hidden">
+                <div class="flex justify-end mb-4">
+                    <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%] shadow-sm animate-slide-in-right">
+                        <p class="text-sm dm-sans">Yes, let's go</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-3 mb-4">
+                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                        <img class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />
+                    </div>
+                    <div class="flex-1">
+                        <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
+                            <p class="text-sm text-gray-900 dm-sans">Please confirm your delivery address.</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-3 mb-3 shadow-sm">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm text-gray-900 dm-sans">Home</p>
+                                    <p class="text-xs text-gray-500 dm-sans">123 Main Street<br>San Francisco, CA 94102</p>
+                                </div>
+                                <svg class="w-4 h-4 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 0115 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="use-address-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Use this address</button>
+                            <button id="edit-address-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Method Flow -->
+            <div id="payment-flow" class="hidden">
+                <div class="flex justify-end mb-4">
+                    <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%] shadow-sm animate-slide-in-right">
+                        <p class="text-sm dm-sans">Use this address</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-3 mb-4">
+                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                        <img class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />
+                    </div>
+                    <div class="flex-1">
+                        <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
+                            <p class="text-sm text-gray-900 dm-sans">Perfect, we'll deliver to: 123 Main Street, San Francisco, CA 94102</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
+                            <p class="text-sm text-gray-900 dm-sans">You'll be charged $448.20 using your saved card ending in ••••1234.</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-3 mb-3 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-6 bg-blue-600 rounded-sm flex items-center justify-center">
+                                        <span class="text-white text-xs font-bold">••••</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-sm text-gray-900 dm-sans">•••• 1234</p>
+                                        <p class="text-xs text-gray-500 dm-sans">Expires 12/26</p>
+                                    </div>
+                                </div>
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="confirm-payment-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Confirm</button>
+                            <button id="change-card-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Use another card</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final Summary Flow -->
+            <div id="summary-flow" class="hidden">
+                <div class="flex justify-end mb-4">
+                    <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%] shadow-sm animate-slide-in-right">
+                        <p class="text-sm dm-sans">Confirm</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-3 mb-4">
+                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                        <img class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />
+                    </div>
+                    <div class="flex-1">
+                        <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
+                            <p class="text-sm text-gray-900 dm-sans font-medium">Here's your order summary:</p>
+                            <div class="mt-3 space-y-2">
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-gray-600 dm-sans">Products (2 items)</span>
+                                    <span class="text-gray-900 dm-sans">$415.00</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-gray-600 dm-sans">Shipping</span>
+                                    <span class="text-gray-900 dm-sans">Free</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-gray-600 dm-sans">Tax</span>
+                                    <span class="text-gray-900 dm-sans">$33.20</span>
+                                </div>
+                                <div class="border-t border-gray-200 pt-2">
+                                    <div class="flex justify-between">
+                                        <span class="font-semibold text-sm text-gray-900 dm-sans">Total</span>
+                                        <span class="font-bold text-sm text-gray-900 dm-sans">$448.20</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3 pt-3 border-t border-gray-200">
+                                <p class="text-xs text-gray-600 dm-sans">Shipping to: 123 Main Street, San Francisco, CA 94102</p>
+                                <p class="text-xs text-gray-600 dm-sans">Payment: ••••1234</p>
+                                <p class="text-xs text-gray-600 dm-sans">Estimated delivery: Oct 15–18</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="place-order-btn" class="bg-[#939BFB] text-white px-4 py-2 rounded-full text-sm font-medium dm-sans hover:opacity-90 transition-colors">Place Order</button>
+                            <button id="edit-order-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Success Flow -->
+            <div id="success-flow" class="hidden">
+                <div class="flex justify-end mb-4">
+                    <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%] shadow-sm animate-slide-in-right">
+                        <p class="text-sm dm-sans">Place Order</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-3 mb-4">
+                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                        <img class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />
+                    </div>
+                    <div class="flex-1">
+                        <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
+                            <p class="text-sm text-gray-900 dm-sans">🎉 Done! Your order is placed. I'll update you as soon as it ships.</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
+                            <p class="text-sm text-gray-900 dm-sans">You can also invite friends to shop with you or share what you just bought.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="invite-friend-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Invite friend</button>
+                            <button id="share-haul-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Share my haul</button>
+                            <button id="skip-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Skip</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="chat-input-drawer" class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
+            <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+                <button id="cam-btn-drawer" class="icon-button hover:opacity-70 transition-opacity">
+                    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
+                    </svg>
+                </button>
+                <textarea id="chat-input-drawer-field" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none overflow-y-auto min-h-[24px] max-h-[120px] py-0 leading-6 text-sm" rows="1" style="height: 24px;"></textarea>
+                <button id="add-friend-btn-drawer" class="icon-button hover:opacity-70 transition-opacity">
+                    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                    </svg>
+                </button>
+                <button id="mic-btn-drawer" class="icon-button hover:opacity-70 transition-opacity">
+                    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
+                    </svg>
+                </button>
+                <button id="send-btn-drawer" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity">
+                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-friend-content" class="flex-1 flex flex-col min-h-0 hidden">
+        <div id="contact-list" class="flex-1 overflow-y-auto p-4">
+            <div class="mb-4">
+                <div class="relative">
+                    <input type="text" id="contact-search" placeholder="Search contacts..." class="w-full bg-white border border-gray-200 rounded-2xl px-4 py-3 pl-10 text-sm dm-sans focus:outline-none focus:ring-1 focus:ring-[#939BFB] shadow-sm">
+                    <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+                </div>
+            </div>
+            
+            <div id="contacts-container" class="space-y-3">
+                <div class="contact-item flex items-center space-x-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm" data-name="Alex Johnson" data-phone="+1 (555) 123-4567" data-goshopme="true">
+                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Contact" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-gray-900 text-sm truncate dm-sans">Alex Johnson</p>
+                        <p class="text-xs text-gray-500 dm-sans">+1 (555) 123-4567</p>
+                    </div>
+                    <button class="contact-action bg-[#939BFB] text-white px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:opacity-90 transition-colors">Add</button>
+                </div>
+                
+                <div class="contact-item flex items-center space-x-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm" data-name="Maria Rodriguez" data-phone="+1 (555) 987-6543" data-goshopme="false">
+                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                        <span class="text-gray-600 font-semibold text-sm dm-sans">MR</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-gray-900 text-sm truncate dm-sans">Maria Rodriguez</p>
+                        <p class="text-xs text-gray-500 dm-sans">+1 (555) 987-6543</p>
+                    </div>
+                    <button class="contact-action bg-white text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium border border-[#939BFB] dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Invite</button>
+                </div>
+                
+                <div class="contact-item flex items-center space-x-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm" data-name="David Kim" data-phone="+1 (555) 456-7890" data-goshopme="true">
+                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" alt="Contact" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-gray-900 text-sm truncate dm-sans">David Kim</p>
+                        <p class="text-xs text-gray-500 dm-sans">+1 (555) 456-7890</p>
+                    </div>
+                    <button class="contact-action bg-[#939BFB] text-white px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:opacity-90 transition-colors">Add</button>
+                </div>
+                
+                <div class="contact-item flex items-center space-x-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm" data-name="Sarah Thompson" data-phone="+1 (555) 234-5678" data-goshopme="false">
+                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                        <span class="text-gray-600 font-semibold text-sm dm-sans">ST</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-gray-900 text-sm truncate dm-sans">Sarah Thompson</p>
+                        <p class="text-xs text-gray-500 dm-sans">+1 (555) 234-5678</p>
+                    </div>
+                    <button class="contact-action bg-white text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium border border-[#939BFB] dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Invite</button>
+                </div>
+
+                <div class="contact-item flex items-center space-x-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm" data-name="Emma Wilson" data-phone="+1 (555) 345-6789" data-goshopme="true">
+                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="Contact" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-gray-900 text-sm truncate dm-sans">Emma Wilson</p>
+                        <p class="text-xs text-gray-500 dm-sans">+1 (555) 345-6789</p>
+                    </div>
+                    <button class="contact-action bg-[#939BFB] text-white px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:opacity-90 transition-colors">Add</button>
+                </div>
+
+                <div class="contact-item flex items-center space-x-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm" data-name="Michael Brown" data-phone="+1 (555) 678-9012" data-goshopme="false">
+                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                        <span class="text-gray-600 font-semibold text-sm dm-sans">MB</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-gray-900 text-sm truncate dm-sans">Michael Brown</p>
+                        <p class="text-xs text-gray-500 dm-sans">+1 (555) 678-9012</p>
+                    </div>
+                    <button class="contact-action bg-white text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium border border-[#939BFB] dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Invite</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="add-friend-input" class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
+            <div class="flex items-end space-x-3 bg-gray-50 rounded-full px-4 py-3">
+                <button class="text-gray-500 hover:text-[#939BFB] flex-shrink-0 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                    </svg>
+                </button>
+                <textarea placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-gray-900 placeholder-gray-500 dm-sans resize-none leading-6 py-0 text-sm" rows="1" style="height: 24px; overflow-y: hidden;"></textarea>
+                <button class="text-gray-500 hover:text-[#939BFB] flex-shrink-0 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM3 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 019.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                    </svg>
+                </button>
+                <button class="text-gray-500 hover:text-[#939BFB] flex-shrink-0 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 z-50">
+    <div class="flex items-center justify-around py-2">
+        <button class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 group hover:text-[#939BFB]">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
+            <span class="text-xs">Home</span>
+        </button>
+        <button class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 group hover:text-[#939BFB]">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"></path></svg>
+            <span class="text-xs">Picks</span>
+        </button>
+        <button class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 group hover:text-[#939BFB]">
+             <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path></svg>
+            <span class="text-xs">Wishlist</span>
+        </button>
+        <button class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 group hover:text-[#939BFB]">
+            <span id="bag-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                </svg>
+            </span>
+            <img id="bag-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile">
+            <span class="text-xs">Profile</span>
+        </button>
+    </div>
+</nav>
+
+<script>
+// Dynamic profile avatar in bottom nav
+(function() {
+    var navIcon = document.getElementById('bag-nav-profile-icon');
+    var navPhoto = document.getElementById('bag-nav-profile-photo');
+    var saved = null;
+    try { saved = localStorage.getItem('profilePhoto'); } catch (err) {}
+    if (saved && navPhoto && navIcon) {
+        navPhoto.src = saved;
+        navPhoto.classList.remove('hidden');
+        navIcon.classList.add('hidden');
+    }
+})();
+</script>
+
+<!-- Fixed Chat Input Bar When Collapsed -->
+<div id="chat-input-bar" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 p-4 z-30">
+    <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+        <button id="cam-btn" class="icon-button hover:opacity-70 transition-opacity">
+            <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
+            </svg>
+        </button>
+        <textarea id="message-input" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none overflow-y-auto min-h-[24px] max-h-[120px] py-0 leading-6 text-sm" rows="1" style="height: 24px;"></textarea>
+        <button id="add-friend-btn" class="icon-button hover:opacity-70 transition-opacity">
+            <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+            </svg>
+        </button>
+        <button id="mic-btn" class="icon-button hover:opacity-70 transition-opacity">
+            <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
+            </svg>
+        </button>
+        <button id="send-btn" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity">
+            <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatDrawer = document.getElementById('chat-drawer');
+    const chatOverlay = document.getElementById('chat-overlay');
+    const chatInput = document.getElementById('message-input');
+    const chatInputDrawer = document.getElementById('chat-input-drawer-field');
+    const micBtn = document.getElementById('mic-btn');
+    const sendBtn = document.getElementById('send-btn');
+    const addFriendBtn = document.getElementById('add-friend-btn');
+    const micBtnDrawer = document.getElementById('mic-btn-drawer');
+    const sendBtnDrawer = document.getElementById('send-btn-drawer');
+    const addFriendBtnDrawer = document.getElementById('add-friend-btn-drawer');
+    const chatInputBar = document.getElementById('chat-input-bar');
+    const backBtn = document.getElementById('back-btn');
+    const chatMessages = document.getElementById('chat-messages');
+    const addFriendContent = document.getElementById('add-friend-content');
+    const chatContent = document.getElementById('chat-content');
+    const contactSearch = document.getElementById('contact-search');
+    const dragHandle = document.getElementById('drag-handle');
+    const mediaPicker = (() => {
+        const inp = document.createElement('input');
+        inp.type = 'file';
+        inp.accept = 'image/*,video/*';
+        inp.setAttribute('capture', 'environment');
+        inp.style.position = 'fixed';
+        inp.style.left = '-9999px';
+        document.body.appendChild(inp);
+        return inp;
+    })();
+    
+    let currentHeight = 80;
+    let isAddFriendMode = false;
+    let isDragging = false;
+    let startY = 0;
+    let isRecording = false;
+    let mediaRecorder = null;
+    let recordingStartTime = 0;
+    let recordingInterval = null;
+    let recordingCancelThreshold = 50; // pixels
+    let recordingStartX = 0;
+    let recordingStartY = 0;
+    let recordingCancelled = false;
+    let isDrawerExpanded = false;
+    let micAccessDenied = false;
+    let mediaStream = null;
+
+    // Initialize drawer open by default
+    chatDrawer.classList.remove('translate-y-full');
+    chatDrawer.style.height = currentHeight + 'vh';
+    chatOverlay.classList.remove('hidden');
+    chatOverlay.setAttribute('aria-hidden', 'false');
+    chatInputBar.classList.add('hidden');
+    isDrawerExpanded = true;
+
+    function expandDrawer() {
+        if (!chatDrawer) return;
+        chatDrawer.classList.remove('translate-y-full');
+        chatOverlay.classList.remove('hidden');
+        chatOverlay.setAttribute('aria-hidden', 'false');
+        chatInputBar.classList.add('hidden');
+        chatDrawer.style.height = currentHeight + 'vh';
+        isDrawerExpanded = true;
+        setTimeout(() => {
+            if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+            if (chatInputDrawer && !isAddFriendMode) {
+                chatInputDrawer.focus();
+                const len = (chatInputDrawer.value || '').length;
+                chatInputDrawer.setSelectionRange(len, len);
+            }
+        }, 50);
+    }
+
+    function collapseDrawer() {
+        if (!chatDrawer) return;
+        chatDrawer.classList.add('translate-y-full');
+        chatOverlay.classList.add('hidden');
+        chatOverlay.setAttribute('aria-hidden', 'true');
+        chatInputBar.classList.remove('hidden');
+        chatDrawer.style.height = '80vh';
+        currentHeight = 80;
+        isDrawerExpanded = false;
+        if (isAddFriendMode) {
+            showChatView();
+        }
+    }
+    window._expandShoppingBagDrawer = expandDrawer;
+
+    // Media picker functionality
+    function openMediaPicker(fromDrawer) {
+        const clickPicker = () => {
+            if (typeof mediaPicker.showPicker === 'function') {
+                try { mediaPicker.showPicker(); } catch { mediaPicker.click(); }
+            } else {
+                mediaPicker.click();
+            }
+        };
+
+        // If the bottom bar button was used and the drawer is closed → expand first, then open picker in the SAME tick
+        if (!fromDrawer && !isDrawerExpanded) {
+            expandDrawer();
+            // allow CSS transition to begin but keep user gesture chain
+            requestAnimationFrame(() => { clickPicker(); });
+        } else {
+            clickPicker();
+        }
+    }
+
+    // Wire the camera buttons with direct event listeners
+    const camBtnEl = document.getElementById('cam-btn');
+    const camBtnDrawerEl = document.getElementById('cam-btn-drawer');
+
+    if (camBtnEl) {
+        camBtnEl.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            e.stopPropagation();
+            openMediaPicker(false);
+        });
+    }
+    if (camBtnDrawerEl) {
+        camBtnDrawerEl.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            e.stopPropagation();
+            openMediaPicker(true);
+        });
+    }
+
+    // Media loading and success bubble creators
+    function createMediaLoadingBubble(file) {
+        const isVideo = file.type.startsWith('video/');
+        const bubble = document.createElement('div');
+        bubble.className = 'flex justify-end mb-4 animate-slide-in-right';
+        
+        bubble.innerHTML = `
+            <div class="border border-[#939BFB] rounded-2xl overflow-hidden shadow-sm max-w-[60%] opacity-60 relative">
+                <div class="w-full h-48 bg-gray-100 flex items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer"></div>
+                    ${isVideo ? `
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-full bg-black/20 flex items-center justify-center opacity-50">
+                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    ` : ''}
+                    <div class="absolute top-2 left-2 bg-gray-600/80 text-white text-xs px-2 py-1 rounded">
+                        Processing...
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        return bubble;
+    }
+
+    function createMediaBubble(file) {
+        const isVideo = file.type.startsWith('video/');
+        const bubble = document.createElement('div');
+        bubble.className = 'flex justify-end mb-4 animate-slide-in-right';
+        
+        try {
+            const mediaUrl = URL.createObjectURL(file);
+            
+            if (isVideo) {
+                bubble.innerHTML = `
+                    <div class="border border-[#939BFB] rounded-2xl overflow-hidden shadow-sm max-w-[60%] relative">
+                        <video src="${mediaUrl}" controls class="object-cover w-full h-auto" style="max-height: 220px;">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                `;
+            } else {
+                bubble.innerHTML = `
+                    <div class="border border-[#939BFB] rounded-2xl overflow-hidden shadow-sm max-w-[60%]">
+                        <img src="${mediaUrl}" class="object-cover w-full h-auto" style="max-height: 200px;" alt="Uploaded image" />
+                    </div>
+                `;
+            }
+            
+            return bubble;
+        } catch (error) {
+            console.error('Error creating media bubble:', error);
+            bubble.innerHTML = `
+                <div class="border border-gray-300 rounded-2xl overflow-hidden shadow-sm max-w-[60%] bg-gray-100">
+                    <div class="w-full h-32 flex items-center justify-center text-gray-500 text-sm cursor-pointer hover:bg-gray-50">
+                        Can't load media. Tap to retry.
+                    </div>
+                </div>
+            `;
+            bubble.onclick = () => createMediaBubble(file);
+            return bubble;
+        }
+    }
+
+    // Handle file selection
+    mediaPicker.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        // reset value so the same file can be picked again later
+        mediaPicker.value = '';
+        if (!file) return;
+
+        const chatMessagesContainer = document.querySelector('#chat-messages');
+        if (!chatMessagesContainer) return;
+
+        // Loading stub (outgoing bubble, opacity 0.6, shimmer, 1px #939BFB, h <= 56% width)
+        const loadingBubble = createMediaLoadingBubble(file);
+        chatMessagesContainer.appendChild(loadingBubble);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Simulated upload/processing → replace with final media bubble
+        setTimeout(() => {
+            loadingBubble.remove();
+            const mediaBubble = createMediaBubble(file);
+            if (mediaBubble) {
+                chatMessagesContainer.appendChild(mediaBubble);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }, 1200);
+    });
+
+    // Enhanced input functionality with autosizing and proper button management
+    function setupInputBehavior(inputField, micBtn, addFriendBtn, sendBtn, cameraBtn) {
+        if (!inputField) return;
+        
+        function autoResizeTextarea() {
+            if (!inputField || inputField.tagName !== 'TEXTAREA') return;
+            inputField.style.height = 'auto';
+            const lineHeight = parseInt(getComputedStyle(inputField).lineHeight) || 24;
+            const maxLines = 6;
+            const maxHeight = lineHeight * maxLines;
+            const newHeight = Math.min(inputField.scrollHeight, maxHeight);
+            
+            inputField.style.height = newHeight + 'px';
+            inputField.style.overflowY = inputField.scrollHeight > maxHeight ? 'auto' : 'hidden';
+        }
+
+        function updateButtonVisibility() {
+            const hasText = inputField.value.trim().length > 0;
+            
+            if (hasText) {
+                // Show only camera and send button
+                if (micBtn) micBtn.classList.add('hidden');
+                if (addFriendBtn) addFriendBtn.classList.add('hidden');
+                if (sendBtn) sendBtn.classList.remove('hidden');
+                if (cameraBtn) cameraBtn.classList.remove('hidden');
+            } else {
+                // Show camera, add friend, and mic buttons
+                if (micBtn) micBtn.classList.remove('hidden');
+                if (addFriendBtn) addFriendBtn.classList.remove('hidden');
+                if (sendBtn) sendBtn.classList.add('hidden');
+                if (cameraBtn) cameraBtn.classList.remove('hidden');
+            }
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendTextMessage();
+            }
+        }
+
+        function sendTextMessage() {
+            const message = inputField.value.trim();
+            if (!message) return;
+            
+            // Insert user message bubble
+            const chatContainer = document.querySelector('#chat-messages');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'flex justify-end mb-4 animate-slide-in-right';
+            userMessage.innerHTML = `
+                <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%] shadow-sm break-words">
+                    <p class="text-sm dm-sans whitespace-pre-wrap">${message.replace(/\n/g, '<br>')}</p>
+                </div>
+            `;
+            
+            chatContainer.appendChild(userMessage);
+            
+            // Clear input and reset
+            inputField.value = '';
+            if (inputField.tagName === 'TEXTAREA') { inputField.style.height = '24px'; inputField.style.overflowY = 'hidden'; }
+            updateButtonVisibility();
+            
+            // Scroll to bottom
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 50);
+            
+            // Simulate AI response after a delay
+            setTimeout(() => {
+                insertAIResponse(message);
+            }, 1000);
+        }
+
+        function insertAIResponse(userMessage) {
+            const chatContainer = document.querySelector('#chat-messages');
+            const aiMessage = document.createElement('div');
+            aiMessage.className = 'flex items-start space-x-3 mb-4 animate-slide-in-left';
+            
+            // Simple response logic based on user message
+            let responseText = "I understand! Let me help you with that.";
+            if (userMessage.toLowerCase().includes('help')) {
+                responseText = "I'm here to help! What can I assist you with today?";
+            } else if (userMessage.toLowerCase().includes('thanks')) {
+                responseText = "You're welcome! Is there anything else I can help you with?";
+            }
+            
+            aiMessage.innerHTML = `
+                <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                    <img class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />
+                </div>
+                <div class="bg-gray-50 text-gray-900 rounded-2xl rounded-tl-md p-3 max-w-[80%] shadow-sm break-words">
+                    <p class="text-sm dm-sans">${responseText}</p>
+                </div>
+            `;
+            
+            chatContainer.appendChild(aiMessage);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Event listeners
+        inputField.addEventListener('input', () => {
+            autoResizeTextarea();
+            updateButtonVisibility();
+        });
+        
+        inputField.addEventListener('keydown', handleKeyPress);
+        
+        if (sendBtn) {
+            sendBtn.addEventListener('click', sendTextMessage);
+        }
+        
+        // Initial setup
+        updateButtonVisibility();
+    }
+
+    // Find camera buttons in both input bars
+    const collapsedCameraBtn = document.getElementById('cam-btn');
+    const drawerCameraBtn = document.getElementById('cam-btn-drawer');
+
+    // Setup input behavior for both input fields
+    setupInputBehavior(chatInput, micBtn, addFriendBtn, sendBtn, collapsedCameraBtn);
+    setupInputBehavior(chatInputDrawer, micBtnDrawer, addFriendBtnDrawer, sendBtnDrawer, drawerCameraBtn);
+
+    // Camera button handlers - find and setup camera buttons
+    [collapsedCameraBtn, drawerCameraBtn].forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!isDrawerExpanded) {
+                    expandDrawer();
+                }
+            });
+        }
+    });
+
+    // Button handlers for expansion - only specific buttons
+    [micBtn, micBtnDrawer, addFriendBtn, addFriendBtnDrawer].forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!isDrawerExpanded) {
+                    expandDrawer();
+                }
+            });
+        }
+    });
+
+    // Tap floating input bar to open drawer when closed (match Home)
+    if (chatInputBar) {
+        chatInputBar.addEventListener('click', function(e) {
+            if (!isDrawerExpanded) {
+                expandDrawer();
+                setTimeout(function() {
+                    if (chatInputDrawer) chatInputDrawer.focus();
+                }, 320);
+            }
+        });
+    }
+
+    // Overlay click to collapse - only bind to overlay element
+    if (chatOverlay) {
+        chatOverlay.addEventListener('click', function(e) {
+            if (e.target === chatOverlay) {
+                collapseDrawer();
+            }
+        });
+    }
+
+    // Drag functionality - same as Home: only when drawer is expanded, resize 35-90vh (no drag-to-close)
+    const startDrag = (e) => {
+        if (!isDrawerExpanded) return;
+        isDragging = true;
+        startY = e.clientY || e.touches[0].clientY;
+        chatDrawer.style.transition = 'none';
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+    };
+
+    const doDrag = (e) => {
+        if (!isDragging) return;
+        const clientY = e.clientY || e.touches[0].clientY;
+        const deltaY = startY - clientY;
+        const newHeight = Math.min(90, Math.max(35, currentHeight + (deltaY / window.innerHeight) * 100));
+        chatDrawer.style.height = newHeight + 'vh';
+    };
+
+    const stopDrag = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        chatDrawer.style.transition = '';
+        document.body.style.userSelect = '';
+        const rect = chatDrawer.getBoundingClientRect();
+        currentHeight = (rect.height / window.innerHeight) * 100;
+    };
+
+    if (dragHandle) {
+        dragHandle.setAttribute('aria-label', 'Resize chat');
+        dragHandle.setAttribute('role', 'separator');
+        dragHandle.addEventListener('mousedown', startDrag);
+        dragHandle.addEventListener('touchstart', startDrag, { passive: false });
+    }
+    document.addEventListener('mousemove', doDrag);
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchmove', doDrag, { passive: false });
+    document.addEventListener('touchend', stopDrag);
+    
+    function autoResizeTextarea(textarea) {
+        if (!textarea || textarea.tagName !== 'TEXTAREA') return;
+        textarea.style.height = 'auto';
+        const lineHeight = parseInt(getComputedStyle(textarea).lineHeight, 10) || 24;
+        const maxHeight = lineHeight * 6; // 6 lines max
+        const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+        textarea.style.height = newHeight + 'px';
+        textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
+    }
+
+    [chatInput, chatInputDrawer].forEach(field => {
+        if (field) {
+            field.addEventListener('input', () => {
+                if (field.tagName === 'TEXTAREA') autoResizeTextarea(field);
+            });
+        }
+    });
+
+    function updateInputButtons(inputField, micBtn, addFriendBtn, sendBtn) {
+        if (inputField.value.trim()) {
+            micBtn.classList.add('hidden');
+            addFriendBtn.classList.add('hidden');
+            sendBtn.classList.remove('hidden');
+        } else {
+            micBtn.classList.remove('hidden');
+            addFriendBtn.classList.remove('hidden');
+            sendBtn.classList.add('hidden');
+        }
+    }
+
+    if (chatInput) chatInput.addEventListener('input', () => updateInputButtons(chatInput, micBtn, addFriendBtn, sendBtn));
+    if (chatInputDrawer) chatInputDrawer.addEventListener('input', () => updateInputButtons(chatInputDrawer, micBtnDrawer, addFriendBtnDrawer, sendBtnDrawer));
+
+    function showAddFriendFlow() {
+        chatContent.classList.add('hidden');
+        addFriendContent.classList.remove('hidden');
+        backBtn.classList.remove('hidden');
+        isAddFriendMode = true;
+        if (!isDrawerExpanded) {
+            expandDrawer();
+        }
+    }
+
+    function showChatView() {
+        chatContent.classList.remove('hidden');
+        addFriendContent.classList.add('hidden');
+        backBtn.classList.add('hidden');
+        isAddFriendMode = false;
+        setTimeout(() => {
+            if (chatInputDrawer && isDrawerExpanded) {
+                chatInputDrawer.focus();
+            }
+        }, 100);
+    }
+
+    // Add Friend button handlers
+    if (addFriendBtn) addFriendBtn.addEventListener('click', showAddFriendFlow);
+    if (addFriendBtnDrawer) addFriendBtnDrawer.addEventListener('click', showAddFriendFlow);
+    if (backBtn) backBtn.addEventListener('click', showChatView);
+
+    // Remove temp recording bubble (match Home)
+    function removeTempRecordingBubble() {
+        const temp = document.getElementById('temp-recording');
+        if (temp) temp.remove();
+    }
+
+    // Start recording function (match Home: access request once, temp bubble, cancel = no message)
+    async function startRecording(micButton) {
+        if (isRecording) return;
+        
+        removeTempRecordingBubble();
+        if (!isDrawerExpanded) {
+            expandDrawer();
+            await new Promise(resolve => setTimeout(resolve, 300));
+        }
+        if (micAccessDenied) {
+            showToast('Microphone access denied. Enable it in your browser settings to record voice messages.');
+            return;
+        }
+        
+        try {
+            if (!mediaStream || !mediaStream.active) {
+                mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            }
+            
+            mediaRecorder = new MediaRecorder(mediaStream);
+            const audioChunks = [];
+            
+            mediaRecorder.ondataavailable = event => {
+                if (event.data.size > 0) audioChunks.push(event.data);
+            };
+            
+            mediaRecorder.onstop = () => {
+                removeTempRecordingBubble();
+                if (!recordingCancelled) {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    insertVoiceMessage(audioUrl, Date.now() - recordingStartTime);
+                }
+                recordingCancelled = false;
+            };
+            
+            mediaRecorder.start();
+            isRecording = true;
+            recordingStartTime = Date.now();
+            
+            micButton.classList.add('scale-110', 'ring-2', 'ring-[#939BFB]', 'ring-offset-2', 'recording-active');
+            
+            // Temp bubble in chat like Home: "Recording... swipe left to cancel"
+            const chatMessagesContainer = document.querySelector('#chat-messages');
+            if (chatMessagesContainer) {
+                const tempBubble = document.createElement('div');
+                tempBubble.id = 'temp-recording';
+                tempBubble.className = 'flex justify-end mb-2';
+                tempBubble.innerHTML = `
+                    <div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]">
+                        <span class="mr-2">🎙️</span>
+                        <span class="text-xs">Recording... swipe left to cancel</span>
+                    </div>
+                `;
+                chatMessagesContainer.appendChild(tempBubble);
+                chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+            }
+            
+            showCancelTooltip(micButton);
+            
+            const textInputs = [chatInput, chatInputDrawer].filter(Boolean);
+            textInputs.forEach(input => {
+                if (input) { input.disabled = true; input.style.opacity = '0.5'; }
+            });
+            
+            recordingInterval = setInterval(updateRecordingTimer, 100);
+            
+        } catch (err) {
+            removeTempRecordingBubble();
+            if (err && (err.name === 'NotAllowedError' || err.name === 'SecurityError')) {
+                micAccessDenied = true;
+                showToast('Microphone access denied. Enable it in your browser settings to record voice messages.');
+            } else {
+                showToast('Could not access microphone. Please try again.');
+                console.warn('Microphone error:', err);
+            }
+        }
+    }
+
+    // Stop recording function (match Home: remove temp bubble; if cancelled, do not add message)
+    function stopRecording(micButton, cancelled = false) {
+        if (!isRecording) return;
+        
+        isRecording = false;
+        recordingCancelled = cancelled;
+        
+        micButton.classList.remove('scale-110', 'ring-2', 'ring-[#939BFB]', 'ring-offset-2');
+        
+        removeTempRecordingBubble();
+        
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+        }
+        
+        hideCancelTooltip();
+        
+        const textInputs = [chatInput, chatInputDrawer].filter(Boolean);
+        textInputs.forEach(input => {
+            if (input) { input.disabled = false; input.style.opacity = '1'; }
+        });
+        
+        if (recordingInterval) {
+            clearInterval(recordingInterval);
+            recordingInterval = null;
+        }
+    }
+    
+    // Cancel recording: stop without adding any chat message (match Home)
+    function cancelRecording(micButton) {
+        if (!isRecording) return;
+        isRecording = false;
+        recordingCancelled = true;
+        micButton.classList.remove('scale-110', 'ring-2', 'ring-[#939BFB]', 'ring-offset-2');
+        removeTempRecordingBubble();
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+        }
+        hideCancelTooltip();
+        const textInputs = [chatInput, chatInputDrawer].filter(Boolean);
+        textInputs.forEach(input => {
+            if (input) { input.disabled = false; input.style.opacity = '1'; }
+        });
+        if (recordingInterval) {
+            clearInterval(recordingInterval);
+            recordingInterval = null;
+        }
+    }
+    
+    function handleSwipeCancel(e) {
+        if (!isRecording || !e.touches || !e.touches.length) return;
+        const currentX = e.touches[0].clientX;
+        if (recordingStartX - currentX > 30) {
+            cancelRecording(this);
+        }
+    }
+
+    // Show cancel tooltip
+    function showCancelTooltip(micButton) {
+        const tooltip = document.createElement('div');
+        tooltip.id = 'recording-tooltip';
+        tooltip.className = 'absolute bottom-full right-0 mb-2 bg-black/80 text-white text-xs px-3 py-2 rounded-lg flex items-center space-x-2 whitespace-nowrap';
+        tooltip.innerHTML = `
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Slide left to cancel</span>
+        `;
+        
+        micButton.style.position = 'relative';
+        micButton.appendChild(tooltip);
+    }
+
+    // Hide cancel tooltip
+    function hideCancelTooltip() {
+        const tooltip = document.getElementById('recording-tooltip');
+        if (tooltip) {
+            tooltip.remove();
+        }
+    }
+
+    // Update recording timer
+    function updateRecordingTimer() {
+        if (!isRecording) return;
+        
+        const duration = Math.floor((Date.now() - recordingStartTime) / 1000);
+        const tooltip = document.getElementById('recording-tooltip');
+        if (tooltip) {
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            tooltip.innerHTML = `
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                <span>Slide left to cancel • ${minutes}:${seconds.toString().padStart(2, '0')}</span>
+            `;
+        }
+    }
+
+    // Insert voice message into chat
+    function insertVoiceMessage(audioUrl, duration) {
+        const chatContainer = document.querySelector('#chat-messages');
+        const durationSeconds = Math.floor(duration / 1000);
+        const minutes = Math.floor(durationSeconds / 60);
+        const seconds = durationSeconds % 60;
+        const formattedDuration = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        const voiceMessage = document.createElement('div');
+        voiceMessage.className = 'flex justify-end mb-4 animate-slide-in-right';
+        voiceMessage.innerHTML = `
+            <div role="group" aria-label="Voice message, ${durationSeconds} seconds, from you" class="voice-message-bubble bg-[#939BFB] text-white rounded-full px-3 py-2 flex items-center gap-2 max-w-64 shadow-sm">
+                <button aria-label="Play voice message, ${durationSeconds} seconds, from you" class="play-btn w-6 h-6 flex items-center justify-center border-2 border-white rounded-full hover:bg-white/20 transition-all duration-150 hover:scale-105">
+                    <svg class="w-3 h-3 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <div class="waveform flex items-center gap-0.5 flex-1">
+                    ${Array.from({length: 12}, (_, i) => `
+                        <div class="wave-bar w-0.5 bg-white/90 rounded-full transition-transform duration-100" style="height: ${Math.random() * 10 + 6}px; --i: ${i}"></div>
+                    `).join('')}
+                </div>
+                <span class="duration text-xs text-white/90 font-medium dm-sans">${formattedDuration}</span>
+                <audio preload="auto" class="hidden">
+                    <source src="${audioUrl}" type="audio/webm">
+                </audio>
+            </div>
+        `;
+        
+        chatContainer.appendChild(voiceMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Add playback functionality
+        setupVoiceMessagePlayback(voiceMessage.querySelector('.voice-message-bubble'));
+    }
+
+    // Setup voice message playback functionality
+    function setupVoiceMessagePlayback(voiceBubble) {
+        const playBtn = voiceBubble.querySelector('.play-btn');
+        const waveBars = voiceBubble.querySelectorAll('.wave-bar');
+        const durationSpan = voiceBubble.querySelector('.duration');
+        const audio = voiceBubble.querySelector('audio');
+        let isPlaying = false;
+        let progressInterval = null;
+
+        if (!audio || !playBtn) return;
+
+        playBtn.addEventListener('click', function() {
+            if (isPlaying) {
+                // Pause
+                audio.pause();
+                isPlaying = false;
+                playBtn.classList.remove('playing');
+                playBtn.innerHTML = `
+                    <svg class="w-3 h-3 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                `;
+                waveBars.forEach(bar => bar.classList.remove('playing'));
+                if (progressInterval) {
+                    clearInterval(progressInterval);
+                    progressInterval = null;
+                }
+            } else {
+                // Play
+                audio.play().then(() => {
+                    isPlaying = true;
+                    playBtn.classList.add('playing');
+                    playBtn.innerHTML = `
+                        <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                        </svg>
+                    `;
+                    waveBars.forEach(bar => bar.classList.add('playing'));
+                    
+                    // Update duration display during playback
+                    progressInterval = setInterval(() => {
+                        if (audio.duration && !audio.paused) {
+                            const remaining = audio.duration - audio.currentTime;
+                            const minutes = Math.floor(remaining / 60);
+                            const seconds = Math.floor(remaining % 60);
+                            durationSpan.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        }
+                    }, 100);
+                }).catch(() => {
+                    // Error state
+                    voiceBubble.innerHTML = `
+                        <div class="text-xs text-white/90 dm-sans text-center py-2 px-3">
+                            Audio failed to load. Tap to retry.
+                        </div>
+                    `;
+                    voiceBubble.style.cursor = 'pointer';
+                    voiceBubble.onclick = () => setupVoiceMessagePlayback(voiceBubble);
+                });
+            }
+        });
+
+        // Audio event listeners
+        audio.addEventListener('loadedmetadata', function() {
+            const minutes = Math.floor(audio.duration / 60);
+            const seconds = Math.floor(audio.duration % 60);
+            durationSpan.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        });
+
+        audio.addEventListener('ended', function() {
+            isPlaying = false;
+            playBtn.classList.remove('playing');
+            playBtn.innerHTML = `
+                <svg class="w-3 h-3 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            `;
+            waveBars.forEach(bar => bar.classList.remove('playing'));
+            
+            // Reset duration display
+            const minutes = Math.floor(audio.duration / 60);
+            const seconds = Math.floor(audio.duration % 60);
+            durationSpan.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+        });
+
+        audio.addEventListener('error', function() {
+            // Error state
+            voiceBubble.innerHTML = `
+                <div class="text-xs text-white/90 dm-sans text-center py-2 px-3 cursor-pointer hover:bg-white/10 rounded-full transition-colors">
+                    Audio failed to load. Tap to retry.
+                </div>
+            `;
+            voiceBubble.onclick = () => {
+                audio.load();
+                setupVoiceMessagePlayback(voiceBubble);
+            };
+        });
+    }
+
+    // Show system message
+    function showSystemMessage(message) {
+        const chatContainer = document.querySelector('#chat-messages');
+        const systemMessage = document.createElement('div');
+        systemMessage.className = 'flex justify-center mb-4';
+        systemMessage.innerHTML = `
+            <div class="bg-gray-50 text-gray-700 rounded-full px-3 py-1.5 text-xs font-medium dm-sans max-w-[80%] text-center shadow-sm animate-fade-in">
+                ${message}
+            </div>
+        `;
+        chatContainer.appendChild(systemMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Auto-remove after 2 seconds
+        setTimeout(() => {
+            systemMessage.style.opacity = '0';
+            systemMessage.style.transform = 'scale(0.95)';
+            setTimeout(() => systemMessage.remove(), 300);
+        }, 2000);
+    }
+
+    // Enhanced microphone button handlers with press-and-hold
+    [micBtn, micBtnDrawer].forEach(btn => {
+        if (btn) {
+            // Mouse events
+            btn.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                recordingStartX = e.clientX;
+                recordingStartY = e.clientY;
+                startRecording(this);
+            });
+            
+            btn.addEventListener('mouseup', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (isRecording) {
+                    const deltaX = recordingStartX - e.clientX;
+                    const cancelled = deltaX > recordingCancelThreshold;
+                    stopRecording(this, cancelled);
+                }
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                if (isRecording && this.classList.contains('recording-active')) {
+                    cancelRecording(this);
+                }
+            });
+            
+            // Touch events
+            btn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const touch = e.touches[0];
+                recordingStartX = touch.clientX;
+                recordingStartY = touch.clientY;
+                startRecording(this);
+            }, { passive: false });
+            
+            btn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (isRecording && e.changedTouches.length > 0) {
+                    const touch = e.changedTouches[0];
+                    const deltaX = recordingStartX - touch.clientX;
+                    const cancelled = deltaX > recordingCancelThreshold;
+                    stopRecording(this, cancelled);
+                }
+            }, { passive: false });
+            
+            btn.addEventListener('touchmove', handleSwipeCancel, { passive: false });
+            btn.addEventListener('touchcancel', function() {
+                if (isRecording && this.classList.contains('recording-active')) {
+                    cancelRecording(this);
+                }
+            });
+            
+            // Prevent context menu
+            btn.addEventListener('contextmenu', e => e.preventDefault());
+        }
+    });
+
+    // Cancel recording on mouse/touch leave
+    document.addEventListener('mouseup', function(e) {
+        if (isRecording) {
+            const micButtons = [micBtn, micBtnDrawer].filter(Boolean);
+            const isOverMicButton = micButtons.some(btn => btn.contains(e.target));
+            if (!isOverMicButton) {
+                const activeMicButton = micButtons.find(btn => btn.classList.contains('recording-active'));
+                if (activeMicButton) {
+                    stopRecording(activeMicButton, true);
+                }
+            }
+        }
+    });
+
+    document.addEventListener('touchend', function(e) {
+        if (isRecording && e.changedTouches.length > 0) {
+            const touch = e.changedTouches[0];
+            const element = document.elementFromPoint(touch.clientX, touch.clientY);
+            const micButtons = [micBtn, micBtnDrawer].filter(Boolean);
+            const isOverMicButton = micButtons.some(btn => btn.contains(element));
+            if (!isOverMicButton) {
+                const activeMicButton = micButtons.find(btn => btn.classList.contains('recording-active'));
+                if (activeMicButton) {
+                    stopRecording(activeMicButton, true);
+                }
+            }
+        }
+    });
+
+    // Contact search functionality
+    contactSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const contacts = document.querySelectorAll('.contact-item');
+        
+        contacts.forEach(contact => {
+            const name = contact.getAttribute('data-name').toLowerCase();
+            const phone = contact.getAttribute('data-phone').toLowerCase();
+            
+            if (name.includes(searchTerm) || phone.includes(searchTerm)) {
+                contact.style.display = 'flex';
+            } else {
+                contact.style.display = 'none';
+            }
+        });
+    });
+
+    // Contact interaction handlers
+    document.querySelectorAll('.contact-action').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const contactItem = this.closest('.contact-item');
+            const name = contactItem.getAttribute('data-name');
+            const isGoshopme = contactItem.getAttribute('data-goshopme') === 'true';
+            
+            if (isGoshopme && this.textContent === 'Add') {
+                // Add to chat with system message
+                const chatContainer = document.querySelector('#chat-messages');
+                const systemMessage = document.createElement('div');
+                systemMessage.className = 'flex justify-center mb-4';
+                systemMessage.innerHTML = `
+                    <div role="status" aria-live="polite" class="bg-green-100 text-green-800 rounded-full px-3 py-1.5 text-xs font-medium dm-sans max-w-[80%] text-center shadow-sm animate-fade-in">
+                        ${name.split(' ')[0]} has been added to chat
+                    </div>
+                `;
+                chatContainer.appendChild(systemMessage);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                showChatView();
+            } else if (!isGoshopme && this.textContent === 'Invite') {
+                // Share invite
+                const shareData = {
+                    title: 'Join me on GoShopMe',
+                    text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me",
+                    url: 'https://app.goshopme.ai'
+                };
+                if (navigator.share) {
+                    navigator.share(shareData);
+                } else {
+                    navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`).then(() => showToast('Invite link copied!'));
+                }
+            }
+        });
+    });
+
+    // Voice message handlers
+    document.querySelectorAll('.voice-message-bubble').forEach(bubble => {
+        setupVoiceMessagePlayback(bubble);
+    });
+
+    // Promo code and checkout flow handlers
+    const promoToggle = document.getElementById('promo-toggle');
+    const promoInputSection = document.getElementById('promo-input-section');
+    const promoCode = document.getElementById('promo-code');
+    const applyPromo = document.getElementById('apply-promo');
+    const appliedPromo = document.getElementById('applied-promo');
+    const totalAmount = document.getElementById('total-amount');
+
+    promoToggle.addEventListener('click', function() {
+        if (promoInputSection.classList.contains('hidden')) {
+            promoInputSection.classList.remove('hidden');
+            promoToggle.textContent = 'Cancel';
+        } else {
+            promoInputSection.classList.add('hidden');
+            promoToggle.textContent = 'Add';
+            promoCode.value = '';
+        }
+    });
+
+    applyPromo.addEventListener('click', function() {
+        if (promoCode.value.trim().toUpperCase() === 'SAVE20') {
+            promoInputSection.classList.add('hidden');
+            appliedPromo.classList.remove('hidden');
+            totalAmount.textContent = '$365.20';
+            promoToggle.textContent = 'Remove';
+            promoToggle.onclick = function() {
+                appliedPromo.classList.add('hidden');
+                totalAmount.textContent = '$448.20';
+                promoToggle.textContent = 'Add';
+                promoToggle.onclick = null;
+                promoToggle.addEventListener('click', arguments.callee.caller);
+            };
+        } else if (promoCode.value) {
+            promoCode.classList.add('ring-2', 'ring-red-500');
+            setTimeout(() => promoCode.classList.remove('ring-2', 'ring-red-500'), 2000);
+        }
+    });
+
+    // Checkout flow handlers (delegation so dynamic bag preview buttons work after re-render)
+    if (chatMessages) {
+        chatMessages.addEventListener('click', function(e) {
+            if (e.target.id === 'checkout-yes-btn' || e.target.closest('#checkout-yes-btn')) {
+                var deliveryFlow = document.getElementById('delivery-flow');
+                if (deliveryFlow) {
+                    deliveryFlow.classList.remove('hidden');
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+        });
+    }
+
+    document.getElementById('use-address-btn').addEventListener('click', function() {
+        document.getElementById('payment-flow').classList.remove('hidden');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    document.getElementById('confirm-payment-btn').addEventListener('click', function() {
+        document.getElementById('summary-flow').classList.remove('hidden');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    document.getElementById('place-order-btn').addEventListener('click', function() {
+        document.getElementById('success-flow').classList.remove('hidden');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    // Add wishlist functionality
+    function toggleWishlist(button, itemId) {
+        const isInWishlist = button.classList.contains('text-[#939BFB]');
+        
+        if (isInWishlist) {
+            // Remove from wishlist
+            button.classList.remove('text-[#939BFB]', 'fill-current');
+            button.classList.add('text-gray-400');
+            button.innerHTML = `
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
+                </svg>
+            `;
+        } else {
+            // Add to wishlist
+            button.classList.remove('text-gray-400');
+            button.classList.add('text-[#939BFB]', 'fill-current');
+            button.innerHTML = `
+                <svg class="w-4 h-4 text-[#939BFB] fill-current" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            `;
+        }
+    }
+
+    // Add share functionality
+    function shareItem(itemName, itemBrand, itemPrice) {
+        const shareData = {
+            title: `${itemName} by ${itemBrand}`,
+            text: `Check out this ${itemName} by ${itemBrand} for $${itemPrice} on GoShopMe!`,
+            url: 'https://app.goshopme.ai/item/' + encodeURIComponent(itemName.toLowerCase().replace(/\s+/g, '-'))
+        };
+        
+        if (navigator.share) {
+            navigator.share(shareData).catch(err => {
+                console.log('Error sharing:', err);
+                // Fallback to clipboard
+                const shareText = `${shareData.text} ${shareData.url}`;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareText);
+                    showToast('Product link copied to clipboard!');
+                }
+            });
+        } else {
+            // Fallback for browsers without Web Share API
+            const shareText = `${shareData.text} ${shareData.url}`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText);
+                showToast('Product link copied to clipboard!');
+            }
+        }
+    }
+
+    // Add delete functionality
+    function deleteItem(itemId) {
+        const bagItem = document.getElementById(itemId);
+        if (bagItem) {
+            // Add fade out animation
+            bagItem.style.transform = 'translateX(-100%)';
+            bagItem.style.opacity = '0';
+            bagItem.style.transition = 'all 0.3s ease-out';
+            
+            // Remove item after animation
+            setTimeout(() => {
+                bagItem.remove();
+                showToast('Item removed!');
+                updateCartTotal();
+                if (typeof syncCartCountFromDOM === 'function') syncCartCountFromDOM();
+                if (typeof updateCartBadge === 'function') updateCartBadge();
+                if (typeof window.renderChatBagPreview === 'function') window.renderChatBagPreview();
+            }, 300);
+        }
+    }
+
+    // Show toast message
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg z-50 text-sm';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+
+    // Update cart total after item removal
+    function updateCartTotal() {
+        const remainingItems = document.querySelectorAll('[id^="bag-item-"]');
+        // Update totals based on remaining items
+        // This would typically connect to your cart state management
+    }
+
+    // Add event listeners for wishlist buttons
+    document.querySelectorAll('button[onclick*="toggleWishlist"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const bagItem = this.closest('[id^="bag-item-"]');
+            const itemId = bagItem ? bagItem.id : 'unknown';
+            toggleWishlist(this, itemId);
+        });
+    });
+
+    // Add event listeners for share buttons
+    document.querySelectorAll('.share-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const bagItem = this.closest('[id^="bag-item-"]');
+            const itemName = bagItem.querySelector('h3').textContent;
+            const itemBrand = bagItem.querySelector('.text-xs.text-gray-500').textContent;
+            const itemPrice = bagItem.querySelector('.font-bold').textContent.replace('$', '');
+            shareItem(itemName, itemBrand, itemPrice);
+        });
+    });
+
+    // Add event listeners for delete buttons
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const bagItem = this.closest('[id^="bag-item-"]');
+            const itemId = bagItem ? bagItem.id : null;
+            if (itemId) {
+                deleteItem(itemId);
+            }
+        });
+    });
+
+    // Add to Bag buttons: increment cart and update badge
+    document.querySelectorAll('.add-to-bag-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            if (typeof window.addToCart === 'function') window.addToCart();
+            showToast('Added to bag!');
+        });
+    });
+
+    // Chat drawer re-expansion patch (match Home: closed = translate-y-full)
+    (function() {
+        const chatDrawer = document.getElementById('chat-drawer');
+        const chatOverlay = document.getElementById('chat-overlay');
+        const chatInputBar = document.getElementById('chat-input-bar');
+        const chatInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const chatInputDrawer = document.getElementById('chat-input-drawer-field');
+
+        function reopenChatDrawer() {
+            if (typeof window._expandShoppingBagDrawer === 'function') {
+                window._expandShoppingBagDrawer();
+            } else {
+                chatDrawer.classList.remove('translate-y-full');
+                chatDrawer.style.height = '80vh';
+                chatOverlay.classList.remove('hidden');
+                chatOverlay.setAttribute('aria-hidden', 'false');
+                chatInputBar.classList.add('hidden');
+            }
+            setTimeout(() => {
+                const chatMessages = document.getElementById('chat-messages');
+                if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+                if (chatInputDrawer) chatInputDrawer.focus();
+            }, 320);
+        }
+
+        const isDrawerClosed = () => chatDrawer.classList.contains('translate-y-full');
+
+        if (chatInput) {
+            chatInput.addEventListener('focus', () => {
+                if (isDrawerClosed()) reopenChatDrawer();
+            });
+            chatInput.addEventListener('click', () => {
+                if (isDrawerClosed()) reopenChatDrawer();
+            });
+        }
+
+        if (sendBtn) {
+            sendBtn.addEventListener('click', () => {
+                if (isDrawerClosed()) reopenChatDrawer();
+            });
+        }
+    })();
+});
+
+// Make sure all functions are properly defined
+window.toggleWishlist = toggleWishlist;
+window.shareItem = shareItem;
+window.deleteItem = deleteItem;
+</script>
+
+</body>
+</html>
+</html>
