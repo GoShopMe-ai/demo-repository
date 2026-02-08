@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Plan - GoShopMe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        body { font-family: 'DM Sans', sans-serif; }
+        .poppins { font-family: 'Poppins', sans-serif; }
+        .font-fuhkwang { font-family: 'Poppins', sans-serif; }
+        .font-wix { font-family: 'DM Sans', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'shine-primary': '#939BFB',
+                        'shine-accent': '#F96226',
+                        primary: '#939BFB',
+                        accent: '#F96226'
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                        'dm-sans': ['DM Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F6F6F6] min-h-screen">
+
+<div id="plan-selection-screen" class="relative w-full max-w-[390px] mx-auto min-h-screen bg-white flex flex-col overflow-hidden shadow-2xl">
+    <!-- Header -->
+    <div id="header" class="w-full bg-white border-b border-gray-100 px-5 py-4 flex-shrink-0">
+        <div class="flex items-center justify-between">
+            <button class="p-2 -ml-2 text-gray-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+                </svg>
+            </button>
+            <h1 class="font-fuhkwang font-semibold text-lg text-gray-800">Choose Your Plan</h1>
+            <div class="w-8"></div>
+        </div>
+        <div class="mt-3">
+            <div class="flex space-x-2">
+                <div class="flex-1 bg-primary h-1 rounded-full"></div>
+                <div class="flex-1 bg-primary h-1 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1 rounded-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto">
+        <div class="px-5 py-6 pb-24">
+            <div id="hero-section" class="text-center mb-6">
+                <h2 class="text-xl font-fuhkwang font-bold text-gray-900 mb-2">
+                    Unlock More with ShineOut Premium ✨
+                </h2>
+                <p class="text-sm text-gray-600 font-wix">
+                    Whether you're a casual shopper or a power user, we've got a plan for you.
+                </p>
+            </div>
+
+            <div id="plan-cards" class="space-y-4 mb-6">
+                <div id="free-plan-card" class="bg-white rounded-2xl border border-gray-200 p-5 cursor-pointer transition-all duration-200" onclick="selectPlan('free')">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-fuhkwang font-semibold text-gray-900">Free Plan</h3>
+                            <p class="text-xl font-fuhkwang font-bold text-gray-700">$0<span class="text-sm font-normal text-gray-500">/month</span></p>
+                        </div>
+                        <div id="free-radio" class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-300"></div>
+                    </div>
+                    
+                    <div class="space-y-2.5">
+                        <div class="flex items-start space-x-2.5">
+                            <i class="fas fa-check text-green-500 mt-0.5 text-sm"></i>
+                            <span class="text-gray-700 text-sm">Up to 15 AI Searches per Month</span>
+                        </div>
+                        <div class="flex items-start space-x-2.5">
+                            <i class="fas fa-check text-green-500 mt-0.5 text-sm"></i>
+                            <span class="text-gray-700 text-sm">Unlimited Purchases</span>
+                        </div>
+                        <div class="flex items-start space-x-2.5">
+                            <i class="fas fa-check text-green-500 mt-0.5 text-sm"></i>
+                            <span class="text-gray-700 text-sm">AI Return Assistance for 1 Item per Month</span>
+                        </div>
+                        <div class="flex items-start space-x-2.5">
+                            <i class="fas fa-check text-green-500 mt-0.5 text-sm"></i>
+                            <span class="text-gray-700 text-sm">Standard Speed AI Chat</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="premium-plan-card" class="bg-white rounded-2xl border p-5 relative cursor-pointer transition-all duration-200 border-primary border-2" style="box-shadow: 0 0 20px rgba(147, 155, 251, 0.3); background: linear-gradient(135deg, rgba(147, 155, 251, 0.05) 0%, rgba(249, 98, 38, 0.02) 100%);" onclick="selectPlan('premium')">
+                    <div class="absolute -top-2.5 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-accent text-white px-3 py-1 rounded-full text-xs font-semibold">Most Popular</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-fuhkwang font-semibold text-gray-900">Premium Plan</h3>
+                            <p class="text-xl font-fuhkwang font-bold text-primary">$19.99<span class="text-sm font-normal text-gray-500">/month</span></p>
+                        </div>
+                        <div id="premium-radio" class="w-5 h-5 rounded-full border-2 border-primary bg-primary flex items-center justify-center">
+                            <i class="fas fa-check text-white text-xs"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2.5">
+                        <div class="flex items-start space-x-2.5">
+                            <i class="fas fa-check text-primary mt-0.5 text-sm"></i>
+                            <span class="text-gray-700 text-sm">Unlimited AI Searches (Text + Image)</span>
+                        </div>
+                        <div class="flex items-start space-x-2.5">
+                            <i class="fas fa-check text-primary mt-0.5 text-sm"></i>
+                            <span class="text-gray-700 text-sm">Unlimited Purchases</span>
+                        </div>
+                        <div class="flex items-start space-x-2.5">
+                            <i class="fas fa-check text-primary mt-0.5 text-sm"></i>
+                            <span class="text-gray-700 text-sm">Full Return Automation (No limits)</span>
+                        </div>
+                        <div class="flex items-start space-x-2.5">
+                            <i class="fas fa-check text-primary mt-0.5 text-sm"></i>
+                            <span class="text-gray-700 text-sm">AI Order Tracking & Notifications</span>
+                        </div>
+                        <div class="flex items-start space-x-2.5">
+                            <i class="fas fa-check text-primary mt-0.5 text-sm"></i>
+                            <span class="text-gray-700 text-sm">Wishlist Discount Alerts & Restock</span>
+                        </div>
+                        <div class="flex items-start space-x-2.5">
+                            <i class="fas fa-check text-primary mt-0.5 text-sm"></i>
+                            <span class="text-gray-700 text-sm">Early Access to Limited Collections</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="comparison-table" class="mb-6">
+                <button class="w-full flex items-center justify-between text-base font-fuhkwang font-semibold text-gray-900 mb-3" onclick="toggleComparison()">
+                    <span>Compare Plans</span>
+                    <i id="comparison-arrow" class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
+                </button>
+                <div id="comparison-content" class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                    <div class="grid grid-cols-3 bg-gray-50 p-3.5 border-b border-gray-200">
+                        <div class="font-semibold text-gray-900 text-xs">Feature</div>
+                        <div class="font-semibold text-gray-900 text-center text-xs">Free</div>
+                        <div class="font-semibold text-gray-900 text-center text-xs">Premium</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 p-3.5 border-b border-gray-100">
+                        <div class="text-gray-700 text-xs">AI Search Limit</div>
+                        <div class="text-center text-gray-600 text-xs">15/month</div>
+                        <div class="text-center text-primary font-medium text-xs">Unlimited</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 p-3.5 border-b border-gray-100">
+                        <div class="text-gray-700 text-xs">AI Return Assistance</div>
+                        <div class="text-center text-gray-600 text-xs">1 item/mo</div>
+                        <div class="text-center text-primary font-medium text-xs">Unlimited</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 p-3.5 border-b border-gray-100">
+                        <div class="text-gray-700 text-xs">Order Tracking</div>
+                        <div class="text-center text-gray-400">
+                            <i class="fas fa-xmark text-sm"></i>
+                        </div>
+                        <div class="text-center text-primary">
+                            <i class="fas fa-check text-sm"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 p-3.5 border-b border-gray-100">
+                        <div class="text-gray-700 text-xs">Discount Alerts</div>
+                        <div class="text-center text-gray-400">
+                            <i class="fas fa-xmark text-sm"></i>
+                        </div>
+                        <div class="text-center text-primary">
+                            <i class="fas fa-check text-sm"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 p-3.5">
+                        <div class="text-gray-700 text-xs">Early Access Collections</div>
+                        <div class="text-center text-gray-400">
+                            <i class="fas fa-xmark text-sm"></i>
+                        </div>
+                        <div class="text-center text-primary">
+                            <i class="fas fa-check text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pb-4">
+                <p class="text-xs text-gray-500 text-center">
+                    All subscriptions renew monthly. You can cancel anytime in your profile settings.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Continue Button -->
+    <div id="continue-button-section" class="absolute bottom-0 left-0 right-0 w-full max-w-[390px] bg-white border-t border-gray-100 px-5 py-4">
+        <button class="w-4/5 mx-auto bg-primary text-white py-2.5 rounded-full font-semibold shadow-md shadow-primary/20 hover:bg-primary/90 transition-colors text-sm block">
+            Continue
+        </button>
+    </div>
+</div>
+
+<script>
+    let selectedPlan = 'premium';
+
+    function selectPlan(plan) {
+        selectedPlan = plan;
+        
+        const freeCard = document.getElementById('free-plan-card');
+        const premiumCard = document.getElementById('premium-plan-card');
+        const freeRadio = document.getElementById('free-radio');
+        const premiumRadio = document.getElementById('premium-radio');
+        
+        if (plan === 'free') {
+            freeCard.classList.add('border-primary', 'border-2');
+            freeCard.style.boxShadow = '0 0 20px rgba(147, 155, 251, 0.3)';
+            freeCard.style.background = 'linear-gradient(135deg, rgba(147, 155, 251, 0.05) 0%, rgba(249, 98, 38, 0.02) 100%)';
+            premiumCard.classList.remove('border-primary', 'border-2');
+            premiumCard.classList.add('border-gray-200');
+            premiumCard.style.boxShadow = '';
+            premiumCard.style.background = '';
+            
+            freeRadio.classList.add('border-primary', 'bg-primary');
+            freeRadio.innerHTML = '<i class="fas fa-check text-white text-xs"></i>';
+            premiumRadio.classList.remove('border-primary', 'bg-primary');
+            premiumRadio.classList.add('border-gray-300');
+            premiumRadio.innerHTML = '';
+        } else {
+            freeCard.classList.remove('border-primary', 'border-2');
+            freeCard.classList.add('border-gray-200');
+            freeCard.style.boxShadow = '';
+            freeCard.style.background = '';
+            premiumCard.classList.add('border-primary', 'border-2');
+            premiumCard.classList.remove('border-gray-200');
+            premiumCard.style.boxShadow = '0 0 20px rgba(147, 155, 251, 0.3)';
+            premiumCard.style.background = 'linear-gradient(135deg, rgba(147, 155, 251, 0.05) 0%, rgba(249, 98, 38, 0.02) 100%)';
+            
+            freeRadio.classList.remove('border-primary', 'bg-primary');
+            freeRadio.classList.add('border-gray-300');
+            freeRadio.innerHTML = '';
+            premiumRadio.classList.add('border-primary', 'bg-primary');
+            premiumRadio.innerHTML = '<i class="fas fa-check text-white text-xs"></i>';
+        }
+    }
+
+    function toggleComparison() {
+        const comparisonContent = document.getElementById('comparison-content');
+        const comparisonArrow = document.getElementById('comparison-arrow');
+        
+        if (comparisonContent.style.maxHeight === '0px') {
+            comparisonContent.style.maxHeight = '1000px';
+            comparisonArrow.classList.remove('rotate-180');
+        } else {
+            comparisonContent.style.maxHeight = '0px';
+            comparisonArrow.classList.add('rotate-180');
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Details - GoShopMe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        * { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif; }
+        .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif; }
+        .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .font-fuhkwang { font-family: 'Poppins', sans-serif; }
+        .font-wix { font-family: 'DM Sans', sans-serif; }
+        .input-error { border-color: #EF4444 !important; }
+        .dob-error .rounded-lg { border-color: #EF4444 !important; }
+        .input-error:focus { --tw-ring-color: #EF4444 !important; }
+        .error-msg { color: #EF4444; font-size: 12px; margin-top: 4px; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'shine-primary': '#939BFB',
+                        'shine-accent': '#F96226',
+                        primary: '#939BFB',
+                        accent: '#F96226'
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                        'dm-sans': ['DM Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F6F6F6] min-h-screen">
+
+<div id="personal-details-screen" class="relative w-full max-w-[390px] mx-auto min-h-screen bg-white flex flex-col overflow-hidden shadow-2xl">
+    <!-- Header - same width as main screen -->
+    <div id="header" class="w-full bg-white border-b border-gray-100 px-5 py-4 flex-shrink-0">
+        <div class="flex items-center justify-between">
+            <button class="p-2 -ml-2 text-gray-600 hover:opacity-70 transition-opacity" aria-label="Go back">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+                </svg>
+            </button>
+            <h1 class="font-fuhkwang font-semibold text-lg text-gray-800">Personal Details</h1>
+            <div class="w-8"></div>
+        </div>
+        <div class="mt-3">
+            <div class="flex space-x-2">
+                <div class="flex-1 bg-primary h-1 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1 rounded-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto">
+        <div class="px-5 py-6 pb-24">
+            <!-- Profile Picture Section -->
+            <div id="profile-picture-section" class="text-center mb-8">
+                <div class="relative inline-block">
+                    <input type="file" id="profilePhotoInput" accept="image/*" class="hidden" aria-label="Select profile photo">
+                    <label for="profilePhotoInput" class="cursor-pointer block">
+                        <div id="profilePhotoPreview" class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center border-2 border-gray-200 overflow-hidden">
+                            <svg id="profilePhotoPlaceholder" class="w-12 h-12 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                            </svg>
+                            <img id="profilePhotoImg" src="" alt="Profile" class="hidden w-full h-full object-cover">
+                        </div>
+                    </label>
+                    <label for="profilePhotoInput" class="absolute -bottom-1 -right-1 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white shadow-lg hover:opacity-90 transition-opacity cursor-pointer" aria-label="Add photo">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
+                        </svg>
+                    </label>
+                </div>
+                <p class="text-sm text-gray-600 mt-3">Add your profile picture</p>
+                <p id="profilePhoto-error" class="error-msg hidden"></p>
+            </div>
+
+            <!-- Personal Info Section -->
+            <div id="personal-info-section" class="mb-8">
+                <h2 class="font-fuhkwang font-semibold text-base text-gray-800 mb-4">Personal Information</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-2" for="firstName">First Name *</label>
+                        <input type="text" id="firstName" required="" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix" placeholder="Enter your first name">
+                        <p id="firstName-error" class="error-msg hidden"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-2" for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" required="" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix" placeholder="Enter your last name">
+                        <p id="lastName-error" class="error-msg hidden"></p>
+                    </div>
+
+                    <div id="dob-container">
+                        <label class="block text-sm text-gray-600 mb-2">Date of Birth *</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <select id="daySelect" required="" class="px-3 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix">
+                                <option value="">Day</option>
+                                <option value="01">01</option>
+                                <option value="02">02</option>
+                                <option value="03">03</option>
+                                <option value="04">04</option>
+                                <option value="05">05</option>
+                                <option value="06">06</option>
+                                <option value="07">07</option>
+                                <option value="08">08</option>
+                                <option value="09">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                                <option value="26">26</option>
+                                <option value="27">27</option>
+                                <option value="28">28</option>
+                                <option value="29">29</option>
+                                <option value="30">30</option>
+                                <option value="31">31</option>
+                            </select>
+                            <select id="monthSelect" required="" class="px-3 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix">
+                                <option value="">Month</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                            <select id="yearSelect" required="" class="px-3 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix">
+                                <option value="">Year</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
+                                <option value="2015">2015</option>
+                                <option value="2014">2014</option>
+                                <option value="2013">2013</option>
+                                <option value="2012">2012</option>
+                                <option value="2011">2011</option>
+                                <option value="2010">2010</option>
+                                <option value="2009">2009</option>
+                                <option value="2008">2008</option>
+                                <option value="2007">2007</option>
+                                <option value="2006">2006</option>
+                                <option value="2005">2005</option>
+                                <option value="2004">2004</option>
+                                <option value="2003">2003</option>
+                                <option value="2002">2002</option>
+                                <option value="2001">2001</option>
+                                <option value="2000">2000</option>
+                                <option value="1999">1999</option>
+                                <option value="1998">1998</option>
+                                <option value="1997">1997</option>
+                                <option value="1996">1996</option>
+                                <option value="1995">1995</option>
+                                <option value="1994">1994</option>
+                                <option value="1993">1993</option>
+                                <option value="1992">1992</option>
+                                <option value="1991">1991</option>
+                                <option value="1990">1990</option>
+                                <option value="1989">1989</option>
+                                <option value="1988">1988</option>
+                                <option value="1987">1987</option>
+                                <option value="1986">1986</option>
+                                <option value="1985">1985</option>
+                                <option value="1984">1984</option>
+                                <option value="1983">1983</option>
+                                <option value="1982">1982</option>
+                                <option value="1981">1981</option>
+                                <option value="1980">1980</option>
+                                <option value="1979">1979</option>
+                                <option value="1978">1978</option>
+                                <option value="1977">1977</option>
+                                <option value="1976">1976</option>
+                                <option value="1975">1975</option>
+                                <option value="1974">1974</option>
+                                <option value="1973">1973</option>
+                                <option value="1972">1972</option>
+                                <option value="1971">1971</option>
+                                <option value="1970">1970</option>
+                                <option value="1969">1969</option>
+                                <option value="1968">1968</option>
+                                <option value="1967">1967</option>
+                                <option value="1966">1966</option>
+                                <option value="1965">1965</option>
+                                <option value="1964">1964</option>
+                                <option value="1963">1963</option>
+                                <option value="1962">1962</option>
+                                <option value="1961">1961</option>
+                                <option value="1960">1960</option>
+                                <option value="1959">1959</option>
+                                <option value="1958">1958</option>
+                                <option value="1957">1957</option>
+                                <option value="1956">1956</option>
+                                <option value="1955">1955</option>
+                                <option value="1954">1954</option>
+                                <option value="1953">1953</option>
+                                <option value="1952">1952</option>
+                                <option value="1951">1951</option>
+                                <option value="1950">1950</option>
+                                <option value="1949">1949</option>
+                                <option value="1948">1948</option>
+                                <option value="1947">1947</option>
+                                <option value="1946">1946</option>
+                                <option value="1945">1945</option>
+                                <option value="1944">1944</option>
+                                <option value="1943">1943</option>
+                                <option value="1942">1942</option>
+                                <option value="1941">1941</option>
+                                <option value="1940">1940</option>
+                                <option value="1939">1939</option>
+                                <option value="1938">1938</option>
+                                <option value="1937">1937</option>
+                                <option value="1936">1936</option>
+                                <option value="1935">1935</option>
+                                <option value="1934">1934</option>
+                                <option value="1933">1933</option>
+                                <option value="1932">1932</option>
+                                <option value="1931">1931</option>
+                                <option value="1930">1930</option>
+                                <option value="1929">1929</option>
+                                <option value="1928">1928</option>
+                                <option value="1927">1927</option>
+                                <option value="1926">1926</option>
+                                <option value="1925">1925</option>
+                                <option value="1924">1924</option>
+                                <option value="1923">1923</option>
+                                <option value="1922">1922</option>
+                                <option value="1921">1921</option>
+                                <option value="1920">1920</option>
+                            </select>
+                        </div>
+                        <p id="dob-error" class="error-msg hidden"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-2" for="email">Email Address *</label>
+                        <input type="email" id="email" required="" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix" placeholder="Enter your email address">
+                        <p id="email-error" class="error-msg hidden"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Address Section -->
+            <div id="shipping-address-section" class="mb-8">
+                <h2 class="font-fuhkwang font-semibold text-base text-gray-800 mb-4">Shipping Address</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-2" for="address1">Address Line 1 *</label>
+                        <input type="text" id="address1" required="" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix" placeholder="Street address">
+                        <p id="address1-error" class="error-msg hidden"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-2" for="address2">Address Line 2 (Optional)</label>
+                        <input type="text" id="address2" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix" placeholder="Apartment, suite, etc.">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-2" for="city">City *</label>
+                            <input type="text" id="city" required="" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix" placeholder="City">
+                            <p id="city-error" class="error-msg hidden"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-2" for="postal">Post Code / ZIP *</label>
+                            <input type="text" id="postal" required="" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix" placeholder="12345">
+                            <p id="postal-error" class="error-msg hidden"></p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-2" for="region">Region / State / Province *</label>
+                        <input type="text" id="region" required="" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix" placeholder="State or Province">
+                        <p id="region-error" class="error-msg hidden"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-2" for="country">Country *</label>
+                        <button type="button" id="countryDropdown" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm text-left flex items-center justify-between bg-white font-wix">
+                            <span id="selectedCountry">Select Country</span>
+                            <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                            </svg>
+                        </button>
+                        <p id="country-error" class="error-msg hidden"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Phone Section -->
+            <div id="mobile-phone-section" class="mb-8">
+                <h2 class="font-fuhkwang font-semibold text-base text-gray-800 mb-4">Mobile Phone</h2>
+                
+                <div class="flex space-x-3">
+                    <div class="w-32 min-w-0">
+                        <label class="block text-sm text-gray-600 mb-2">Code *</label>
+                        <button type="button" id="phoneCodeDropdown" class="w-full px-3 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm text-left flex items-center justify-between gap-2 bg-white font-wix min-w-0">
+                            <span id="selectedPhoneCode" class="truncate">🇺🇸 +1</span>
+                            <svg class="w-4 h-4 text-gray-400 shrink-0 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm text-gray-600 mb-2" for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" required="" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix" placeholder="5551234567" pattern="[0-9]*" inputmode="numeric">
+                        <p id="phone-error" class="error-msg hidden"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Continue Button - same width as main screen -->
+    <div id="continue-button-section" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 px-5 py-4">
+        <button type="button" id="continueBtn" class="w-3/4 mx-auto block py-2.5 px-3 bg-primary text-white rounded-full font-semibold text-sm shadow-md shadow-primary/20 hover:bg-primary/90 transition-colors font-wix">
+            Continue
+        </button>
+    </div>
+</div>
+
+<!-- Phone Code Overlay - centered on desktop per design system -->
+<div id="phoneCodeOverlay" class="fixed left-1/2 top-0 bottom-0 -translate-x-1/2 w-full max-w-[390px] bg-white z-50 hidden shadow-2xl">
+    <div class="h-full flex flex-col min-h-0">
+        <div class="bg-white border-b border-gray-100 px-5 py-4 flex-shrink-0">
+            <div class="flex items-center justify-between mb-4">
+                <button id="closePhoneCodeOverlay" class="p-2 -ml-2 text-gray-600 hover:opacity-70 transition-opacity" aria-label="Close">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                <h2 class="font-fuhkwang font-semibold text-lg text-gray-800">Select Country Code</h2>
+                <div class="w-8"></div>
+            </div>
+            <input type="text" id="phoneCodeSearch" placeholder="Search country or code..." class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix">
+        </div>
+        <div class="flex-1 overflow-y-auto">
+            <div id="phoneCodeList" class="px-5 py-2"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Country Overlay - centered on desktop per design system -->
+<div id="countryOverlay" class="fixed left-1/2 top-0 bottom-0 -translate-x-1/2 w-full max-w-[390px] bg-white z-50 hidden shadow-2xl">
+    <div class="h-full flex flex-col min-h-0">
+        <div class="bg-white border-b border-gray-100 px-5 py-4 flex-shrink-0">
+            <div class="flex items-center justify-between mb-4">
+                <button id="closeCountryOverlay" class="p-2 -ml-2 text-gray-600 hover:opacity-70 transition-opacity" aria-label="Close">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                <h2 class="font-fuhkwang font-semibold text-lg text-gray-800">Select Country</h2>
+                <div class="w-8"></div>
+            </div>
+            <input type="text" id="countrySearch" placeholder="Search country..." class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm font-wix">
+        </div>
+        <div class="flex-1 overflow-y-auto">
+            <div id="countryList" class="px-5 py-2"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+const phoneCodes = [
+    {flag: '🇦🇫', code: '+93', country: 'Afghanistan'},
+    {flag: '🇦🇱', code: '+355', country: 'Albania'},
+    {flag: '🇩🇿', code: '+213', country: 'Algeria'},
+    {flag: '🇦🇩', code: '+376', country: 'Andorra'},
+    {flag: '🇦🇴', code: '+244', country: 'Angola'},
+    {flag: '🇦🇷', code: '+54', country: 'Argentina'},
+    {flag: '🇦🇲', code: '+374', country: 'Armenia'},
+    {flag: '🇦🇺', code: '+61', country: 'Australia'},
+    {flag: '🇦🇹', code: '+43', country: 'Austria'},
+    {flag: '🇦🇿', code: '+994', country: 'Azerbaijan'},
+    {flag: '🇧🇭', code: '+973', country: 'Bahrain'},
+    {flag: '🇧🇩', code: '+880', country: 'Bangladesh'},
+    {flag: '🇧🇾', code: '+375', country: 'Belarus'},
+    {flag: '🇧🇪', code: '+32', country: 'Belgium'},
+    {flag: '🇧🇦', code: '+387', country: 'Bosnia and Herzegovina'},
+    {flag: '🇧🇷', code: '+55', country: 'Brazil'},
+    {flag: '🇧🇬', code: '+359', country: 'Bulgaria'},
+    {flag: '🇨🇦', code: '+1', country: 'Canada'},
+    {flag: '🇨🇱', code: '+56', country: 'Chile'},
+    {flag: '🇨🇳', code: '+86', country: 'China'},
+    {flag: '🇨🇴', code: '+57', country: 'Colombia'},
+    {flag: '🇭🇷', code: '+385', country: 'Croatia'},
+    {flag: '🇨🇾', code: '+357', country: 'Cyprus'},
+    {flag: '🇨🇿', code: '+420', country: 'Czech Republic'},
+    {flag: '🇩🇰', code: '+45', country: 'Denmark'},
+    {flag: '🇪🇬', code: '+20', country: 'Egypt'},
+    {flag: '🇪🇪', code: '+372', country: 'Estonia'},
+    {flag: '🇫🇮', code: '+358', country: 'Finland'},
+    {flag: '🇫🇷', code: '+33', country: 'France'},
+    {flag: '🇬🇪', code: '+995', country: 'Georgia'},
+    {flag: '🇩🇪', code: '+49', country: 'Germany'},
+    {flag: '🇬🇷', code: '+30', country: 'Greece'},
+    {flag: '🇭🇺', code: '+36', country: 'Hungary'},
+    {flag: '🇮🇸', code: '+354', country: 'Iceland'},
+    {flag: '🇮🇳', code: '+91', country: 'India'},
+    {flag: '🇮🇩', code: '+62', country: 'Indonesia'},
+    {flag: '🇮🇷', code: '+98', country: 'Iran'},
+    {flag: '🇮🇶', code: '+964', country: 'Iraq'},
+    {flag: '🇮🇪', code: '+353', country: 'Ireland'},
+    {flag: '🇮🇱', code: '+972', country: 'Israel'},
+    {flag: '🇮🇹', code: '+39', country: 'Italy'},
+    {flag: '🇯🇵', code: '+81', country: 'Japan'},
+    {flag: '🇰🇿', code: '+7', country: 'Kazakhstan'},
+    {flag: '🇰🇼', code: '+965', country: 'Kuwait'},
+    {flag: '🇱🇻', code: '+371', country: 'Latvia'},
+    {flag: '🇱🇹', code: '+370', country: 'Lithuania'},
+    {flag: '🇱🇺', code: '+352', country: 'Luxembourg'},
+    {flag: '🇲🇾', code: '+60', country: 'Malaysia'},
+    {flag: '🇲🇽', code: '+52', country: 'Mexico'},
+    {flag: '🇲🇩', code: '+373', country: 'Moldova'},
+    {flag: '🇳🇱', code: '+31', country: 'Netherlands'},
+    {flag: '🇳🇿', code: '+64', country: 'New Zealand'},
+    {flag: '🇳🇬', code: '+234', country: 'Nigeria'},
+    {flag: '🇲🇰', code: '+389', country: 'North Macedonia'},
+    {flag: '🇳🇴', code: '+47', country: 'Norway'},
+    {flag: '🇵🇰', code: '+92', country: 'Pakistan'},
+    {flag: '🇵🇭', code: '+63', country: 'Philippines'},
+    {flag: '🇵🇱', code: '+48', country: 'Poland'},
+    {flag: '🇵🇹', code: '+351', country: 'Portugal'},
+    {flag: '🇶🇦', code: '+974', country: 'Qatar'},
+    {flag: '🇷🇴', code: '+40', country: 'Romania'},
+    {flag: '🇷🇺', code: '+7', country: 'Russia'},
+    {flag: '🇸🇦', code: '+966', country: 'Saudi Arabia'},
+    {flag: '🇷🇸', code: '+381', country: 'Serbia'},
+    {flag: '🇸🇬', code: '+65', country: 'Singapore'},
+    {flag: '🇸🇰', code: '+421', country: 'Slovakia'},
+    {flag: '🇸🇮', code: '+386', country: 'Slovenia'},
+    {flag: '🇿🇦', code: '+27', country: 'South Africa'},
+    {flag: '🇰🇷', code: '+82', country: 'South Korea'},
+    {flag: '🇪🇸', code: '+34', country: 'Spain'},
+    {flag: '🇸🇪', code: '+46', country: 'Sweden'},
+    {flag: '🇨🇭', code: '+41', country: 'Switzerland'},
+    {flag: '🇹🇭', code: '+66', country: 'Thailand'},
+    {flag: '🇹🇷', code: '+90', country: 'Turkey'},
+    {flag: '🇺🇦', code: '+380', country: 'Ukraine'},
+    {flag: '🇦🇪', code: '+971', country: 'United Arab Emirates'},
+    {flag: '🇬🇧', code: '+44', country: 'United Kingdom'},
+    {flag: '🇺🇸', code: '+1', country: 'United States'},
+    {flag: '🇻🇳', code: '+84', country: 'Vietnam'}
+];
+
+const countries = ['Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan', 'Bahrain', 'Bangladesh', 'Belarus', 'Belgium', 'Bosnia and Herzegovina', 'Brazil', 'Bulgaria', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Egypt', 'Estonia', 'Finland', 'France', 'Georgia', 'Germany', 'Greece', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Japan', 'Kazakhstan', 'Kuwait', 'Latvia', 'Lithuania', 'Luxembourg', 'Malaysia', 'Mexico', 'Moldova', 'Netherlands', 'New Zealand', 'Nigeria', 'North Macedonia', 'Norway', 'Pakistan', 'Philippines', 'Poland', 'Portugal', 'Qatar', 'Romania', 'Russia', 'Saudi Arabia', 'Serbia', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa', 'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Thailand', 'Turkey', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Vietnam'];
+
+// Phone code dropdown
+document.getElementById('phoneCodeDropdown').onclick = () => {
+    document.getElementById('phoneCodeOverlay').classList.remove('hidden');
+    renderPhoneCodes(phoneCodes);
+    document.getElementById('phoneCodeSearch').focus();
+};
+
+document.getElementById('closePhoneCodeOverlay').onclick = () => {
+    document.getElementById('phoneCodeOverlay').classList.add('hidden');
+};
+
+document.getElementById('phoneCodeSearch').oninput = (e) => {
+    const query = e.target.value.toLowerCase();
+    const filtered = phoneCodes.filter(item => 
+        item.country.toLowerCase().includes(query) || 
+        item.code.includes(query) || 
+        item.code.replace('+', '').includes(query)
+    );
+    renderPhoneCodes(filtered);
+};
+
+function renderPhoneCodes(items) {
+    const list = document.getElementById('phoneCodeList');
+    list.innerHTML = items.map((item, i) => 
+        `<div class="py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 flex items-center phone-code-option" data-flag="${item.flag}" data-code="${item.code}">
+            <span class="text-lg mr-3 shrink-0">${item.flag}</span>
+            <span class="text-sm text-gray-800 flex-1 min-w-0 truncate">${item.country}</span>
+            <span class="text-sm text-gray-600 shrink-0 ml-2">${item.code}</span>
+        </div>`
+    ).join('');
+    list.querySelectorAll('.phone-code-option').forEach(el => {
+        el.addEventListener('click', () => {
+            const flag = el.getAttribute('data-flag');
+            const code = el.getAttribute('data-code');
+            selectPhoneCode(flag + ' ' + code);
+        });
+    });
+}
+
+function selectPhoneCode(value) {
+    document.getElementById('selectedPhoneCode').textContent = value;
+    document.getElementById('phoneCodeOverlay').classList.add('hidden');
+    document.getElementById('phoneCodeSearch').value = '';
+}
+
+// Country dropdown
+document.getElementById('countryDropdown').onclick = () => {
+    document.getElementById('countryOverlay').classList.remove('hidden');
+    renderCountries(countries);
+    document.getElementById('countrySearch').focus();
+};
+
+document.getElementById('closeCountryOverlay').onclick = () => {
+    document.getElementById('countryOverlay').classList.add('hidden');
+};
+
+document.getElementById('countrySearch').oninput = (e) => {
+    const query = e.target.value.toLowerCase();
+    const filtered = countries.filter(item => 
+        item.toLowerCase().includes(query)
+    );
+    renderCountries(filtered);
+};
+
+function renderCountries(items) {
+    const list = document.getElementById('countryList');
+    list.innerHTML = items.map(item => 
+        `<div class="py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 flex items-center" onclick="selectCountry('${item}')">
+            <span class="text-sm text-gray-800">${item}</span>
+        </div>`
+    ).join('');
+}
+
+function selectCountry(value) {
+    document.getElementById('selectedCountry').textContent = value;
+    document.getElementById('countryOverlay').classList.add('hidden');
+    document.getElementById('countrySearch').value = '';
+    showFieldError('countryDropdown', 'country-error', '');
+}
+
+// Profile photo - open native image picker (gallery/files) and show preview
+document.getElementById('profilePhotoInput').addEventListener('change', function(e) {
+    const file = e.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            const img = document.getElementById('profilePhotoImg');
+            const placeholder = document.getElementById('profilePhotoPlaceholder');
+            img.src = ev.target.result;
+            img.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+            showFieldError(null, 'profilePhoto-error', '');
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Email validation
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validateEmail(value) {
+    if (!value || value.trim() === '') return 'Email is required';
+    if (!emailRegex.test(value.trim())) return 'Please enter a valid email address';
+    return '';
+}
+
+function showEmailError(msg) {
+    const input = document.getElementById('email');
+    const errorEl = document.getElementById('email-error');
+    if (msg) {
+        input.classList.add('input-error');
+        errorEl.textContent = msg;
+        errorEl.classList.remove('hidden');
+    } else {
+        input.classList.remove('input-error');
+        errorEl.textContent = '';
+        errorEl.classList.add('hidden');
+    }
+}
+
+document.getElementById('email').addEventListener('blur', function() {
+    const msg = validateEmail(this.value);
+    showEmailError(msg);
+});
+
+document.getElementById('email').addEventListener('input', function() {
+    showEmailError('');
+});
+
+// Generic field error helper
+function showFieldError(inputOrBtnId, errorId, msg) {
+    const el = document.getElementById(inputOrBtnId);
+    const errorEl = document.getElementById(errorId);
+    if (msg) {
+        if (el) el.classList.add('input-error');
+        if (errorEl) {
+            errorEl.textContent = msg;
+            errorEl.classList.remove('hidden');
+        }
+    } else {
+        if (el) el.classList.remove('input-error');
+        if (errorEl) {
+            errorEl.textContent = '';
+            errorEl.classList.add('hidden');
+        }
+    }
+}
+
+// Validation for all required fields
+function validateAll() {
+    const profilePhoto = document.getElementById('profilePhotoImg');
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const day = document.getElementById('daySelect').value;
+    const month = document.getElementById('monthSelect').value;
+    const year = document.getElementById('yearSelect').value;
+    const email = document.getElementById('email').value;
+    const address1 = document.getElementById('address1').value.trim();
+    const city = document.getElementById('city').value.trim();
+    const postal = document.getElementById('postal').value.trim();
+    const region = document.getElementById('region').value.trim();
+    const country = document.getElementById('selectedCountry').textContent.trim();
+    const phone = document.getElementById('phone').value.replace(/\D/g, '');
+
+    let hasError = false;
+
+    if (!profilePhoto || !profilePhoto.src || profilePhoto.classList.contains('hidden')) {
+        showFieldError(null, 'profilePhoto-error', 'Profile picture is required');
+        hasError = true;
+    } else {
+        showFieldError(null, 'profilePhoto-error', '');
+    }
+
+    if (!firstName) {
+        showFieldError('firstName', 'firstName-error', 'First name is required');
+        hasError = true;
+    } else {
+        showFieldError('firstName', 'firstName-error', '');
+    }
+
+    if (!lastName) {
+        showFieldError('lastName', 'lastName-error', 'Last name is required');
+        hasError = true;
+    } else {
+        showFieldError('lastName', 'lastName-error', '');
+    }
+
+    if (!day || !month || !year) {
+        document.getElementById('dob-container')?.classList.add('dob-error');
+        showFieldError('daySelect', 'dob-error', 'Date of birth is required');
+        hasError = true;
+    } else {
+        document.getElementById('dob-container')?.classList.remove('dob-error');
+        showFieldError('daySelect', 'dob-error', '');
+    }
+
+    const emailErr = validateEmail(email);
+    if (emailErr) {
+        showEmailError(emailErr);
+        hasError = true;
+    } else {
+        showEmailError('');
+    }
+
+    if (!address1) {
+        showFieldError('address1', 'address1-error', 'Address line 1 is required');
+        hasError = true;
+    } else {
+        showFieldError('address1', 'address1-error', '');
+    }
+
+    if (!city) {
+        showFieldError('city', 'city-error', 'City is required');
+        hasError = true;
+    } else {
+        showFieldError('city', 'city-error', '');
+    }
+
+    if (!postal) {
+        showFieldError('postal', 'postal-error', 'Post code / ZIP is required');
+        hasError = true;
+    } else {
+        showFieldError('postal', 'postal-error', '');
+    }
+
+    if (!region) {
+        showFieldError('region', 'region-error', 'Region / State / Province is required');
+        hasError = true;
+    } else {
+        showFieldError('region', 'region-error', '');
+    }
+
+    if (!country || country === 'Select Country') {
+        showFieldError('countryDropdown', 'country-error', 'Country is required');
+        hasError = true;
+    } else {
+        showFieldError('countryDropdown', 'country-error', '');
+    }
+
+    if (phone.length < 7) {
+        showFieldError('phone', 'phone-error', 'Valid phone number is required');
+        hasError = true;
+    } else {
+        showFieldError('phone', 'phone-error', '');
+    }
+
+    return !hasError;
+}
+
+// Clear errors on input
+['firstName', 'lastName', 'address1', 'city', 'postal', 'region', 'phone'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => showFieldError(id, id + '-error', ''));
+});
+
+['daySelect', 'monthSelect', 'yearSelect'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', () => {
+        document.getElementById('dob-container')?.classList.remove('dob-error');
+        showFieldError('daySelect', 'dob-error', '');
+    });
+});
+
+document.getElementById('continueBtn').addEventListener('click', function() {
+    if (validateAll()) {
+        console.log('Form valid - continuing...');
+        // window.location.href = '...';
+    }
+});
+</script>
+
+
+</body></html>

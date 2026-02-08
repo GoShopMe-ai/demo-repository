@@ -85,6 +85,13 @@ font-family: 'Poppins',
 **Special**:
 - Price: `text-2xl font-bold` (24px, bold, black)
 
+### Font Usage Rules
+- **Body & UI text**: Use DM Sans stack — apply via global `*`, `.dm-sans`, or `.font-wix` (alias)
+- **Headings** (H1, H2, H3): Use Poppins — apply via `.poppins` or `.font-fuhkwang` (alias)
+- **Buttons**: Use DM Sans for button labels; Poppins for primary CTA text if desired
+- **Minimum body font size**: 12px (`text-xs`); headings 14px+ (`text-sm` and up)
+- **Desktop**: Same font rules; no scaling changes — use same classes across breakpoints
+
 ## 3. Buttons
 
 ### Icon Buttons
@@ -169,7 +176,8 @@ font-family: 'Poppins',
 
 ### Structure
 - **Position**: Fixed top, centered
-- **Width**: Full width, max 390px (mobile viewport)
+- **Width**: Always matches main screen — `w-full max-w-[390px]` (must be same width as app shell/main container on desktop)
+- **Desktop**: `fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px]` — centered, max 390px
 - **Background**: `bg-white`
 - **Border**: `border-b border-gray-100`
 - **Z-index**: `z-50`
@@ -202,7 +210,8 @@ font-family: 'Poppins',
 
 ### Structure
 - **Position**: Fixed bottom
-- **Width**: Full width, max 390px
+- **Width**: Always matches main screen — `w-full max-w-[390px]` (must be same width as app shell on desktop)
+- **Desktop**: `fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px]` — centered, max 390px
 - **Background**: `bg-white`
 - **Border**: `border-t border-gray-100`
 - **Z-index**: `z-50`
@@ -406,6 +415,16 @@ font-family: 'Poppins',
 - **Max Width**: `max-w-[390px]` (mobile viewport)
 - **Centering**: `mx-auto` or `left-1/2 -translate-x-1/2`
 
+### Standalone & Auth/Onboarding Screen Template
+For screens without the main app shell (auth, onboarding, error states, etc.):
+
+- **Body**: `bg-[#F6F6F6] min-h-screen` — gray background around the centered card
+- **Main container**: `relative w-full max-w-[390px] mx-auto min-h-screen bg-white flex flex-col overflow-y-auto shadow-2xl` — white card, centered, 390px max width
+- **Header**: `w-full bg-white border-b border-gray-100 px-5 py-4 flex-shrink-0` — same width as main container (inherits from parent)
+- **Bottom nav / fixed footer** (when present): `fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px]` — same width as main screen
+- **No full-screen gradients**; keep content on plain white over gray background
+- **Icons**: Heroicons SVG inline; avoid Font Awesome
+
 ### Padding Scale
 - **XS**: `p-1` (4px)
 - **SM**: `p-2` (8px)
@@ -496,6 +515,13 @@ const breakpoints = {
   desktop: '≥ 1024px'     // Desktop: centered 390px
 }
 ```
+
+### Desktop Resolution Rules
+- **Target width**: 390px — all main content, header, and bottom nav use `max-w-[390px]`
+- **Layout**: Centered with `mx-auto` (block) or `left-1/2 -translate-x-1/2` (fixed elements)
+- **Header & bottom nav**: Must always match main screen width — use `max-w-[390px]` so they align visually
+- **Fonts**: Same as mobile — no scaling; use DM Sans for body, Poppins for headings
+- **No responsive font sizing** on desktop — apply same type scale across breakpoints
 
 ### Default Width
 - **Target Width**: 390px (design target)
