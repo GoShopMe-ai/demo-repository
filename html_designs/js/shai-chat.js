@@ -150,6 +150,14 @@
   </div>
 </div>`;
 
+    /* Inject CSS custom-property rule so bottom updates atomically when JS sets --shai-nav-h */
+    if (!document.getElementById('shai-dock-rule')) {
+      var ds = document.createElement('style');
+      ds.id = 'shai-dock-rule';
+      ds.textContent = '#chat-drawer,#chat-input-bar{bottom:var(--shai-nav-h,64px)!important}';
+      document.head.appendChild(ds);
+    }
+
     document.body.insertAdjacentHTML('beforeend', html);
   }
 
@@ -552,7 +560,7 @@
     if (addDrawer) addDrawer.addEventListener('click', showFriendPanel);
     if (addBar) addBar.addEventListener('click', function() { showFriendPanel(); });
 
-        /* -- Dock chat elements flush to nav top (reliable via ResizeObserver) -- */
+        /* -- Dock: set CSS custom property --shai-nav-h to the nav's actual pixel height -- */
     (function() {
       var nav = document.getElementById('bottom-navigation') || document.getElementById('bottom-nav') ||
                 document.querySelector('nav[id$="-navigation"]') || document.querySelector('nav[id$="-nav"]');
@@ -560,10 +568,7 @@
 
       function applyDock() {
         var navH = nav.getBoundingClientRect().height;
-        if (navH > 0) {
-          drawer.style.setProperty('bottom', navH + 'px', 'important');
-          inputBar.style.setProperty('bottom', navH + 'px', 'important');
-        }
+        if (navH > 0) document.documentElement.style.setProperty('--shai-nav-h', navH + 'px');
       }
 
       /* ResizeObserver fires when nav gets its CSS (Tailwind CDN) applied */
@@ -572,7 +577,7 @@
         ro.observe(nav);
       }
 
-      /* Fallback timers for browsers without ResizeObserver */
+      /* Fallback timers */
       applyDock();
       setTimeout(applyDock, 100);
       setTimeout(applyDock, 500);

@@ -33,7 +33,9 @@
         .bottom-nav-btn:hover, .bottom-nav-btn.active { color: #939BFB; }
         .bottom-nav-btn:hover svg, .bottom-nav-btn:hover span, .bottom-nav-btn.active svg, .bottom-nav-btn.active span { color: #939BFB; }
         .bottom-nav-btn svg { width: 20px; height: 20px; stroke-width: 1.5; margin-bottom: 4px; }
-        /* Mobile: full-width chat drawer and input bar */
+        /* Chat drawer and input bar: full-width on mobile, docked to nav on all screens */
+        :root { --shai-nav-h: 64px; }  /* default; JS will update to actual nav height */
+
         @media screen and (max-width: 768px) {
             #chat-drawer, #chat-input-bar {
                 left: 0 !important;
