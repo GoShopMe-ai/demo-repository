@@ -1,17 +1,13 @@
 ﻿/**
- * GoShopMe Mobile Optimization â€“ Shared across ALL 52 screens
+ * GoShopMe Mobile Optimization - Shared across ALL screens
  *
- * STRATEGY: Use Tailwind class attribute selectors to target every
- * fixed element and container regardless of ID, covering all screens
- * without touching individual HTML files.
- *
- * Mobile (<=768px)  â†’ full-width, edge-to-edge, no gutters
- * Desktop (>768px)  â†’ centered 390px mockup with shadow
+ * Mobile (<=768px)  -> full-width, edge-to-edge, no gutters
+ * Desktop (>768px)  -> centered 390px mockup with shadow
  */
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* =============================================================
    1. BASE RESETS
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ============================================================= */
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body {
@@ -22,7 +18,6 @@ html, body {
   text-size-adjust: 100%;
 }
 
-/* Dynamic viewport height â€” adapts to browser chrome on Android/iOS */
 html {
   min-height: 100%;
   min-height: -webkit-fill-available;
@@ -34,114 +29,153 @@ body {
   min-height: 100dvh;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* =============================================================
    2. HIDE SCROLLBARS EVERYWHERE
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ============================================================= */
 ::-webkit-scrollbar { display: none; }
 * { scrollbar-width: none; -ms-overflow-style: none; }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   3. MOBILE: FULL-WIDTH, EDGE-TO-EDGE  (phones â‰¤ 768px)
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* =============================================================
+   3. MOBILE: FULL-WIDTH, EDGE-TO-EDGE  (phones <= 768px)
+   ============================================================= */
 @media screen and (max-width: 768px) {
 
-  /* --- 3a. Remove gray body gutter --- */
-  body { background-color: #ffffff !important; }
-
-  /* --- 3b. App shell / screen wrappers --- */
-  /*
-   * Targets every wrapper that Tailwind classes make 390px wide.
-   * Works for: Home, SignIn, SignUp, Onboarding, Quiz steps, Orders, etc.
-   */
-  [class*="max-w-[390px]"] {
-    max-width: 100% !important;
-    width: 100% !important;
+  /* --- 3a. White body - no gray gutters --- */
+  html, body {
+    background-color: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* Direct-child wrappers of body (anonymous divs with no ID) */
-  body > div,
-  body > main {
-    max-width: 100% !important;
-    box-shadow: none !important;   /* remove desktop shadow */
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-
-  /* Named screen containers */
+  /* --- 3b. Main app wrappers: remove 390px cap --- */
   #app-shell,
   #auth-screen,
   #welcome_screen,
-  [id$="-screen"],
-  [id$="-container"],
-  [id$="-wrapper"] {
-    max-width: 100% !important;
+  #quiz-screen,
+  #onboarding-screen,
+  #main-content {
+    max-width: 100vw !important;
     width: 100% !important;
     box-shadow: none !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
 
-  /* --- 3c. ALL fixed centered elements â†’ full-width, no X-centering ---
-   *
-   * Every header, bottom nav, chat bar, and drawer in all 52 screens uses
-   * the pattern:  class="fixed ... left-1/2 -translate-x-1/2 ... max-w-[390px]"
-   *
-   * We target both parts of the centering trick:
-   *   â€¢ left:50%              (from Tailwind "left-1/2")
-   *   â€¢ translateX(-50%)      (from Tailwind "-translate-x-1/2")
-   * and replace with left:0 / right:0 / transform:none
-   *
-   * Excludes small toast pills (rounded-full) so they stay centred.
-   */
-  [class*="left-1\/2"][class*="-translate-x-1\/2"]:not([class*="rounded-full"]),
+  [id$="-screen"],
+  [id$="-container"],
+  [id$="-wrapper"],
+  [id$="-page"] {
+    max-width: 100vw !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  body > div,
+  body > main {
+    max-width: 100vw !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Attribute selector for Tailwind max-w-[390px] */
+  [class*="max-w-\[390px\]"],
+  [class*="max-w-[390px]"] {
+    max-width: 100vw !important;
+    width: 100% !important;
+  }
+
+  /* --- 3c. Fixed headers --- */
+  header,
+  #header,
+  [id$="-header"] {
+    left: 0 !important;
+    right: 0 !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+
+  /* --- 3d. Fixed bottom nav bars --- */
+  nav,
+  #bottom-nav,
+  [id$="-nav"],
+  [id$="-navigation"] {
+    left: 0 !important;
+    right: 0 !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+
+  /* --- 3e. Chat input bar and drawers --- */
+  #chat-input-bar,
+  #chat-drawer,
+  [id$="-drawer"],
+  [id$="-input-bar"],
+  [id$="-chat-bar"] {
+    left: 0 !important;
+    right: 0 !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+  }
+
+  /* Tailwind centering trick: left-1/2 + -translate-x-1/2 */
   [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]) {
     left:      0 !important;
     right:     0 !important;
-    max-width: 100% !important;
+    max-width: 100vw !important;
     width:     100% !important;
-    transform: none !important;    /* removes translateX(-50%) */
+    transform: none !important;
   }
 
-  /* --- 3d. Re-apply Y slide for HIDDEN drawers ---
-   *
-   * Drawers are hidden by toggling Tailwind's translate-y-full class.
-   * When that class is present, restore the downward translation so
-   * the drawer is off-screen below. CSS transition still animates it.
-   */
-  [class*="left-1\/2"][class*="-translate-x-1\/2"][class*="translate-y-full"],
+  /* Re-apply Y slide so hidden drawers stay off-screen */
   [class*="left-1/2"][class*="-translate-x-1/2"][class*="translate-y-full"] {
     transform: translateY(100%) !important;
   }
 
-  /* --- 3e. Safe area: bottom nav home-indicator padding (iPhone X+, Android gestures) --- */
-  nav,
-  [id$="-nav"],
-  [id$="-navigation"],
-  [id="bottom-nav"] {
-    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
-  }
-
-  /* --- 3f. Main content â€” remove any inner max-width centering --- */
+  /* --- 3f. Main content --- */
   main,
   [id="main-content"],
   [id$="-content"] {
-    max-width: 100% !important;
-    width:     100% !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* --- 3g. Bottom nav: safe area + shift buttons UP ---
+   * On Android gesture navigation the system gesture bar sits at
+   * the very bottom. We pad the nav with the safe area inset, then
+   * give the button row more top padding so the icons sit visually
+   * centred in the visible part of the bar, not crammed down.
+   */
+  #bottom-nav,
+  nav[id="bottom-nav"] {
+    padding-bottom: env(safe-area-inset-bottom, 8px) !important;
+  }
+
+  #bottom-nav > div,
+  nav#bottom-nav > div {
+    padding-top: 10px !important;
+    padding-bottom: 2px !important;
   }
 
 } /* end @media mobile */
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* =============================================================
    4. DESKTOP: centered 390px mockup
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ============================================================= */
 @media screen and (min-width: 769px) {
   body { background-color: #F6F6F6; }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* =============================================================
    5. iOS INPUT ZOOM PREVENTION
-   Inputs need font-size >= 16px or iOS Safari zooms the page on focus.
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ============================================================= */
 input,
 input[type="text"],
 input[type="email"],
@@ -157,7 +191,6 @@ select {
   appearance: none;
 }
 
-/* Restore design-intended 14px on larger screens where zoom won't occur */
 @media screen and (min-width: 390px) {
   input,
   input[type="text"],
@@ -173,57 +206,52 @@ select {
   }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* =============================================================
    6. TOUCH IMPROVEMENTS
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-
-/* Remove 300ms tap delay on Android */
+   ============================================================= */
 a, button, [role="button"], input, select, textarea {
   touch-action: manipulation;
 }
 
-/* Subtle branded tap flash instead of default gray */
 * { -webkit-tap-highlight-color: rgba(147, 155, 251, 0.10); }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   7. IMAGES & MEDIA â€” never cause horizontal scroll
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* =============================================================
+   7. IMAGES & MEDIA
+   ============================================================= */
 img, video, iframe {
   max-width: 100%;
   display: block;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   8. HORIZONTAL CAROUSELS â€” momentum scrolling on iOS
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* =============================================================
+   8. HORIZONTAL CAROUSELS
+   ============================================================= */
 .overflow-x-auto,
 [class*="overflow-x-auto"] {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   9. LONG TEXT â€” never overflow cards or containers
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* =============================================================
+   9. LONG TEXT
+   ============================================================= */
 p, h1, h2, h3, h4, h5, h6, span, a, label {
   overflow-wrap: break-word;
   word-break: break-word;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   10. 320px PHONES (iPhone SE 1st gen, Galaxy A series)
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* =============================================================
+   10. 320px PHONES
+   ============================================================= */
 @media screen and (max-width: 359px) {
-  html { font-size: 14px; }    /* scale everything down proportionally */
-
-  /* Product cards in horizontal carousels */
+  html { font-size: 14px; }
   .w-40 { width: 136px !important; }
   .w-44 { width: 150px !important; }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* =============================================================
    11. LANDSCAPE ON SMALL PHONES
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ============================================================= */
 @media screen and (orientation: landscape) and (max-height: 500px) {
   #app-shell,
   #auth-screen,
@@ -235,8 +263,8 @@ p, h1, h2, h3, h4, h5, h6, span, a, label {
   }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* =============================================================
    12. HELPER CLASSES
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ============================================================= */
 .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0); }
 .safe-area-top    { padding-top:    env(safe-area-inset-top,    0); }
