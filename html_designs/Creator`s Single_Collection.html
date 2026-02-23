@@ -604,10 +604,6 @@
                 showAddFriendFlow();
             });
 
-            document.getElementById('mic-button-collapsed').addEventListener('click', (e) => {
-                e.stopPropagation();
-                expandDrawer();
-            });
 
             // Expand drawer when clicking on drawer input bar or its buttons
             chatInputDrawer.addEventListener('click', (e) => {
@@ -628,12 +624,81 @@
                 showAddFriendFlow();
             });
 
-            micButtonDrawer.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (!isDrawerExpanded) {
-                    expandDrawer();
+            // Voice recording for drawer mic button
+            (function() {
+                var isRec = false, mRecorder, audioChunks = [], mStream, micDenied = false;
+                var SHAI_AVATAR = 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
+                function removeTempBubble() { var t = document.getElementById('creator-temp-rec'); if (t) t.remove(); }
+                function scrollBottom() { scrollChatToBottom(); }
+                function shaiVoiceReply() {
+                    setTimeout(function() {
+                        var cnt = chatMessages.querySelector('.p-4'); if (!cnt) return;
+                        var r = document.createElement('div'); r.className = 'flex items-start space-x-3 mb-4';
+                        r.innerHTML = '<div class=\"w-8 h-8 rounded-full overflow-hidden flex-shrink-0\"><img class=\"w-full h-full object-cover\" src=\"' + SHAI_AVATAR + '\" alt=\"ShAI\"></div><div class=\"bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs\"><p class=\"text-sm text-black\">Got your voice message! I\u2019m checking the collection to find the best matches for you.</p></div>';
+                        cnt.appendChild(r); scrollBottom();
+                    }, 900);
                 }
-            });
+                function renderAudio(url) {
+                    var cnt = chatMessages.querySelector('.p-4'); if (!cnt) return;
+                    var div = document.createElement('div'); div.className = 'flex justify-end mb-3';
+                    div.innerHTML = '<div class=\"bg-[#939BFB] text-white rounded-2xl px-3 py-2 flex items-center gap-2\">' +
+                        '<button class=\"w-6 h-6 border border-white rounded-full flex items-center justify-center\" onclick=\"window.creatorToggleAudio(this,\\\u0022' + url + '\\\u0022)\">' +
+                        '<svg class=\"w-3 h-3 text-white\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M8 5v14l11-7z\"/></svg></button>' +
+                        '<span class=\"text-xs text-white/90\">Voice message</span>' +
+                        '<audio src=\"' + url + '\" preload=\"auto\" class=\"hidden\"></audio></div>';
+                    cnt.appendChild(div); scrollBottom();
+                    shaiVoiceReply();
+                }
+                window.creatorToggleAudio = function(btn, url) {
+                    var wrap = btn.closest('div'); var audio = wrap.querySelector('audio');
+                    if (!audio) return;
+                    if (audio.paused) { audio.play(); btn.querySelector('svg').innerHTML = '<path d=\"M6 4h4v16H6V4zm8 0h4v16h-4V4z\"/>'; }
+                    else { audio.pause(); btn.querySelector('svg').innerHTML = '<path d=\"M8 5v14l11-7z\"/>'; }
+                };
+                async function startRec(e) {
+                    e.stopPropagation(); e.preventDefault();
+                    if (!isDrawerExpanded) { expandDrawer(); return; }
+                    if (micDenied) { alert('Microphone access was denied. Please allow it in your browser settings.'); return; }
+                    removeTempBubble();
+                    try {
+                        if (!mStream || !mStream.active) mStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        mRecorder = new MediaRecorder(mStream);
+                        isRec = true; audioChunks = [];
+                        mRecorder.ondataavailable = function(ev) { if (ev.data.size > 0) audioChunks.push(ev.data); };
+                        mRecorder.start();
+                        micButtonDrawer.classList.add('ring-2', 'ring-[#939BFB]', 'ring-offset-2', 'rounded-full');
+                        var cnt = chatMessages.querySelector('.p-4');
+                        if (cnt) {
+                            var t = document.createElement('div'); t.id = 'creator-temp-rec'; t.className = 'flex justify-end mb-2';
+                            t.innerHTML = '<div class=\"bg-[#939BFB] text-white rounded-2xl px-3 py-2 text-xs\">Recording\u2026 tap stop to send</div>';
+                            cnt.appendChild(t); scrollBottom();
+                        }
+                    } catch(err) {
+                        removeTempBubble();
+                        if (err.name === 'NotAllowedError') { micDenied = true; alert('Microphone access denied.'); }
+                        else alert('Could not access microphone.');
+                    }
+                }
+                function stopRec(e) {
+                    e.stopPropagation(); e.preventDefault();
+                    if (!isRec) return;
+                    isRec = false;
+                    micButtonDrawer.classList.remove('ring-2', 'ring-[#939BFB]', 'ring-offset-2', 'rounded-full');
+                    removeTempBubble();
+                    if (mRecorder) {
+                        mRecorder.stop();
+                        mRecorder.onstop = function() {
+                            var blob = new Blob(audioChunks, { type: 'audio/webm' });
+                            renderAudio(URL.createObjectURL(blob));
+                        };
+                    }
+                }
+                // Hold to record on mobile, click to start/stop on desktop
+                micButtonDrawer.addEventListener('mousedown', startRec);
+                micButtonDrawer.addEventListener('touchstart', startRec, { passive: false });
+                micButtonDrawer.addEventListener('mouseup', stopRec);
+                micButtonDrawer.addEventListener('touchend', stopRec);
+            })();
 
             // Back button functionality
             backButton.addEventListener('click', (e) => {
@@ -809,6 +874,8 @@
                     inputField.value = '';
                     sendButton.classList.add('hidden');
                     micButton.classList.remove('hidden');
+                    if (inputField === chatInputDrawer) addFriendButtonDrawer.classList.remove('hidden');
+                    else addFriendButtonCollapsed.classList.remove('hidden');
 
                     // Simulate AI response
                     setTimeout(() => {
