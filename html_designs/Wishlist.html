@@ -203,6 +203,18 @@
         }
         .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
         .header-icon-btn:hover { transform: translateY(-2px); }
+        @media screen and (max-width: 768px) {
+            #shai-chat-drawer, #chat-input-bar {
+                left: 0 !important; right: 0 !important;
+                max-width: 100vw !important; width: 100% !important;
+            }
+            #shai-chat-drawer { max-height: calc(100dvh - 144px) !important; overscroll-behavior: contain; }
+            #shai-chat-drawer.translate-y-full { transform: translateY(100%) !important; }
+            #bottom-navigation > div > div, #bottom-navigation > div {
+                padding-top: 2px !important; padding-bottom: 24px !important;
+            }
+            #chat-messages { overscroll-behavior: contain; }
+        }
     </style>
 </head>
 <body class="bg-[#F6F6F6] dm-sans">
@@ -773,85 +785,71 @@
 
     function expandDrawer() {
         if (!chatDrawer) return;
-            chatDrawer.classList.remove('translate-y-full');
+        chatDrawer.classList.remove('translate-y-full');
         chatOverlay.classList.remove('hidden');
         if (chatInputBar) chatInputBar.classList.add('hidden');
-            isDrawerExpanded = true;
-        currentHeight = 80;
-        chatDrawer.style.height = '50vh';
-        }
+        isDrawerExpanded = true;
+        currentHeight = 60;
+        chatDrawer.style.height = '60vh';
+        document.body.style.overflow = 'hidden';
+    }
 
-        function collapseDrawer() {
+    function collapseDrawer() {
         if (!chatDrawer) return;
-            chatDrawer.classList.add('translate-y-full');
+        chatDrawer.classList.add('translate-y-full');
         if (chatOverlay) chatOverlay.classList.add('hidden');
         if (chatInputBar) chatInputBar.classList.remove('hidden');
-            isDrawerExpanded = false;
-        currentHeight = 80;
-        chatDrawer.style.height = '50vh';
+        isDrawerExpanded = false;
+        currentHeight = 60;
+        chatDrawer.style.height = '60vh';
+        document.body.style.overflow = '';
         if (isAddFriendMode) {
             hideAddFriendMode();
         }
     }
+    }
 
-    // Dragging Drawer
-    if (dragHandleZone && chatDrawer) {
-        dragHandleZone.addEventListener("mousedown", e => { 
-            isDragging = true; 
-            startY = e.clientY; 
-            currentHeight = (chatDrawer.clientHeight / window.innerHeight) * 100;
-            chatDrawer.style.transition = 'none'; // Disable transition during drag
-        });
-        dragHandleZone.addEventListener("touchstart", e => { 
-            isDragging = true;
-            startY = e.touches[0].clientY; 
-            currentHeight = (chatDrawer.clientHeight / window.innerHeight) * 100;
-            chatDrawer.style.transition = 'none'; // Disable transition during drag
+    // Dragging Drawer - native touch events for reliable mobile drag
+    (function() {
+        if (!dragHandleZone || !chatDrawer) return;
+        dragHandleZone.style.touchAction = 'none';
+        var touchStartY = 0, touchStartH = 0;
+        dragHandleZone.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+            touchStartH = chatDrawer.offsetHeight;
+            chatDrawer.style.transition = 'none';
         }, { passive: true });
-    }
-
-    document.addEventListener("mousemove", e => {
-        if (!isDragging || !chatDrawer) return;
-        const deltaY = startY - e.clientY;
-        const newHeight = Math.min(90, Math.max(0, currentHeight + (deltaY / window.innerHeight) * 100));
-        chatDrawer.style.height = newHeight + "vh";
-    });
-
-    document.addEventListener("touchmove", e => {
-        if (!isDragging || !chatDrawer) return;
-        e.preventDefault(); // Prevent scrolling while dragging
-        const deltaY = startY - e.touches[0].clientY;
-        const newHeight = Math.min(90, Math.max(0, currentHeight + (deltaY / window.innerHeight) * 100));
-        chatDrawer.style.height = newHeight + "vh";
-    });
-
-    function handleDragEnd() {
-        if (isDragging && chatDrawer) {
-            isDragging = false;
-            chatDrawer.style.transition = 'height 0.3s ease-in-out'; // Re-enable transition
-            const rect = chatDrawer.getBoundingClientRect();
-            currentHeight = (rect.height / window.innerHeight) * 100;
-            
-            if (currentHeight < 15) {
-                // Fully collapse if dragged below 15%
-                collapseDrawer();
-            } else if (currentHeight > 85) {
-                // Snap to max if dragged above 85%
-                chatDrawer.style.height = '90vh';
-                currentHeight = 90;
-            } else {
-                // Keep the user's exact selected height (no clamping, just use what they dragged to)
-                chatDrawer.style.height = currentHeight + 'vh';
-                // Update isDrawerExpanded state
-                isDrawerExpanded = true;
-                if (chatOverlay) chatOverlay.classList.remove('hidden');
-                if (chatInputBar) chatInputBar.classList.add('hidden');
+        dragHandleZone.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            var delta = touchStartY - e.touches[0].clientY;
+            var maxH = window.innerHeight - 64 - 80;
+            var minH = Math.round(window.innerHeight * 0.25);
+            chatDrawer.style.height = Math.min(maxH, Math.max(minH, touchStartH + delta)) + 'px';
+        }, { passive: false });
+        dragHandleZone.addEventListener('touchend', function() {
+            chatDrawer.style.transition = '';
+            var h = chatDrawer.offsetHeight;
+            var minH = Math.round(window.innerHeight * 0.25);
+            if (h < minH) { collapseDrawer(); }
+        }, { passive: true });
+        dragHandleZone.addEventListener('mousedown', function(e) {
+            var startY = e.clientY, startH = chatDrawer.offsetHeight;
+            chatDrawer.style.transition = 'none';
+            function onMove(ev) {
+                var delta = startY - ev.clientY;
+                var maxH = window.innerHeight - 64 - 80;
+                var minH = Math.round(window.innerHeight * 0.25);
+                chatDrawer.style.height = Math.min(maxH, Math.max(minH, startH + delta)) + 'px';
             }
-        }
-    }
-    document.addEventListener("touchend", handleDragEnd);
-    document.addEventListener("touchcancel", handleDragEnd);
-    document.addEventListener("mouseup", handleDragEnd);
+            function onUp() {
+                chatDrawer.style.transition = '';
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            }
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+    })();
 
     // Fix wrapping for all text bubbles
     function fixWrapping() {
@@ -1829,7 +1827,6 @@ populateWishlistItems([
     });
 </script>
 
-<script src="js/shai-chat.js"></script>
 </body>
 </html>
 
