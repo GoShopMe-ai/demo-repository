@@ -55,6 +55,11 @@
           -webkit-user-select: none;
           user-select: none;
         }
+        /* Drawer can never go higher than 80px from the top of the viewport.
+           64px = bottom-16 offset, 80px = safe zone for browser bar + status bar */
+        #chat-drawer {
+          max-height: calc(100dvh - 144px) !important;
+        }
         ::-webkit-scrollbar { display: none; }
        * { 
     font-family: 'DM Sans', 
@@ -1176,7 +1181,11 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!isDragging) return;
             e.preventDefault();                    // stop page scroll during drag
             const dy   = e.touches[0].clientY - dragStartY;
-            const newH = Math.max(80, Math.min(window.innerHeight * 0.92, dragStartH - dy));
+            // Max height = viewport height minus the drawer bottom offset (64px) minus a top safe zone (80px)
+            // This keeps the drag handle always visible below the browser bar
+            const bottomOffset = parseFloat(getComputedStyle(chatDrawer).bottom) || 64;
+            const maxDrawerH   = window.innerHeight - bottomOffset - 80;
+            const newH = Math.max(80, Math.min(maxDrawerH, dragStartH - dy));
             chatDrawer.style.height = newH + "px";
             currentHeight = (newH / window.innerHeight) * 100;
         }, { passive: false });
@@ -1194,7 +1203,9 @@ document.addEventListener("DOMContentLoaded", function () {
             function onMouseMove(ev) {
                 if (!isDragging) return;
                 const dy   = ev.clientY - dragStartY;
-                const newH = Math.max(80, Math.min(window.innerHeight * 0.92, dragStartH - dy));
+                const bottomOffset = parseFloat(getComputedStyle(chatDrawer).bottom) || 64;
+                const maxDrawerH   = window.innerHeight - bottomOffset - 80;
+                const newH = Math.max(80, Math.min(maxDrawerH, dragStartH - dy));
                 chatDrawer.style.height = newH + "px";
                 currentHeight = (newH / window.innerHeight) * 100;
             }
