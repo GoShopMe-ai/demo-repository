@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -181,7 +181,7 @@
                             </div>
                         </div>
 
-                        <!-- Contact List (dynamic: goshopme→Add+avatar, non-goshopme→Invite+initials) -->
+                        <!-- Contact List (dynamic: goshopmeâ†’Add+avatar, non-goshopmeâ†’Invite+initials) -->
                         <div id="contact-list" class="space-y-2">
                             <!-- Rendered by renderAddFriendContacts() -->
                         </div>
@@ -685,7 +685,7 @@
                         hero: {
                             mediaType: 'image',
                             imageUrl: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/679e3cd9c0-57bff49eadf03dd76c2d.png',
-                            title: 'TEST HERO – Dynamic Data',
+                            title: 'TEST HERO â€“ Dynamic Data',
                             alt: 'Test hero'
                         },
                         categories: [
@@ -847,7 +847,7 @@
                         const tempBubble = document.createElement('div');
                         tempBubble.id = 'temp-recording';
                         tempBubble.className = 'flex justify-end mb-2';
-                        tempBubble.innerHTML = '<div class="flex items-center bg-shine-primary text-white rounded-2xl px-3 py-2 max-w-[70%]"><span class="mr-2">🎙️</span><span class="text-xs dm-sans">Recording... swipe left to cancel</span></div>';
+                        tempBubble.innerHTML = '<div class="flex items-center bg-shine-primary text-white rounded-2xl px-3 py-2 max-w-[70%]"><span class="mr-2">ðŸŽ™ï¸</span><span class="text-xs dm-sans">Recording... swipe left to cancel</span></div>';
                         chatMessages.appendChild(tempBubble);
                         scrollChatToBottom();
                     } catch (err) {
@@ -915,7 +915,7 @@
                         durationText.textContent = Math.floor(d / 60) + ':' + (d % 60).toString().padStart(2, '0');
                     });
                     scrollChatToBottom();
-                    setTimeout(() => addShaiReply("Got your voice message! I'm on it — let me find the best options for you."), 800);
+                    setTimeout(() => addShaiReply("Got your voice message! I'm on it â€” let me find the best options for you."), 800);
                 }
                 window.toggleVoicePlaybackCat = function(button, audioUrl) {
                     const container = button.closest('.voice-message-bubble');
@@ -1000,7 +1000,7 @@
                         } else if (inviteBtn) {
                             const shareData = {
                                 title: 'GoShopMe Invitation',
-                                text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me",
+                                text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me",
                                 url: 'https://app.goshopme.ai'
                             };
                             if (navigator.share) navigator.share(shareData);
@@ -1108,10 +1108,10 @@
                 });
 
                 const promptReplies = {
-                    'Vacation Edit': "Love it! I'll curate the best vacation looks — breezy dresses, swimwear, and versatile pieces you can mix and match for your trip.",
-                    'Date Night': "Perfect! I'll find you stunning date night outfits — elegant dresses, chic tops, and accessories that'll make you feel amazing.",
-                    'Under $100': "Got it! I'll show you amazing finds under $100 — stylish pieces that won't break the bank.",
-                    'Workwear Looks': "On it! I'll put together sharp workwear options — professional blazers, tailored pieces, and polished looks for the office."
+                    'Vacation Edit': "Love it! I'll curate the best vacation looks â€” breezy dresses, swimwear, and versatile pieces you can mix and match for your trip.",
+                    'Date Night': "Perfect! I'll find you stunning date night outfits â€” elegant dresses, chic tops, and accessories that'll make you feel amazing.",
+                    'Under $100': "Got it! I'll show you amazing finds under $100 â€” stylish pieces that won't break the bank.",
+                    'Workwear Looks': "On it! I'll put together sharp workwear options â€” professional blazers, tailored pieces, and polished looks for the office."
                 };
                 document.querySelectorAll('.ml-11 button').forEach(button => {
                     button.addEventListener('click', () => {
@@ -1151,6 +1151,7 @@
             });
         </script>
     </div>
+<script src="js/shai-chat.js"></script>
 </body>
 </html>
 

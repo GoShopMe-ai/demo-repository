@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -566,7 +566,7 @@
                 const contactName = (contactItem.querySelector('p') || {}).textContent || '';
                 const isGoshopmeUser = contactItem.getAttribute('data-goshopme') === 'true';
                 if (!isGoshopmeUser && navigator.share) {
-                    navigator.share({ title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me", url: 'https://app.goshopme.ai' }).catch(() => {});
+                    navigator.share({ title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me", url: 'https://app.goshopme.ai' }).catch(() => {});
                 }
                 hideAddFriendFlow();
                 const notification = document.createElement('div');
@@ -708,7 +708,7 @@
                         var tempBubble = document.createElement('div');
                         tempBubble.id = 'temp-recording';
                         tempBubble.className = 'flex justify-end mb-2';
-                        tempBubble.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]"><span class="mr-2">🎙️</span><span class="text-xs">Recording... swipe left to cancel</span></div>';
+                        tempBubble.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]"><span class="mr-2">ðŸŽ™ï¸</span><span class="text-xs">Recording... swipe left to cancel</span></div>';
                         chatMessagesContainer.appendChild(tempBubble);
                         scrollChatToBottom();
                     }
@@ -783,7 +783,7 @@
                     var avatarUrl = (document.getElementById('shai-avatar') || {}).src || window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
                     var aiResponse = document.createElement('div');
                     aiResponse.className = 'flex items-start space-x-3 mb-4';
-                    aiResponse.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="' + (avatarUrl || '').replace(/"/g, '&quot;') + '" alt="ShAI" data-shai-avatar /></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%]"><p class="text-sm text-black">Got your voice message! I\'m on it — let me find the best options for you.</p></div>';
+                    aiResponse.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="' + (avatarUrl || '').replace(/"/g, '&quot;') + '" alt="ShAI" data-shai-avatar /></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%]"><p class="text-sm text-black">Got your voice message! I\'m on it â€” let me find the best options for you.</p></div>';
                     chatMessagesContainer.appendChild(aiResponse);
                     scrollChatToBottom();
                 }, 800);
