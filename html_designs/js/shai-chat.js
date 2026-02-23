@@ -81,7 +81,7 @@
     <div class="px-4 py-2 border-b border-gray-100 flex-shrink-0">
       <div class="relative">
         <svg class="absolute left-3 top-2.5 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <input type="text" id="shai-friend-search" placeholder="Search contacts..." class="w-full bg-gray-50 border border-gray-200 rounded-full pl-9 pr-4 py-2 text-sm outline-none">
+        <input type="text" id="shai-friend-search" placeholder="Search contacts..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 pl-10 text-sm">
       </div>
     </div>
     <div id="shai-friend-list" class="flex-1 overflow-y-auto p-4 space-y-2" style="overscroll-behavior:contain"></div>
@@ -487,22 +487,41 @@
       friendList.innerHTML = list.map(function(c, i) {
         var initials = getFriendInitials(c.name);
         var avatarHtml = (c.goshopme && c.avatar)
-          ? '<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img src="' + c.avatar + '" alt="" class="w-full h-full object-cover"></div>'
-          : '<div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-600 font-medium text-xs">' + initials + '</span></div>';
+          ? '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img src="' + c.avatar + '" alt="" class="w-full h-full object-cover"></div>'
+          : '<div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-600 font-medium text-xs">' + initials + '</span></div>';
         var btnClass = c.goshopme
-          ? 'bg-[#939BFB] text-white px-3 py-1 rounded-full text-xs font-medium flex-shrink-0'
-          : 'bg-white text-[#939BFB] px-3 py-1 rounded-full text-xs font-medium border border-[#939BFB] flex-shrink-0';
+          ? 'bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium flex-shrink-0'
+          : 'bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB] flex-shrink-0';
         var btnLabel = c.goshopme ? 'Add' : 'Invite';
-        return '<div class="flex items-center gap-3 p-2 bg-gray-50 rounded-xl" data-idx="' + i + '">' + avatarHtml + '<div class="flex-1 min-w-0"><p class="font-medium text-sm text-black truncate">' + (c.name || '').replace(/</g, '&lt;') + '</p><p class="text-xs text-gray-500 truncate">' + (c.phone || '').replace(/</g, '&lt;') + '</p></div><button class="shai-friend-action ' + btnClass + '">' + btnLabel + '</button></div>';
+        return '<div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-idx="' + i + '" data-name="' + (c.name||'').replace(/"/g,'&quot;') + '" data-phone="' + (c.phone||'').replace(/"/g,'&quot;') + '" data-goshopme="' + (c.goshopme?'true':'false') + '">' + avatarHtml + '<div class="flex-1 min-w-0"><p class="font-medium text-sm text-black truncate">' + (c.name || '').replace(/</g, '&lt;') + '</p><p class="text-xs text-gray-500 truncate">' + (c.phone || '').replace(/</g, '&lt;') + '</p></div><button class="shai-friend-action ' + btnClass + '">' + btnLabel + '</button></div>';
       }).join('');
       friendList.querySelectorAll('.shai-friend-action').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var idx = parseInt(btn.closest('[data-idx]').getAttribute('data-idx'), 10);
           var contact = list[idx];
-          var isAdd = btn.textContent.trim() === 'Add';
-          btn.textContent = isAdd ? 'Added!' : 'Invited!';
-          btn.style.opacity = '0.6'; btn.disabled = true;
-          showToast((isAdd ? 'Friend request sent to ' : 'Invitation sent to ') + (contact ? contact.name : 'contact') + '!');
+          var firstName = contact ? (contact.name || '').split(' ')[0] : 'Contact';
+          if (btn.textContent.trim() === 'Add') {
+            btn.textContent = 'Added!'; btn.style.opacity = '0.6'; btn.disabled = true;
+            if (msgContainer) {
+              var note = document.createElement('div');
+              note.className = 'flex justify-center mb-4';
+              note.innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">' + firstName + ' has been added to chat</div>';
+              msgContainer.appendChild(note);
+              scrollBottom();
+            }
+            hideFriendPanel();
+          } else {
+            var shareData = { title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless - join me", url: 'https://app.goshopme.ai' };
+            if (navigator.share) {
+              navigator.share(shareData).catch(function() {
+                if (navigator.clipboard) navigator.clipboard.writeText(shareData.text + ' ' + shareData.url);
+              });
+            } else if (navigator.clipboard) {
+              navigator.clipboard.writeText(shareData.text + ' ' + shareData.url);
+              showToast('Invitation link copied to clipboard!');
+            }
+            btn.textContent = 'Invited!'; btn.style.opacity = '0.6'; btn.disabled = true;
+          }
         });
       });
     }
@@ -515,7 +534,7 @@
       if (friendBackBtn) friendBackBtn.classList.remove('hidden');
       if (avatarWrap) avatarWrap.classList.add('hidden');
       if (drawerHeaderTitle) drawerHeaderTitle.textContent = 'Add Friend';
-      if (drawerHeaderSub) drawerHeaderSub.textContent = 'Invite friends to GoShopMe';
+      if (drawerHeaderSub) drawerHeaderSub.textContent = 'Choose contacts to add';
       if (friendSearch) friendSearch.value = '';
       renderFriendContacts('');
     }
@@ -541,7 +560,9 @@
       var navH = nav.getBoundingClientRect().height;
       if (navH > 0) { drawer.style.bottom = navH + 'px'; inputBar.style.bottom = navH + 'px'; }
     }
-    setTimeout(dockChatToNav, 150);
+    dockChatToNav();
+    setTimeout(dockChatToNav, 300);
+    window.addEventListener('load', dockChatToNav);
     window.addEventListener('resize', dockChatToNav);
     if (!document.getElementById('shai-wave-css')) {
       var s = document.createElement('style');
