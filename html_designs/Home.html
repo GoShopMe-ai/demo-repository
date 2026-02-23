@@ -332,7 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <header id="header" class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-50 bg-white border-b border-gray-100">
     <div class="flex items-center justify-between pl-0 pr-4 py-3">
-        <div class="flex items-center justify-start flex-shrink-0 min-w-0">
+        <div class="flex items-center justify-start flex-shrink-0 min-w-0 -ml-3">
             <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/GoShopMe%20logo.svg" alt="GoShopMe Logo" class="h-14 w-auto max-w-[220px] object-contain object-left block">
         </div>
         <div class="flex items-center gap-0">
@@ -1134,30 +1134,43 @@ document.addEventListener("DOMContentLoaded", function () {
     // Open drawer by default
     expandDrawer();
 
-    // === Dragging Drawer ===
-    if (dragHandleZone) {
-        dragHandleZone.addEventListener("mousedown", e => { isDragging = true; startY = e.clientY; });
-        dragHandleZone.addEventListener("touchstart", e => { isDragging = true; startY = e.touches[0].clientY; }, { passive: true });
-    }
-
-    function getClientY(e) { return e.touches ? e.touches[0].clientY : e.clientY; }
-    function handleDragMove(e) {
-        if (!isDragging) return;
-        const clientY = getClientY(e);
-        const deltaY = startY - clientY;
-        startY = clientY;
-        currentHeight = Math.min(90, Math.max(0, currentHeight + (deltaY / window.innerHeight) * 100));
-        chatDrawer.style.height = currentHeight + "vh";
-    }
-    document.addEventListener("mousemove", handleDragMove);
-    document.addEventListener("touchmove", e => {
-        if (isDragging) { e.preventDefault(); handleDragMove(e); }
-    }, { passive: false });
-
+    // === Dragging Drawer (Pointer Events — works for both touch & mouse) ===
     const CLOSE_THRESHOLD = 30;
+
+    if (dragHandleZone) {
+        // touch-action:none lets us capture pointermove without passive restrictions
+        dragHandleZone.style.touchAction = "none";
+        dragHandleZone.style.userSelect  = "none";
+        dragHandleZone.style.cursor      = "grab";
+        // Make the grab zone taller so it is easy to hit on mobile
+        dragHandleZone.style.paddingTop    = "12px";
+        dragHandleZone.style.paddingBottom = "12px";
+
+        dragHandleZone.addEventListener("pointerdown", e => {
+            isDragging = true;
+            startY = e.clientY;
+            dragHandleZone.setPointerCapture(e.pointerId);
+            // Disable drawer height transition while dragging for smoothness
+            chatDrawer.style.transition = "none";
+        });
+
+        dragHandleZone.addEventListener("pointermove", e => {
+            if (!isDragging) return;
+            const deltaY = startY - e.clientY;
+            startY = e.clientY;
+            currentHeight = Math.min(90, Math.max(10, currentHeight + (deltaY / window.innerHeight) * 100));
+            chatDrawer.style.height = currentHeight + "vh";
+        });
+
+        dragHandleZone.addEventListener("pointerup", handleDragEnd);
+        dragHandleZone.addEventListener("pointercancel", handleDragEnd);
+    }
+
     function handleDragEnd() {
         if (!isDragging) return;
         isDragging = false;
+        // Re-enable transition for snap animation
+        chatDrawer.style.transition = "";
         const rect = chatDrawer.getBoundingClientRect();
         const h = (rect.height / window.innerHeight) * 100;
         if (h < CLOSE_THRESHOLD) {
@@ -1167,9 +1180,6 @@ document.addEventListener("DOMContentLoaded", function () {
             chatDrawer.style.height = currentHeight + "vh";
         }
     }
-    document.addEventListener("mouseup", handleDragEnd);
-    document.addEventListener("touchend", handleDragEnd);
-    document.addEventListener("touchcancel", handleDragEnd);
 
     const addFriendContent = document.getElementById("add-friend-content");
     const chatContent = document.getElementById("chat-content");

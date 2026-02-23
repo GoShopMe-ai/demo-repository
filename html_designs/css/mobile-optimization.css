@@ -153,8 +153,8 @@ body {
    */
   #bottom-nav > div,
   nav#bottom-nav > div {
-    padding-top: 6px !important;
-    padding-bottom: 14px !important;
+    padding-top: 4px !important;
+    padding-bottom: 20px !important;
   }
 
   /* Chat drawer and input bar: full-width, no centering offset */
