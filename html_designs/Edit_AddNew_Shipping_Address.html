@@ -335,10 +335,10 @@ document.getElementById('phoneCodeDropdown').onclick = function(){
     document.getElementById('phoneCodeOverlay').classList.remove('hidden');
     var list = document.getElementById('phoneCodeList');
     list.innerHTML = phoneCodes.map(function(item){
-        return '<div class="py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 flex items-center phone-code-option" data-flag="'+item.flag+'" data-code="'+item.code+'"><span class="text-lg mr-3 shrink-0">'+item.flag+'</span><span class="text-sm text-gray-800 flex-1 min-w-0 truncate">'+item.country+'</span><span class="text-sm text-gray-600 shrink-0 ml-2">'+item.code+'</span></div>';
+        return '<div class="py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 flex items-center justify-between phone-code-option" data-flag="'+item.flag+'" data-code="'+item.code+'"><span class="text-sm text-gray-800">'+item.country+'</span><span class="text-sm font-medium text-gray-700 ml-2">'+item.code+'</span></div>';
     }).join('');
     list.querySelectorAll('.phone-code-option').forEach(function(el){
-        el.onclick = function(){ document.getElementById('selectedPhoneCode').textContent = el.getAttribute('data-flag')+' '+el.getAttribute('data-code'); document.getElementById('phoneCodeOverlay').classList.add('hidden'); document.getElementById('phoneCodeSearch').value = ''; };
+        el.onclick = function(){ document.getElementById('selectedPhoneCode').textContent = el.getAttribute('data-code'); document.getElementById('phoneCodeOverlay').classList.add('hidden'); document.getElementById('phoneCodeSearch').value = ''; };
     });
     document.getElementById('phoneCodeSearch').focus();
 };
@@ -347,8 +347,8 @@ document.getElementById('phoneCodeSearch').oninput = function(e){
     var q = e.target.value.toLowerCase();
     var f = phoneCodes.filter(function(item){ return item.country.toLowerCase().indexOf(q)>=0 || item.code.indexOf(q)>=0 || item.code.replace('+','').indexOf(q)>=0; });
     var list = document.getElementById('phoneCodeList');
-    list.innerHTML = f.map(function(item){ return '<div class="py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 flex items-center phone-code-option" data-flag="'+item.flag+'" data-code="'+item.code+'"><span class="text-lg mr-3 shrink-0">'+item.flag+'</span><span class="text-sm text-gray-800 flex-1 min-w-0 truncate">'+item.country+'</span><span class="text-sm text-gray-600 shrink-0 ml-2">'+item.code+'</span></div>'; }).join('');
-    list.querySelectorAll('.phone-code-option').forEach(function(el){ el.onclick = function(){ document.getElementById('selectedPhoneCode').textContent = el.getAttribute('data-flag')+' '+el.getAttribute('data-code'); document.getElementById('phoneCodeOverlay').classList.add('hidden'); document.getElementById('phoneCodeSearch').value = ''; }; });
+    list.innerHTML = f.map(function(item){ return '<div class="py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 flex items-center justify-between phone-code-option" data-flag="'+item.flag+'" data-code="'+item.code+'"><span class="text-sm text-gray-800">'+item.country+'</span><span class="text-sm font-medium text-gray-700 ml-2">'+item.code+'</span></div>'; }).join('');
+    list.querySelectorAll('.phone-code-option').forEach(function(el){ el.onclick = function(){ document.getElementById('selectedPhoneCode').textContent = el.getAttribute('data-code'); document.getElementById('phoneCodeOverlay').classList.add('hidden'); document.getElementById('phoneCodeSearch').value = ''; }; });
 };
 
 document.getElementById('countryDropdown').onclick = function(){
