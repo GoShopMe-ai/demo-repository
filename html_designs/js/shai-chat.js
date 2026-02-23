@@ -42,12 +42,15 @@
 
   <!-- Header -->
   <div class="flex items-center px-4 pb-2 flex-shrink-0">
-    <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
+    <button id="shai-friend-back" class="hidden w-8 h-8 flex items-center justify-center mr-2 hover:opacity-70 transition-opacity" aria-label="Back to chat">
+      <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+    </button>
+    <div id="shai-avatar-wrap" class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
       <img class="w-full h-full object-cover" src="${SHAI_AVATAR}" alt="ShAI" data-shai-avatar>
     </div>
     <div class="flex-1">
-      <p class="font-semibold text-black text-sm">ShAI</p>
-      <p class="text-xs text-gray-500">Your shopping assistant</p>
+      <p id="shai-header-title" class="font-semibold text-black text-sm">ShAI</p>
+      <p id="shai-header-sub" class="text-xs text-gray-500">Your shopping assistant</p>
     </div>
   </div>
 
@@ -70,6 +73,18 @@
         </div>
       </div>
     </div>
+  </div>
+
+
+  <!-- Add Friend panel (hidden by default) -->
+  <div id="shai-friend-panel" class="hidden flex-col flex-1 min-h-0 overflow-hidden">
+    <div class="px-4 py-2 border-b border-gray-100 flex-shrink-0">
+      <div class="relative">
+        <svg class="absolute left-3 top-2.5 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" id="shai-friend-search" placeholder="Search contacts..." class="w-full bg-gray-50 border border-gray-200 rounded-full pl-9 pr-4 py-2 text-sm outline-none">
+      </div>
+    </div>
+    <div id="shai-friend-list" class="flex-1 overflow-y-auto p-4 space-y-2" style="overscroll-behavior:contain"></div>
   </div>
 
   <!-- Drawer input -->
@@ -436,6 +451,98 @@
     }
 
     /* â”€â”€ Inject wave animation keyframes â”€â”€ */
+
+    /* -- Add-friend panel -- */
+    var friendPanel = document.getElementById('shai-friend-panel');
+    var friendBackBtn = document.getElementById('shai-friend-back');
+    var friendSearch = document.getElementById('shai-friend-search');
+    var friendList = document.getElementById('shai-friend-list');
+    var avatarWrap = document.getElementById('shai-avatar-wrap');
+    var drawerHeaderTitle = document.getElementById('shai-header-title');
+    var drawerHeaderSub = document.getElementById('shai-header-sub');
+    var isFriendMode = false;
+
+    window.__addFriendContacts = window.__addFriendContacts || [
+      { name: 'Alex Johnson', phone: '+1 (555) 123-4567', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg' },
+      { name: 'Maria Rodriguez', phone: '+1 (555) 987-6543', goshopme: false },
+      { name: 'David Kim', phone: '+1 (555) 456-7890', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg' },
+      { name: 'Sarah Thompson', phone: '+1 (555) 234-5678', goshopme: false },
+      { name: 'Emma Wilson', phone: '+1 (555) 345-6789', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg' },
+      { name: 'Michael Brown', phone: '+1 (555) 678-9012', goshopme: false },
+      { name: 'Jennifer Lee', phone: '+1 (555) 789-0123', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg' }
+    ];
+
+    function getFriendInitials(name) {
+      var parts = (name || '').trim().split(/\s+/);
+      return parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : (parts[0] ? parts[0].slice(0, 2) : '??').toUpperCase();
+    }
+
+    function renderFriendContacts(query) {
+      if (!friendList) return;
+      var list = (window.__addFriendContacts || []).filter(function(c) {
+        if (!query) return true;
+        return (c.name || '').toLowerCase().indexOf(query.toLowerCase()) >= 0 || (c.phone || '').indexOf(query) >= 0;
+      });
+      if (!list.length) { friendList.innerHTML = '<div class="text-center text-sm text-gray-400 py-8">No contacts found</div>'; return; }
+      friendList.innerHTML = list.map(function(c, i) {
+        var initials = getFriendInitials(c.name);
+        var avatarHtml = (c.goshopme && c.avatar)
+          ? '<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img src="' + c.avatar + '" alt="" class="w-full h-full object-cover"></div>'
+          : '<div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-600 font-medium text-xs">' + initials + '</span></div>';
+        var btnClass = c.goshopme
+          ? 'bg-[#939BFB] text-white px-3 py-1 rounded-full text-xs font-medium flex-shrink-0'
+          : 'bg-white text-[#939BFB] px-3 py-1 rounded-full text-xs font-medium border border-[#939BFB] flex-shrink-0';
+        var btnLabel = c.goshopme ? 'Add' : 'Invite';
+        return '<div class="flex items-center gap-3 p-2 bg-gray-50 rounded-xl" data-idx="' + i + '">' + avatarHtml + '<div class="flex-1 min-w-0"><p class="font-medium text-sm text-black truncate">' + (c.name || '').replace(/</g, '&lt;') + '</p><p class="text-xs text-gray-500 truncate">' + (c.phone || '').replace(/</g, '&lt;') + '</p></div><button class="shai-friend-action ' + btnClass + '">' + btnLabel + '</button></div>';
+      }).join('');
+      friendList.querySelectorAll('.shai-friend-action').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.closest('[data-idx]').getAttribute('data-idx'), 10);
+          var contact = list[idx];
+          var isAdd = btn.textContent.trim() === 'Add';
+          btn.textContent = isAdd ? 'Added!' : 'Invited!';
+          btn.style.opacity = '0.6'; btn.disabled = true;
+          showToast((isAdd ? 'Friend request sent to ' : 'Invitation sent to ') + (contact ? contact.name : 'contact') + '!');
+        });
+      });
+    }
+
+    function showFriendPanel() {
+      isFriendMode = true;
+      if (!isOpen) openDrawer();
+      if (messages) messages.classList.add('hidden');
+      if (friendPanel) { friendPanel.classList.remove('hidden'); friendPanel.classList.add('flex'); }
+      if (friendBackBtn) friendBackBtn.classList.remove('hidden');
+      if (avatarWrap) avatarWrap.classList.add('hidden');
+      if (drawerHeaderTitle) drawerHeaderTitle.textContent = 'Add Friend';
+      if (drawerHeaderSub) drawerHeaderSub.textContent = 'Invite friends to GoShopMe';
+      if (friendSearch) friendSearch.value = '';
+      renderFriendContacts('');
+    }
+    function hideFriendPanel() {
+      isFriendMode = false;
+      if (messages) messages.classList.remove('hidden');
+      if (friendPanel) { friendPanel.classList.add('hidden'); friendPanel.classList.remove('flex'); }
+      if (friendBackBtn) friendBackBtn.classList.add('hidden');
+      if (avatarWrap) avatarWrap.classList.remove('hidden');
+      if (drawerHeaderTitle) drawerHeaderTitle.textContent = 'ShAI';
+      if (drawerHeaderSub) drawerHeaderSub.textContent = 'Your shopping assistant';
+    }
+    if (friendBackBtn) friendBackBtn.addEventListener('click', hideFriendPanel);
+    if (friendSearch) friendSearch.addEventListener('input', function() { renderFriendContacts(friendSearch.value); });
+    if (addDrawer) addDrawer.addEventListener('click', showFriendPanel);
+    if (addBar) addBar.addEventListener('click', function() { showFriendPanel(); });
+
+    /* -- Dynamic docking: set bottom = nav height -- */
+    function dockChatToNav() {
+      var nav = document.getElementById('bottom-navigation') || document.getElementById('bottom-nav') ||
+                document.querySelector('nav[id$="-navigation"]') || document.querySelector('nav[id$="-nav"]');
+      if (!nav) return;
+      var navH = nav.getBoundingClientRect().height;
+      if (navH > 0) { drawer.style.bottom = navH + 'px'; inputBar.style.bottom = navH + 'px'; }
+    }
+    setTimeout(dockChatToNav, 150);
+    window.addEventListener('resize', dockChatToNav);
     if (!document.getElementById('shai-wave-css')) {
       var s = document.createElement('style');
       s.id = 'shai-wave-css';
