@@ -167,10 +167,7 @@
                 <button id="back-button" class="mr-3 hidden hover:opacity-70 transition-opacity">
                     <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
                 </button>
-                <div id="shai-avatar-container" class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0 bg-gray-200 flex items-center justify-center">
-                    <img id="shai-avatar" class="w-full h-full object-cover hidden" src="" alt="ShAI avatar" data-placeholder="true">
-                    <span id="shai-avatar-placeholder" class="text-gray-500 text-xs font-medium">AI</span>
-                </div>
+                <div id="shai-avatar-container" class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0"><img id="shai-avatar" class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" data-shai-avatar></div>
                 <div class="flex-1">
                     <p id="drawer-title" class="font-semibold text-black text-sm">ShAI</p>
                     <p id="drawer-subtitle" class="text-xs text-gray-500">Your shopping assistant</p>
@@ -182,7 +179,7 @@
                 <div class="p-4 pb-0">
                 <!-- ShAI Greeting - use avatar placeholder -->
                 <div class="flex items-start space-x-3 mb-4">
-                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-500 text-xs font-medium">AI</span></div>
+                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" data-shai-avatar></div>
                     <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs">
                         <p class="text-sm text-black">I see you're browsing this collection! These pieces are perfect for making a strong impression. Which item caught your eye?</p>
                     </div>
@@ -506,7 +503,7 @@
                     setTimeout(() => {
                         const ai = document.createElement('div');
                         ai.className = 'flex items-start space-x-3 mb-4';
-                        ai.innerHTML = '<div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-500 text-xs font-medium">AI</span></div><div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">' + (file.type.startsWith('video/') ? 'Great! I can analyze your video. Let me find products that match what I see.' : 'Perfect! I can see your image. Let me analyze it and find similar products for you.') + '</p></div></div>';
+                        ai.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" data-shai-avatar></div><div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">' + (file.type.startsWith('video/') ? 'Great! I can analyze your video. Let me find products that match what I see.' : 'Perfect! I can see your image. Let me analyze it and find similar products for you.') + '</p></div></div>';
                         cnt.appendChild(ai);
                         scrollChatToBottom();
                     }, 1500);
@@ -660,7 +657,7 @@
                     contextMessage.className = 'flex items-start space-x-3 mb-4';
                     const collectionName = window.__currentCollectionName || '';
                     const collectionPart = collectionName ? ' from the "' + collectionName + '" collection' : '';
-                    contextMessage.innerHTML = '<div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-500 text-xs font-medium">AI</span></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs"><p class="text-sm text-black">Looking at: ' + productName + ' by ' + brandName + ' â€“ ' + price + collectionPart + '. Want it in another size or color? I can also show you similar styles!</p></div>';
+                    contextMessage.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" data-shai-avatar></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs"><p class="text-sm text-black">Looking at: ' + productName + ' by ' + brandName + ' â€“ ' + price + collectionPart + '. Want it in another size or color? I can also show you similar styles!</p></div>';
                     cnt.appendChild(contextMessage);
                     scrollChatToBottom();
                 }
@@ -789,7 +786,7 @@
                         if (cnt) {
                             const aiResponse = document.createElement('div');
                             aiResponse.className = 'flex items-start space-x-3 mb-4';
-                            aiResponse.innerHTML = '<div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-500 text-xs font-medium">AI</span></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs"><p class="text-sm text-black">Great choice! Let me help you find the perfect fit and styling options for that piece.</p></div>';
+                            aiResponse.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" data-shai-avatar></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs"><p class="text-sm text-black">Great choice! Let me help you find the perfect fit and styling options for that piece.</p></div>';
                             cnt.appendChild(aiResponse);
                             scrollChatToBottom();
                         }
@@ -820,7 +817,7 @@
                     setTimeout(() => {
                         const aiResponse = document.createElement('div');
                         aiResponse.className = 'flex items-start space-x-3 mb-4';
-                        aiResponse.innerHTML = '<div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-500 text-xs font-medium">AI</span></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs"><p class="text-sm text-black">Perfect! Let me help you with that right away.</p></div>';
+                        aiResponse.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" data-shai-avatar></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs"><p class="text-sm text-black">Perfect! Let me help you with that right away.</p></div>';
                         cnt.appendChild(aiResponse);
                         scrollChatToBottom();
                     }, 800);
