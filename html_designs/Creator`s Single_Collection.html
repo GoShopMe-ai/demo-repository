@@ -51,6 +51,22 @@
         [id^="product-"] .heart-btn, [id^="product-"] .share-btn, [id^="product-"] .chat-trigger { cursor: pointer; }
         .drag-handle { background: #D1D5DB; width: 40px; height: 4px; border-radius: 9999px; margin: 8px auto; cursor: grab; }
         .drag-handle:active { cursor: grabbing; }
+        /* Mobile: drawer and input bar full-width and docked to nav */
+        @media screen and (max-width: 768px) {
+            #shai-chat-drawer, #chat-input-collapsed {
+                left: 0 !important;
+                right: 0 !important;
+                max-width: 100vw !important;
+                width: 100% !important;
+            }
+            #shai-chat-drawer { max-height: calc(100dvh - 144px) !important; overscroll-behavior: contain; }
+            #shai-chat-drawer.translate-y-full { transform: translateY(100%) !important; }
+            #bottom-navigation > div {
+                padding-top: 2px !important;
+                padding-bottom: 24px !important;
+            }
+            #chat-messages { overscroll-behavior: contain; }
+        }
     </style>
 </head>
 <body class="bg-[#F6F6F6] min-h-screen text-black overflow-x-hidden">
@@ -510,49 +526,50 @@
                 }
             }
             
-            // Drag functionality for drawer handle
-            let startY, startHeight;
-            if (dragHandle) {
-                dragHandle.addEventListener('mousedown', startDrag);
-                dragHandle.addEventListener('touchstart', startDrag);
-            }
-            
-            function startDrag(e) {
-                isDragging = true;
-                startY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
-                startHeight = parseInt(chatDrawer.style.height) || 35;
-                
-                document.addEventListener('mousemove', drag);
-                document.addEventListener('mouseup', stopDrag);
-                document.addEventListener('touchmove', drag);
-                document.addEventListener('touchend', stopDrag);
-                
-                e.preventDefault();
-            }
-            
-            function drag(e) {
-                if (!isDragging) return;
-                
-                const currentY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
-                const deltaY = startY - currentY;
-                const newHeight = Math.min(90, Math.max(35, startHeight + (deltaY / window.innerHeight) * 100));
-                
-                    drawerHeight = newHeight;
-                chatDrawer.style.height = newHeight + 'vh';
-                
-                if (newHeight > 70) {
-                    chatDrawer.style.height = '90vh';
-                    drawerHeight = 90;
-                }
-            }
-            
-            function stopDrag() {
-                isDragging = false;
-                document.removeEventListener('mousemove', drag);
-                document.removeEventListener('mouseup', stopDrag);
-                document.removeEventListener('touchmove', drag);
-                document.removeEventListener('touchend', stopDrag);
-            }
+            // Drag functionality - native touch events for reliable mobile drag
+            (function() {
+                if (!dragHandle) return;
+                let touchStartY = 0;
+                let touchStartHeight = 0;
+                const bottomOffset = 64; // bottom-16 = 64px above nav
+                dragHandle.style.touchAction = 'none';
+                dragHandle.style.cursor = 'grab';
+                dragHandle.addEventListener('touchstart', function(e) {
+                    touchStartY = e.touches[0].clientY;
+                    touchStartHeight = chatDrawer.offsetHeight;
+                }, { passive: true });
+                dragHandle.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                    const delta = touchStartY - e.touches[0].clientY;
+                    const maxH = window.innerHeight - bottomOffset - 80;
+                    const minH = Math.round(window.innerHeight * 0.35);
+                    const newH = Math.min(maxH, Math.max(minH, touchStartHeight + delta));
+                    chatDrawer.style.height = newH + 'px';
+                    chatDrawer.style.transition = 'none';
+                }, { passive: false });
+                dragHandle.addEventListener('touchend', function() {
+                    chatDrawer.style.transition = '';
+                }, { passive: true });
+                // Mouse drag for desktop
+                dragHandle.addEventListener('mousedown', function(e) {
+                    const startY = e.clientY;
+                    const startH = chatDrawer.offsetHeight;
+                    const onMove = function(ev) {
+                        const delta = startY - ev.clientY;
+                        const maxH = window.innerHeight - bottomOffset - 80;
+                        const minH = Math.round(window.innerHeight * 0.35);
+                        chatDrawer.style.height = Math.min(maxH, Math.max(minH, startH + delta)) + 'px';
+                        chatDrawer.style.transition = 'none';
+                    };
+                    const onUp = function() {
+                        chatDrawer.style.transition = '';
+                        document.removeEventListener('mousemove', onMove);
+                        document.removeEventListener('mouseup', onUp);
+                    };
+                    document.addEventListener('mousemove', onMove);
+                    document.addEventListener('mouseup', onUp);
+                });
+            })();
 
             // Click on main screen to collapse drawer
             backgroundContent.addEventListener('click', (e) => {
@@ -730,11 +747,12 @@
 
             function expandDrawer() {
                 chatDrawer.classList.remove('translate-y-full');
-                chatDrawer.style.height = '80vh';
-                drawerHeight = 80;
+                chatDrawer.style.height = '60vh';
+                drawerHeight = 60;
                 chatOverlay.classList.remove('hidden');
                 chatInputCollapsed.classList.add('hidden');
                 isDrawerExpanded = true;
+                document.body.style.overflow = 'hidden';
             }
 
             function collapseDrawer() {
@@ -742,7 +760,7 @@
                 chatOverlay.classList.add('hidden');
                 chatInputCollapsed.classList.remove('hidden');
                 isDrawerExpanded = false;
-                
+                document.body.style.overflow = '';
                 // Reset to chat view when collapsing
                 if (isInAddFriendFlow) {
                     hideAddFriendFlow();
@@ -754,6 +772,10 @@
                 const hasText = e.target.value.trim().length > 0;
                 sendButtonDrawer.classList.toggle('hidden', !hasText);
                 micButtonDrawer.classList.toggle('hidden', hasText);
+                addFriendButtonDrawer.classList.toggle('hidden', hasText);
+            });
+            chatInputDrawer.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(chatInputDrawer, sendButtonDrawer, micButtonDrawer); }
             });
 
             // Chat Input Functionality - Collapsed
@@ -761,6 +783,14 @@
                 const hasText = e.target.value.trim().length > 0;
                 sendButtonCollapsed.classList.toggle('hidden', !hasText);
                 micButtonCollapsed.classList.toggle('hidden', hasText);
+                addFriendButtonCollapsed.classList.toggle('hidden', hasText);
+            });
+            chatInputCollapsedField.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage(chatInputCollapsedField, sendButtonCollapsed, micButtonCollapsed);
+                    expandDrawer();
+                }
             });
 
             // Send Message Functions
@@ -865,5 +895,8 @@
 <script src="js/shai-chat.js"></script>
 </body>
 </html>
+
+
+
 
 

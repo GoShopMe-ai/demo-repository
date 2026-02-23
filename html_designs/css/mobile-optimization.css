@@ -1,4 +1,4 @@
-/**
+﻿/**
  * GoShopMe Mobile Optimization - Shared across ALL screens
  *
  * Mobile (<=768px)  -> full-width, edge-to-edge, no gutters
@@ -152,7 +152,9 @@ body {
    * within the bar on Android gesture-nav phones (Pixel, Samsung etc.)
    */
   #bottom-nav > div,
-  nav#bottom-nav > div {
+  nav#bottom-nav > div,
+  #bottom-navigation > div,
+  nav#bottom-navigation > div {
     padding-top: 2px !important;
     padding-bottom: 24px !important;
   }

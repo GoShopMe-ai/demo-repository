@@ -915,6 +915,16 @@
         send.classList.add("hidden");
 
         setTimeout(() => scrollToBottom(true), 50);
+
+        const shaiReplies = [
+            "Love your taste! I\u0027m searching for similar styles to match your wishlist vibe.",
+            "On it! I\u0027ll find pieces that perfectly complement what you\u0027ve saved.",
+            "Great pick! Let me curate some options that go well with your wishlist.",
+            "I see your style! Finding the best matches for you right now.",
+            "Got it! Let me search for items that fit your wishlist perfectly."
+        ];
+        const reply = shaiReplies[Math.floor(Math.random() * shaiReplies.length)];
+        setTimeout(() => addContextualMessage(reply, []), 900);
     }
 
     // Setup input handlers
