@@ -33,14 +33,13 @@
         .bottom-nav-btn:hover, .bottom-nav-btn.active { color: #939BFB; }
         .bottom-nav-btn:hover svg, .bottom-nav-btn:hover span, .bottom-nav-btn.active svg, .bottom-nav-btn.active span { color: #939BFB; }
         .bottom-nav-btn svg { width: 20px; height: 20px; stroke-width: 1.5; margin-bottom: 4px; }
-        /* Mobile: dock chat drawer and input bar flush to the bottom nav */
+        /* Mobile: full-width chat drawer and input bar */
         @media screen and (max-width: 768px) {
             #chat-drawer, #chat-input-bar {
                 left: 0 !important;
                 right: 0 !important;
                 max-width: 100vw !important;
                 width: 100% !important;
-                bottom: var(--nav-h, 62px) !important;
             }
             #chat-drawer {
                 max-height: calc(100dvh - 144px) !important;
@@ -143,18 +142,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
     var link = document.getElementById('brand-nav-profile-link');
     if (link) link.href = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
-})();
-</script>
-<script>
-(function(){
-    function setNavH(){
-        var nav=document.getElementById("bottom-navigation");
-        if(nav){ var h=nav.getBoundingClientRect().height; if(h>0) document.documentElement.style.setProperty("--nav-h",h+"px"); }
-    }
-    document.addEventListener("DOMContentLoaded",setNavH);
-    window.addEventListener("load",setNavH);
-    window.addEventListener("resize",setNavH);
-    setTimeout(setNavH,300);
 })();
 </script>
 <script src="js/shai-chat.js"></script>

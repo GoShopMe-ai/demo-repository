@@ -552,18 +552,34 @@
     if (addDrawer) addDrawer.addEventListener('click', showFriendPanel);
     if (addBar) addBar.addEventListener('click', function() { showFriendPanel(); });
 
-    /* -- Dynamic docking: set bottom = nav height -- */
-    function dockChatToNav() {
+        /* -- Dock chat elements flush to nav top (reliable via ResizeObserver) -- */
+    (function() {
       var nav = document.getElementById('bottom-navigation') || document.getElementById('bottom-nav') ||
                 document.querySelector('nav[id$="-navigation"]') || document.querySelector('nav[id$="-nav"]');
       if (!nav) return;
-      var navH = nav.getBoundingClientRect().height;
-      if (navH > 0) { drawer.style.bottom = navH + 'px'; inputBar.style.bottom = navH + 'px'; }
-    }
-    dockChatToNav();
-    setTimeout(dockChatToNav, 300);
-    window.addEventListener('load', dockChatToNav);
-    window.addEventListener('resize', dockChatToNav);
+
+      function applyDock() {
+        var navH = nav.getBoundingClientRect().height;
+        if (navH > 0) {
+          drawer.style.setProperty('bottom', navH + 'px', 'important');
+          inputBar.style.setProperty('bottom', navH + 'px', 'important');
+        }
+      }
+
+      /* ResizeObserver fires when nav gets its CSS (Tailwind CDN) applied */
+      if (window.ResizeObserver) {
+        var ro = new ResizeObserver(function() { applyDock(); });
+        ro.observe(nav);
+      }
+
+      /* Fallback timers for browsers without ResizeObserver */
+      applyDock();
+      setTimeout(applyDock, 100);
+      setTimeout(applyDock, 500);
+      setTimeout(applyDock, 1500);
+      window.addEventListener('load', applyDock);
+      window.addEventListener('resize', applyDock);
+    })();
     if (!document.getElementById('shai-wave-css')) {
       var s = document.createElement('style');
       s.id = 'shai-wave-css';
