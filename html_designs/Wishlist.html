@@ -294,7 +294,7 @@
                     </svg>
                     </button>
                 <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-                    <img class="w-full h-full object-cover" src="../assets/shai-avatar.png" data-shai-avatar alt="ShAI avatar" />
+                    <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" data-shai-avatar alt="ShAI avatar" />
                     </div>
                 <div class="flex-1">
                     <p class="font-semibold text-black text-sm">ShAI</p>
@@ -308,7 +308,7 @@
                 <!-- ShAI Greeting -->
                 <div class="flex items-start space-x-3 mb-4">
                         <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                            <img class="w-full h-full object-cover" src="../assets/shai-avatar.png" data-shai-avatar alt="ShAI avatar" />
+                            <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" data-shai-avatar alt="ShAI avatar" />
                         </div>
                         <div class="flex-1">
                             <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3">
@@ -626,7 +626,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        if (typeof window.populateShAIAvatar === 'function') window.populateShAIAvatar('../assets/shai-avatar.png');
+        if (typeof window.populateShAIAvatar === 'function') window.populateShAIAvatar('https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png');
         const chatDrawer = document.getElementById('shai-chat-drawer');
         const dragHandleZone = document.getElementById('drag-handle-zone') || document.getElementById('drag-handle');
         const chatOverlay = document.getElementById('chat-overlay');
@@ -762,7 +762,7 @@
     function addContextualMessage(message, thumbUrls) {
         const container = document.querySelector('#chat-messages .p-4');
         if (!container) return;
-        const avatarUrl = window.__shaiAvatarUrl || '../assets/shai-avatar.png';
+        const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
         const thumbHtml = (thumbUrls && thumbUrls.length) ? '<div class="flex gap-1.5 mt-2 flex-wrap">' + thumbUrls.slice(0, 4).map(function(t) { return '<img class="w-12 h-12 rounded-lg object-cover border border-gray-200" src="' + (t || '').replace(/"/g, '&quot;') + '" alt="">'; }).join('') + '</div>' : '';
         const contextMessage = document.createElement('div');
         contextMessage.className = 'flex items-start space-x-3 mb-4';
@@ -1375,7 +1375,7 @@
         // ===== DYNAMIC WISHLIST RENDER (presentation data from data/wishlist.json only) =====
         // Mock items live in data/wishlist.json — edit that file to change presentation content.
         const WISHLIST_FALLBACK = {
-            hero: { imageUrl: "../assets/Paris%20in%20Spring.jpg", alt: "Wishlist gift sharing hero" },
+            hero: { imageUrl: "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Paris%20in%20Spring.jpg", alt: "Wishlist gift sharing hero" },
             items: []
         };
 

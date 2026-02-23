@@ -1,11 +1,11 @@
 {
   "justForYou": {
     "products": [
-      {"id":"silk-midi-dress","name":"Silk Midi Dress","brand":"Reformation","price":"$248","image":"../assets/silk%20midi%20dress.jpg","images":[],"discountBadge":null},
-      {"id":"cashmere-sweater","name":"Cashmere Sweater","brand":"Brunello Cucinelli","price":"$1,850","image":"../assets/cashmere%20sweater.jpg","images":[],"discountBadge":"20% OFF","originalPrice":"$2,300"},
-      {"id":"leather-ankle-boots","name":"Leather Ankle Boots","brand":"Totême","price":"$640","image":"../assets/leather%20ankle%20boots.jpg","images":[],"discountBadge":null},
-      {"id":"gold-chain-necklace","name":"Gold Chain Necklace","brand":"Cartier","price":"$2,100","image":"../assets/gold%20necklace.jpg","images":[],"discountBadge":null},
-      {"id":"structured-blazer","name":"Le Smoking Blazer","brand":"Saint Laurent","price":"$1,890","image":"../assets/Saint%20Laurent%20Blazer.jpg","images":[],"discountBadge":null}
+      {"id":"silk-midi-dress","name":"Silk Midi Dress","brand":"Reformation","price":"$248","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/silk%20midi%20dress.jpg","images":[],"discountBadge":null},
+      {"id":"cashmere-sweater","name":"Cashmere Sweater","brand":"Brunello Cucinelli","price":"$1,850","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/cashmere%20sweater.jpg","images":[],"discountBadge":"20% OFF","originalPrice":"$2,300"},
+      {"id":"leather-ankle-boots","name":"Leather Ankle Boots","brand":"Totême","price":"$640","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/leather%20ankle%20boots.jpg","images":[],"discountBadge":null},
+      {"id":"gold-chain-necklace","name":"Gold Chain Necklace","brand":"Cartier","price":"$2,100","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/gold%20necklace.jpg","images":[],"discountBadge":null},
+      {"id":"structured-blazer","name":"Le Smoking Blazer","brand":"Saint Laurent","price":"$1,890","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Saint%20Laurent%20Blazer.jpg","images":[],"discountBadge":null}
     ]
   },
   "featuredBrand": {
@@ -17,7 +17,7 @@
     "ctaText": "Explore the Drop",
     "products": [
       {"id":"saint-laurent-leather-jacket","name":"Leather Moto Jacket","brand":"Saint Laurent","price":"$2,990","image":"https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&h=650&fit=crop"},
-      {"id":"saint-laurent-heels","name":"Tribute Sandals","brand":"Saint Laurent","price":"$695","image":"../assets/Saint%20Laurent%20sandals.jpg"},
+      {"id":"saint-laurent-heels","name":"Tribute Sandals","brand":"Saint Laurent","price":"$695","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Saint%20Laurent%20sandals.jpg"},
       {"id":"saint-laurent-bag","name":"Lou Camera Bag","brand":"Saint Laurent","price":"$1,290","image":"https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&h=650&fit=crop"},
       {"id":"saint-laurent-blazer","name":"Le Smoking Blazer","brand":"Saint Laurent","price":"$1,890","image":"https://images.unsplash.com/photo-1591369822096-ffd140ec948f?w=500&h=650&fit=crop"}
     ]
@@ -29,7 +29,7 @@
       "outfitDescription": "wearing vintage Mugler at Paris Fashion Week",
       "coverImage": "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&h=800&fit=crop",
       "products": [
-        {"id":"vintage-blazer","name":"Vintage Blazer","brand":"Mugler","price":"$850","image":"../assets/mugler%20blazer.jpg"},
+        {"id":"vintage-blazer","name":"Vintage Blazer","brand":"Mugler","price":"$850","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/mugler%20blazer.jpg"},
         {"id":"statement-earrings","name":"Statement Earrings","brand":"Bottega Veneta","price":"$1,200","image":"https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&h=650&fit=crop"},
         {"id":"pointed-pumps","name":"Pointed Pumps","brand":"Louboutin","price":"$745","image":"https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&h=650&fit=crop"}
       ]
@@ -54,7 +54,7 @@
       "creatorAvatar": "https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg",
       "lookTitle": "Neutral Power",
       "lookSubtitle": "Minimalist elegance",
-      "coverImage": "../assets/Neutrals.jpg",
+      "coverImage": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Neutrals.jpg",
       "products": [
         {"id":"cream-knit-top","name":"Cream Knit Top","brand":"The Row","price":"$890","image":"https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=500&h=650&fit=crop"},
         {"id":"wide-leg-trousers","name":"Wide Leg Trousers","brand":"Loro Piana","price":"$1,250","image":"https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=500&h=650&fit=crop"},
@@ -68,7 +68,7 @@
       "creatorAvatar": "https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg",
       "lookTitle": "Paris in Spring",
       "lookSubtitle": "French effortless chic",
-      "coverImage": "../assets/Paris%20in%20Spring.jpg",
+      "coverImage": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Paris%20in%20Spring.jpg",
       "products": [
         {"id":"trench-coat","name":"Gabardine Trench","brand":"Burberry","price":"$1,890","image":"https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500&h=650&fit=crop"},
         {"id":"silk-scarf","name":"Silk Twilly","brand":"Hermès","price":"$210","image":"https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&h=650&fit=crop"},

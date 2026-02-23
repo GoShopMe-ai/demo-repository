@@ -8,13 +8,13 @@
     "alt": "fashion shopping aesthetic minimalist hero background with soft colors and elegant styling"
   },
   "categories": [
-    { "id": "shoes", "name": "Shoes", "imageUrl": "../assets/shoes%201.jpg", "alt": "Shoes", "badge": null },
-    { "id": "dresses", "name": "Dresses", "imageUrl": "../assets/dresses.jpg", "alt": "Dresses", "badge": null },
-    { "id": "bags", "name": "Bags", "imageUrl": "../assets/bags.jpg", "alt": "Bags", "badge": null },
-    { "id": "workwear", "name": "Workwear", "imageUrl": "../assets/Workwear.jpg", "alt": "Workwear", "badge": null },
-    { "id": "swimwear", "name": "Swimwear", "imageUrl": "../assets/swimwear%201.jpg", "alt": "Swimwear", "badge": null },
+    { "id": "shoes", "name": "Shoes", "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shoes%201.jpg", "alt": "Shoes", "badge": null },
+    { "id": "dresses", "name": "Dresses", "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/dresses.jpg", "alt": "Dresses", "badge": null },
+    { "id": "bags", "name": "Bags", "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/bags.jpg", "alt": "Bags", "badge": null },
+    { "id": "workwear", "name": "Workwear", "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Workwear.jpg", "alt": "Workwear", "badge": null },
+    { "id": "swimwear", "name": "Swimwear", "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/swimwear%201.jpg", "alt": "Swimwear", "badge": null },
     { "id": "beauty", "name": "Beauty", "imageUrl": "https://storage.googleapis.com/uxpilot-auth.appspot.com/fe64037ddd-2c7840117cc2911d537b.png", "alt": "Beauty", "badge": null },
-    { "id": "wellness", "name": "Wellness", "imageUrl": "../assets/Wellness.jpg", "alt": "Wellness", "badge": null },
+    { "id": "wellness", "name": "Wellness", "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Wellness.jpg", "alt": "Wellness", "badge": null },
     { "id": "sale", "name": "Sale", "imageUrl": "https://storage.googleapis.com/uxpilot-auth.appspot.com/179cee2d51-68640f3705cf734d5d3e.png", "alt": "Sale", "badge": "Up to 50% off" }
   ]
 }

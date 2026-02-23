@@ -365,7 +365,7 @@ tailwind.config = {
             </svg>
         </button>
         <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-            <img class="w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
+            <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
         </div>
         <div class="flex-1">
             <p class="font-semibold text-black text-sm" id="header-title">ShAI</p>
@@ -378,7 +378,7 @@ tailwind.config = {
             <div class="p-4 pb-0">
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
+                        <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
                     </div>
                     <div class="flex-1">
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3">
@@ -1077,7 +1077,7 @@ window.testUserPreferredSize = function(unit, size) {
 document.addEventListener("DOMContentLoaded", function () {
     // ShAI avatar: set from DB when loaded. Call window.setShAIAvatar(url) from API response.
     window.setShAIAvatar = function(url) {
-        window.__shaiAvatarUrl = url || '../assets/shai-avatar.png';
+        window.__shaiAvatarUrl = url || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
         document.querySelectorAll('[data-shai-avatar]').forEach(function(img) { img.src = window.__shaiAvatarUrl; });
     };
     window.testShAIAvatar = function(url) {
@@ -1639,7 +1639,7 @@ document.addEventListener("touchmove", e => {
     function addShAIMessage(message, thumbUrls) {
         const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
         if (chatMessagesContainer) {
-            const avatarUrl = window.__shaiAvatarUrl || '../assets/shai-avatar.png';
+            const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
             const thumbHtml = (thumbUrls && thumbUrls.length) ? '<div class="flex gap-1.5 mt-2 flex-wrap">' + thumbUrls.slice(0, 4).map(function(t) { return '<img class="w-12 h-12 rounded-lg object-cover border border-gray-200" src="' + (t || '').replace(/"/g, '&quot;') + '" alt="">'; }).join('') + '</div>' : '';
             const aiMessage = document.createElement('div');
             aiMessage.className = 'flex items-start space-x-3 mb-4';
@@ -1760,7 +1760,7 @@ document.addEventListener("touchmove", e => {
                 chatMessagesContainer.appendChild(userMessage);
                 
                 setTimeout(() => {
-                    const avatarUrl = window.__shaiAvatarUrl || '../assets/shai-avatar.png';
+                    const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
                     const aiResponse = document.createElement('div');
                     aiResponse.className = 'flex items-start space-x-3 mb-4';
                     aiResponse.innerHTML = `
@@ -2256,7 +2256,7 @@ function requireSizeBefore(action) {
         if (chatMessagesContainer) {
             const bubble = document.createElement('div');
             bubble.className = 'flex items-start space-x-3 mb-4';
-            const avatarUrl = window.__shaiAvatarUrl || '../assets/shai-avatar.png';
+            const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
             bubble.innerHTML = `
                 <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
                     <img class="w-full h-full object-cover" src="${avatarUrl.replace(/"/g, '&quot;')}" alt="ShAI" data-shai-avatar />

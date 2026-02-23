@@ -153,7 +153,7 @@
             </svg>
         </button>
         <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-            <img class="w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
+            <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
         </div>
         <div class="flex-1">
             <p class="font-semibold text-gray-900 text-sm font-['Space_Grotesk']">ShAI</p>
@@ -167,7 +167,7 @@
             <!-- ShAI Welcome Message -->
             <div class="flex items-start space-x-3 mb-2 animate-slide-in-left">
                 <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                    <img class="w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
+                    <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
                 </div>
                 <div class="flex-1">
                     <div class="bg-gray-50 rounded-2xl rounded-tl-md p-2.5 mb-3 shadow-sm max-w-[80%]">
@@ -408,7 +408,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // ShAI avatar: set from DB when loaded. Call window.setShAIAvatar(url) from API response.
-    const defaultShaiAvatar = '../assets/shai-avatar.png';
+    const defaultShaiAvatar = 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
     window.setShAIAvatar = function(url) {
         window.__shaiAvatarUrl = url || defaultShaiAvatar;
         document.querySelectorAll('[data-shai-avatar]').forEach(function(img) { img.src = window.__shaiAvatarUrl; });
@@ -911,7 +911,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 shaiResponse.className = 'flex items-start space-x-3 mb-2 animate-slide-in-left';
                 shaiResponse.innerHTML = `
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI assistant avatar" />
+                        <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI assistant avatar" />
                     </div>
                     <div class="flex-1">
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-2.5 shadow-sm max-w-[80%]">

@@ -130,7 +130,7 @@
                     </button>
                     <div id="shai-avatar-container" class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
                         <span id="shai-avatar-placeholder" class="text-gray-600 dm-sans font-medium text-xs">AI</span>
-                        <img id="shai-avatar" class="w-full h-full object-cover rounded-full" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
+                        <img id="shai-avatar" class="w-full h-full object-cover rounded-full" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
                     </div>
                     <div class="ml-3">
                         <h4 class="font-semibold text-sm text-black poppins">ShAI</h4>
@@ -331,13 +331,13 @@
                         alt: 'fashion shopping aesthetic minimalist hero background with soft colors and elegant styling'
                     },
                     categories: [
-                        { id: 'shoes', name: 'Shoes', imageUrl: '../assets/shoes%201.jpg', alt: 'Shoes', badge: null },
-                        { id: 'dresses', name: 'Dresses', imageUrl: '../assets/dresses.jpg', alt: 'Dresses', badge: null },
-                        { id: 'bags', name: 'Bags', imageUrl: '../assets/bags.jpg', alt: 'Bags', badge: null },
-                        { id: 'workwear', name: 'Workwear', imageUrl: '../assets/Workwear.jpg', alt: 'Workwear', badge: null },
-                        { id: 'swimwear', name: 'Swimwear', imageUrl: '../assets/swimwear%201.jpg', alt: 'Swimwear', badge: null },
+                        { id: 'shoes', name: 'Shoes', imageUrl: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shoes%201.jpg', alt: 'Shoes', badge: null },
+                        { id: 'dresses', name: 'Dresses', imageUrl: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/dresses.jpg', alt: 'Dresses', badge: null },
+                        { id: 'bags', name: 'Bags', imageUrl: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/bags.jpg', alt: 'Bags', badge: null },
+                        { id: 'workwear', name: 'Workwear', imageUrl: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Workwear.jpg', alt: 'Workwear', badge: null },
+                        { id: 'swimwear', name: 'Swimwear', imageUrl: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/swimwear%201.jpg', alt: 'Swimwear', badge: null },
                         { id: 'beauty', name: 'Beauty', imageUrl: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/fe64037ddd-2c7840117cc2911d537b.png', alt: 'Beauty', badge: null },
-                        { id: 'wellness', name: 'Wellness', imageUrl: '../assets/Wellness.jpg', alt: 'Wellness', badge: null },
+                        { id: 'wellness', name: 'Wellness', imageUrl: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Wellness.jpg', alt: 'Wellness', badge: null },
                         { id: 'sale', name: 'Sale', imageUrl: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/179cee2d51-68640f3705cf734d5d3e.png', alt: 'Sale', badge: 'Up to 50% off' }
                     ]
                 };
@@ -484,7 +484,7 @@
                 // ShAI avatar: set from DB when loaded. Updates header AND all chat message avatars.
                 window.__shaiAvatarUrl = window.__shaiAvatarUrl || '';
                 function getShaiAvatarHtml() {
-                    const url = window.__shaiAvatarUrl || '../assets/shai-avatar.png';
+                    const url = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
                     const base = 'w-8 h-8 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center bg-gray-200';
                     return url
                         ? `<div class="shai-msg-avatar-wrap ${base}"><img class="w-full h-full object-cover" src="${url.replace(/"/g, '&quot;')}" alt="ShAI avatar" onerror="this.parentElement.innerHTML='<span class=\\'text-gray-600 dm-sans font-medium text-xs\\'>AI</span>'"></div>`
@@ -492,7 +492,7 @@
                 }
                 function updateAllShaiMsgAvatars() {
                     document.querySelectorAll('.shai-msg-avatar-wrap').forEach(wrap => {
-                        const url = window.__shaiAvatarUrl || '../assets/shai-avatar.png';
+                        const url = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
                         wrap.innerHTML = url ? `<img class="w-full h-full object-cover" src="${url.replace(/"/g, '&quot;')}" alt="ShAI avatar" onerror="this.parentElement.innerHTML='<span class=\\'text-gray-600 dm-sans font-medium text-xs\\'>AI</span>'">` : '<span class="text-gray-600 dm-sans font-medium text-xs">AI</span>';
                     });
                 }
@@ -667,7 +667,7 @@
 
                 // Apply ShAI avatar on load: use pre-set URL or default from assets
                 if (window.__shaiAvatarUrl) window.setShAIAvatar(window.__shaiAvatarUrl);
-                else window.setShAIAvatar('../assets/shai-avatar.png');
+                else window.setShAIAvatar('https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png');
 
                 // Expose for console testing
                 window.loadShopByCategoryData = loadShopByCategoryData;

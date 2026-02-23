@@ -97,7 +97,7 @@
             <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
         </button>
         <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0 bg-gray-100 flex items-center justify-center relative">
-            <img class="notif-shai-avatar w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI" onerror="this.style.display='none';var s=this.parentElement.querySelector('.notif-shai-placeholder');if(s)s.classList.remove('hidden')">
+            <img class="notif-shai-avatar w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" onerror="this.style.display='none';var s=this.parentElement.querySelector('.notif-shai-placeholder');if(s)s.classList.remove('hidden')">
             <span class="notif-shai-placeholder hidden absolute inset-0 flex items-center justify-center text-gray-400 text-xs font-medium">AI</span>
         </div>
         <div class="flex-1">
@@ -110,7 +110,7 @@
             <div class="p-4 pb-6">
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center relative">
-                        <img class="notif-shai-avatar w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI" onerror="this.style.display='none';var s=this.parentElement.querySelector('.notif-shai-placeholder');if(s)s.classList.remove('hidden')">
+                        <img class="notif-shai-avatar w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" onerror="this.style.display='none';var s=this.parentElement.querySelector('.notif-shai-placeholder');if(s)s.classList.remove('hidden')">
                         <span class="notif-shai-placeholder hidden absolute inset-0 flex items-center justify-center text-gray-400 text-xs font-medium">AI</span>
                     </div>
                     <div class="flex-1">
@@ -332,7 +332,7 @@
             var backBtn = document.getElementById('notif-chat-back-btn');
             var contactsContainer = document.getElementById('notif-contacts-container');
             var contactSearch = document.getElementById('notif-contact-search');
-            function getShaiImg() { return window.__shaiAvatarUrl || '../assets/shai-avatar.png'; }
+            function getShaiImg() { return window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png'; }
             function getContainer() { return chatMessages && chatMessages.querySelector('.p-4'); }
             function scrollToBottom() {
                 if (!chatMessages) return;

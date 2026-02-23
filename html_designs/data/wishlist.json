@@ -1,6 +1,6 @@
 {
   "hero": {
-    "imageUrl": "../assets/Paris%20in%20Spring.jpg",
+    "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Paris%20in%20Spring.jpg",
     "alt": "Wishlist gift sharing hero"
   },
   "items": [
@@ -10,7 +10,7 @@
       "name": "Silk Midi Dress",
       "brand": "Reformation",
       "price": "$248",
-      "image": "../assets/silk%20midi%20dress.jpg",
+      "image": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/silk%20midi%20dress.jpg",
       "imageAlt": "Silk midi dress",
       "originalPrice": null,
       "discount": null
@@ -21,7 +21,7 @@
       "name": "Cashmere Sweater",
       "brand": "Brunello Cucinelli",
       "price": "$1,850",
-      "image": "../assets/cashmere%20sweater.jpg",
+      "image": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/cashmere%20sweater.jpg",
       "imageAlt": "Cashmere sweater",
       "originalPrice": null,
       "discount": null
@@ -32,7 +32,7 @@
       "name": "Leather Ankle Boots",
       "brand": "Totême",
       "price": "$640",
-      "image": "../assets/leather%20ankle%20boots.jpg",
+      "image": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/leather%20ankle%20boots.jpg",
       "imageAlt": "Leather ankle boots",
       "originalPrice": null,
       "discount": null
@@ -43,7 +43,7 @@
       "name": "Gold Chain Necklace",
       "brand": "Cartier",
       "price": "$2,100",
-      "image": "../assets/gold%20necklace.jpg",
+      "image": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/gold%20necklace.jpg",
       "imageAlt": "Gold chain necklace",
       "originalPrice": null,
       "discount": null
@@ -54,7 +54,7 @@
       "name": "Le Smoking Blazer",
       "brand": "Saint Laurent",
       "price": "$1,890",
-      "image": "../assets/Saint%20Laurent%20Blazer.jpg",
+      "image": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Saint%20Laurent%20Blazer.jpg",
       "imageAlt": "Saint Laurent blazer",
       "originalPrice": null,
       "discount": null
@@ -65,7 +65,7 @@
       "name": "Le 5 À 7 Tote",
       "brand": "Saint Laurent",
       "price": "$1,490",
-      "image": "../assets/Saint%20Laurent%20bag.jpg",
+      "image": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Saint%20Laurent%20bag.jpg",
       "imageAlt": "Saint Laurent tote bag",
       "originalPrice": null,
       "discount": null
@@ -76,7 +76,7 @@
       "name": "Vintage Blazer",
       "brand": "Mugler",
       "price": "$850",
-      "image": "../assets/mugler%20blazer.jpg",
+      "image": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/mugler%20blazer.jpg",
       "imageAlt": "Mugler vintage blazer",
       "originalPrice": null,
       "discount": null
@@ -89,7 +89,7 @@
       "price": "$168",
       "originalPrice": "$210",
       "discount": "20% off",
-      "image": "../assets/reformation%20midi%20dress.jpg",
+      "image": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/reformation%20midi%20dress.jpg",
       "imageAlt": "Reformation midi dress"
     }
   ]

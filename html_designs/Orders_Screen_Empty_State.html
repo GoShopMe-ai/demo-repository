@@ -132,7 +132,7 @@
                 </svg>
             </button>
             <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-                <img class="orders-empty-shai-avatar w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-from-db />
+                <img class="orders-empty-shai-avatar w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-from-db />
             </div>
             <div class="flex-1">
                 <p class="font-semibold text-black text-sm" id="header-title">ShAI</p>
@@ -144,7 +144,7 @@
                 <div class="p-4 pb-0">
                     <div class="flex items-start space-x-3 mb-4">
                         <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                            <img class="orders-empty-shai-avatar w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-from-db />
+                            <img class="orders-empty-shai-avatar w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-from-db />
                         </div>
                         <div class="flex-1">
                             <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3">
@@ -551,7 +551,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (container) {
             var aiMessage = document.createElement('div');
             aiMessage.className = 'flex items-start space-x-3 mb-4';
-            aiMessage.innerHTML = '<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img class="orders-empty-shai-avatar w-full h-full object-cover" src="' + (window.__shaiAvatarUrl || '../assets/shai-avatar.png') + '" alt="ShAI avatar" data-shai-from-db /></div><div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">' + message + '</p></div></div>';
+            aiMessage.innerHTML = '<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img class="orders-empty-shai-avatar w-full h-full object-cover" src="' + (window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png') + '" alt="ShAI avatar" data-shai-from-db /></div><div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">' + message + '</p></div></div>';
             container.appendChild(aiMessage);
             container.scrollTop = container.scrollHeight;
         }
@@ -758,7 +758,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 setTimeout(function() {
                     var aiResponse = document.createElement('div');
                     aiResponse.className = 'flex items-start space-x-3 mb-4';
-                    aiResponse.innerHTML = '<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img class="orders-empty-shai-avatar w-full h-full object-cover" src="' + (window.__shaiAvatarUrl || '../assets/shai-avatar.png') + '" alt="ShAI avatar" data-shai-from-db /></div><div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">I\'d be happy to help you with that! Let me find some perfect options for you.</p></div></div>';
+                    aiResponse.innerHTML = '<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img class="orders-empty-shai-avatar w-full h-full object-cover" src="' + (window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png') + '" alt="ShAI avatar" data-shai-from-db /></div><div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">I\'d be happy to help you with that! Let me find some perfect options for you.</p></div></div>';
                     container.appendChild(aiResponse);
                     container.scrollTop = container.scrollHeight;
                 }, 1000);

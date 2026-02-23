@@ -400,7 +400,7 @@
             <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
         </button>
         <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-            <img class="w-full h-full object-cover" src="../assets/shai-avatar.png"
+            <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
                  alt="ShAI" data-shai-avatar>
             <div style="display:none;width:100%;height:100%;background:#e5e7eb;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#6b7280;">AI</div>
@@ -417,7 +417,7 @@
             <div class="p-4 pb-0">
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="w-full h-full object-cover" src="../assets/shai-avatar.png"
+                        <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png"
                              onerror="this.style.display='none'"
                              alt="ShAI" data-shai-avatar>
                     </div>
@@ -525,7 +525,7 @@
 
     /* ── Helpers ─────────────────────────────────────── */
     function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-    function shaiAvSrc() { var el = document.querySelector('[data-shai-avatar]'); return (el && el.src) ? el.src : '../assets/shai-avatar.png'; }
+    function shaiAvSrc() { var el = document.querySelector('[data-shai-avatar]'); return (el && el.src) ? el.src : 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png'; }
 
     /* ── Profile nav ──────────────────────────────────── */
     try {

@@ -474,7 +474,7 @@
             <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
         </button>
         <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0 bg-gray-100 flex items-center justify-center relative">
-            <img class="orders-shai-avatar w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI" onerror="this.style.display='none';var s=this.parentElement.querySelector('.orders-shai-placeholder');if(s)s.classList.remove('hidden')">
+            <img class="orders-shai-avatar w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" onerror="this.style.display='none';var s=this.parentElement.querySelector('.orders-shai-placeholder');if(s)s.classList.remove('hidden')">
             <span class="orders-shai-placeholder hidden absolute inset-0 flex items-center justify-center text-gray-400 text-xs font-medium">AI</span>
         </div>
         <div class="flex-1">
@@ -487,7 +487,7 @@
             <div class="p-4 pb-6">
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center relative">
-                        <img class="orders-shai-avatar w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI" onerror="this.style.display='none';var s=this.parentElement.querySelector('.orders-shai-placeholder');if(s)s.classList.remove('hidden')">
+                        <img class="orders-shai-avatar w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" onerror="this.style.display='none';var s=this.parentElement.querySelector('.orders-shai-placeholder');if(s)s.classList.remove('hidden')">
                         <span class="orders-shai-placeholder hidden absolute inset-0 flex items-center justify-center text-gray-400 text-xs font-medium">AI</span>
                     </div>
                     <div class="flex-1">
@@ -621,7 +621,7 @@
 // - Text/voice: user bubbles bg-[#939BFB] rounded-tr-md; ShAI bubbles bg-gray-50 rounded-tl-md; voice: play-btn + waveform
 // - Camera: file input image/*,video/*; same bubble designs as other pages
 (function() {
-    window.__shaiAvatarUrl = '../assets/shai-avatar.png';
+    window.__shaiAvatarUrl = 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
     window.setShaiAvatarFromDb = window.setShAIAvatar = function(url) {
         if (!url) return;
         window.__shaiAvatarUrl = url;
@@ -696,7 +696,7 @@
         var headerSubtitle = document.getElementById('orders-header-subtitle');
         var contactSearch = document.getElementById('orders-contact-search');
         var contactsContainer = document.getElementById('orders-contacts-container');
-        function getShaiImg() { return window.__shaiAvatarUrl || '../assets/shai-avatar.png'; }
+        function getShaiImg() { return window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png'; }
 
         function getContainer() { return chatMessages && chatMessages.querySelector('.p-4'); }
 
