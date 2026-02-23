@@ -1,4 +1,4 @@
-﻿/**
+/**
  * GoShopMe Mobile Optimization - Shared across ALL screens
  *
  * Mobile (<=768px)  -> full-width, edge-to-edge, no gutters
@@ -161,7 +161,13 @@ body {
 
   /* Chat drawer and input bar: full-width, no centering offset */
   #chat-drawer,
-  #chat-input-bar {
+  #chat-input-bar,
+  #chat-input-collapsed,
+  #shai-chat-drawer,
+  #return-chat-drawer,
+  #return-chat-input-bar,
+  #shai-chat-drawer-wrapper,
+  #chat-drawer-wrapper {
     left: 0 !important;
     right: 0 !important;
     max-width: 100vw !important;
@@ -169,7 +175,51 @@ body {
     overscroll-behavior: contain;
   }
 
+  /* Re-apply Y slide when drawer is hidden (translate-y-full) */
+  #chat-drawer.translate-y-full,
+  #shai-chat-drawer.translate-y-full,
+  #return-chat-drawer.translate-y-full {
+    transform: translateY(100%) !important;
+  }
+
+  /* Chat drawer max-height: 64px bottom-16 + 80px safe zone for browser/status bar */
+  #chat-drawer,
+  #shai-chat-drawer,
+  #return-chat-drawer,
+  [id$="-drawer"] {
+    max-height: calc(100dvh - 144px) !important;
+  }
+
 } /* end @media mobile */
+
+/* =============================================================
+   3b. CHAT DRAWER SCROLL & TOUCH (all viewports)
+   ============================================================= */
+#chat-drawer,
+#shai-chat-drawer,
+#return-chat-drawer,
+[id$="-drawer"] {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+#chat-messages,
+#return-chat-messages,
+[id$="-chat-messages"],
+[id$="-messages"] {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Drag handle: prevent scroll on touch, optimize for dragging */
+#drag-handle-zone,
+.chat-drawer-drag-zone,
+[id$="-drag-handle-area"] {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
 
 /* =============================================================
    4. DESKTOP: centered 390px mockup

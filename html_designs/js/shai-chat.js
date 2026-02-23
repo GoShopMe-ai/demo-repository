@@ -1,4 +1,4 @@
-﻿/**
+/**
  * shai-chat.js â€” Self-contained ShAI Chat System
  * Drop <script src="js/shai-chat.js"></script> into any GoShopMe screen.
  * The script injects the overlay, drawer, and collapsed input bar,
@@ -509,7 +509,6 @@
           var contact = list[idx];
           var firstName = contact ? (contact.name || '').split(' ')[0] : 'Contact';
           if (btn.textContent.trim() === 'Add') {
-            btn.textContent = 'Added!'; btn.style.opacity = '0.6'; btn.disabled = true;
             if (msgContainer) {
               var note = document.createElement('div');
               note.className = 'flex justify-center mb-4';
@@ -528,7 +527,6 @@
               navigator.clipboard.writeText(shareData.text + ' ' + shareData.url);
               showToast('Invitation link copied to clipboard!');
             }
-            btn.textContent = 'Invited!'; btn.style.opacity = '0.6'; btn.disabled = true;
           }
         });
       });

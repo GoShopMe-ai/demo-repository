@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Trending Now - GoShopMe</title>
     <link rel="stylesheet" href="css/mobile-optimization.css">
+    <link rel="stylesheet" href="css/chat-drawer-drag.css">
 <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -390,14 +391,16 @@
 <!-- ── ShAI Chat Drawer — slides up from above bottom nav ── -->
 <div id="chat-drawer">
     <!-- Drag handle -->
-    <div id="drag-handle-zone" class="drag-zone">
+    <div id="drag-handle-zone" class="drag-zone chat-drawer-drag-zone">
         <div class="drag-pill"></div>
     </div>
 
     <!-- Drawer header -->
     <div id="chat-header" class="flex items-center p-4 pb-2 flex-shrink-0">
         <button id="back-btn" class="hidden mr-2 p-1 hover:opacity-70 transition-opacity" aria-label="Back">
-            <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+            <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+            </svg>
         </button>
         <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
             <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png"
@@ -423,7 +426,7 @@
                     </div>
                     <div class="flex-1">
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3">
-                            <p class="text-sm text-black break-words whitespace-pre-wrap">Hi! I'm ShAI ✨ Tap any product's chat icon or ask me anything about style, sizing, or alternatives.</p>
+                            <p class="text-sm text-black break-words whitespace-pre-wrap">Hi! I'm ShAI. Tap any product's chat icon or ask me anything about style, sizing, or alternatives.</p>
                         </div>
                     </div>
                 </div>
@@ -638,7 +641,7 @@
         setTimeout(function () {
             /* ShAI message only — with thumbnail — no outgoing user bubble */
             appendShAI(
-                'Tell me more about the "' + name + '" by ' + brand + ' (' + price + '). Want styling tips, size help, or similar options? 💜',
+                'Tell me more about the "' + name + '" by ' + brand + ' (' + price + '). Want styling tips, size help, or similar options?',
                 imgSrc ? [imgSrc] : []
             );
         }, 260);
@@ -701,7 +704,7 @@
         if (!txt) return;
         appendUser(txt);
         dInput.value = ''; autoResize(dInput); syncDrawerInput();
-        setTimeout(function(){ appendShAI("Thanks! I'm here to help — what would you like to know? 💜"); }, 900);
+        setTimeout(function(){ appendShAI("Thanks! I'm here to help — what would you like to know?"); }, 900);
     }
     if (dInput)  dInput.addEventListener('input', syncDrawerInput);
     if (dInput)  dInput.addEventListener('keydown', function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendDrawerMsg(); } });
@@ -722,7 +725,7 @@
         setTimeout(function(){
             appendUser(txt);
             bInput.value = ''; autoResize(bInput); syncBarInput();
-            setTimeout(function(){ appendShAI("Thanks! I'm here to help — what would you like to know? 💜"); }, 900);
+            setTimeout(function(){ appendShAI("Thanks! I'm here to help — what would you like to know?"); }, 900);
         }, 320);
     }
     if (bInput) bInput.addEventListener('input', syncBarInput);
@@ -848,7 +851,7 @@
             var tmp = document.createElement('div');
             tmp.id = 'temp-recording';
             tmp.className = 'flex justify-end mb-2';
-            tmp.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]"><span class="mr-2">🎙️</span><span class="text-xs">Recording... swipe left to cancel</span></div>';
+            tmp.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]"><svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg><span class="text-xs">Recording... swipe left to cancel</span></div>';
             container.appendChild(tmp);
             scrollBottom();
         }
@@ -943,17 +946,55 @@
 
     function renderContacts(list) {
         if (!contactsContainer) return;
-        contactsContainer.innerHTML = (list || []).map(function(c) {
+        var contacts = list || [];
+        contactsContainer.innerHTML = contacts.map(function(c, i) {
             var initials = getInitials(c.name);
             var avatarHtml = (c.goshopme && c.avatar)
                 ? '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img src="' + esc(c.avatar) + '" alt="' + esc(c.name) + '" class="w-full h-full object-cover"></div>'
                 : '<div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-600 font-medium text-xs">' + initials + '</span></div>';
-            var btnHtml = c.goshopme
-                ? '<button class="bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>'
-                : '<button class="bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>';
-            return '<div class="flex items-center gap-2 p-2 bg-gray-50 rounded-xl">' + avatarHtml + '<div class="flex-1"><p class="font-medium text-sm text-black">' + esc(c.name) + '</p><p class="text-xs text-gray-500">' + esc(c.phone) + '</p></div>' + btnHtml + '</div>';
+            var btnClass = c.goshopme
+                ? 'contact-action-btn bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium'
+                : 'contact-action-btn bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]';
+            var btnLabel = c.goshopme ? 'Add' : 'Invite';
+            return '<div class="contact-row flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-idx="' + i + '" data-name="' + esc(c.name) + '" data-goshopme="' + (c.goshopme ? 'true' : 'false') + '">' + avatarHtml + '<div class="flex-1"><p class="font-medium text-sm text-black">' + esc(c.name) + '</p><p class="text-xs text-gray-500">' + esc(c.phone) + '</p></div><button type="button" class="' + btnClass + '" data-action="' + (c.goshopme ? 'add' : 'invite') + '">' + btnLabel + '</button></div>';
         }).join('');
     }
+
+    function handleContactAction(e) {
+        var btn = e.target.closest('.contact-action-btn');
+        if (!btn || !contactsContainer || !contactsContainer.contains(btn)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        var row = btn.closest('.contact-row');
+        if (!row) return;
+        var name = row.getAttribute('data-name') || '';
+        var firstName = name.split(' ')[0] || 'Contact';
+        var action = btn.getAttribute('data-action') || (btn.textContent.trim() === 'Add' ? 'add' : 'invite');
+        if (action === 'add') {
+            var note = document.createElement('div');
+            note.className = 'flex justify-center mb-4';
+            note.innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">' + esc(firstName) + ' has been added to chat</div>';
+            var msgContainer = document.querySelector('#chat-messages .p-4');
+            if (msgContainer) {
+                msgContainer.appendChild(note);
+                if (typeof scrollBottom === 'function') scrollBottom();
+            }
+            hideAddFriendFlow();
+        } else {
+            var shareData = { title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless - join me", url: 'https://app.goshopme.ai' };
+            if (navigator.share) {
+                navigator.share(shareData).catch(function() {
+                    if (navigator.clipboard) navigator.clipboard.writeText(shareData.text + ' ' + shareData.url);
+                });
+            } else if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareData.text + ' ' + shareData.url);
+                if (typeof renderSystemBubble === 'function') renderSystemBubble('Invitation link copied to clipboard!');
+                else if (typeof showToast === 'function') showToast('Invitation link copied to clipboard!');
+                else alert('Invitation link copied to clipboard!');
+            }
+        }
+    }
+    if (contactsContainer) contactsContainer.addEventListener('click', handleContactAction);
 
     function filterContacts(query) {
         var q = (query || '').toLowerCase();
@@ -1061,7 +1102,7 @@
             var creator = cl.dataset.creator || '';
             if (!isOpen) openDrawer();
             setTimeout(function(){
-                appendShAI('Want to see more from @' + creator + '? I can show their full collection and help you create similar looks! 🌟');
+                appendShAI('Want to see more from @' + creator + '? I can show their full collection and help you create similar looks!');
             }, 250);
             return;
         }

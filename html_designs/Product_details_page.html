@@ -1018,7 +1018,7 @@ window.testUserPreferredSize = function(unit, size) {
         wrap.className = 'flex justify-end mb-4';
         wrap.innerHTML = `
           <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%]">
-            <p class="text-sm"></p>
+            <p class="text-sm break-words whitespace-pre-wrap"></p>
           </div>`;
         wrap.querySelector('p').textContent = text;
         container.appendChild(wrap);
@@ -1027,6 +1027,11 @@ window.testUserPreferredSize = function(unit, size) {
       ta.value = '';
       autoResize();
       updateButtons();
+      if (typeof window.addShAIMessage === 'function') {
+        setTimeout(() => {
+          window.addShAIMessage("I'm on it! Let me help you with that — what else would you like to know about this product?");
+        }, 800);
+      }
     };
 
     // Events
@@ -1318,20 +1323,27 @@ document.addEventListener("touchmove", e => {
         const text = inputEl.value.trim();
         if (!text) return;
         const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+        const chatMessages = document.getElementById('chat-messages');
         if (chatMessagesContainer) {
             const userMsg = document.createElement('div');
             userMsg.className = 'flex justify-end mb-4';
             userMsg.innerHTML = `
                 <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%]">
-                    <p class="text-sm break-words whitespace-pre-wrap">${text}</p>
+                    <p class="text-sm break-words whitespace-pre-wrap">${text.replace(/</g, '&lt;')}</p>
                 </div>`;
             chatMessagesContainer.appendChild(userMsg);
-            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+            if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
             inputEl.value = "";
 
             mic.classList.remove("hidden");
             addFriend.classList.remove("hidden");
             send.classList.add("hidden");
+
+            if (typeof addShAIMessage === 'function') {
+                setTimeout(() => {
+                    addShAIMessage("I'm on it! Let me help you with that — what else would you like to know about this product?");
+                }, 800);
+            }
         }
     }
 
@@ -1440,6 +1452,11 @@ document.addEventListener("touchmove", e => {
     }
 
     // === VOICE RECORDING ===
+    function removeTempRecordingBubble() {
+        const temp = document.getElementById("temp-recording");
+        if (temp) temp.remove();
+    }
+
     function setupVoiceRecording() {
         micBtns.forEach(btn => {
             if (!btn) return;
@@ -1456,6 +1473,7 @@ document.addEventListener("touchmove", e => {
 
     async function startRecording(e) {
         e.preventDefault();
+        removeTempRecordingBubble();
         if (!isDrawerExpanded) {
             expandDrawer();
             return;
@@ -1491,16 +1509,16 @@ document.addEventListener("touchmove", e => {
                 tempBubble.className = 'flex justify-end mb-2';
                 tempBubble.innerHTML = `
                     <div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]">
-                        <span class="mr-2">🎙️</span>
-                        <span class="text-xs">
-                            Recording... swipe left to cancel
-                        </span>
+                        <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg>
+                        <span class="text-xs">Recording... swipe left to cancel</span>
                     </div>
                 `;
                 chatMessagesContainer.appendChild(tempBubble);
-                chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+                const chatMsgs = document.getElementById('chat-messages');
+                if (chatMsgs) chatMsgs.scrollTop = chatMsgs.scrollHeight;
             }
         } catch (err) {
+            removeTempRecordingBubble();
             if (err && (err.name === "NotAllowedError" || err.name === "SecurityError")) {
                 micAccessDenied = true;
                 renderSystemBubble("Microphone access denied. Enable it in Settings to record voice messages.");
@@ -1514,9 +1532,9 @@ document.addEventListener("touchmove", e => {
         e.preventDefault();
         if (!isRecording) return;
         isRecording = false;
-        this.classList.remove("scale-110", "ring-2", "ring-[#939BFB]", "ring-offset-2");
-        const temp = document.getElementById("temp-recording");
-        if (temp) temp.remove();
+        const btn = e.currentTarget || e.target;
+        if (btn) btn.classList.remove("scale-110", "ring-2", "ring-[#939BFB]", "ring-offset-2");
+        removeTempRecordingBubble();
 
         if (mediaRecorder) {
             mediaRecorder.stop();
@@ -1531,11 +1549,10 @@ document.addEventListener("touchmove", e => {
     function cancelRecording(e) {
         if (!isRecording) return;
         isRecording = false;
-        this.classList.remove("scale-110", "ring-2", "ring-[#939BFB]", "ring-offset-2");
-        const temp = document.getElementById("temp-recording");
-        if (temp) temp.remove();
+        const btn = e.currentTarget || e.target;
+        if (btn) btn.classList.remove("scale-110", "ring-2", "ring-[#939BFB]", "ring-offset-2");
+        removeTempRecordingBubble();
         if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
-        renderSystemBubble("Recording cancelled");
     }
 
     function handleSwipeCancel(e) {
@@ -1547,7 +1564,8 @@ document.addEventListener("touchmove", e => {
     }
 
     function renderAudioBubble(url) {
-    const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+        removeTempRecordingBubble();
+        const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
     if (chatMessagesContainer) {
         const bubble = document.createElement('div');
         bubble.className = 'flex justify-end mb-2';
@@ -1658,6 +1676,7 @@ document.addEventListener("touchmove", e => {
             chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
         }
     }
+    window.addShAIMessage = addShAIMessage;
 
     window.openRecentChat = function(chatId) {
         if (!isDrawerExpanded) {

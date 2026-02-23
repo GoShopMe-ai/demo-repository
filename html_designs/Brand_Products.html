@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="stylesheet" href="css/mobile-optimization.css">
+    <link rel="stylesheet" href="css/chat-drawer-drag.css">
     <title>Brand - GoShopMe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,8 +34,17 @@
         .bottom-nav-btn:hover, .bottom-nav-btn.active { color: #939BFB; }
         .bottom-nav-btn:hover svg, .bottom-nav-btn:hover span, .bottom-nav-btn.active svg, .bottom-nav-btn.active span { color: #939BFB; }
         .bottom-nav-btn svg { width: 20px; height: 20px; stroke-width: 1.5; margin-bottom: 4px; }
-        /* Chat drawer and input bar: full-width on mobile, docked to nav on all screens */
-        :root { --shai-nav-h: 64px; }  /* default; JS will update to actual nav height */
+        /* Chat drawer and input bar: docked above bottom nav, nav stays on top */
+        :root { --shai-nav-h: 72px; }
+        #chat-drawer, #chat-input-bar {
+            bottom: 72px !important;  /* dock above nav bar */
+        }
+        #chat-drawer {
+            z-index: 40 !important;   /* below nav (z-50) so nav stays clickable */
+        }
+        #chat-overlay {
+            z-index: 35 !important;
+        }
 
         @media screen and (max-width: 768px) {
             #chat-drawer, #chat-input-bar {
@@ -134,7 +144,10 @@ document.addEventListener('DOMContentLoaded', async function() {
                 <span class="text-xs">Wishlist</span>
             </a>
             <a id="brand-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                <span id="brand-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                </span>
+                <img id="brand-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile" data-profile-avatar>
                 <span class="text-xs">Profile</span>
             </a>
         </div>
@@ -144,6 +157,25 @@ document.addEventListener('DOMContentLoaded', async function() {
     var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
     var link = document.getElementById('brand-nav-profile-link');
     if (link) link.href = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+
+    function refreshProfilePhoto() {
+        var img = document.getElementById('brand-nav-profile-photo');
+        var icon = document.getElementById('brand-nav-profile-icon');
+        if (!img || !icon) return;
+        try {
+            var saved = localStorage.getItem('profilePhoto');
+            if (saved) {
+                img.src = saved;
+                img.classList.remove('hidden');
+                icon.classList.add('hidden');
+            } else {
+                img.classList.add('hidden');
+                icon.classList.remove('hidden');
+            }
+        } catch (e) {}
+    }
+    refreshProfilePhoto();
+    window.addEventListener('pageshow', function(e) { if (e.persisted) refreshProfilePhoto(); });
 })();
 </script>
 <script src="js/shai-chat.js"></script>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Creator Collections - GoShopMe</title>
     <link rel="stylesheet" href="css/mobile-optimization.css">
+    <link rel="stylesheet" href="css/chat-drawer-drag.css">
 <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -187,8 +188,8 @@
         <div id="shai-chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-50 bg-white rounded-t-3xl shadow-2xl h-[80vh] transform translate-y-full transition-transform duration-300 flex flex-col">
             
             <!-- Drag Handle - match Home -->
-            <div class="flex justify-center pt-2 flex-shrink-0">
-                <div id="drag-handle" class="w-10 h-1 bg-gray-300 rounded-full cursor-pointer drag-handle"></div>
+            <div id="drag-handle-zone" class="chat-drawer-drag-zone flex justify-center pt-2 flex-shrink-0">
+                <div id="drag-handle" class="w-10 h-1 bg-gray-300 rounded-full cursor-grab pointer-events-none" role="button" aria-label="Drag to resize"></div>
             </div>
 
             <!-- Drawer Header - no arrow button; ShAI avatar placeholder (DB-sourced) -->
@@ -197,8 +198,8 @@
                     <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
                 </button>
                 <div id="shai-avatar-container" class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0 bg-gray-200 flex items-center justify-center">
-                    <img id="shai-avatar" class="w-full h-full object-cover hidden" src="" alt="ShAI avatar" data-placeholder="true">
-                    <span id="shai-avatar-placeholder" class="text-gray-500 text-xs font-medium">AI</span>
+                    <img id="shai-avatar" class="w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar onerror="this.style.display='none';var p=document.getElementById('shai-avatar-placeholder');if(p)p.classList.remove('hidden')">
+                    <span id="shai-avatar-placeholder" class="text-gray-500 text-xs font-medium hidden">AI</span>
                 </div>
                 <div class="flex-1">
                     <p class="font-semibold text-black text-sm" id="header-title">ShAI</p>
@@ -212,8 +213,8 @@
                     <div class="p-4 pb-0">
                         <div class="flex items-start space-x-3 mb-4">
                             <div id="shai-msg-avatar" class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gray-200 flex items-center justify-center">
-                                <img id="shai-msg-avatar-img" class="w-full h-full object-cover hidden" src="" alt="ShAI avatar">
-                                <span id="shai-msg-avatar-placeholder" class="text-gray-500 text-sm font-medium">AI</span>
+                                <img id="shai-msg-avatar-img" class="w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar onerror="this.style.display='none';var p=document.getElementById('shai-msg-avatar-placeholder');if(p)p.classList.remove('hidden')">
+                                <span id="shai-msg-avatar-placeholder" class="text-gray-500 text-sm font-medium hidden">AI</span>
                             </div>
                             <div class="flex-1">
                                 <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3">
@@ -656,8 +657,8 @@
                 if (cnt) {
                     const contextMessage = document.createElement('div');
                     contextMessage.className = 'flex items-start space-x-3 mb-4';
-                    const avatarUrl = (document.getElementById('shai-avatar') || {}).src || '';
-                    const avatarHtml = avatarUrl ? `<img class="w-8 h-8 rounded-full object-cover flex-shrink-0" src="${avatarUrl}" alt="ShAI avatar">` : '<div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-500 text-xs font-medium">AI</span></div>';
+                    const avatarUrl = window.__shaiAvatarUrl || (document.getElementById('shai-avatar') || {}).src || SHAI_AVATAR_DEFAULT;
+                    const avatarHtml = `<img class="w-8 h-8 rounded-full object-cover flex-shrink-0" src="${(avatarUrl || '').replace(/"/g, '&quot;')}" alt="ShAI avatar" data-shai-avatar>`;
                     const thumbHtml = thumbs.length ? '<div class="flex gap-1.5 mt-2 flex-wrap">' + thumbs.slice(0, 4).map((t) => '<img class="w-12 h-12 rounded-lg object-cover border border-gray-200" src="' + (t || '').replace(/"/g, '&quot;') + '" alt="">').join('') + '</div>' : '';
                     contextMessage.innerHTML = avatarHtml + `<div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs"><p class="text-sm text-black">Want the entire "${collectionName}" look? I'll help you shop it!</p>${thumbHtml}</div>`;
                     cnt.appendChild(contextMessage);
@@ -733,8 +734,8 @@
                     setTimeout(() => {
                         const ai = document.createElement('div');
                         ai.className = 'flex items-start space-x-3 mb-4';
-                        const avatarUrl = (document.getElementById('shai-avatar') || {}).src || '';
-                        const avatarHtml = avatarUrl ? '<img class="w-10 h-10 rounded-full object-cover flex-shrink-0" src="' + avatarUrl + '" alt="ShAI">' : '<div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-500 text-xs font-medium">AI</span></div>';
+                        const avatarUrl = window.__shaiAvatarUrl || (document.getElementById('shai-avatar') || {}).src || SHAI_AVATAR_DEFAULT;
+                        const avatarHtml = '<img class="w-10 h-10 rounded-full object-cover flex-shrink-0" src="' + (avatarUrl || '').replace(/"/g, '&quot;') + '" alt="ShAI" data-shai-avatar>';
                         ai.innerHTML = avatarHtml + '<div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">' + (file.type.startsWith('video/') ? 'Great! I can analyze your video. Let me find products that match what I see.' : 'Perfect! I can see your image. Let me analyze it and find similar products for you.') + '</p></div></div>';
                         cnt.appendChild(ai);
                         scrollChatToBottom();
@@ -773,7 +774,7 @@
                         const tb = document.createElement('div');
                         tb.id = 'temp-recording';
                         tb.className = 'flex justify-end mb-2';
-                        tb.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%] shadow-sm animate-pulse"><span class="mr-2" aria-hidden="true">🎙️</span><span class="text-xs font-medium">Recording... swipe left to cancel</span></div>';
+                        tb.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%] shadow-sm animate-pulse"><svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg><span class="text-xs font-medium">Recording... swipe left to cancel</span></div>';
                         cnt.appendChild(tb);
                         scrollChatToBottom();
                     }
@@ -848,15 +849,20 @@
                 btn.addEventListener('touchmove', handleSwipeCancel);
             });
 
-            // Set ShAI avatar from DB (call window.setShAIAvatar(url) when loaded)
+            // Set ShAI avatar from DB or assets (call window.setShAIAvatar(url) when loaded)
+            var SHAI_AVATAR_DEFAULT = '../assets/shai-avatar.png';
+            window.__shaiAvatarUrl = window.__shaiAvatarUrl || SHAI_AVATAR_DEFAULT;
             window.setShAIAvatar = function(url) {
-                const headerImg = document.getElementById('shai-avatar');
-                const headerPlaceholder = document.getElementById('shai-avatar-placeholder');
-                const msgImg = document.getElementById('shai-msg-avatar-img');
-                const msgPlaceholder = document.getElementById('shai-msg-avatar-placeholder');
-                if (url && headerImg) { headerImg.src = url; headerImg.classList.remove('hidden'); if (headerPlaceholder) headerPlaceholder.classList.add('hidden'); }
-                if (url && msgImg) { msgImg.src = url; msgImg.classList.remove('hidden'); if (msgPlaceholder) msgPlaceholder.classList.add('hidden'); }
+                var u = url || SHAI_AVATAR_DEFAULT;
+                window.__shaiAvatarUrl = u;
+                document.querySelectorAll('[data-shai-avatar]').forEach(function(img) {
+                    img.src = u;
+                    img.style.display = '';
+                    img.onerror = function() { this.style.display = 'none'; var ph = this.parentElement.querySelector('[id$="-placeholder"]'); if (ph) ph.classList.remove('hidden'); };
+                });
+                document.querySelectorAll('#shai-avatar-placeholder, #shai-msg-avatar-placeholder').forEach(function(ph) { ph.classList.add('hidden'); });
             };
+            window.setShAIAvatar(window.__shaiAvatarUrl);
 
             document.addEventListener('click', (e) => {
                 if (!e.target.classList.contains('contact-action')) return;
@@ -941,8 +947,8 @@
                     setTimeout(() => {
                         const ai = document.createElement('div');
                         ai.className = 'flex items-start space-x-3 mb-4';
-                        const avatarUrl = (document.getElementById('shai-avatar') || {}).src || '';
-                        const avatarHtml = avatarUrl ? '<img class="w-10 h-10 rounded-full object-cover flex-shrink-0" src="' + avatarUrl + '" alt="ShAI">' : '<div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-500 text-xs font-medium">AI</span></div>';
+                        const avatarUrl = window.__shaiAvatarUrl || (document.getElementById('shai-avatar') || {}).src || SHAI_AVATAR_DEFAULT;
+                        const avatarHtml = '<img class="w-10 h-10 rounded-full object-cover flex-shrink-0" src="' + (avatarUrl || '').replace(/"/g, '&quot;') + '" alt="ShAI" data-shai-avatar>';
                         ai.innerHTML = avatarHtml + '<div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">Perfect! I\'ll show you the items from that collection that match your style and size.</p></div></div>';
                         cnt.appendChild(ai);
                         scrollChatToBottom();
@@ -978,8 +984,8 @@
                         setTimeout(() => {
                             const aiResponse = document.createElement('div');
                             aiResponse.className = 'flex items-start space-x-3 mb-4';
-                            const avatarUrl = (document.getElementById('shai-avatar') || {}).src || '';
-                            const avatarHtml = avatarUrl ? '<img class="w-10 h-10 rounded-full object-cover flex-shrink-0" src="' + avatarUrl + '" alt="ShAI">' : '<div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-500 text-xs font-medium">AI</span></div>';
+                            const avatarUrl = window.__shaiAvatarUrl || (document.getElementById('shai-avatar') || {}).src || SHAI_AVATAR_DEFAULT;
+                            const avatarHtml = '<img class="w-10 h-10 rounded-full object-cover flex-shrink-0" src="' + (avatarUrl || '').replace(/"/g, '&quot;') + '" alt="ShAI" data-shai-avatar>';
                             aiResponse.innerHTML = avatarHtml + '<div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">Great choice! Let me help you with that collection.</p></div></div>';
                             cnt.appendChild(aiResponse);
                             scrollChatToBottom();
