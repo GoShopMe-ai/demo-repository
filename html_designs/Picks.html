@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -136,7 +136,7 @@
                     <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
                 </button>
                 <div id="shai-avatar-container" class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0 bg-gray-200 flex items-center justify-center">
-                    <img id="shai-avatar" class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar>
+                    <img id="shai-avatar" class="w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar>
                     <span id="shai-avatar-placeholder" class="text-gray-500 text-xs font-medium hidden">AI</span>
                 </div>
                 <div class="flex-1">
@@ -151,7 +151,7 @@
                     <div class="p-4 pb-0">
                         <div class="flex items-start space-x-3 mb-4">
                             <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gray-200 flex items-center justify-center">
-                                <img id="creator-picks-greeting-avatar" class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar onerror="this.style.display='none';this.nextElementSibling?.classList.remove('hidden')">
+                                <img id="creator-picks-greeting-avatar" class="w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar onerror="this.style.display='none';this.nextElementSibling?.classList.remove('hidden')">
                                 <span class="text-gray-500 text-sm font-medium hidden">AI</span>
                             </div>
                             <div class="flex-1">
@@ -368,7 +368,7 @@
             for (var i = 0; i < staticBlocks.length; i++) { staticBlocks[i].remove(); }
         };
         window.setShAIAvatar = function(url) {
-            window.__shaiAvatarUrl = url || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+            window.__shaiAvatarUrl = url || '../assets/shai-avatar.png';
             var img = document.getElementById('shai-avatar');
             var ph = document.getElementById('shai-avatar-placeholder');
             var greetingImg = document.getElementById('creator-picks-greeting-avatar');
@@ -387,7 +387,7 @@
         };
         function getShAIAvatarHtml(size) {
             var img = document.getElementById('shai-avatar');
-            var url = (img && img.src ? img.src : '') || window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+            var url = (img && img.src ? img.src : '') || window.__shaiAvatarUrl || '../assets/shai-avatar.png';
             var sz = size || 'w-8 h-8';
             if (url) return '<img class="' + sz + ' rounded-full object-cover flex-shrink-0" src="' + url.replace(/"/g, '&quot;') + '" alt="ShAI avatar">';
             return '<div class="' + sz + ' rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-500 text-xs font-medium">AI</span></div>';
@@ -401,7 +401,7 @@
             if (typeof window.loadCreatorPicksData === 'function') {
                 window.loadCreatorPicksData(creators);
             }
-            if (typeof window.setShAIAvatar === 'function') { window.__shaiAvatarUrl = 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png'; window.setShAIAvatar('https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png'); }
+            if (typeof window.setShAIAvatar === 'function') { window.__shaiAvatarUrl = '../assets/shai-avatar.png'; window.setShAIAvatar('../assets/shai-avatar.png'); }
             const chatDrawer = document.getElementById('shai-chat-drawer');
             const chatOverlay = document.getElementById('chat-overlay');
             const chatInputCollapsedField = document.getElementById('message-input');
@@ -566,7 +566,7 @@
                 const contactName = (contactItem.querySelector('p') || {}).textContent || '';
                 const isGoshopmeUser = contactItem.getAttribute('data-goshopme') === 'true';
                 if (!isGoshopmeUser && navigator.share) {
-                    navigator.share({ title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me", url: 'https://app.goshopme.ai' }).catch(() => {});
+                    navigator.share({ title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me", url: 'https://app.goshopme.ai' }).catch(() => {});
                 }
                 hideAddFriendFlow();
                 const notification = document.createElement('div');
@@ -708,7 +708,7 @@
                         var tempBubble = document.createElement('div');
                         tempBubble.id = 'temp-recording';
                         tempBubble.className = 'flex justify-end mb-2';
-                        tempBubble.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]"><span class="mr-2">ðŸŽ™ï¸</span><span class="text-xs">Recording... swipe left to cancel</span></div>';
+                        tempBubble.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]"><span class="mr-2">🎙️</span><span class="text-xs">Recording... swipe left to cancel</span></div>';
                         chatMessagesContainer.appendChild(tempBubble);
                         scrollChatToBottom();
                     }
@@ -780,10 +780,10 @@
                 scrollChatToBottom();
                 setTimeout(function() {
                     if (!chatMessagesContainer) return;
-                    var avatarUrl = (document.getElementById('shai-avatar') || {}).src || window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+                    var avatarUrl = (document.getElementById('shai-avatar') || {}).src || window.__shaiAvatarUrl || '../assets/shai-avatar.png';
                     var aiResponse = document.createElement('div');
                     aiResponse.className = 'flex items-start space-x-3 mb-4';
-                    aiResponse.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="' + (avatarUrl || '').replace(/"/g, '&quot;') + '" alt="ShAI" data-shai-avatar /></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%]"><p class="text-sm text-black">Got your voice message! I\'m on it â€” let me find the best options for you.</p></div>';
+                    aiResponse.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="' + (avatarUrl || '').replace(/"/g, '&quot;') + '" alt="ShAI" data-shai-avatar /></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%]"><p class="text-sm text-black">Got your voice message! I\'m on it — let me find the best options for you.</p></div>';
                     chatMessagesContainer.appendChild(aiResponse);
                     scrollChatToBottom();
                 }, 800);

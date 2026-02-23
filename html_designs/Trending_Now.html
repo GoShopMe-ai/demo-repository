@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -62,7 +62,7 @@
         .product-card { cursor:pointer; transition:transform .15s ease; -webkit-tap-highlight-color:rgba(147,155,251,.12); touch-action:manipulation; }
         .product-card:active { transform:scale(.97); }
 
-        /* â”€â”€ Chat drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ── Chat drawer ─────────────────────────────────── */
         #chat-drawer {
             position:fixed;
             bottom:64px;
@@ -79,7 +79,7 @@
         }
         #chat-drawer.open { transform:translateX(-50%) translateY(0); }
 
-        /* â”€â”€ Mobile: full-width drawer, Y-only slide â”€â”€ */
+        /* ── Mobile: full-width drawer, Y-only slide ── */
         @media (max-width: 768px) {
             #chat-drawer {
                 left:0 !important; right:0 !important;
@@ -103,7 +103,7 @@
         /* Chat messages area */
         #chat-messages { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
 
-        /* â”€â”€ Collapsed input bar â€” always visible above bottom nav â”€â”€ */
+        /* ── Collapsed input bar — always visible above bottom nav ── */
         #chat-input-bar {
             position:fixed;
             bottom:64px;                          /* sits on top of bottom nav */
@@ -116,7 +116,7 @@
         }
         #chat-input-bar.hidden-bar { display:none; }
 
-        /* â”€â”€ Auto-grow textarea â”€â”€ */
+        /* ── Auto-grow textarea ── */
         #message-input, #chat-input-drawer-field {
             resize: none;
             overflow: hidden;
@@ -124,7 +124,7 @@
             max-height: calc(1.4em * 6);
         }
 
-        /* â”€â”€ Voice recording wave animation â”€â”€ */
+        /* ── Voice recording wave animation ── */
         @keyframes wavePulse {
             0%, 100% { transform: scaleY(1); }
             50%       { transform: scaleY(2); }
@@ -136,7 +136,7 @@
 
 <div class="relative mx-auto w-full max-w-[390px] bg-white min-h-screen">
 
-    <!-- â”€â”€ Header â”€â”€ -->
+    <!-- ── Header ── -->
     <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white z-50 border-b border-gray-100">
         <div class="flex items-center justify-between px-4 py-3">
             <button onclick="history.length>1?history.back():location.href='Home.html'"
@@ -157,7 +157,7 @@
         </div>
     </header>
 
-    <!-- â”€â”€ Main â”€â”€ -->
+    <!-- ── Main ── -->
     <main class="pt-[68px] px-4 pb-52">
 
         <!-- Just For You -->
@@ -363,7 +363,7 @@
                     </div>
 
                     <div class="product-card flex-shrink-0 w-40 bg-white rounded-xl overflow-hidden shadow-sm"
-                         data-pid="leather-loafers" data-name="Leather Loafers" data-brand="TotÃªme" data-price="$340"
+                         data-pid="leather-loafers" data-name="Leather Loafers" data-brand="Totême" data-price="$340"
                          data-img="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=300&h=400&fit=crop">
                         <div class="product-image-overlay-wrap bg-gray-100 rounded-t-xl h-48">
                             <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=300&h=400&fit=crop" alt="Leather Loafers" loading="lazy">
@@ -373,7 +373,7 @@
                                 <button type="button" class="p-1 flex items-center justify-center hover:opacity-80 transition-opacity chat-trigger" aria-label="Ask ShAI"><svg class="w-4 h-4 product-overlay-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg></button>
                             </div>
                         </div>
-                        <div class="p-2.5"><p class="text-[11px] text-gray-500 mb-0.5 font-medium">TotÃªme</p><h4 class="font-semibold text-black text-sm mb-1.5 leading-tight poppins">Leather Loafers</h4><span class="text-black font-semibold text-sm">$340</span></div>
+                        <div class="p-2.5"><p class="text-[11px] text-gray-500 mb-0.5 font-medium">Totême</p><h4 class="font-semibold text-black text-sm mb-1.5 leading-tight poppins">Leather Loafers</h4><span class="text-black font-semibold text-sm">$340</span></div>
                     </div>
 
                 </div>
@@ -384,10 +384,10 @@
 
 </div><!-- /app-shell -->
 
-<!-- â”€â”€ Chat Overlay â”€â”€ -->
+<!-- ── Chat Overlay ── -->
 <div id="chat-overlay"></div>
 
-<!-- â”€â”€ ShAI Chat Drawer â€” slides up from above bottom nav â”€â”€ -->
+<!-- ── ShAI Chat Drawer — slides up from above bottom nav ── -->
 <div id="chat-drawer">
     <!-- Drag handle -->
     <div id="drag-handle-zone" class="drag-zone">
@@ -400,7 +400,7 @@
             <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
         </button>
         <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-            <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png"
+            <img class="w-full h-full object-cover" src="../assets/shai-avatar.png"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
                  alt="ShAI" data-shai-avatar>
             <div style="display:none;width:100%;height:100%;background:#e5e7eb;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#6b7280;">AI</div>
@@ -417,13 +417,13 @@
             <div class="p-4 pb-0">
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png"
+                        <img class="w-full h-full object-cover" src="../assets/shai-avatar.png"
                              onerror="this.style.display='none'"
                              alt="ShAI" data-shai-avatar>
                     </div>
                     <div class="flex-1">
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3">
-                            <p class="text-sm text-black break-words whitespace-pre-wrap">Hi! I'm ShAI âœ¨ Tap any product's chat icon or ask me anything about style, sizing, or alternatives.</p>
+                            <p class="text-sm text-black break-words whitespace-pre-wrap">Hi! I'm ShAI ✨ Tap any product's chat icon or ask me anything about style, sizing, or alternatives.</p>
                         </div>
                     </div>
                 </div>
@@ -478,7 +478,7 @@
     </div>
 </div>
 
-<!-- â”€â”€ Collapsed input bar â€” always visible above bottom nav â”€â”€ -->
+<!-- ── Collapsed input bar — always visible above bottom nav ── -->
 <div id="chat-input-bar">
     <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
         <button id="cam-btn" class="icon-button hover:opacity-70 transition-opacity" aria-label="Camera">
@@ -497,7 +497,7 @@
     </div>
 </div>
 
-<!-- â”€â”€ Bottom Navigation â”€â”€ -->
+<!-- ── Bottom Navigation ── -->
 <nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 z-50">
     <div class="flex items-center justify-around py-2">
         <a href="Home.html" class="bottom-nav-btn">
@@ -523,18 +523,18 @@
 (function () {
     'use strict';
 
-    /* â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Helpers ─────────────────────────────────────── */
     function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-    function shaiAvSrc() { var el = document.querySelector('[data-shai-avatar]'); return (el && el.src) ? el.src : 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png'; }
+    function shaiAvSrc() { var el = document.querySelector('[data-shai-avatar]'); return (el && el.src) ? el.src : '../assets/shai-avatar.png'; }
 
-    /* â”€â”€ Profile nav â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Profile nav ──────────────────────────────────── */
     try {
         var plan = (localStorage.getItem('__userPlan')||'').toLowerCase();
         var plink = document.getElementById('profile-nav-link');
         if (plink) plink.href = (plan==='paid'||plan==='true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
     } catch(e){}
 
-    /* â”€â”€ Chat drawer elements â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Chat drawer elements ─────────────────────────── */
     var drawer    = document.getElementById('chat-drawer');
     var overlay   = document.getElementById('chat-overlay');
     var inputBar  = document.getElementById('chat-input-bar');
@@ -570,7 +570,7 @@
 
     var isOpen = false, drawerH = 50;
 
-    /* â”€â”€ Open / close â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Open / close ────────────────────────────────── */
     function openDrawer() {
         isOpen = true;
         drawer.classList.add('open');
@@ -589,12 +589,12 @@
         if (chatMsgs) requestAnimationFrame(function(){ chatMsgs.scrollTop = chatMsgs.scrollHeight; });
     }
 
-    /* Tap on collapsed bar field â†’ open drawer */
+    /* Tap on collapsed bar field → open drawer */
     if (bInput) bInput.addEventListener('focus', function(){ openDrawer(); setTimeout(function(){ if(dInput) dInput.focus(); },320); });
 
     if (overlay) overlay.addEventListener('click', closeDrawer);
 
-    /* â”€â”€ Append ShAI message with optional thumbnail â”€â”€ */
+    /* ── Append ShAI message with optional thumbnail ── */
     function appendShAI(text, thumbUrls) {
         var container = document.querySelector('#chat-messages .p-4');
         if (!container) return;
@@ -632,19 +632,19 @@
         scrollBottom();
     }
 
-    /* â”€â”€ Chat icon on product card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Chat icon on product card ───────────────────── */
     function openProductChat(name, brand, price, imgSrc) {
         if (!isOpen) openDrawer();
         setTimeout(function () {
-            /* ShAI message only â€” with thumbnail â€” no outgoing user bubble */
+            /* ShAI message only — with thumbnail — no outgoing user bubble */
             appendShAI(
-                'Tell me more about the "' + name + '" by ' + brand + ' (' + price + '). Want styling tips, size help, or similar options? ðŸ’œ',
+                'Tell me more about the "' + name + '" by ' + brand + ' (' + price + '). Want styling tips, size help, or similar options? 💜',
                 imgSrc ? [imgSrc] : []
             );
         }, 260);
     }
 
-    /* â”€â”€ Drag to resize â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Drag to resize ──────────────────────────────── */
     if (dragZone) {
         var dragY = 0, dragH0 = drawerH, dragging = false;
         function dStart(e) {
@@ -680,7 +680,7 @@
         dragZone.addEventListener('touchstart', dStart, { passive:true });
     }
 
-    /* â”€â”€ Auto-grow textarea helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Auto-grow textarea helper ────────────────────── */
     function autoResize(ta) {
         if (!ta) return;
         ta.style.height = 'auto';
@@ -688,7 +688,7 @@
         ta.style.height = Math.min(ta.scrollHeight, lh * 6) + 'px';
     }
 
-    /* â”€â”€ Drawer input sync / send â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Drawer input sync / send ─────────────────────── */
     function syncDrawerInput() {
         var has = dInput && dInput.value.trim().length > 0;
         if (dSend)      { dSend.classList.toggle('hidden', !has); }
@@ -701,13 +701,13 @@
         if (!txt) return;
         appendUser(txt);
         dInput.value = ''; autoResize(dInput); syncDrawerInput();
-        setTimeout(function(){ appendShAI("Thanks! I'm here to help â€” what would you like to know? ðŸ’œ"); }, 900);
+        setTimeout(function(){ appendShAI("Thanks! I'm here to help — what would you like to know? 💜"); }, 900);
     }
     if (dInput)  dInput.addEventListener('input', syncDrawerInput);
     if (dInput)  dInput.addEventListener('keydown', function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendDrawerMsg(); } });
     if (dSend)   dSend.addEventListener('click', sendDrawerMsg);
 
-    /* â”€â”€ Collapsed bar send â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Collapsed bar send ───────────────────────────── */
     function syncBarInput() {
         var has = bInput && bInput.value.trim().length > 0;
         if (bSend)      { bSend.classList.toggle('hidden', !has); }
@@ -722,14 +722,14 @@
         setTimeout(function(){
             appendUser(txt);
             bInput.value = ''; autoResize(bInput); syncBarInput();
-            setTimeout(function(){ appendShAI("Thanks! I'm here to help â€” what would you like to know? ðŸ’œ"); }, 900);
+            setTimeout(function(){ appendShAI("Thanks! I'm here to help — what would you like to know? 💜"); }, 900);
         }, 320);
     }
     if (bInput) bInput.addEventListener('input', syncBarInput);
     if (bInput) bInput.addEventListener('keydown', function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendBarMsg(); } });
     if (bSend)  bSend.addEventListener('click', sendBarMsg);
 
-    /* â”€â”€ System bubble helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── System bubble helper ────────────────────────── */
     function renderSystemBubble(msg) {
         var container = document.querySelector('#chat-messages .p-4');
         if (!container) return;
@@ -740,7 +740,7 @@
         scrollBottom();
     }
 
-    /* â”€â”€ Camera handler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Camera handler ──────────────────────────────── */
     function handleFileSelection(file) {
         var url = URL.createObjectURL(file);
         var container = document.querySelector('#chat-messages .p-4');
@@ -789,7 +789,7 @@
     }
     setupCameraButtons();
 
-    /* â”€â”€ Voice recording â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Voice recording ─────────────────────────────── */
     function removeTempRecordingBubble() {
         var t = document.getElementById('temp-recording');
         if (t) t.remove();
@@ -818,7 +818,7 @@
             });
         }
         scrollBottom();
-        setTimeout(function(){ appendShAI("Got your voice message! I'm on it â€” let me find the best options for you."); }, 800);
+        setTimeout(function(){ appendShAI("Got your voice message! I'm on it — let me find the best options for you."); }, 800);
     }
 
     window.toggleVoicePlayback = function(button, audioUrl) {
@@ -848,7 +848,7 @@
             var tmp = document.createElement('div');
             tmp.id = 'temp-recording';
             tmp.className = 'flex justify-end mb-2';
-            tmp.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]"><span class="mr-2">ðŸŽ™ï¸</span><span class="text-xs">Recording... swipe left to cancel</span></div>';
+            tmp.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]"><span class="mr-2">🎙️</span><span class="text-xs">Recording... swipe left to cancel</span></div>';
             container.appendChild(tmp);
             scrollBottom();
         }
@@ -861,7 +861,7 @@
         if (micAccessDenied) { renderSystemBubble('Microphone access denied. Enable it in your browser settings.'); return; }
         startX = e.touches ? e.touches[0].clientX : e.clientX;
         var btn = e.currentTarget || e.target;
-        /* Reuse the stream if already granted â€” no repeated permission prompts */
+        /* Reuse the stream if already granted — no repeated permission prompts */
         if (mediaStream && mediaStream.active) {
             doRecord(mediaStream, btn);
         } else {
@@ -923,7 +923,7 @@
     }
     setupMicButtons();
 
-    /* â”€â”€ Add Friend panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Add Friend panel ────────────────────────────── */
     window.__addFriendContacts = window.__addFriendContacts || [
         { name: 'Alex Johnson',     phone: '+1 (555) 123-4567', goshopme: true,  avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg' },
         { name: 'Maria Rodriguez',  phone: '+1 (555) 987-6543', goshopme: false },
@@ -1000,13 +1000,13 @@
     }
     setupAddFriendButtons();
 
-    /* â”€â”€ Brand drop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Brand drop ───────────────────────────────────── */
     var brandBtn = document.getElementById('brand-drop-btn');
     if (brandBtn) brandBtn.addEventListener('click', function(){
         window.location.href = 'Brand_Products.html?brand=' + encodeURIComponent('Saint Laurent');
     });
 
-    /* â”€â”€ Wishlist state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Wishlist state ──────────────────────────────── */
     var wishlisted = new Set();
     function toggleWishlist(btn) {
         var pid = btn.dataset.pid || '';
@@ -1020,7 +1020,7 @@
         }
     }
 
-    /* â”€â”€ Global click delegation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Global click delegation ─────────────────────── */
     document.addEventListener('click', function(e) {
 
         /* Wishlist */
@@ -1061,12 +1061,12 @@
             var creator = cl.dataset.creator || '';
             if (!isOpen) openDrawer();
             setTimeout(function(){
-                appendShAI('Want to see more from @' + creator + '? I can show their full collection and help you create similar looks! ðŸŒŸ');
+                appendShAI('Want to see more from @' + creator + '? I can show their full collection and help you create similar looks! 🌟');
             }, 250);
             return;
         }
 
-        /* Product tile â†’ detail page */
+        /* Product tile → detail page */
         var card = e.target.closest('.product-card');
         if (card && !e.target.closest('button')) {
             var id = card.dataset.pid||'', name = card.dataset.name||'', brand = card.dataset.brand||'', price = card.dataset.price||'';

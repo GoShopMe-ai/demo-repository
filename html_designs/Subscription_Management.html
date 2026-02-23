@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -61,7 +61,7 @@
     </style>
 </head>
 <body class="bg-[#F6F6F6] dm-sans overflow-x-hidden">
-    <img id="pdf-logo-preload" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/html_designs/GoShopMe%20logo.svg" alt="" style="position:absolute;left:-9999px;width:375px;height:55px" aria-hidden="true">
+    <img id="pdf-logo-preload" src="GoShopMe logo.svg" alt="" style="position:absolute;left:-9999px;width:375px;height:55px" aria-hidden="true">
     <div id="app-shell" class="relative w-full max-w-[390px] mx-auto min-h-screen bg-white shadow-2xl overflow-x-hidden">
         <!-- Header (design system Section 5) -->
         <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white z-50 border-b border-gray-100">
@@ -129,7 +129,7 @@
             <section class="px-5 py-4">
                 <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
                     <p class="text-sm text-gray-700 text-center">
-                        Cancel anytime â€” your plan will remain active until the end of the billing period.
+                        Cancel anytime — your plan will remain active until the end of the billing period.
                     </p>
                 </div>
             </section>
@@ -303,8 +303,8 @@
                 if (planCard) planCard.classList.remove('from-shine-primary', 'to-shine-accent');
                 if (planCard) planCard.classList.add('bg-gray-100', 'text-gray-800');
             } else {
-                if (billingDate) billingDate.textContent = sub.nextBillingDate || 'â€”';
-                if (paymentMethod) paymentMethod.textContent = sub.paymentMethod || 'â€”';
+                if (billingDate) billingDate.textContent = sub.nextBillingDate || '—';
+                if (paymentMethod) paymentMethod.textContent = sub.paymentMethod || '—';
             }
         }
 
@@ -447,15 +447,15 @@
 
                 doc.setFontSize(11);
                 doc.setTextColor(0, 0, 0);
-                doc.text('Date: ' + (payment.date || 'â€”'), contentLeft, y);
+                doc.text('Date: ' + (payment.date || '—'), contentLeft, y);
                 y += 8;
-                doc.text('Plan: ' + (payment.planName || 'â€”'), contentLeft, y);
+                doc.text('Plan: ' + (payment.planName || '—'), contentLeft, y);
                 y += 8;
-                doc.text('Amount: ' + (payment.amount || 'â€”'), contentLeft, y);
+                doc.text('Amount: ' + (payment.amount || '—'), contentLeft, y);
                 y += 8;
                 doc.text('Status: ' + (payment.status || 'Paid'), contentLeft, y);
                 y += 8;
-                doc.text('Payment: ' + (subscription.paymentMethod || 'â€”'), contentLeft, y);
+                doc.text('Payment: ' + (subscription.paymentMethod || '—'), contentLeft, y);
                 y += 14;
 
                 doc.setFontSize(9);

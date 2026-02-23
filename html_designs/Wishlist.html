@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -248,7 +248,7 @@
                         <div class="relative z-10 flex flex-col items-center space-y-3">
                             <div>
                                 <h3 class="text-lg poppins font-bold text-white mb-2">Turn your wishlist into a gift list</h3>
-                                <p class="text-sm text-white/90 mb-4">Send your wishlist to friends or family, and let them shop the items you truly love â€” for birthdays, holidays or just because.</p>
+                                <p class="text-sm text-white/90 mb-4">Send your wishlist to friends or family, and let them shop the items you truly love — for birthdays, holidays or just because.</p>
                                 <button id="share-wishlist-btn" class="bg-[#939BFB] text-white px-4 py-2.5 rounded-full font-medium text-sm hover:bg-[#939BFB]/90 transition-colors flex items-center justify-center space-x-2 mx-auto">
                                     <span>Share My Wishlist</span>
                                     <svg class="w-4 h-4 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -294,7 +294,7 @@
                     </svg>
                     </button>
                 <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-                    <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" data-shai-avatar alt="ShAI avatar" />
+                    <img class="w-full h-full object-cover" src="../assets/shai-avatar.png" data-shai-avatar alt="ShAI avatar" />
                     </div>
                 <div class="flex-1">
                     <p class="font-semibold text-black text-sm">ShAI</p>
@@ -308,7 +308,7 @@
                 <!-- ShAI Greeting -->
                 <div class="flex items-start space-x-3 mb-4">
                         <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                            <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" data-shai-avatar alt="ShAI avatar" />
+                            <img class="w-full h-full object-cover" src="../assets/shai-avatar.png" data-shai-avatar alt="ShAI avatar" />
                         </div>
                         <div class="flex-1">
                             <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3">
@@ -626,7 +626,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        if (typeof window.populateShAIAvatar === 'function') window.populateShAIAvatar('https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png');
+        if (typeof window.populateShAIAvatar === 'function') window.populateShAIAvatar('../assets/shai-avatar.png');
         const chatDrawer = document.getElementById('shai-chat-drawer');
         const dragHandleZone = document.getElementById('drag-handle-zone') || document.getElementById('drag-handle');
         const chatOverlay = document.getElementById('chat-overlay');
@@ -675,7 +675,7 @@
         shareWishlistBtn.addEventListener('click', () => {
             const shareData = {
                 title: 'My GoShopMe Wishlist',
-                text: "Check out my wishlist on GoShopMe! ðŸ‘€âœ¨",
+                text: "Check out my wishlist on GoShopMe! 👀✨",
                 url: 'https://goshopme.ai/u/jane-doe/wishlist'
             };
             if (navigator.share) {
@@ -734,7 +734,7 @@
             btn.addEventListener('click', () => {
                 const shareData = {
                     title: 'Join me on GoShopMe!',
-                    text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me",
+                    text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me",
                     url: 'https://app.goshopme.ai'
                 };
                 if (navigator.share) {
@@ -762,7 +762,7 @@
     function addContextualMessage(message, thumbUrls) {
         const container = document.querySelector('#chat-messages .p-4');
         if (!container) return;
-        const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+        const avatarUrl = window.__shaiAvatarUrl || '../assets/shai-avatar.png';
         const thumbHtml = (thumbUrls && thumbUrls.length) ? '<div class="flex gap-1.5 mt-2 flex-wrap">' + thumbUrls.slice(0, 4).map(function(t) { return '<img class="w-12 h-12 rounded-lg object-cover border border-gray-200" src="' + (t || '').replace(/"/g, '&quot;') + '" alt="">'; }).join('') + '</div>' : '';
         const contextMessage = document.createElement('div');
         contextMessage.className = 'flex items-start space-x-3 mb-4';
@@ -1078,7 +1078,7 @@
                 tempBubble.className = 'flex justify-end mb-2';
                 tempBubble.innerHTML = `
                     <div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]">
-                        <span class="mr-2">ðŸŽ™ï¸</span>
+                        <span class="mr-2">🎙️</span>
                         <span class="text-xs">Recording... swipe left to cancel</span>
                     </div>
                 `;
@@ -1176,7 +1176,7 @@
             });
             
             chatMessages.scrollTop = chatMessages.scrollHeight;
-            setTimeout(() => addContextualMessage("Got your voice message! I'm on it â€” let me find the best options for you.", []), 800);
+            setTimeout(() => addContextualMessage("Got your voice message! I'm on it — let me find the best options for you.", []), 800);
         }
     }
 
@@ -1341,7 +1341,7 @@
             }, true);
         }
 
-        // Share product function â€“ dynamic link to product page (not hardcoded)
+        // Share product function – dynamic link to product page (not hardcoded)
         window.shareProduct = function(productName, price, productUrl = null, productId = null, brand = null) {
             const base = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
             const id = productId || (productName || '').toLowerCase().replace(/\s+/g, '-');
@@ -1373,9 +1373,9 @@
         };
 
         // ===== DYNAMIC WISHLIST RENDER (presentation data from data/wishlist.json only) =====
-        // Mock items live in data/wishlist.json â€” edit that file to change presentation content.
+        // Mock items live in data/wishlist.json — edit that file to change presentation content.
         const WISHLIST_FALLBACK = {
-            hero: { imageUrl: "https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Paris%20in%20Spring.jpg", alt: "Wishlist gift sharing hero" },
+            hero: { imageUrl: "../assets/Paris%20in%20Spring.jpg", alt: "Wishlist gift sharing hero" },
             items: []
         };
 
@@ -1451,7 +1451,7 @@
                 heroImg.onerror = function() {
                     console.warn('Failed to load wishlist hero image:', imageUrl);
                 };
-                console.log(`âœ“ Updated wishlist hero image with: ${imageUrl}`);
+                console.log(`✓ Updated wishlist hero image with: ${imageUrl}`);
                 return true;
             } else {
                 console.warn('Hero image element not found');
@@ -1470,7 +1470,7 @@
                 };
                 count++;
             });
-            console.log(`âœ“ Updated ${count} ShAI avatar(s) with: ${avatarUrl}`);
+            console.log(`✓ Updated ${count} ShAI avatar(s) with: ${avatarUrl}`);
             return count;
         };
         window.testShAIAvatar = function(url) {
@@ -1490,7 +1490,7 @@
                 };
                 count++;
             });
-            console.log(`âœ“ Updated ${count} user avatar(s) with: ${avatarUrl}`);
+            console.log(`✓ Updated ${count} user avatar(s) with: ${avatarUrl}`);
             return count;
         };
 

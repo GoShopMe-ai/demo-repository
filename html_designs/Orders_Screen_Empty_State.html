@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="stylesheet" href="css/mobile-optimization.css">
-    <title>Orders â€“ GoShopMe</title>
+    <title>Orders – GoShopMe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -108,7 +108,7 @@
         </div><!-- Empty State Content -->
         <div class="text-center mb-8">
           <h2 class="text-2xl poppins font-semibold text-gray-900 mb-4">
-            You haven't placed any orders yet â€” but your perfect look is just a
+            You haven't placed any orders yet — but your perfect look is just a
             chat away!
           </h2>
           <p class="text-gray-600 dm-sans text-base leading-relaxed px-4">
@@ -132,7 +132,7 @@
                 </svg>
             </button>
             <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-                <img class="orders-empty-shai-avatar w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-from-db />
+                <img class="orders-empty-shai-avatar w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-from-db />
             </div>
             <div class="flex-1">
                 <p class="font-semibold text-black text-sm" id="header-title">ShAI</p>
@@ -144,7 +144,7 @@
                 <div class="p-4 pb-0">
                     <div class="flex items-start space-x-3 mb-4">
                         <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                            <img class="orders-empty-shai-avatar w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-from-db />
+                            <img class="orders-empty-shai-avatar w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-from-db />
                         </div>
                         <div class="flex-1">
                             <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3">
@@ -551,7 +551,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (container) {
             var aiMessage = document.createElement('div');
             aiMessage.className = 'flex items-start space-x-3 mb-4';
-            aiMessage.innerHTML = '<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img class="orders-empty-shai-avatar w-full h-full object-cover" src="' + (window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png') + '" alt="ShAI avatar" data-shai-from-db /></div><div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">' + message + '</p></div></div>';
+            aiMessage.innerHTML = '<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img class="orders-empty-shai-avatar w-full h-full object-cover" src="' + (window.__shaiAvatarUrl || '../assets/shai-avatar.png') + '" alt="ShAI avatar" data-shai-from-db /></div><div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">' + message + '</p></div></div>';
             container.appendChild(aiMessage);
             container.scrollTop = container.scrollHeight;
         }
@@ -635,7 +635,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 var tempBubble = document.createElement('div');
                 tempBubble.id = 'temp-recording';
                 tempBubble.className = 'flex justify-end mb-2';
-                tempBubble.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]"><span class="mr-2">ðŸŽ™ï¸</span><span class="text-xs">Recording... swipe left to cancel</span></div>';
+                tempBubble.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]"><span class="mr-2">🎙️</span><span class="text-xs">Recording... swipe left to cancel</span></div>';
                 container.appendChild(tempBubble);
                 container.scrollTop = container.scrollHeight;
             }
@@ -708,7 +708,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 durationText.textContent = Math.floor(d / 60) + ':' + (d % 60).toString().padStart(2, '0');
             });
             container.scrollTop = container.scrollHeight;
-            setTimeout(function() { addShAIMessage("Got your voice message! I'm on it â€” let me find the best options for you."); }, 800);
+            setTimeout(function() { addShAIMessage("Got your voice message! I'm on it — let me find the best options for you."); }, 800);
         }
     }
 
@@ -758,7 +758,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 setTimeout(function() {
                     var aiResponse = document.createElement('div');
                     aiResponse.className = 'flex items-start space-x-3 mb-4';
-                    aiResponse.innerHTML = '<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img class="orders-empty-shai-avatar w-full h-full object-cover" src="' + (window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png') + '" alt="ShAI avatar" data-shai-from-db /></div><div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">I\'d be happy to help you with that! Let me find some perfect options for you.</p></div></div>';
+                    aiResponse.innerHTML = '<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img class="orders-empty-shai-avatar w-full h-full object-cover" src="' + (window.__shaiAvatarUrl || '../assets/shai-avatar.png') + '" alt="ShAI avatar" data-shai-from-db /></div><div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black">I\'d be happy to help you with that! Let me find some perfect options for you.</p></div></div>';
                     container.appendChild(aiResponse);
                     container.scrollTop = container.scrollHeight;
                 }, 1000);
@@ -830,7 +830,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             hideAddFriendFlow();
         } else if (e.target.textContent === 'Invite') {
-            var shareData = { title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me", url: 'https://app.goshopme.ai' };
+            var shareData = { title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me", url: 'https://app.goshopme.ai' };
             if (navigator.share) {
                 navigator.share(shareData).catch(function() {
                     if (navigator.clipboard) navigator.clipboard.writeText(shareData.text + ' ' + shareData.url).then(function() { showToast('Invitation link copied to clipboard!'); });

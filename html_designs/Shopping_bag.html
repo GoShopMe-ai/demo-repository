@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -246,12 +246,12 @@
                 '<img class="w-full h-full object-cover" src="' + (item.imgSrc || '') + '" alt="' + (item.title || '') + '">' +
                 '</div><div class="flex-1 min-w-0">' +
                 '<p class="font-medium text-xs text-gray-900 dm-sans">' + (item.title || '') + '</p>' +
-                '<p class="text-xs text-gray-500 dm-sans">' + (item.brand || '') + (item.details ? ' â€¢ ' + item.details : '') + ' â€¢ ' + (item.priceDisplay || '') + '</p>' +
+                '<p class="text-xs text-gray-500 dm-sans">' + (item.brand || '') + (item.details ? ' • ' + item.details : '') + ' • ' + (item.priceDisplay || '') + '</p>' +
                 '</div></div>';
         }).join('');
         root.innerHTML = '<div class="flex items-start space-x-3 mb-4">' +
             '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">' +
-            '<img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />' +
+            '<img class="shai-avatar-img w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />' +
             '</div><div class="flex-1">' +
             '<div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-2 shadow-sm animate-slide-in-left">' +
             '<p class="text-sm text-gray-900 dm-sans">' + intro + '</p></div>' +
@@ -534,7 +534,7 @@
             </svg>
         </button>
         <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-            <img id="shai-avatar" class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
+            <img id="shai-avatar" class="shai-avatar-img w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
         </div>
         <div class="flex-1">
             <p class="font-semibold text-gray-900 text-sm poppins" id="header-title">Shopping Bag</p>
@@ -559,7 +559,7 @@
 
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
+                        <img class="shai-avatar-img w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
                     </div>
                     <div class="flex-1">
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
@@ -595,23 +595,23 @@
 
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
+                        <img class="shai-avatar-img w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
                     </div>
                     <div class="flex-1">
                         <div id="payment-deliver-to" class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
                             <p class="text-sm text-gray-900 dm-sans">Perfect, we'll deliver to: 123 Main Street, San Francisco, CA 94102</p>
                         </div>
                         <div id="payment-charge-msg" class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
-                            <p class="text-sm text-gray-900 dm-sans">You'll be charged $448.20 using your saved card ending in â€¢â€¢â€¢â€¢1234.</p>
+                            <p class="text-sm text-gray-900 dm-sans">You'll be charged $448.20 using your saved card ending in ••••1234.</p>
                         </div>
                         <div id="payment-card-block" class="bg-white border border-gray-200 rounded-xl p-3 mb-3 shadow-sm">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-3">
                                     <div class="w-8 h-6 bg-blue-600 rounded-sm flex items-center justify-center">
-                                        <span class="text-white text-xs font-bold">â€¢â€¢â€¢â€¢</span>
+                                        <span class="text-white text-xs font-bold">••••</span>
                                     </div>
                                     <div>
-                                        <p id="payment-card-last4" class="font-medium text-sm text-gray-900 dm-sans">â€¢â€¢â€¢â€¢ 1234</p>
+                                        <p id="payment-card-last4" class="font-medium text-sm text-gray-900 dm-sans">•••• 1234</p>
                                         <p id="payment-card-expiry" class="text-xs text-gray-500 dm-sans">Expires 12/26</p>
                                     </div>
                                 </div>
@@ -638,7 +638,7 @@
 
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
+                        <img class="shai-avatar-img w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
                     </div>
                     <div class="flex-1">
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
@@ -665,8 +665,8 @@
                             </div>
                             <div class="mt-3 pt-3 border-t border-gray-200">
                                 <p id="summary-shipping-to" class="text-xs text-gray-600 dm-sans">Shipping to: 123 Main Street, San Francisco, CA 94102</p>
-                                <p id="summary-payment" class="text-xs text-gray-600 dm-sans">Payment: â€¢â€¢â€¢â€¢1234</p>
-                                <p class="text-xs text-gray-600 dm-sans">Estimated delivery: Oct 15â€“18</p>
+                                <p id="summary-payment" class="text-xs text-gray-600 dm-sans">Payment: ••••1234</p>
+                                <p class="text-xs text-gray-600 dm-sans">Estimated delivery: Oct 15–18</p>
                             </div>
                         </div>
                         <div class="flex flex-wrap gap-2">
@@ -687,11 +687,11 @@
 
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
+                        <img class="shai-avatar-img w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
                     </div>
                     <div class="flex-1">
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
-                            <p class="text-sm text-gray-900 dm-sans">ðŸŽ‰ Done! Your order is placed. I'll update you as soon as it ships.</p>
+                            <p class="text-sm text-gray-900 dm-sans">🎉 Done! Your order is placed. I'll update you as soon as it ships.</p>
                         </div>
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
                             <p class="text-sm text-gray-900 dm-sans">You can also invite friends to shop with you or share what you just bought.</p>
@@ -942,7 +942,7 @@
                     </div>
                     <div>
                         <label class="block text-sm text-gray-600 mb-1" for="pm-cvv">CVV</label>
-                        <input type="password" id="pm-cvv" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans" placeholder="â€¢â€¢â€¢" maxlength="3">
+                        <input type="password" id="pm-cvv" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans" placeholder="•••" maxlength="3">
                         <p id="pm-cvv-error" class="error-msg hidden dm-sans"></p>
                     </div>
                 </div>
@@ -1134,7 +1134,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
 
-        // If the bottom bar button was used and the drawer is closed â†’ expand first, then open picker in the SAME tick
+        // If the bottom bar button was used and the drawer is closed → expand first, then open picker in the SAME tick
         if (!fromDrawer && !isDrawerExpanded) {
             expandDrawer();
             // allow CSS transition to begin but keep user gesture chain
@@ -1246,7 +1246,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessagesContainer.appendChild(loadingBubble);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // Simulated upload/processing â†’ replace with final media bubble
+        // Simulated upload/processing → replace with final media bubble
         setTimeout(() => {
             loadingBubble.remove();
             const mediaBubble = createMediaBubble(file);
@@ -1345,7 +1345,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             aiMessage.innerHTML = `
                 <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                    <img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
+                    <img class="shai-avatar-img w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
                 </div>
                 <div class="bg-gray-50 text-gray-900 rounded-2xl rounded-tl-md p-3 max-w-[80%] shadow-sm break-words">
                     <p class="text-sm dm-sans">${responseText}</p>
@@ -1580,7 +1580,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 tempBubble.className = 'flex justify-end mb-2';
                 tempBubble.innerHTML = `
                     <div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]">
-                        <span class="mr-2">ðŸŽ™ï¸</span>
+                        <span class="mr-2">🎙️</span>
                         <span class="text-xs">Recording... swipe left to cancel</span>
                     </div>
                 `;
@@ -1703,7 +1703,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
-                <span>Slide left to cancel â€¢ ${minutes}:${seconds.toString().padStart(2, '0')}</span>
+                <span>Slide left to cancel • ${minutes}:${seconds.toString().padStart(2, '0')}</span>
             `;
         }
     }
@@ -1747,7 +1747,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {
             const aiMessage = document.createElement('div');
             aiMessage.className = 'flex items-start space-x-3 mb-4';
-            aiMessage.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db /></div><div class="bg-gray-50 text-gray-900 rounded-2xl rounded-tl-md p-3 max-w-[80%] shadow-sm break-words"><p class="text-sm dm-sans">Got your voice message! I\'m on it â€” let me find the best options for you.</p></div>';
+            aiMessage.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="shai-avatar-img w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db /></div><div class="bg-gray-50 text-gray-900 rounded-2xl rounded-tl-md p-3 max-w-[80%] shadow-sm break-words"><p class="text-sm dm-sans">Got your voice message! I\'m on it — let me find the best options for you.</p></div>';
             chatContainer.appendChild(aiMessage);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }, 800);
@@ -2008,7 +2008,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Share invite - URL points to app for download/join
                 const shareData = {
                     title: 'Join me on GoShopMe',
-                    text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me",
+                    text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me",
                     url: 'https://app.goshopme.ai'
                 };
                 if (navigator.share) {
@@ -2094,7 +2094,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target.id === 'not-yet-btn' || e.target.closest('#not-yet-btn')) {
                 var shaiBubble = document.createElement('div');
                 shaiBubble.className = 'flex items-start space-x-3 mt-4 animate-slide-in-left';
-                shaiBubble.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI"></div>' +
+                shaiBubble.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="shai-avatar-img w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI"></div>' +
                     '<div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 shadow-sm"><p class="text-sm text-gray-900 dm-sans">Is there anything else you\'d like to add or change?</p></div></div>';
                 var root = document.getElementById('chat-bag-preview-root');
                 if (root) root.appendChild(shaiBubble);
@@ -2111,8 +2111,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var last4El = document.getElementById('payment-card-last4');
         var expiryEl = document.getElementById('payment-card-expiry');
         if (deliverTo) deliverTo.querySelector('p').textContent = "Perfect, we'll deliver to: " + data.address.full;
-        if (chargeMsg) chargeMsg.querySelector('p').textContent = "You'll be charged $" + data.total.toFixed(2) + " using your saved card ending in â€¢â€¢â€¢â€¢" + data.card.last4 + ".";
-        if (last4El) last4El.textContent = 'â€¢â€¢â€¢â€¢ ' + data.card.last4;
+        if (chargeMsg) chargeMsg.querySelector('p').textContent = "You'll be charged $" + data.total.toFixed(2) + " using your saved card ending in ••••" + data.card.last4 + ".";
+        if (last4El) last4El.textContent = '•••• ' + data.card.last4;
         if (expiryEl) expiryEl.textContent = 'Expires ' + data.card.expiry;
         paymentFlow.classList.remove('hidden');
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -2264,7 +2264,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return '<div class="payment-card-option border rounded-xl p-3 cursor-pointer flex items-center gap-3 ' + (isSelected ? 'border-[#939BFB] bg-[#939BFB]/5' : 'border-gray-200 hover:border-gray-300') + '" data-last4="' + card.last4 + '" data-brand="' + (card.brand||'Card') + '" data-expiry="' + (card.expiry||'') + '">' +
                 '<input type="radio" name="payment-modal-card" ' + (isSelected ? 'checked' : '') + ' class="w-4 h-4 text-[#939BFB]">' +
                 '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-8 h-6 ' + iconClass + ' shrink-0">' + iconPath + '</svg>' +
-                '<div class="flex-1 min-w-0"><p class="font-medium text-sm text-gray-900 dm-sans">' + (card.brand||'Card') + ' â€¢â€¢â€¢â€¢ ' + card.last4 + '</p><p class="text-xs text-gray-500 dm-sans">Expires ' + (card.expiry||'') + '</p></div>' +
+                '<div class="flex-1 min-w-0"><p class="font-medium text-sm text-gray-900 dm-sans">' + (card.brand||'Card') + ' •••• ' + card.last4 + '</p><p class="text-xs text-gray-500 dm-sans">Expires ' + (card.expiry||'') + '</p></div>' +
                 '</div>';
         }).join('');
         var options = container.querySelectorAll('.payment-card-option');
@@ -2293,9 +2293,9 @@ document.addEventListener('DOMContentLoaded', function() {
         var last4El = document.getElementById('payment-card-last4');
         var expiryEl = document.getElementById('payment-card-expiry');
         var chargeMsg = document.getElementById('payment-charge-msg');
-        if (last4El) last4El.textContent = 'â€¢â€¢â€¢â€¢ ' + data.last4;
+        if (last4El) last4El.textContent = '•••• ' + data.last4;
         if (expiryEl) expiryEl.textContent = 'Expires ' + data.expiry;
-        if (chargeMsg) chargeMsg.querySelector('p').textContent = "You'll be charged $" + (getCheckoutData().total.toFixed(2)) + " using your saved card ending in â€¢â€¢â€¢â€¢" + data.last4 + ".";
+        if (chargeMsg) chargeMsg.querySelector('p').textContent = "You'll be charged $" + (getCheckoutData().total.toFixed(2)) + " using your saved card ending in ••••" + data.last4 + ".";
         document.getElementById('payment-method-modal').classList.add('hidden');
     }
     document.getElementById('change-card-btn').addEventListener('click', function() {
@@ -2338,7 +2338,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!m) return { valid: false, msg: 'Use format MM/YY' };
         var month = parseInt(m[1], 10);
         var year = parseInt(m[2], 10);
-        if (month < 1 || month > 12) return { valid: false, msg: 'Month must be 01â€“12' };
+        if (month < 1 || month > 12) return { valid: false, msg: 'Month must be 01–12' };
         var fullYear = 2000 + year;
         var lastDay = new Date(fullYear, month, 0);
         var today = new Date();
@@ -2378,7 +2378,7 @@ document.addEventListener('DOMContentLoaded', function() {
             hasError = true;
         }
         if (cardNum.length < 15 || cardNum.length > 19) {
-            pmShowFieldError('pm-cardnumber', 'pm-cardnumber-error', 'Card number must be 15â€“19 digits');
+            pmShowFieldError('pm-cardnumber', 'pm-cardnumber-error', 'Card number must be 15–19 digits');
             hasError = true;
         }
         var cvcRes = pmValidateCVC(cvv);
@@ -2413,9 +2413,9 @@ document.addEventListener('DOMContentLoaded', function() {
         var last4El = document.getElementById('payment-card-last4');
         var expiryEl = document.getElementById('payment-card-expiry');
         var chargeMsg = document.getElementById('payment-charge-msg');
-        if (last4El) last4El.textContent = 'â€¢â€¢â€¢â€¢ ' + last4;
+        if (last4El) last4El.textContent = '•••• ' + last4;
         if (expiryEl) expiryEl.textContent = 'Expires ' + expiry;
-        if (chargeMsg) chargeMsg.querySelector('p').textContent = "You'll be charged $" + (getCheckoutData().total.toFixed(2)) + " using your saved card ending in â€¢â€¢â€¢â€¢" + last4 + ".";
+        if (chargeMsg) chargeMsg.querySelector('p').textContent = "You'll be charged $" + (getCheckoutData().total.toFixed(2)) + " using your saved card ending in ••••" + last4 + ".";
         document.getElementById('payment-modal-add-view').classList.add('hidden');
         document.getElementById('payment-modal-list-view').classList.remove('hidden');
         renderPaymentModalCards();
@@ -2452,7 +2452,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (taxEl) taxEl.innerHTML = '<span class="text-gray-600 dm-sans">Tax</span><span class="text-gray-900 dm-sans">$' + data.tax.toFixed(2) + '</span>';
         if (totalEl) totalEl.textContent = '$' + data.total.toFixed(2);
         if (shipTo) shipTo.textContent = 'Shipping to: ' + data.address.full;
-        if (payment) payment.textContent = 'Payment: â€¢â€¢â€¢â€¢' + data.card.last4;
+        if (payment) payment.textContent = 'Payment: ••••' + data.card.last4;
         summaryFlow.classList.remove('hidden');
         chatMessages.scrollTop = chatMessages.scrollHeight;
     });
@@ -2492,7 +2492,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Add share functionality â€“ link to product page (dynamic, not hardcoded)
+    // Add share functionality – link to product page (dynamic, not hardcoded)
     function shareItem(itemName, itemBrand, itemPrice) {
         const base = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
         const id = (itemName || '').toLowerCase().replace(/\s+/g, '-');
@@ -2627,7 +2627,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Share buttons â€“ event delegation: read name, brand, price from bag item (dynamic)
+    // Share buttons – event delegation: read name, brand, price from bag item (dynamic)
     document.addEventListener('click', function(e) {
         const btn = e.target.closest('.share-btn');
         if (!btn) return;

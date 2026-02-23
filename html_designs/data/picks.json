@@ -6,7 +6,7 @@
       "avatar": "https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg",
       "tagline": "Bold evening edits",
       "collections": [
-        {"id": "paris-spring", "name": "Paris in Spring", "coverImage": "https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Paris%20in%20Spring.jpg", "itemCount": 7, "itemThumbnails": ["https://storage.googleapis.com/uxpilot-auth.appspot.com/a1fa951de5-1df3707f3a394528a723.png", "https://storage.googleapis.com/uxpilot-auth.appspot.com/a5a5c3117b-e552b0101625253f2e63.png", "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=400&fit=crop"]},
+        {"id": "paris-spring", "name": "Paris in Spring", "coverImage": "../assets/Paris%20in%20Spring.jpg", "itemCount": 7, "itemThumbnails": ["https://storage.googleapis.com/uxpilot-auth.appspot.com/a1fa951de5-1df3707f3a394528a723.png", "https://storage.googleapis.com/uxpilot-auth.appspot.com/a5a5c3117b-e552b0101625253f2e63.png", "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=400&fit=crop"]},
         {"id": "work-week-essentials", "name": "Work Week Essentials", "coverImage": "https://storage.googleapis.com/uxpilot-auth.appspot.com/486bd6818f-a15b8b6d17a566d04183.png", "itemCount": 12, "itemThumbnails": ["https://storage.googleapis.com/uxpilot-auth.appspot.com/7e094a771c-f075ee55c692dad6fbaa.png", "https://storage.googleapis.com/uxpilot-auth.appspot.com/1c28bc4fa5-25ed7e84931d74632079.png", "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?w=300&h=400&fit=crop"]},
         {"id": "date-night-ready", "name": "Date Night Ready", "coverImage": "https://storage.googleapis.com/uxpilot-auth.appspot.com/7c640ee900-49da491c48a25226f4d3.png", "itemCount": 6, "itemThumbnails": ["https://storage.googleapis.com/uxpilot-auth.appspot.com/1d822aec75-b3cb13c31948045b34c1.png", "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=300&h=400&fit=crop"]}
       ]
@@ -17,7 +17,7 @@
       "avatar": "https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg",
       "tagline": "Minimalist cool",
       "collections": [
-        {"id": "power-business", "name": "Power Business", "coverImage": "https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Business%20collection.jpg", "itemCount": 8, "itemThumbnails": ["https://storage.googleapis.com/uxpilot-auth.appspot.com/b13c2b21e8-e2e6c6512286c20cbd44.png", "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=400&fit=crop"]},
+        {"id": "power-business", "name": "Power Business", "coverImage": "../assets/Business%20collection.jpg", "itemCount": 8, "itemThumbnails": ["https://storage.googleapis.com/uxpilot-auth.appspot.com/b13c2b21e8-e2e6c6512286c20cbd44.png", "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=400&fit=crop"]},
         {"id": "minimalist-basics", "name": "Minimalist Basics", "coverImage": "https://storage.googleapis.com/uxpilot-auth.appspot.com/a237d37f08-9183f2271467bd16514a.png", "itemCount": 10, "itemThumbnails": ["https://storage.googleapis.com/uxpilot-auth.appspot.com/a237d37f08-9183f2271467bd16514a.png"]}
       ]
     },
@@ -37,7 +37,7 @@
       "avatar": "https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg",
       "tagline": "Street style",
       "collections": [
-        {"id": "urban-street", "name": "Urban Street Style", "coverImage": "https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Urban%20style.jpg", "itemCount": 11, "itemThumbnails": ["https://storage.googleapis.com/uxpilot-auth.appspot.com/02814a6d7b-0207c0fd9ce4694eb9ed.png", "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=300&h=400&fit=crop"]},
+        {"id": "urban-street", "name": "Urban Street Style", "coverImage": "../assets/Urban%20style.jpg", "itemCount": 11, "itemThumbnails": ["https://storage.googleapis.com/uxpilot-auth.appspot.com/02814a6d7b-0207c0fd9ce4694eb9ed.png", "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=300&h=400&fit=crop"]},
         {"id": "sneaker-fashion", "name": "Sneaker Fashion", "coverImage": "https://storage.googleapis.com/uxpilot-auth.appspot.com/64c66e6d0e-91cec063e572905c683c.png", "itemCount": 8, "itemThumbnails": ["https://storage.googleapis.com/uxpilot-auth.appspot.com/64c66e6d0e-91cec063e572905c683c.png"]}
       ]
     },

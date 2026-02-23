@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -262,7 +262,7 @@ tailwind.config = {
              src=""
              alt="product image" />
 
-        <!-- Gallery dots â€” optional (you can generate dynamically later) -->
+        <!-- Gallery dots — optional (you can generate dynamically later) -->
         <div id="gallery-dots" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"></div>
 
         <!-- Wishlist + Share + Chat buttons (no circles, white icons with drop-shadow for visibility) -->
@@ -365,7 +365,7 @@ tailwind.config = {
             </svg>
         </button>
         <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-            <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
+            <img class="w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
         </div>
         <div class="flex-1">
             <p class="font-semibold text-black text-sm" id="header-title">ShAI</p>
@@ -378,7 +378,7 @@ tailwind.config = {
             <div class="p-4 pb-0">
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
+                        <img class="w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
                     </div>
                     <div class="flex-1">
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3">
@@ -692,7 +692,7 @@ function renderReviewStars(rating) {
     `;
 }
 
-// Feature flag â€” Reviews disabled for MVP
+// Feature flag — Reviews disabled for MVP
 const REVIEWS_ENABLED = false;
 window.loadProductData = function(product) {
     if (!product.images && product.image) product.images = [product.image];
@@ -765,7 +765,7 @@ window.loadProductData = function(product) {
     document.getElementById("product-brand").textContent = product.brand;
     document.getElementById("product-name").textContent = product.name;
     var priceText = (product.price === "" || product.price == null) ? "" : (typeof product.price === "string" && product.price.indexOf("$") === 0 ? product.price : (product.currency ? product.currency + " " + product.price : "$" + product.price));
-    document.getElementById("product-price").textContent = priceText || (product.currency ? product.currency + " â€”" : "â€”");
+    document.getElementById("product-price").textContent = priceText || (product.currency ? product.currency + " —" : "—");
     document.getElementById("product-merchant").textContent = product.merchant;
 
     // -------------------------------------------------------------------------
@@ -855,7 +855,7 @@ if (reviewsContainer) {
             .join("");
     }
 
-    // Store for share button â€“ link uses current product, not hardcoded
+    // Store for share button – link uses current product, not hardcoded
     window.__currentProduct = product;
     console.log("Product loaded:", product.name);
 };
@@ -939,7 +939,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
 });
 
-// Test dynamic sizing â€“ call with sizing chart from API. Example:
+// Test dynamic sizing – call with sizing chart from API. Example:
 // testProductSizes({ US: ["7","7.5","8","8.5","9"], EU: ["40","41","42","43","44"], UK: ["6","6.5","7","7.5","8"] })
 // testProductSizes({ OneSize: ["One Size"] })
 // testProductSizes(["XS","S","M","L","XL"])
@@ -1077,7 +1077,7 @@ window.testUserPreferredSize = function(unit, size) {
 document.addEventListener("DOMContentLoaded", function () {
     // ShAI avatar: set from DB when loaded. Call window.setShAIAvatar(url) from API response.
     window.setShAIAvatar = function(url) {
-        window.__shaiAvatarUrl = url || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+        window.__shaiAvatarUrl = url || '../assets/shai-avatar.png';
         document.querySelectorAll('[data-shai-avatar]').forEach(function(img) { img.src = window.__shaiAvatarUrl; });
     };
     window.testShAIAvatar = function(url) {
@@ -1491,7 +1491,7 @@ document.addEventListener("touchmove", e => {
                 tempBubble.className = 'flex justify-end mb-2';
                 tempBubble.innerHTML = `
                     <div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]">
-                        <span class="mr-2">ðŸŽ™ï¸</span>
+                        <span class="mr-2">🎙️</span>
                         <span class="text-xs">
                             Recording... swipe left to cancel
                         </span>
@@ -1589,7 +1589,7 @@ document.addEventListener("touchmove", e => {
         });
         
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-        setTimeout(() => addShAIMessage("Got your voice message! I'm on it â€” let me find the best options for you."), 800);
+        setTimeout(() => addShAIMessage("Got your voice message! I'm on it — let me find the best options for you."), 800);
     }
 }
     window.toggleVoicePlayback = function(button, audioUrl) {
@@ -1639,7 +1639,7 @@ document.addEventListener("touchmove", e => {
     function addShAIMessage(message, thumbUrls) {
         const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
         if (chatMessagesContainer) {
-            const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+            const avatarUrl = window.__shaiAvatarUrl || '../assets/shai-avatar.png';
             const thumbHtml = (thumbUrls && thumbUrls.length) ? '<div class="flex gap-1.5 mt-2 flex-wrap">' + thumbUrls.slice(0, 4).map(function(t) { return '<img class="w-12 h-12 rounded-lg object-cover border border-gray-200" src="' + (t || '').replace(/"/g, '&quot;') + '" alt="">'; }).join('') + '</div>' : '';
             const aiMessage = document.createElement('div');
             aiMessage.className = 'flex items-start space-x-3 mb-4';
@@ -1730,7 +1730,7 @@ document.addEventListener("touchmove", e => {
             // Hero Invite: open native app picker (share sheet) directly, not Add Friend flow
             const shareData = {
                 title: 'Join me on GoShopMe',
-                text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me",
+                text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me",
                 url: 'https://app.goshopme.ai'
             };
             if (navigator.share) {
@@ -1760,7 +1760,7 @@ document.addEventListener("touchmove", e => {
                 chatMessagesContainer.appendChild(userMessage);
                 
                 setTimeout(() => {
-                    const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+                    const avatarUrl = window.__shaiAvatarUrl || '../assets/shai-avatar.png';
                     const aiResponse = document.createElement('div');
                     aiResponse.className = 'flex items-start space-x-3 mb-4';
                     aiResponse.innerHTML = `
@@ -1899,7 +1899,7 @@ document.addEventListener("touchmove", e => {
             } else if (e.target.textContent === 'Invite') {
                 const shareData = {
                     title: 'Join me on GoShopMe',
-                    text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me",
+                    text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me",
                     url: 'https://app.goshopme.ai'
                 };
                 
@@ -2043,14 +2043,14 @@ document.addEventListener("touchmove", e => {
 
 document.addEventListener("click", function(e) {
 
-    // SHARE BUTTON â€“ uses current product from loadProductData or DOM/URL
+    // SHARE BUTTON – uses current product from loadProductData or DOM/URL
     if (e.target.closest('button')?.querySelector('svg.transform.-rotate-45 path[d*="M6 12L3.269"]')) {
         e.preventDefault();
         const productData = getCurrentProductData();
         handleShareClick(productData);
     }
 
- // Share functionality â€“ share link to current product (not hardcoded)
+ // Share functionality – share link to current product (not hardcoded)
     function getCurrentProductData() {
         if (window.__currentProduct) return window.__currentProduct;
         const params = new URLSearchParams(window.location.search);
@@ -2069,7 +2069,7 @@ document.addEventListener("click", function(e) {
             : baseUrl;
         const shareData = {
             title: productData ? `${productData.name || 'Product'} by ${productData.brand || 'GoShopMe'}` : 'Check out GoShopMe',
-            text: productData ? `Found this on GoShopMe: ${productData.name} by ${productData.brand}${productData.price ? ' - $' + productData.price : ''}` : "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me",
+            text: productData ? `Found this on GoShopMe: ${productData.name} by ${productData.brand}${productData.price ? ' - $' + productData.price : ''}` : "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me",
             url: shareUrl
         };
         
@@ -2109,7 +2109,7 @@ document.addEventListener("click", function(e) {
         toggleWishlist(button);
     }
 
-    // CHAT PRODUCT BUTTON â€“ open drawer with product context and thumbnail (like Picks)
+    // CHAT PRODUCT BUTTON – open drawer with product context and thumbnail (like Picks)
     const chatProductBtn = e.target.closest('#chat-product-btn');
     if (chatProductBtn) {
         e.preventDefault();
@@ -2128,7 +2128,7 @@ document.addEventListener("click", function(e) {
     }
 });
 // ----------------------------------------
-// SIZE SELECTION SYSTEM â€“ dynamic from product.sizes / product.sizingChart (DB/API)
+// SIZE SELECTION SYSTEM – dynamic from product.sizes / product.sizingChart (DB/API)
 // ----------------------------------------
 
 const PREFERRED_SIZE_KEY = "__userPreferredSize";  // Set by onboarding quiz: { unit: "US", size: "8" }
@@ -2223,7 +2223,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// Size/unit clicks â€“ event delegation so all size options stay clickable (change from default)
+// Size/unit clicks – event delegation so all size options stay clickable (change from default)
 document.addEventListener("click", function(e) {
     const sizeBtn = e.target.closest(".size-option");
     if (sizeBtn && sizeBtn.dataset.size) {
@@ -2256,7 +2256,7 @@ function requireSizeBefore(action) {
         if (chatMessagesContainer) {
             const bubble = document.createElement('div');
             bubble.className = 'flex items-start space-x-3 mb-4';
-            const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+            const avatarUrl = window.__shaiAvatarUrl || '../assets/shai-avatar.png';
             bubble.innerHTML = `
                 <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
                     <img class="w-full h-full object-cover" src="${avatarUrl.replace(/"/g, '&quot;')}" alt="ShAI" data-shai-avatar />

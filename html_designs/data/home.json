@@ -1,36 +1,36 @@
 {
   "justForYou": [
-    {"id":"silk-midi-dress","name":"Silk Midi Dress","brand":"Reformation","price":"$248","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/silk%20midi%20dress.jpg"},
-    {"id":"cashmere-sweater","name":"Cashmere Sweater","brand":"Brunello Cucinelli","price":"$1,850","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/cashmere%20sweater.jpg"},
-    {"id":"leather-ankle-boots","name":"Leather Ankle Boots","brand":"Totême","price":"$640","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/leather%20ankle%20boots.jpg"},
-    {"id":"gold-chain-necklace","name":"Gold Chain Necklace","brand":"Cartier","price":"$2,100","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/gold%20necklace.jpg"},
-    {"id":"structured-blazer","name":"Le Smoking Blazer","brand":"Saint Laurent","price":"$1,890","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Saint%20Laurent%20Blazer.jpg"},
-    {"id":"designer-tote","name":"Le 5 À 7 Tote","brand":"Saint Laurent","price":"$1,490","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Saint%20Laurent%20bag.jpg"}
+    {"id":"silk-midi-dress","name":"Silk Midi Dress","brand":"Reformation","price":"$248","image":"../assets/silk%20midi%20dress.jpg"},
+    {"id":"cashmere-sweater","name":"Cashmere Sweater","brand":"Brunello Cucinelli","price":"$1,850","image":"../assets/cashmere%20sweater.jpg"},
+    {"id":"leather-ankle-boots","name":"Leather Ankle Boots","brand":"Totême","price":"$640","image":"../assets/leather%20ankle%20boots.jpg"},
+    {"id":"gold-chain-necklace","name":"Gold Chain Necklace","brand":"Cartier","price":"$2,100","image":"../assets/gold%20necklace.jpg"},
+    {"id":"structured-blazer","name":"Le Smoking Blazer","brand":"Saint Laurent","price":"$1,890","image":"../assets/Saint%20Laurent%20Blazer.jpg"},
+    {"id":"designer-tote","name":"Le 5 À 7 Tote","brand":"Saint Laurent","price":"$1,490","image":"../assets/Saint%20Laurent%20bag.jpg"}
   ],
   "trending": [
-    {"id":"vintage-blazer","name":"Vintage Blazer","brand":"Mugler","price":"$850","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/mugler%20blazer.jpg"},
-    {"id":"editorial-dress","name":"Editorial Midi Dress","brand":"Bottega Veneta","price":"$2,400","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/bottega%20venetta%20dress.jpg"},
-    {"id":"runway-heels","name":"Tribute Sandals","brand":"Saint Laurent","price":"$695","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Saint%20Laurent%20sandals.jpg"},
+    {"id":"vintage-blazer","name":"Vintage Blazer","brand":"Mugler","price":"$850","image":"../assets/mugler%20blazer.jpg"},
+    {"id":"editorial-dress","name":"Editorial Midi Dress","brand":"Bottega Veneta","price":"$2,400","image":"../assets/bottega%20venetta%20dress.jpg"},
+    {"id":"runway-heels","name":"Tribute Sandals","brand":"Saint Laurent","price":"$695","image":"../assets/Saint%20Laurent%20sandals.jpg"},
     {"id":"statement-earrings","name":"Statement Earrings","brand":"Bottega Veneta","price":"$1,200","image":"https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&h=650&fit=crop"},
-    {"id":"paris-editorial","name":"Paris FW Blazer","brand":"Chanel","price":"$4,200","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/chanel%20blazer.jpg"}
+    {"id":"paris-editorial","name":"Paris FW Blazer","brand":"Chanel","price":"$4,200","image":"../assets/chanel%20blazer.jpg"}
   ],
   "creatorCollections": [
-    {"id":"minimalist-chic","title":"Paris in Spring","creatorName":"Emma Style","creatorAvatarUrl":"https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg","coverType":"image","coverUrl":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Paris%20in%20Spring.jpg","wishlistId":"minimalist-chic-collection"},
-    {"id":"bold-bright","title":"Power Business","creatorName":"Anna Rivera","creatorAvatarUrl":"https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg","coverType":"image","coverUrl":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Business%20collection.jpg","wishlistId":"bold-bright-collection"},
-    {"id":"neutral-power","title":"Neutral Power","creatorName":"StyledByMira","creatorAvatarUrl":"https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg","coverType":"image","coverUrl":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Neutrals.jpg","wishlistId":"neutral-power-collection"},
-    {"id":"urban-street","title":"Urban Street Style","creatorName":"Maya Johnson","creatorAvatarUrl":"https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg","coverType":"image","coverUrl":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Urban%20style.jpg","wishlistId":"urban-street-collection"}
+    {"id":"minimalist-chic","title":"Paris in Spring","creatorName":"Emma Style","creatorAvatarUrl":"https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg","coverType":"image","coverUrl":"../assets/Paris%20in%20Spring.jpg","wishlistId":"minimalist-chic-collection"},
+    {"id":"bold-bright","title":"Power Business","creatorName":"Anna Rivera","creatorAvatarUrl":"https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg","coverType":"image","coverUrl":"../assets/Business%20collection.jpg","wishlistId":"bold-bright-collection"},
+    {"id":"neutral-power","title":"Neutral Power","creatorName":"StyledByMira","creatorAvatarUrl":"https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg","coverType":"image","coverUrl":"../assets/Neutrals.jpg","wishlistId":"neutral-power-collection"},
+    {"id":"urban-street","title":"Urban Street Style","creatorName":"Maya Johnson","creatorAvatarUrl":"https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg","coverType":"image","coverUrl":"../assets/Urban%20style.jpg","wishlistId":"urban-street-collection"}
   ],
   "categories": [
-    {"id":"shoes","name":"Shoes","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shoes%201.jpg"},
-    {"id":"dresses","name":"Dresses","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/dresses.jpg"},
-    {"id":"bags","name":"Bags","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/bags.jpg"},
-    {"id":"workwear","name":"Workwear","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Workwear.jpg"},
-    {"id":"swimwear","name":"Swimwear","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/swimwear%201.jpg"},
+    {"id":"shoes","name":"Shoes","image":"../assets/shoes%201.jpg"},
+    {"id":"dresses","name":"Dresses","image":"../assets/dresses.jpg"},
+    {"id":"bags","name":"Bags","image":"../assets/bags.jpg"},
+    {"id":"workwear","name":"Workwear","image":"../assets/Workwear.jpg"},
+    {"id":"swimwear","name":"Swimwear","image":"../assets/swimwear%201.jpg"},
     {"id":"sale","name":"Sale","image":"https://storage.googleapis.com/uxpilot-auth.appspot.com/179cee2d51-68640f3705cf734d5d3e.png"}
   ],
   "recentActivity": [
-    {"chatId":"theory-blazer","title":"Theory Power Blazer","subtitle":"Size advice","timeAgo":"2h ago","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Power%20blazer.jpg"},
-    {"chatId":"reformation-dress","title":"Reformation Midi Dress","subtitle":"Color options","timeAgo":"Yesterday","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/reformation%20midi%20dress.jpg"},
-    {"chatId":"mejuri-necklace","title":"Mejuri Chain Necklace","subtitle":"Layering tips","timeAgo":"2 days ago","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/chain%20necklace.jpg"}
+    {"chatId":"theory-blazer","title":"Theory Power Blazer","subtitle":"Size advice","timeAgo":"2h ago","image":"../assets/Power%20blazer.jpg"},
+    {"chatId":"reformation-dress","title":"Reformation Midi Dress","subtitle":"Color options","timeAgo":"Yesterday","image":"../assets/reformation%20midi%20dress.jpg"},
+    {"chatId":"mejuri-necklace","title":"Mejuri Chain Necklace","subtitle":"Layering tips","timeAgo":"2 days ago","image":"../assets/chain%20necklace.jpg"}
   ]
 }

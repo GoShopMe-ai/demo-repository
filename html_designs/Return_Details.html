@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <script>
@@ -168,7 +168,7 @@
                 id="refund-amount" class="font-semibold text-green-600 text-lg">$89.99</span></div>
             <div class="flex justify-between items-center"><span
                 class="text-gray-600 font-madefor">Refund Method</span><span
-                id="refund-method" class="font-medium">Visa â€¢â€¢â€¢â€¢ 4242</span></div>
+                id="refund-method" class="font-medium">Visa •••• 4242</span></div>
             <div class="flex justify-between items-center"><span
                 class="text-gray-600 font-madefor">Refund Status</span><span
                 id="refund-status-badge" class="inline-block px-3 py-1 text-xs bg-green-100 text-green-800 rounded-full font-medium">Completed</span>
@@ -198,10 +198,10 @@
       <section id="support-cta" class="mb-4"></section>
     </main>
 
-    <!-- Chat overlay â€“ tap to close drawer -->
+    <!-- Chat overlay – tap to close drawer -->
     <div id="return-chat-overlay" class="fixed inset-0 bg-black/40 z-40 hidden" aria-hidden="true"></div>
 
-    <!-- Chat drawer â€“ docked above bottom nav, height resizable via drag -->
+    <!-- Chat drawer – docked above bottom nav, height resizable via drag -->
     <div id="return-chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 flex flex-col border-t border-gray-100 transition-all duration-300 transform translate-y-full hidden" style="height: 50vh;">
       <div class="flex justify-center items-center flex-shrink-0 cursor-grab active:cursor-grabbing select-none" id="return-chat-drag-handle-area">
         <div class="drag-pill w-12 h-1.5 bg-gray-300 rounded-full"></div>
@@ -211,7 +211,7 @@
           <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
         </button>
         <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0 bg-gray-100 flex items-center justify-center relative">
-          <img class="return-shai-avatar w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI" data-shai-from-db onerror="this.style.display='none';var s=this.parentElement.querySelector('.return-shai-placeholder');if(s)s.classList.remove('hidden')">
+          <img class="return-shai-avatar w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI" data-shai-from-db onerror="this.style.display='none';var s=this.parentElement.querySelector('.return-shai-placeholder');if(s)s.classList.remove('hidden')">
           <span class="return-shai-placeholder absolute inset-0 flex items-center justify-center text-gray-400 text-xs font-medium bg-gray-100">AI</span>
         </div>
         <div class="flex-1">
@@ -224,7 +224,7 @@
           <div class="p-4 pb-6">
             <div class="flex items-start space-x-3 mb-4">
               <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center relative">
-                <img class="return-shai-avatar w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI" data-shai-from-db onerror="this.style.display='none';var s=this.parentElement.querySelector('.return-shai-placeholder');if(s)s.classList.remove('hidden')">
+                <img class="return-shai-avatar w-full h-full object-cover" src="../assets/shai-avatar.png" alt="ShAI" data-shai-from-db onerror="this.style.display='none';var s=this.parentElement.querySelector('.return-shai-placeholder');if(s)s.classList.remove('hidden')">
                 <span class="return-shai-placeholder absolute inset-0 flex items-center justify-center text-gray-400 text-xs font-medium bg-gray-100">AI</span>
               </div>
               <div class="flex-1">
@@ -271,7 +271,7 @@
       </div>
     </div>
 
-    <!-- Chat input bar (collapsed state) â€“ tap to expand -->
+    <!-- Chat input bar (collapsed state) – tap to expand -->
     <div id="return-chat-input-bar" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 p-4 z-30 min-w-0 overflow-hidden">
       <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm min-w-0 w-full overflow-hidden">
         <button id="return-cam-btn-collapsed" class="icon-button hover:opacity-70 transition-opacity">
@@ -334,9 +334,9 @@
 (function() {
   var DEFAULT_RETURN = {
     id: '#S04545', date: 'June 15, 2025', total: '$89.99', status: 'returned', statusLabel: 'Returned',
-    returnedDate: 'June 22, 2025', refundStatus: 'Processed', payment: 'Visa â€¢â€¢â€¢â€¢ 4242',
+    returnedDate: 'June 22, 2025', refundStatus: 'Processed', payment: 'Visa •••• 4242',
     returnId: '#R20250715', returnMethod: 'Courier Pickup', returnReason: 'Changed mind', itemCondition: 'New with tags',
-    items: [{ image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/8edc82e22f-908ef8c4557e6b889643.png', title: 'Basic Cotton T-Shirt', meta: 'Size L â€¢ Qty 2', alt: 'Basic Cotton T-Shirt' }]
+    items: [{ image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/8edc82e22f-908ef8c4557e6b889643.png', title: 'Basic Cotton T-Shirt', meta: 'Size L • Qty 2', alt: 'Basic Cotton T-Shirt' }]
   };
 
   function getReturnOrder() {
@@ -385,10 +385,10 @@
     var id = order.id || '';
 
     var titleEl = document.getElementById('return-order-title');
-    if (titleEl) titleEl.textContent = 'Return Details for Order ' + (id || 'â€”');
+    if (titleEl) titleEl.textContent = 'Return Details for Order ' + (id || '—');
 
     var returnIdEl = document.getElementById('return-id');
-    if (returnIdEl) returnIdEl.textContent = order.returnId || (id ? '#R' + String(id).replace(/^#/, '') : '#Râ€”');
+    if (returnIdEl) returnIdEl.textContent = order.returnId || (id ? '#R' + String(id).replace(/^#/, '') : '#R—');
 
     var statusEl = document.getElementById('return-status');
     if (statusEl) {
@@ -397,7 +397,7 @@
     }
 
     var reqDateEl = document.getElementById('return-request-date');
-    if (reqDateEl) reqDateEl.textContent = order.returnedDate || order.date || 'â€”';
+    if (reqDateEl) reqDateEl.textContent = order.returnedDate || order.date || '—';
 
     var methodEl = document.getElementById('return-method');
     if (methodEl) methodEl.textContent = order.returnMethod || 'Courier Pickup';
@@ -411,10 +411,10 @@
         var img = escapeHtml(item.image || '');
         var title = escapeHtml(item.title || '');
         var meta = escapeHtml(item.meta || '');
-        var reason = escapeHtml(item.returnReason || order.returnReason || 'â€”');
-        var condition = escapeHtml(item.condition || order.itemCondition || 'â€”');
+        var reason = escapeHtml(item.returnReason || order.returnReason || '—');
+        var condition = escapeHtml(item.condition || order.itemCondition || '—');
         var itemStatus = item.refundStatus || order.refundStatus || 'Refunded';
-        return '<div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg"><img src="' + img + '" alt="' + title + '" class="w-16 h-16 rounded-lg object-cover"><div class="flex-1"><h4 class="font-medium text-sm mb-1">' + title + '</h4><p class="text-xs text-gray-600 mb-2">' + meta + ' â€¢ ' + escapeHtml(order.total || '') + '</p><div class="space-y-1"><div class="flex justify-between text-xs"><span class="text-gray-600">Reason:</span><span class="font-medium">' + reason + '</span></div><div class="flex justify-between text-xs"><span class="text-gray-600">Condition:</span><span class="font-medium">' + condition + '</span></div><div class="flex justify-between text-xs"><span class="text-gray-600">Status:</span><span class="text-green-600 font-medium">' + escapeHtml(itemStatus) + '</span></div></div></div></div>';
+        return '<div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg"><img src="' + img + '" alt="' + title + '" class="w-16 h-16 rounded-lg object-cover"><div class="flex-1"><h4 class="font-medium text-sm mb-1">' + title + '</h4><p class="text-xs text-gray-600 mb-2">' + meta + ' • ' + escapeHtml(order.total || '') + '</p><div class="space-y-1"><div class="flex justify-between text-xs"><span class="text-gray-600">Reason:</span><span class="font-medium">' + reason + '</span></div><div class="flex justify-between text-xs"><span class="text-gray-600">Condition:</span><span class="font-medium">' + condition + '</span></div><div class="flex justify-between text-xs"><span class="text-gray-600">Status:</span><span class="text-green-600 font-medium">' + escapeHtml(itemStatus) + '</span></div></div></div></div>';
       }).join('');
     }
 
@@ -422,10 +422,10 @@
     if (timelineEl) timelineEl.innerHTML = buildTimeline(order);
 
     var refundAmountEl = document.getElementById('refund-amount');
-    if (refundAmountEl) refundAmountEl.textContent = order.total || 'â€”';
+    if (refundAmountEl) refundAmountEl.textContent = order.total || '—';
 
     var refundMethodDetailEl = document.getElementById('refund-method');
-    if (refundMethodDetailEl) refundMethodDetailEl.textContent = order.payment || 'â€”';
+    if (refundMethodDetailEl) refundMethodDetailEl.textContent = order.payment || '—';
 
     var refundStatusEl = document.getElementById('refund-status-badge');
     if (refundStatusEl) {
@@ -434,7 +434,7 @@
     }
 
     var refundDateEl = document.getElementById('refund-processing-date');
-    if (refundDateEl) refundDateEl.textContent = order.returnedDate || order.date || 'â€”';
+    if (refundDateEl) refundDateEl.textContent = order.returnedDate || order.date || '—';
   }
 
   window.setReturnOrder = function(order) {
@@ -598,7 +598,7 @@ function toggleTimeline() {
   function loadShaiAvatarFromDb() {
     if (window.__shaiAvatarUrl) { setShaiAvatarFromDb(window.__shaiAvatarUrl); return; }
     if (window.location.protocol === 'file:') {
-      try { var cached = localStorage.getItem('shaiAvatar'); if (cached) setShaiAvatarFromDb(cached); else setShaiAvatarFromDb('..https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png'); } catch (e) { setShaiAvatarFromDb('..https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png'); }
+      try { var cached = localStorage.getItem('shaiAvatar'); if (cached) setShaiAvatarFromDb(cached); else setShaiAvatarFromDb('..../assets/shai-avatar.png'); } catch (e) { setShaiAvatarFromDb('..../assets/shai-avatar.png'); }
       return;
     }
     var endpoint = window.__shaiAvatarEndpoint || '/api/avatar/shai';
@@ -636,7 +636,7 @@ function toggleTimeline() {
     if (!chatMessages) return;
     requestAnimationFrame(function() { requestAnimationFrame(function() { chatMessages.scrollTop = chatMessages.scrollHeight; }); });
   }
-  var defaultShaiImg = 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+  var defaultShaiImg = '../assets/shai-avatar.png';
   function getShaiAvatarUrl() {
     var img = document.querySelector('.return-shai-avatar');
     var fallback = localStorage.getItem('shaiAvatar') || (window.location.protocol === 'file:' ? devShaiAvatarDataUri : defaultShaiImg);
@@ -653,13 +653,13 @@ function toggleTimeline() {
   }
   function getShaiReply(msg) {
     var m = (msg || '').toLowerCase().trim();
-    if (/return|refund|status|tracking|when|where|processing|received|shipped/i.test(m)) return "Your return is being processed! Refunds typically appear within 3â€“5 business days after we receive your items. I can check the exact status for you â€” would you like me to look it up?";
-    if (/outfit|outfits|find.*look|style|dress|shirt|pants|jacket|what to wear/i.test(m)) return "I'd love to help you find the perfect outfit! Tell me the occasion â€” casual, work, date night, or something else â€” and I'll curate some looks for you.";
+    if (/return|refund|status|tracking|when|where|processing|received|shipped/i.test(m)) return "Your return is being processed! Refunds typically appear within 3–5 business days after we receive your items. I can check the exact status for you — would you like me to look it up?";
+    if (/outfit|outfits|find.*look|style|dress|shirt|pants|jacket|what to wear/i.test(m)) return "I'd love to help you find the perfect outfit! Tell me the occasion — casual, work, date night, or something else — and I'll curate some looks for you.";
     if (/trending|trend|popular|hot|new|what\'?s in/i.test(m)) return "Here's what's trending right now: elevated basics, soft neutrals, and statement accessories. Want me to show you some picks that match your style?";
     if (/help|hi|hello|hey|what can you/i.test(m)) return "Hi! I'm here to help with your return status, refund questions, or finding your next favorite look. What would you like to explore?";
     if (/size|exchange|swap|wrong size|too (big|small)/i.test(m)) return "I can help with that! For size exchanges, we can arrange a swap when your return is received. Would you like me to start an exchange, or find similar items in your size?";
-    if (/how long|delay|when will|refund.*days/i.test(m)) return "Refunds usually process within 3â€“5 business days after we receive your return. If it's been longer, I can help you track it or escalate if needed.";
-    if (/thank|thanks|ty|great|perfect|awesome/i.test(m)) return "You're welcome! Let me know if you need anything else â€” I'm here to help.";
+    if (/how long|delay|when will|refund.*days/i.test(m)) return "Refunds usually process within 3–5 business days after we receive your return. If it's been longer, I can help you track it or escalate if needed.";
+    if (/thank|thanks|ty|great|perfect|awesome/i.test(m)) return "You're welcome! Let me know if you need anything else — I'm here to help.";
     if (/bye|goodbye|later/i.test(m)) return "Goodbye! Come back anytime you need help with returns or styling.";
     return "I'd be happy to help with that! Your return is on track, and I can also assist with outfit ideas or trending picks. What would you like to explore?";
   }
