@@ -1,0 +1,930 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <title>Group Chat - GoShopMe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/chat-drawer-drag.css">
+    <link rel="stylesheet" href="css/global-components.css">
+    <script src="js/header-icons-badges.js"></script>
+    <script src="js/back-button.js"></script>
+    <script src="js/bottom-nav.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'shine-primary': '#939BFB',
+              'shine-accent': '#F96226',
+              'shine-support': '#B7C7FF'
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      ::-webkit-scrollbar { display: none; }
+      * { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+      .header-icon-btn:hover { transform: translateY(-2px); }
+      .bottom-nav-btn { display: flex; flex-direction: column; align-items: center; color: #6B7280; transition: color 0.2s ease-in-out; }
+      .bottom-nav-btn:hover, .bottom-nav-btn.active { color: #939BFB; }
+      .bottom-nav-btn:hover svg, .bottom-nav-btn:hover span, .bottom-nav-btn.active svg, .bottom-nav-btn.active span { color: #939BFB; }
+      .bottom-nav-btn svg { width: 20px; height: 20px; stroke-width: 1.5; margin-bottom: 4px; }
+      .recording { background: #ef4444 !important; color: white !important; }
+      #cart-indicator.hidden, #notif-indicator.hidden { display: none !important; }
+
+      @keyframes shimmer
+      {
+        0%
+        {
+          transform: translateX(-100%);
+        }
+
+        100%
+        {
+          transform: translateX(100%);
+        }
+      }
+
+      .animate-shimmer
+      {
+        animation: shimmer 1.5s infinite;
+      }
+
+      @keyframes slide-in-left
+      {
+        from
+        {
+          opacity: 0;
+          transform: translateX(-10px);
+        }
+
+        to
+        {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes slide-in-right
+      {
+        from
+        {
+          opacity: 0;
+          transform: translateX(10px);
+        }
+
+        to
+        {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .animate-slide-in-left
+      {
+        animation: slide-in-left 0.3s ease forwards;
+      }
+
+      .animate-slide-in-right
+      {
+        animation: slide-in-right 0.3s ease forwards;
+      }
+
+      @keyframes waveformPulse
+      {
+
+        0%,
+        100%
+        {
+          transform: scaleY(1);
+        }
+
+        50%
+        {
+          transform: scaleY(1.5);
+        }
+      }
+
+      @keyframes progress
+      {
+        0%
+        {
+          width: 0%;
+        }
+
+        100%
+        {
+          width: 100%;
+        }
+      }
+
+      .animate-progress { animation: progress 8s linear; }
+      .chat-drawer { transition: height 0.3s ease-in-out; }
+      #main-content { min-height: calc(100vh - 56px); }
+      #chat-drawer { height: 50vh; }
+    </style>
+</head>
+
+<body class="bg-[#F6F6F6] dm-sans overflow-x-hidden">
+<div id="app-shell" class="relative w-full max-w-[390px] mx-auto min-h-screen bg-white shadow-2xl overflow-x-hidden">
+    <header id="header" class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white z-50 border-b border-gray-100">
+      <div class="flex items-center justify-between p-4">
+        <a href="#" class="goshopme-back-btn header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800" data-fallback="Home.html" aria-label="Back">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+          </svg>
+        </a>
+        <h1 id="header-title" class="absolute left-0 right-0 text-center text-lg font-semibold text-gray-900 poppins pointer-events-none">Group Chat</h1>
+        <div id="header-icons-slot" class="flex items-center gap-0 flex-shrink-0"></div>
+      </div>
+    </header>
+    <main id="main-content" class="pt-20 px-4 pb-4 overflow-y-auto">
+      <div id="chat-context-preview" class="rounded-xl border border-gray-100 bg-white p-3 shadow-sm">
+        <p class="text-xs text-gray-500 dm-sans mb-1">Chatting about</p>
+        <div class="flex space-x-3">
+          <div class="w-14 h-14 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/89a9fe6304-a3e42c4a74f135d4367a.png" alt="Air Max 90 Essential" class="w-full h-full object-cover">
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs text-gray-500 dm-sans">Nike</p>
+            <p class="font-medium text-sm text-gray-900 dm-sans">Air Max 90 Essential</p>
+            <p class="font-bold text-sm text-black">$120</p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div id="chat-drawer-overlay" class="fixed inset-0 bg-black/40 z-40 hidden">
+    </div>
+    <div id="chat-drawer" class="chat-drawer fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 flex flex-col min-h-0">
+      <div id="drag-handle-zone" class="chat-drawer-drag-zone flex justify-center pt-2 flex-shrink-0">
+        <div id="drag-handle" class="w-10 h-1 bg-gray-300 rounded-full cursor-grab pointer-events-none"></div>
+      </div>
+      <div id="chat-drawer-header" class="flex items-center px-4 py-3 flex-shrink-0 border-b border-gray-100">
+        <div class="flex -space-x-2 mr-3">
+          <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="You" class="w-8 h-8 rounded-full border-2 border-white object-cover">
+          <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Alex" class="w-8 h-8 rounded-full border-2 border-white object-cover">
+          <div class="w-8 h-8 rounded-full border-2 border-white overflow-hidden">
+            <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI" class="w-full h-full object-cover" data-shai-avatar>
+          </div>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-gray-900 poppins truncate">You, Alex &amp; ShAI</p>
+          <p class="text-xs text-gray-500 dm-sans">Active now</p>
+        </div>
+      </div>
+      <div id="chat-messages" class="flex-1 min-h-0 overflow-y-auto px-4 pt-4 space-y-4">
+        <div class="flex items-start space-x-3 animate-slide-in-left">
+          <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI" class="w-full h-full object-cover" data-shai-avatar></div>
+          <div class="flex-1">
+            <p class="text-xs text-gray-500 mb-1 dm-sans">ShAI</p>
+            <div
+              class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[85%] shadow-sm">
+              <p class="text-sm text-gray-900 dm-sans mb-3 break-words whitespace-pre-wrap">Looking at:</p>
+              <div class="bg-white border border-gray-200 rounded-xl p-3">
+                <div class="flex space-x-3">
+                  <div
+                    class="w-14 h-14 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                    <img
+                      src="https://storage.googleapis.com/uxpilot-auth.appspot.com/89a9fe6304-a3e42c4a74f135d4367a.png"
+                      alt="Air Max 90 Essential"
+                      class="w-full h-full object-cover"></div>
+                  <div class="flex-1">
+                    <p class="text-xs text-gray-500 dm-sans">Nike</p>
+                    <p class="font-medium text-sm text-gray-900 dm-sans">Air Max
+                      90 Essential</p>
+                    <p class="font-bold text-sm text-black">$120</p>
+                  </div>
+                </div>
+              </div>
+            </div><span
+              class="text-xs text-gray-400 dm-sans mt-1 block">14:22</span>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3 animate-slide-in-left">
+          <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI" class="w-full h-full object-cover" data-shai-avatar></div>
+          <div class="flex-1">
+            <p class="text-xs text-gray-500 mb-1 dm-sans">ShAI</p>
+            <div
+              class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%] shadow-sm">
+              <p class="text-sm text-gray-900 dm-sans break-words whitespace-pre-wrap">Hey! ðŸ‘‹ I see you're both
+                checking out the Air Max 90 Essential. What do you think? Need
+                any details on sizing or style?</p>
+            </div><span
+              class="text-xs text-gray-400 dm-sans mt-1 block">14:23</span>
+          </div>
+        </div>
+        <div class="flex justify-end animate-slide-in-right">
+          <div class="flex-1 flex flex-col items-end">
+            <p class="text-xs text-gray-500 mb-1 dm-sans">You</p>
+            <div
+              class="bg-shine-primary text-white rounded-2xl rounded-tr-md p-3 max-w-[80%] shadow-sm">
+              <p class="text-sm dm-sans break-words whitespace-pre-wrap">I love the white colorway! What do you
+                think, Alex?</p>
+            </div><span class="text-xs text-gray-400 dm-sans mt-1">14:24</span>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3 animate-slide-in-left"><img
+            src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
+            alt="Alex" class="w-8 h-8 rounded-full flex-shrink-0">
+          <div class="flex-1">
+            <p class="text-xs text-gray-500 mb-1 dm-sans">Alex</p>
+            <div
+              class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%] shadow-sm">
+              <p class="text-sm text-gray-900 dm-sans break-words whitespace-pre-wrap">It's clean! But do they
+                have it in black? I think black would be more versatile.</p>
+            </div><span
+              class="text-xs text-gray-400 dm-sans mt-1 block">14:25</span>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3 animate-slide-in-left">
+          <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI" class="w-full h-full object-cover" data-shai-avatar></div>
+          <div class="flex-1">
+            <p class="text-xs text-gray-500 mb-1 dm-sans">ShAI</p>
+            <div
+              class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%] shadow-sm mb-3">
+              <p class="text-sm text-gray-900 dm-sans break-words whitespace-pre-wrap">Great question! Yes, the
+                Air Max 90 comes in black too. Here's a quick comparison:</p>
+            </div>
+            <div class="space-y-3">
+              <div
+                class="bg-white border border-gray-200 rounded-xl p-3 max-w-[85%]">
+                <div class="flex space-x-3">
+                  <div
+                    class="w-14 h-14 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                    <img
+                      src="https://storage.googleapis.com/uxpilot-auth.appspot.com/89a9fe6304-a3e42c4a74f135d4367a.png"
+                      alt="White" class="w-full h-full object-cover"></div>
+                  <div class="flex-1">
+                    <p class="text-xs text-gray-500 dm-sans">Nike</p>
+                    <p class="font-medium text-sm text-gray-900 dm-sans">Air Max
+                      90 White</p>
+                    <p class="font-bold text-sm text-black">$120</p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="bg-white border border-gray-200 rounded-xl p-3 max-w-[85%]">
+                <div class="flex space-x-3">
+                  <div
+                    class="w-14 h-14 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                    <img
+                      src="https://storage.googleapis.com/uxpilot-auth.appspot.com/b57ed3e303-afe108bd0a80671060f4.png"
+                      alt="Black" class="w-full h-full object-cover"></div>
+                  <div class="flex-1">
+                    <p class="text-xs text-gray-500 dm-sans">Nike</p>
+                    <p class="font-medium text-sm text-gray-900 dm-sans">Air Max
+                      90 Black</p>
+                    <p class="font-bold text-sm text-black">$125</p>
+                  </div>
+                </div>
+              </div>
+            </div><span
+              class="text-xs text-gray-400 dm-sans mt-2 block">14:26</span>
+          </div>
+        </div>
+        <div class="flex justify-end animate-slide-in-right">
+          <div class="flex-1 flex flex-col items-end">
+            <p class="text-xs text-gray-500 mb-1 dm-sans">You</p>
+            <div
+              class="max-w-[60%] bg-white rounded-2xl shadow-sm border border-shine-primary overflow-hidden">
+              <div class="relative"><img
+                  src="https://storage.googleapis.com/uxpilot-auth.appspot.com/89a9fe6304-a3e42c4a74f135d4367a.png"
+                  alt="User uploaded image" class="w-full h-48 object-cover">
+              </div>
+              <div class="px-3 py-2 flex justify-between items-center"><span
+                  class="text-xs text-gray-500 dm-sans">Image â€¢ 1.2
+                  MB</span><span
+                  class="text-xs text-gray-500 dm-sans">14:27</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end animate-slide-in-right">
+          <div class="flex-1 flex flex-col items-end">
+            <div
+              class="bg-shine-primary text-white rounded-2xl rounded-tr-md p-3 max-w-[80%] shadow-sm">
+              <p class="text-sm dm-sans break-words whitespace-pre-wrap">This is how they look on me! I think
+                the white pops more.</p>
+            </div><span class="text-xs text-gray-400 dm-sans mt-1">14:27</span>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3 animate-slide-in-left"><img
+            src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
+            alt="Alex" class="w-8 h-8 rounded-full flex-shrink-0">
+          <div class="flex-1">
+            <p class="text-xs text-gray-500 mb-1 dm-sans">Alex</p>
+            <div
+              class="max-w-[70%] bg-gray-50 rounded-2xl rounded-tl-md p-2.5 flex items-center gap-3 shadow-sm">
+              <button
+                class="play-btn w-8 h-8 flex items-center justify-center bg-shine-primary rounded-full"><svg
+                  fill="currentColor" viewBox="0 0 24 24"
+                  class="w-4 h-4 text-white ml-0.5">
+                  <path d="M8 5v14l11-7z"></path>
+                </svg></button>
+              <div
+                class="waveform flex-1 h-2 bg-gray-300 rounded-full relative overflow-hidden">
+                <div
+                  class="progress absolute top-0 left-0 h-2 bg-shine-primary rounded-full w-0">
+                </div>
+              </div><span class="text-xs text-gray-700 dm-sans">0:08</span>
+            </div><span
+              class="text-xs text-gray-400 dm-sans mt-1 block">14:28</span>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3 animate-slide-in-left">
+          <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI" class="w-full h-full object-cover" data-shai-avatar></div>
+          <div class="flex-1">
+            <p class="text-xs text-gray-500 mb-1 dm-sans">ShAI</p>
+            <div
+              class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%] shadow-sm">
+              <p class="text-sm text-gray-900 dm-sans break-words whitespace-pre-wrap">Both look great! ðŸ‘Ÿ The
+                white is definitely a statement piece, while the black is more
+                versatile for everyday wear. What's the main use case?</p>
+            </div><span
+              class="text-xs text-gray-400 dm-sans mt-1 block">14:29</span>
+          </div>
+        </div>
+        <div class="flex justify-end animate-slide-in-right">
+          <div class="flex-1 flex flex-col items-end">
+            <p class="text-xs text-gray-500 mb-1 dm-sans">You</p>
+            <div
+              class="bg-shine-primary text-white rounded-2xl rounded-tr-md p-3 max-w-[80%] shadow-sm">
+              <p class="text-sm dm-sans break-words whitespace-pre-wrap">I need them for daily wear, gym, and
+                casual outings.</p>
+            </div><span class="text-xs text-gray-400 dm-sans mt-1">14:30</span>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3 animate-slide-in-left"><img
+            src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
+            alt="Alex" class="w-8 h-8 rounded-full flex-shrink-0">
+          <div class="flex-1">
+            <p class="text-xs text-gray-500 mb-1 dm-sans">Alex</p>
+            <div
+              class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%] shadow-sm">
+              <p class="text-sm text-gray-900 dm-sans break-words whitespace-pre-wrap">Then definitely go with
+                black! White will get dirty too fast at the gym.</p>
+            </div><span
+              class="text-xs text-gray-400 dm-sans mt-1 block">14:31</span>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3 animate-slide-in-left">
+          <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI" class="w-full h-full object-cover" data-shai-avatar></div>
+          <div class="flex-1">
+            <p class="text-xs text-gray-500 mb-1 dm-sans">ShAI</p>
+            <div
+              class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%] shadow-sm mb-3">
+              <p class="text-sm text-gray-900 dm-sans break-words whitespace-pre-wrap">Alex makes a good point!
+                For gym and daily wear, the black is more practical. Would you
+                like me to check your size availability for the black version?
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2"><button
+                class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Check
+                size</button><button
+                class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Compare
+                options</button><button
+                class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Add
+                to cart</button></div><span
+              class="text-xs text-gray-400 dm-sans mt-2 block">14:32</span>
+          </div>
+        </div>
+      </div>
+      <div id="chat-input-area" class="flex-shrink-0 px-4 py-3 border-t border-gray-100 bg-white">
+        <div class="flex items-end space-x-3 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+          <button id="cam-btn" class="text-gray-600 hover:text-[#939BFB] flex-shrink-0" aria-label="Camera"><svg
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              stroke-width="1.5" class="w-[18px] h-[18px]">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z">
+              </path>
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z">
+              </path>
+            </svg></button><textarea id="message-input" placeholder="Message..." rows="1" class="flex-1 min-w-0 bg-transparent outline-none text-gray-900 placeholder-gray-500 dm-sans resize-none leading-6 py-0 max-h-36 min-h-[24px]" style="max-height: 144px;"></textarea><button
+            id="mic-btn"
+            class="text-gray-600 hover:text-[#939BFB] flex-shrink-0" aria-label="Microphone"><svg
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              stroke-width="1.5" class="w-[18px] h-[18px]">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z">
+              </path>
+            </svg></button><button id="send-btn"
+            class="text-[#939BFB] hidden flex-shrink-0" aria-label="Send"><svg fill="none"
+              stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"
+              class="w-[18px] h-[18px]">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5">
+              </path>
+            </svg></button></div>
+      </div>
+    </div>
+    <div id="bottom-nav-placeholder"></div>
+</div>
+<script>
+      window.__bottomNavInit = { insertBefore: 'bottom-nav-placeholder', currentPage: 'home' };
+      (function initContextFromUrl() {
+        var p = new URLSearchParams(window.location.search);
+        var from = p.get('from') || '';
+        var productName = p.get('productName') || p.get('product') || '';
+        var productBrand = p.get('productBrand') || p.get('brand') || '';
+        var productPrice = p.get('productPrice') || p.get('price') || '';
+        var productImage = p.get('productImage') || p.get('image') || '';
+        var titleEl = document.getElementById('header-title');
+        var previewEl = document.getElementById('chat-context-preview');
+        if (productName && titleEl) titleEl.textContent = productName;
+        if (previewEl && (productName || productImage)) {
+          var img = previewEl.querySelector('img');
+          var infoDiv = previewEl.querySelector('.flex-1.min-w-0');
+          if (infoDiv) {
+            var ps = infoDiv.querySelectorAll('p');
+            if (productImage && img) img.src = productImage;
+            if (productBrand && ps[0]) ps[0].textContent = productBrand;
+            if (productName && ps[1]) ps[1].textContent = productName;
+            if (productPrice && ps[2]) ps[2].textContent = (productPrice.indexOf('$') >= 0 ? '' : '$') + productPrice;
+          }
+        } else if (previewEl && !productName && !productImage) {
+          previewEl.style.display = 'none';
+        }
+      })();
+      document.addEventListener('DOMContentLoaded', function()
+      {
+        const drawer = document.getElementById('chat-drawer');
+        const overlay = document.getElementById('chat-drawer-overlay');
+        const dragHandleZone = document.getElementById('drag-handle-zone') || document.getElementById('drag-handle');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const micBtn = document.getElementById('mic-btn');
+        const chatMessages = document.getElementById('chat-messages');
+
+        let startY = 0;
+        let startHeight = 0;
+        let isDragging = false;
+
+        function expandDrawer()
+        {
+          drawer.style.height = '50vh';
+          overlay.classList.remove('hidden');
+        }
+
+        function collapseDrawer()
+        {
+          drawer.style.height = '50vh';
+          overlay.classList.add('hidden');
+        }
+
+        window.collapseDrawer = collapseDrawer;
+
+        if (dragHandleZone) {
+          dragHandleZone.addEventListener('mousedown', function(e)
+          {
+            isDragging = true;
+            startY = e.clientY;
+            startHeight = drawer.offsetHeight;
+          });
+
+          dragHandleZone.addEventListener('touchstart', function(e)
+          {
+            isDragging = true;
+            startY = e.touches[0].clientY;
+            startHeight = drawer.offsetHeight;
+          }, { passive: true });
+        }
+
+        document.addEventListener('mousemove', function(e)
+        {
+          if (!isDragging) return;
+          const deltaY = startY - e.clientY;
+          const newHeight = startHeight + deltaY;
+          const minHeight = window.innerHeight * 0.35;
+          const maxHeight = window.innerHeight * 0.8;
+
+          if (newHeight >= minHeight && newHeight <= maxHeight)
+          {
+            drawer.style.height = newHeight + 'px';
+            if (newHeight > minHeight + 50)
+            {
+              overlay.classList.remove('hidden');
+            }
+            else
+            {
+              overlay.classList.add('hidden');
+            }
+          }
+        });
+
+        document.addEventListener('touchmove', function(e)
+        {
+          if (!isDragging) return;
+          const deltaY = startY - e.touches[0].clientY;
+          const newHeight = startHeight + deltaY;
+          const minHeight = window.innerHeight * 0.35;
+          const maxHeight = window.innerHeight * 0.8;
+
+          if (newHeight >= minHeight && newHeight <= maxHeight)
+          {
+            drawer.style.height = newHeight + 'px';
+            if (newHeight > minHeight + 50)
+            {
+              overlay.classList.remove('hidden');
+            }
+            else
+            {
+              overlay.classList.add('hidden');
+            }
+          }
+        });
+
+        document.addEventListener('mouseup', function()
+        {
+          isDragging = false;
+        });
+
+        document.addEventListener('touchend', function()
+        {
+          isDragging = false;
+        });
+
+        document.addEventListener('touchcancel', function()
+        {
+          isDragging = false;
+        });
+
+        messageInput.addEventListener('focus', expandDrawer);
+
+        var camBtn = document.getElementById('cam-btn');
+        if (camBtn) camBtn.addEventListener('click', function() { window.handleCameraClick && window.handleCameraClick(); });
+
+        function autoResizeInput(inputField)
+        {
+          inputField.style.height = 'auto';
+          const lineHeight = 24;
+          const maxLines = 6;
+          const minHeight = lineHeight;
+          const maxHeight = lineHeight * maxLines;
+          let newHeight = Math.min(inputField.scrollHeight, maxHeight);
+          newHeight = Math.max(newHeight, minHeight);
+          inputField.style.height = newHeight + 'px';
+          if (inputField.scrollHeight > maxHeight)
+          {
+            inputField.style.overflowY = 'auto';
+          }
+          else
+          {
+            inputField.style.overflowY = 'hidden';
+          }
+        }
+
+        function updateInputIcons(inputField, sendBtn, micBtn)
+        {
+          const hasText = inputField.value.trim().length > 0;
+          if (hasText)
+          {
+            if (micBtn) micBtn.classList.add('hidden');
+            if (sendBtn) sendBtn.classList.remove('hidden');
+          }
+          else
+          {
+            if (micBtn) micBtn.classList.remove('hidden');
+            if (sendBtn) sendBtn.classList.add('hidden');
+          }
+        }
+
+        function sendMessage(message, sender = 'You')
+        {
+          const timestamp = new Date().toLocaleTimeString('en-US',
+          {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+          });
+
+          const messageBubble = document.createElement('div');
+          messageBubble.className =
+            'flex justify-end animate-slide-in-right';
+          messageBubble.innerHTML = `
+            <div class="flex-1 flex flex-col items-end">
+                <p class="text-xs text-gray-500 mb-1 dm-sans">${sender}</p>
+                <div class="bg-shine-primary text-white rounded-2xl rounded-tr-md p-3 max-w-[80%] shadow-sm">
+                    <p class="text-sm dm-sans leading-relaxed break-words whitespace-pre-wrap">${message}</p>
+                </div>
+                <span class="text-xs text-gray-400 dm-sans mt-1">${timestamp}</span>
+            </div>
+        `;
+
+          chatMessages.appendChild(messageBubble);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+
+          if (typeof window.GoShopMeChatAPI !== 'undefined' && window.GoShopMeChatAPI.sendMessage) {
+            window.GoShopMeChatAPI.sendMessage(message, sender);
+          }
+        }
+
+        if (messageInput)
+        {
+          messageInput.addEventListener('input', function()
+          {
+            autoResizeInput(this);
+            updateInputIcons(this, sendBtn, micBtn);
+          });
+
+          messageInput.addEventListener('keypress', function(e)
+          {
+            if (e.key === 'Enter' && !e.shiftKey)
+            {
+              e.preventDefault();
+              if (this.value.trim() && sendBtn && !sendBtn.classList
+                .contains('hidden'))
+              {
+                sendMessage(this.value.trim());
+                this.value = '';
+                autoResizeInput(this);
+                updateInputIcons(this, sendBtn, micBtn);
+              }
+            }
+          });
+        }
+
+        if (sendBtn)
+        {
+          sendBtn.addEventListener('click', function()
+          {
+            if (messageInput.value.trim())
+            {
+              sendMessage(messageInput.value.trim());
+              messageInput.value = '';
+              autoResizeInput(messageInput);
+              updateInputIcons(messageInput, sendBtn, micBtn);
+            }
+          });
+        }
+
+        function setupMicrophoneInteraction(micButton)
+        {
+          let isRecording = false;
+          let recordingStartTime = 0;
+
+          function startRecording()
+          {
+            if (isRecording) return;
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices
+              .getUserMedia)
+            {
+              alert('Voice recording is not supported in your browser.');
+              return;
+            }
+
+            expandDrawer();
+
+            navigator.mediaDevices.getUserMedia(
+              {
+                audio: true
+              })
+              .then(function(stream)
+              {
+                isRecording = true;
+                recordingStartTime = Date.now();
+
+                micButton.style.transform = 'scale(1.1)';
+                micButton.classList.add('recording', 'ring-2', 'ring-[#939BFB]', 'ring-offset-2');
+
+                micButton.mediaStream = stream;
+              })
+              .catch(function(err)
+              {
+                alert('Microphone access is needed for voice messages.');
+              });
+          }
+
+          function stopRecording()
+          {
+            if (!isRecording) return;
+
+            isRecording = false;
+
+            if (micButton.mediaStream)
+            {
+              micButton.mediaStream.getTracks().forEach(track => track
+              .stop());
+              micButton.mediaStream = null;
+            }
+
+            micButton.style.transform = 'scale(1)';
+            micButton.classList.remove('recording', 'ring-2', 'ring-[#939BFB]', 'ring-offset-2');
+
+            const duration = Math.max(1, Math.floor((Date.now() -
+              recordingStartTime) / 1000));
+            createVoiceMessageBubble(duration);
+          }
+
+          function createVoiceMessageBubble(duration)
+          {
+            const timestamp = new Date().toLocaleTimeString('en-US',
+            {
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false
+            });
+
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            const durationText =
+              `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            const voiceBubble = document.createElement('div');
+            voiceBubble.className =
+              'flex justify-end animate-slide-in-right';
+            voiceBubble.innerHTML = `
+                <div class="flex-1 flex flex-col items-end">
+                    <p class="text-xs text-gray-500 mb-1 dm-sans">You</p>
+                    <div class="max-w-[70%] bg-shine-primary rounded-2xl rounded-tr-md p-2.5 flex items-center gap-3 shadow-sm">
+                        <button class="play-btn w-8 h-8 flex items-center justify-center bg-white/20 rounded-full" onclick="toggleVoicePlay(this)">
+                            <svg class="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </button>
+                        <div class="waveform flex-1 h-2 bg-white/30 rounded-full relative overflow-hidden">
+                            <div class="progress absolute top-0 left-0 h-2 bg-white rounded-full w-0"></div>
+                        </div>
+                        <span class="text-xs text-white dm-sans">${durationText}</span>
+                    </div>
+                    <span class="text-xs text-gray-400 dm-sans mt-1">${timestamp}</span>
+                </div>
+            `;
+
+            chatMessages.appendChild(voiceBubble);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          }
+
+          micButton.addEventListener('mousedown', function(e)
+          {
+            e.preventDefault();
+            startRecording();
+
+            const handleMouseUp = () =>
+            {
+              stopRecording();
+              document.removeEventListener('mouseup', handleMouseUp);
+            };
+
+            document.addEventListener('mouseup', handleMouseUp);
+          });
+
+          micButton.addEventListener('touchstart', function(e)
+          {
+            e.preventDefault();
+            startRecording();
+          });
+
+          micButton.addEventListener('touchend', function(e)
+          {
+            e.preventDefault();
+            stopRecording();
+          });
+        }
+
+        if (micBtn)
+        {
+          setupMicrophoneInteraction(micBtn);
+        }
+      });
+
+      window.toggleVoicePlay = function(button)
+      {
+        const voiceMessage = button.closest('.bg-shine-primary, .bg-gray-50');
+        const progressBar = voiceMessage.querySelector('.progress');
+        const isPlaying = progressBar.style.width !== '0%' && progressBar
+          .style.width !== '';
+
+        if (isPlaying)
+        {
+          button.innerHTML = `
+            <svg class="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+            </svg>
+        `;
+          progressBar.style.width = '0%';
+          progressBar.style.animation = 'none';
+        }
+        else
+        {
+          button.innerHTML = `
+            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+            </svg>
+        `;
+          progressBar.style.animation = 'progress 8s linear';
+          progressBar.style.width = '100%';
+
+          setTimeout(() =>
+          {
+            button.innerHTML = `
+                <svg class="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            `;
+            progressBar.style.width = '0%';
+            progressBar.style.animation = 'none';
+          }, 8000);
+        }
+      };
+
+      window.togglePinnedProduct = function()
+      {
+        const pinnedProduct = document.getElementById('pinned-product');
+        const isCollapsed = pinnedProduct.classList.contains('h-0');
+
+        if (isCollapsed)
+        {
+          pinnedProduct.classList.remove('h-0', 'overflow-hidden', 'p-0');
+          pinnedProduct.classList.add('p-4');
+        }
+        else
+        {
+          pinnedProduct.classList.add('h-0', 'overflow-hidden', 'p-0');
+          pinnedProduct.classList.remove('p-4');
+        }
+      };
+
+      window.handleCameraClick = function()
+      {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*,video/*';
+        input.capture = 'environment';
+
+        input.onchange = function(e)
+        {
+          const file = e.target.files[0];
+          if (file)
+          {
+            handleMediaUpload(file);
+          }
+        };
+
+        input.click();
+      };
+
+      function handleMediaUpload(file)
+      {
+        const fileURL = URL.createObjectURL(file);
+        const timestamp = new Date().toLocaleTimeString('en-US',
+        {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        });
+
+        const fileSize = (file.size / (1024 * 1024)).toFixed(1);
+        const isVideo = file.type.startsWith('video/');
+        const mediaType = isVideo ? 'Video' : 'Image';
+
+        const chatMessages = document.getElementById('chat-messages');
+        const drawer = document.getElementById('chat-drawer');
+        const overlay = document.getElementById('chat-drawer-overlay');
+
+        drawer.style.height = '50vh';
+        overlay.classList.remove('hidden');
+
+        const mediaBubble = document.createElement('div');
+        mediaBubble.className = 'flex justify-end animate-slide-in-right';
+        mediaBubble.innerHTML = `
+        <div class="flex-1 flex flex-col items-end">
+            <p class="text-xs text-gray-500 mb-1 dm-sans">You</p>
+            <div class="max-w-[60%] bg-white rounded-2xl shadow-sm border border-shine-primary overflow-hidden">
+                <div class="relative">
+                    ${isVideo ? 
+                        `<video src="${fileURL}" class="w-full h-48 object-cover" controls></video>` :
+                        `<img src="${fileURL}" alt="User uploaded image" class="w-full h-48 object-cover">`
+                    }
+                </div>
+                <div class="px-3 py-2 flex justify-between items-center">
+                    <span class="text-xs text-gray-500 dm-sans">${mediaType} â€¢ ${fileSize} MB</span>
+                    <span class="text-xs text-gray-500 dm-sans">${timestamp}</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+        chatMessages.appendChild(mediaBubble);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        setTimeout(() =>
+        {
+          URL.revokeObjectURL(fileURL);
+        }, 10000);
+      }
+    </script>
+  </body>
+
+</html>
+

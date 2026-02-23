@@ -1,0 +1,2384 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'shine-primary': '#939BFB',
+        'shine-accent': '#F96226'
+      }
+    }
+  }
+}
+</script>
+    <script src="https://unpkg.com/heroicons@2.0.16/24/outline/index.js"></script>
+    <script src="js/product-api.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/chat-drawer-drag.css">
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        * { 
+    font-family: 'DM Sans', 
+                 'Karla',
+                 -apple-system,
+                 BlinkMacSystemFont,
+                 'Segoe UI',
+                 Roboto,
+                 'Helvetica Neue',
+                 Arial,
+                 'Noto Sans',
+                 sans-serif; 
+}
+
+.dm-sans { 
+    font-family: 'DM Sans', 
+                 'Karla',
+                 -apple-system,
+                 BlinkMacSystemFont,
+                 'Segoe UI',
+                 Roboto,
+                 'Helvetica Neue',
+                 Arial,
+                 'Noto Sans',
+                 sans-serif; 
+}
+
+.poppins { 
+    font-family: 'Poppins',
+                 -apple-system,
+                 BlinkMacSystemFont,
+                 'Segoe UI',
+                 Roboto,
+                 'Helvetica Neue',
+                 Arial,
+                 sans-serif; 
+}
+        
+        /* Icon styling */
+        .icon-button svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 1.5;
+        }
+        
+        .icon-button:hover svg {
+            color: #939BFB;
+        }
+        
+        .icon-button.white svg {
+            color: #FFF;
+        }
+        
+        /* Bottom nav styling */
+        .bottom-nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6B7280;
+            transition: color 0.2s ease-in-out;
+        }
+        
+        .bottom-nav-btn:hover,
+        .bottom-nav-btn.active {
+            color: #939BFB;
+        }
+        
+        .bottom-nav-btn:hover svg,
+        .bottom-nav-btn:hover span,
+        .bottom-nav-btn.active svg,
+        .bottom-nav-btn.active span {
+            color: #939BFB;
+        }
+
+        .bottom-nav-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 1.5;
+            margin-bottom: 4px;
+        }
+
+        #cart-indicator, #notif-indicator {
+            min-width: 18px;
+            min-height: 18px;
+            padding: 0 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #cart-indicator.hidden, #notif-indicator.hidden { display: none !important; }
+        #cart-indicator.badge-numeric, #notif-indicator.badge-numeric {
+            min-width: 18px;
+            padding: 0 5px;
+        }
+
+        /* Product recommendation tiles: pointer cursor (desktop), touch-optimized (mobile) */
+        .recommendation-tile { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: rgba(147, 155, 251, 0.12); }
+        
+        /* Wishlist heart filled state */
+        .heart-filled {
+            fill: #939BFB !important;
+            stroke: #939BFB !important;
+        }
+        
+        /* Voice recording state */
+        .recording {
+            background: #ef4444 !important;
+            color: white !important;
+        }
+        
+        /* Chat message bubbles */
+        .voice-message-bubble {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border-radius: 16px;
+            max-width: 80%;
+        }
+        
+        .voice-message-outgoing {
+            background: #939BFB;
+            color: white;
+            margin-left: auto;
+        }
+        
+        .voice-message-incoming {
+            background: #f3f4f6;
+            color: #000;
+        }
+        
+        .product-bubble {
+            background: white;
+            border: 1px solid #D1D5DB;
+            border-radius: 16px;
+            padding: 12px;
+            max-width: 60%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .product-bubble.outgoing {
+            border-color: #939BFB;
+            margin-left: auto;
+        }
+        
+        /* Share button - Instagram-style tilted paper plane */
+        .share-icon-tilted {
+            transform: rotate(-35deg);
+        }
+        /* Product overlay icons - no circles, highly visible on any image */
+        .product-overlay-icon {
+            /* Plain white icons - Instagram style */
+        }
+        .product-image-overlay-wrap::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.08); pointer-events: none; z-index: 0; }
+        .product-image-overlay-wrap > [class*="absolute"][class*="top-"] { z-index: 1; }
+        
+        /* Add to existing styles */
+        @keyframes wavePulse {
+            0%, 100% { 
+                transform: scaleY(0.5); 
+            }
+            50% { 
+                transform: scaleY(1.0); 
+            }
+        }
+
+        .wave-bar.playing {
+            animation: wavePulse 1.1s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.08s);
+        }
+
+        .voice-message-bubble {
+            min-width: 140px;
+            max-width: 260px;
+            width: fit-content;
+        }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
+    </style>
+   </head>
+<body class="bg-[#F6F6F6] min-h-screen overflow-x-hidden">
+
+<div id="app-shell" class="relative w-full max-w-[390px] mx-auto min-h-screen bg-white shadow-2xl">
+
+<header id="header" class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white z-50 border-b border-gray-100">
+    <div class="flex items-center justify-between p-4">
+   <a id="product-back-link" href="Home.html" class="header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800" aria-label="Go back" onclick="return typeof goBackProductDetails==='function'?goBackProductDetails(event):true">
+            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+        </a>
+        <h1 class="text-lg font-semibold text-gray-900 poppins">Product Details</h1>
+        <div class="flex items-center gap-0">
+            <!-- Notifications (unified with Home: no grey background, same size) -->
+            <a href="Notifications_Screen.html?from=product" id="notif-btn" class="header-icon-btn w-10 h-10 flex items-center justify-center relative overflow-visible text-gray-600 hover:text-gray-800" aria-label="Notifications">
+                <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 
+                             8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 
+                             01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 
+                             0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 
+                             0 11-5.714 0" />
+                </svg>
+                <div id="notif-indicator" class="absolute -top-0.5 -right-0.5 min-w-[18px] min-h-[18px] px-1 bg-[#F96226] rounded-full hidden items-center justify-center flex">
+                    <span id="notif-count" class="text-[10px] text-white font-medium leading-none whitespace-nowrap"></span>
+                </div>
+            </a>
+
+            <!-- Shopping cart (unified with Home: no grey background, same size) -->
+            <a href="Shopping_bag.html?from=product" id="cart-btn" class="header-icon-btn w-10 h-10 flex items-center justify-center relative overflow-visible text-gray-600 hover:text-gray-800" aria-label="Shopping bag">
+                <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 
+                             12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 
+                             01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 
+                             1.059.435 1.119.993z" />
+                </svg>
+                <div id="cart-indicator" class="absolute -top-0.5 -right-0.5 min-w-[18px] min-h-[18px] px-1 bg-[#939BFB] rounded-full hidden items-center justify-center flex">
+                    <span id="cart-count" class="text-[10px] text-white font-medium leading-none whitespace-nowrap"></span>
+                </div>
+            </a>
+        </div>
+
+    </div> <!-- CLOSES the header layout container -->
+</header>
+
+<main id="main-content" class="pt-20 pb-40">
+ 
+    <section id="product-gallery" class="relative mt-0">
+    <div class="w-full h-[400px] bg-gray-100 relative product-image-overlay-wrap overflow-hidden">
+        <img id="product-main-image"
+             class="w-full h-full object-cover"
+             src=""
+             alt="product image" />
+
+        <!-- Gallery dots â€” optional (you can generate dynamically later) -->
+        <div id="gallery-dots" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"></div>
+
+        <!-- Wishlist + Share + Chat buttons (no circles, white icons with drop-shadow for visibility) -->
+        <div class="absolute top-2 right-2 flex flex-col space-y-2">
+            <button id="wishlist-btn" class="p-1 flex items-center justify-center hover:opacity-80 transition-opacity">
+                <svg class="w-5 h-5 text-white product-overlay-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+                </svg>
+            </button>
+            <button id="share-btn" class="p-1 flex items-center justify-center hover:opacity-80 transition-opacity">
+                <svg class="w-5 h-5 text-white product-overlay-icon share-icon-tilted" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+                </svg>
+            </button>
+            <button id="chat-product-btn" class="p-1 flex items-center justify-center hover:opacity-80 transition-opacity chat-trigger" aria-label="Chat about this product">
+                <svg class="w-4 h-4 text-white product-overlay-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</section>
+    <section id="product-info" class="px-4 pt-6 pb-4">
+    <div class="mb-2">
+        <p id="product-brand" class="text-sm text-gray-500 dm-sans"></p>
+
+        <h1 id="product-name" class="text-2xl font-semibold text-gray-900 poppins mb-2"></h1>
+
+        <p id="product-price" class="text-2xl font-bold text-black mb-1"></p>
+
+        <p id="product-merchant" class="text-sm text-gray-500"></p>
+    </div>
+</section>
+
+    <section id="size-selector" class="px-4 pb-4">
+        <div class="mb-4">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-semibold text-gray-900 poppins">Size</h3>
+                <div id="unit-buttons-container" class="flex bg-gray-100 rounded-lg p-1 hidden">
+                    <!-- Unit buttons (US/EU/UK etc.) populated from product sizing chart -->
+                </div>
+            </div>
+            <div id="size-options-grid" class="grid grid-cols-5 gap-1.5">
+                <!-- Size options populated from product.sizes / product.sizingChart -->
+            </div>
+            <p id="size-placeholder" class="text-sm text-gray-500 hidden">Sizes load from product data.</p>
+        </div>
+    </section>
+
+   <section id="product-description" class="px-4 pb-8">
+    <div class="border-t border-gray-100 pt-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3 poppins">Description</h3>
+
+        <p id="product-description-text" class="text-gray-600 leading-relaxed mb-4 dm-sans"></p>
+
+        <!-- EXTRAS: keep structure, fill dynamically later -->
+        <div class="space-y-4">
+            <div>
+                <h4 class="font-semibold text-gray-900 mb-2 dm-sans">Material & Care</h4>
+                <p id="product-material" class="text-sm text-gray-600 dm-sans"></p>
+            </div>
+            
+            <div>
+                <h4 class="font-semibold text-gray-900 mb-2 dm-sans">Shipping & Returns</h4>
+                <p id="product-shipping" class="text-sm text-gray-600 dm-sans"></p>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="reviews" class="px-4 pb-8 hidden">
+    <h3 class="text-lg font-semibold text-gray-900 mb-3 poppins">Reviews</h3>
+    <div id="reviews-container"></div>
+</section>
+
+   
+    <section id="similar-products" class="px-4 pb-8">
+    <div class="border-t border-gray-100 pt-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4 poppins">You might also like</h3>
+
+        <!-- JS will inject cards into this grid -->
+        <div id="similar-grid" class="grid grid-cols-2 gap-4"></div>
+    </div>
+</section>
+  
+</main>
+
+<div id="chat-overlay" class="fixed inset-0 bg-black/40 z-40 hidden"></div>
+
+<!-- Chat drawer docked above bottom nav; pointer-events-none on wrapper so main content (sizes etc) stays clickable when drawer closed -->
+<div id="chat-drawer-wrapper" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-50 pointer-events-none">
+<div id="chat-drawer" class="w-full max-w-[390px] mx-auto bg-white rounded-t-3xl shadow-2xl h-[50vh] transform translate-y-full transition-transform duration-300 flex flex-col pointer-events-auto">
+    <div id="drag-handle-zone" class="chat-drawer-drag-zone flex justify-center pt-2 flex-shrink-0">
+        <div id="drag-handle" class="w-10 h-1 bg-gray-300 rounded-full cursor-pointer pointer-events-none"></div>
+    </div>
+
+    <div id="chat-header" class="flex items-center p-4 pb-2 flex-shrink-0">
+        <button id="back-btn" class="mr-3 hidden hover:opacity-70 transition-opacity">
+            <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+            </svg>
+        </button>
+        <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
+            <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
+        </div>
+        <div class="flex-1">
+            <p class="font-semibold text-black text-sm" id="header-title">ShAI</p>
+            <p class="text-xs text-gray-500" id="header-subtitle">Your shopping assistant</p>
+        </div>
+    </div>
+
+    <div id="chat-content" class="flex-1 flex flex-col min-h-0">
+        <div id="chat-messages" class="flex-1 overflow-y-auto">
+            <div class="p-4 pb-0">
+                <div class="flex items-start space-x-3 mb-4">
+                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                        <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
+                    </div>
+                    <div class="flex-1">
+                        <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3">
+                            <p class="text-sm text-black">Hi there! I'm ShAI, your personal shopping assistant. How can I help you find the perfect items today?</p>
+                        </div>
+                        <div id="smart-prompts" class="flex-shrink-0">
+                            <div class="flex flex-wrap gap-2 pb-2">
+                                <button class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 hover:bg-[#939BFB] hover:text-white transition-colors">I need a formal outfit</button>
+                                <button class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 hover:bg-[#939BFB] hover:text-white transition-colors">Find me seasonal outfits</button>
+                                <button class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 hover:bg-[#939BFB] hover:text-white transition-colors">What's trending right now?</button>
+                                <button class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 hover:bg-[#939BFB] hover:text-white transition-colors">Elevate my workwear</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="chat-input-drawer" class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
+            <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+                <button id="cam-btn-drawer" class="icon-button hover:opacity-70 transition-opacity">
+                    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
+                    </svg>
+                </button>
+                <input type="text" id="chat-input-drawer-field" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans min-h-[24px]">
+                <button id="add-friend-btn-drawer" class="icon-button hover:opacity-70 transition-opacity">
+                    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                    </svg>
+                </button>
+                <button id="mic-btn-drawer" class="icon-button hover:opacity-70 transition-opacity">
+                    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
+                    </svg>
+                </button>
+                <button id="send-btn-drawer" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity">
+                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-friend-content" class="flex-1 flex flex-col min-h-0 hidden">
+        <div id="contact-list" class="flex-1 overflow-y-auto p-4">
+            <div class="mb-4">
+                <div class="relative">
+                    <input type="text" id="contact-search" placeholder="Search contacts..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 pl-10 text-sm">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+            
+            <div id="contacts-container" class="space-y-2">
+                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Alex Johnson" data-phone="+1 (555) 123-4567" data-goshopme="true">
+                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Contact" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-sm text-black">Alex Johnson</p>
+                        <p class="text-xs text-gray-500">+1 (555) 123-4567</p>
+                    </div>
+                    <button class="contact-action bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>
+                </div>
+                
+                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Maria Rodriguez" data-phone="+1 (555) 987-6543" data-goshopme="false">
+                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
+                        <span class="text-gray-600 font-medium text-xs">MR</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-sm text-black">Maria Rodriguez</p>
+                        <p class="text-xs text-gray-500">+1 (555) 987-6543</p>
+                    </div>
+                    <button class="contact-action bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>
+                </div>
+                
+                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="David Kim" data-phone="+1 (555) 456-7890" data-goshopme="true">
+                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" alt="Contact" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-sm text-black">David Kim</p>
+                        <p class="text-xs text-gray-500">+1 (555) 456-7890</p>
+                    </div>
+                    <button class="contact-action bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>
+                </div>
+                
+                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Sarah Thompson" data-phone="+1 (555) 234-5678" data-goshopme="false">
+                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
+                        <span class="text-gray-600 font-medium text-xs">ST</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-sm text-black">Sarah Thompson</p>
+                        <p class="text-xs text-gray-500">+1 (555) 234-5678</p>
+                    </div>
+                    <button class="contact-action bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>
+                </div>
+
+                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Emma Wilson" data-phone="+1 (555) 345-6789" data-goshopme="true">
+                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="Contact" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-sm text-black">Emma Wilson</p>
+                        <p class="text-xs text-gray-500">+1 (555) 345-6789</p>
+                    </div>
+                    <button class="contact-action bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>
+                </div>
+
+                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Michael Brown" data-phone="+1 (555) 678-9012" data-goshopme="false">
+                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
+                        <span class="text-gray-600 font-medium text-xs">MB</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-sm text-black">Michael Brown</p>
+                        <p class="text-xs text-gray-500">+1 (555) 678-9012</p>
+                    </div>
+                    <button class="contact-action bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>
+                </div>
+
+                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Jennifer Lee" data-phone="+1 (555) 789-0123" data-goshopme="true">
+                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="Contact" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-sm text-black">Jennifer Lee</p>
+                        <p class="text-xs text-gray-500">+1 (555) 789-0123</p>
+                    </div>
+                    <button class="contact-action bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>
+                </div>
+
+                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Robert Davis" data-phone="+1 (555) 890-1234" data-goshopme="false">
+                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
+                        <span class="text-gray-600 font-medium text-xs">RD</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-sm text-black">Robert Davis</p>
+                        <p class="text-xs text-gray-500">+1 (555) 890-1234</p>
+                    </div>
+                    <button class="contact-action bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="add-friend-input" class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
+            <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+                <button class="icon-button hover:opacity-70 transition-opacity">
+                    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
+                    </svg>
+                </button>
+                <input type="text" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 wix-madefor min-h-[24px]">
+                <button class="icon-button hover:opacity-70 transition-opacity">
+                    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                    </svg>
+                </button>
+                <button class="icon-button hover:opacity-70 transition-opacity">
+                    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 z-50">
+    <div class="flex items-center justify-around py-2">
+        <a href="Home.html" class="bottom-nav-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+            </svg>
+            <span class="text-xs">Home</span>
+        </a>
+        <a href="Picks.html" class="bottom-nav-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
+            </svg>
+            <span class="text-xs">Picks</span>
+        </a>
+        <a href="Wishlist.html" class="bottom-nav-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+            </svg>
+            <span class="text-xs">Wishlist</span>
+        </a>
+        <a id="product-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn">
+            <span id="product-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1 text-[#939BFB]"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg></span>
+            <img id="product-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile" data-profile-avatar>
+            <span class="text-xs">Profile</span>
+        </a>
+    </div>
+</nav>
+<script>
+// Bottom nav profile: show icon OR photo - icon if no uploaded photo, photo if saved in localStorage
+(function() {
+    var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
+    var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+    var profileLink = document.getElementById('product-nav-profile-link');
+    if (profileLink) profileLink.href = profileHref;
+    var saved = null;
+    try { saved = localStorage.getItem('profilePhoto') || localStorage.getItem('profileAvatarUrl'); } catch (e) {}
+    var img = document.getElementById('product-nav-profile-photo');
+    var icon = document.getElementById('product-nav-profile-icon');
+    if (img && icon) {
+        if (saved) {
+            img.src = saved;
+            img.classList.remove('hidden');
+            icon.classList.add('hidden');
+        } else {
+            img.src = '';
+            img.classList.add('hidden');
+            icon.classList.remove('hidden');
+        }
+    }
+})();
+</script>
+<script>
+// Contextual back: from param -> previous page (same logic as Notifications_Screen)
+(function() {
+    var fromMap = {
+        'home': 'Home.html',
+        'picks': "Picks.html",
+        'wishlist': 'Wishlist.html',
+        'orders': 'Orders.html',
+        'orders-empty': 'Orders_Screen_Empty_State.html',
+        'order-tracking': 'Order_Tracking.html',
+        'product': 'Product_details_page.html',
+        'collections': "Creator`s Collections_Page.html",
+        'collection': "Creator`s Single_Collection.html",
+        'notifications-settings': 'Notifications_Settings.html',
+        'notifications': 'Notifications_Screen.html',
+        'cart': 'Shopping_bag.html',
+        'cart-empty': 'Shopping_bag_empty_state.html',
+        'category': 'ShopbyCategory.html',
+        'subscription': 'Subscription_Management.html',
+        'trending': 'Trending_Now.html',
+        'profile-free': 'User_Profile_Free_Plan.html',
+        'profile-paid': 'User_Profile_Paid_Plan.html',
+        'privacy-settings': 'Privacy_Settings.html',
+        'return-details': 'Return_Details.html',
+        'receipt': 'Receipt_Details_Screen.html'
+    };
+    window.goBackProductDetails = function(e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        var params = new URLSearchParams(window.location.search);
+        var from = (params.get('from') || '').toLowerCase();
+        var target = fromMap[from];
+        if (target) {
+            window.location.href = target;
+        } else if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = 'Home.html';
+        }
+        return false;
+    };
+    var link = document.getElementById('product-back-link');
+    if (link) {
+        var params = new URLSearchParams(window.location.search);
+        var from = (params.get('from') || '').toLowerCase();
+        link.href = fromMap[from] || 'Home.html';
+    }
+})();
+</script>
+
+<div id="chat-input-bar" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 p-4 z-50">
+    <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+        <button id="cam-btn" class="icon-button hover:opacity-70 transition-opacity">
+            <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
+            </svg>
+        </button>
+        <input type="text" id="message-input" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans min-h-[24px]">
+        <button id="add-friend-btn" class="icon-button hover:opacity-70 transition-opacity">
+            <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+            </svg>
+        </button>
+        <button id="mic-btn" class="icon-button hover:opacity-70 transition-opacity">
+            <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
+            </svg>
+        </button>
+        <button id="send-btn" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity">
+            <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+            </svg>
+        </button>
+    </div>
+</div>
+<script>
+// ======================================================================================
+//      FINAL DYNAMIC PRODUCT LOADER FOR GOSHOPME PRODUCT PAGE
+// ======================================================================================
+function renderReviewStars(rating) {
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5;
+    const empty = 5 - full - half;
+
+    return `
+        ${'<svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>'.repeat(full)}
+        ${half ? '<svg class="w-4 h-4 text-yellow-400 fill-current opacity-50" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77V2z"/></svg>' : ''}
+        ${'<svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>'.repeat(empty)}
+    `;
+}
+
+// Feature flag â€” Reviews disabled for MVP
+const REVIEWS_ENABLED = false;
+window.loadProductData = function(product) {
+    if (!product.images && product.image) product.images = [product.image];
+
+    // -------------------------------------------------------------------------
+    // 1. Load Image Gallery + Swipe Support
+    // -------------------------------------------------------------------------
+    const mainImg = document.getElementById("product-main-image");
+    const galleryDots = document.getElementById("gallery-dots");
+
+    let currentIndex = 0;
+    let startX = 0;
+    let endX = 0;
+
+    function updateImage() {
+        if (!product.images || product.images.length === 0) return;
+        mainImg.src = product.images[currentIndex];
+        highlightDot();
+    }
+
+    function renderDots() {
+        if (!galleryDots) return;
+        galleryDots.innerHTML = product.images
+            .map((_, i) =>
+                `<div class="w-2 h-2 rounded-full ${i === 0 ? 'bg-white' : 'bg-white/50'}"></div>`
+            )
+            .join("");
+    }
+
+    function highlightDot() {
+        const dots = galleryDots.querySelectorAll("div");
+        dots.forEach((dot, i) => {
+            dot.classList.remove("bg-white");
+            dot.classList.add("bg-white/50");
+            if (i === currentIndex) {
+                dot.classList.add("bg-white");
+                dot.classList.remove("bg-white/50");
+            }
+        });
+    }
+
+    function nextImage() {
+        if (!product.images || product.images.length === 0) return;
+        currentIndex = (currentIndex + 1) % product.images.length;
+        updateImage();
+    }
+
+    function prevImage() {
+        if (!product.images || product.images.length === 0) return;
+        currentIndex = (currentIndex - 1 + product.images.length) % product.images.length;
+        updateImage();
+    }
+
+    // Swipe Handlers (only when multiple images)
+    if (product.images && product.images.length > 1) {
+        mainImg.addEventListener("touchstart", e => { startX = e.touches[0].clientX; });
+        mainImg.addEventListener("touchend", e => {
+            endX = e.changedTouches[0].clientX;
+            if (endX - startX > 40) prevImage();
+            if (startX - endX > 40) nextImage();
+        });
+    }
+
+    renderDots();
+    updateImage();
+
+    // -------------------------------------------------------------------------
+    // 2. Product Info
+    // -------------------------------------------------------------------------
+    document.getElementById("product-brand").textContent = product.brand;
+    document.getElementById("product-name").textContent = product.name;
+    var priceText = (product.price === "" || product.price == null) ? "" : (typeof product.price === "string" && product.price.indexOf("$") === 0 ? product.price : (product.currency ? product.currency + " " + product.price : "$" + product.price));
+    document.getElementById("product-price").textContent = priceText || (product.currency ? product.currency + " â€”" : "â€”");
+    document.getElementById("product-merchant").textContent = product.merchant;
+
+    // -------------------------------------------------------------------------
+    // 3. Description, Material, Shipping
+    // -------------------------------------------------------------------------
+    document.getElementById("product-description-text").textContent =
+        product.description || "No description available.";
+
+    document.getElementById("product-material").textContent =
+        product.material_and_care || "Material information not provided.";
+
+    document.getElementById("product-shipping").textContent =
+        product.shipping_and_returns || "Shipping details not available.";
+
+    // -------------------------------------------------------------------------
+             // -------------------------------------------------------------------------
+// 4. Dynamic Reviews (Full Styled Version)
+// -------------------------------------------------------------------------
+const reviewsContainer = document.getElementById("reviews-container");
+
+if (reviewsContainer) {
+    if (!product.reviews || product.reviews.length === 0) {
+        reviewsContainer.innerHTML = `
+            <p class="text-gray-500 text-sm">No reviews yet.</p>
+        `;
+    } else {
+        reviewsContainer.innerHTML = product.reviews.map(r => `
+            <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                <div class="flex items-center mb-2">
+                    <img src="${r.avatar}" 
+                         alt="${r.author}" 
+                         class="w-8 h-8 rounded-full mr-3">
+
+                    <div>
+                        <p class="font-medium text-sm dm-sans">${r.author}</p>
+                        <div class="flex items-center">
+                            ${renderReviewStars(r.rating)}
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-sm text-gray-600 dm-sans">${r.comment}</p>
+
+                <p class="text-xs text-gray-400 mt-1">${r.date}</p>
+            </div>
+        `).join("");
+    }
+}
+    // -------------------------------------------------------------------------
+    // 5. Dynamic sizing chart (from DB/API: product.sizes or product.sizingChart)
+    // -------------------------------------------------------------------------
+    const sizingChart = product.sizingChart || product.sizes;
+    if (sizingChart) {
+        const normalized = (typeof sizingChart === 'object' && !Array.isArray(sizingChart))
+            ? sizingChart  // { US: [...], EU: [...], UK: [...] }
+            : { '': Array.isArray(sizingChart) ? sizingChart : [String(sizingChart)] };  // flat: ["XS","S","M","L"]
+        window.__currentProductSizes = normalized;
+        const units = Object.keys(normalized).filter(u => u);
+        window.__currentSizeUnits = units.length ? units : (Object.keys(normalized)[0] ? [Object.keys(normalized)[0]] : ['']);
+        selectedUnit = window.__currentSizeUnits[0] || '';
+        selectedSize = null;
+        if (typeof window.renderProductSizes === 'function') window.renderProductSizes();
+    } else {
+        window.__currentProductSizes = null;
+        window.__currentSizeUnits = [];
+        document.getElementById("size-selector")?.classList.add("hidden");
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. Dynamic "You Might Also Like" (from API/DB)
+    // -------------------------------------------------------------------------
+    const grid = document.getElementById("similar-grid");
+    if (grid) {
+        const similar = Array.isArray(product.similar) ? product.similar : [];
+        grid.innerHTML = similar
+            .map(sim => `
+                <div class="recommendation-tile bg-white rounded-lg border border-gray-100 p-3 cursor-pointer hover:shadow-md transition-shadow"
+                     data-product-id="${(sim.id||'').replace(/"/g,'&quot;')}" data-product-name="${(sim.name||'').replace(/"/g,'&quot;')}" data-product-brand="${(sim.brand||'').replace(/"/g,'&quot;')}" data-product-image="${(sim.image||'').replace(/"/g,'&quot;')}" data-product-price="${(sim.price||'').toString().replace(/"/g,'&quot;')}">
+                    <div class="w-full h-32 bg-gray-100 rounded-lg mb-3 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="${sim.image}" />
+                    </div>
+                    <p class="text-xs text-gray-500 dm-sans">${sim.brand}</p>
+                    <p class="font-medium text-sm text-gray-900 dm-sans">${sim.name}</p>
+                    <p class="font-bold text-sm text-black">$${sim.price}</p>
+                </div>
+            `)
+            .join("");
+    }
+
+    // Store for share button â€“ link uses current product, not hardcoded
+    window.__currentProduct = product;
+    console.log("Product loaded:", product.name);
+};
+
+// -------------------------------------------------------------------------
+// Load product from API on page init (id from URL ?id=)
+// All product details come from database/API via GoShopMeProductAPI
+// -------------------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", async function() {
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get("id");
+    const nameParam = params.get("name") || "";
+    const brandParam = params.get("brand") || "";
+    const imageParam = params.get("image") || "";
+    const priceParam = params.get("price") || "";
+
+    var navData = null;
+    try {
+        var stored = sessionStorage.getItem('__productNavData');
+        if (stored) { navData = JSON.parse(stored); sessionStorage.removeItem('__productNavData'); }
+    } catch (e) {}
+    // Merge URL params into navData so we always have image/price/name/brand from the source page
+    if (!navData) navData = {};
+    if (imageParam && !navData.image) navData.image = imageParam;
+    if (priceParam && !navData.price) navData.price = priceParam;
+    if (nameParam && !navData.name) navData.name = nameParam;
+    if (brandParam && !navData.brand) navData.brand = brandParam;
+    if (productId && !navData.id) navData.id = productId;
+
+    let product = null;
+    if (window.GoShopMeProductAPI && productId) {
+        product = await window.GoShopMeProductAPI.fetchProductById(productId);
+    }
+
+    if (product) {
+        if ((navData && navData.image) || imageParam) {
+            const img = (navData && navData.image) || imageParam;
+            if (!product.images || product.images.length === 0) product.images = [img];
+            else product.images = [img].concat((product.images || []).filter(x => x !== img));
+        }
+        if ((navData && navData.price) || priceParam) {
+            product.price = (navData && navData.price) || priceParam;
+        }
+        window.loadProductData(product);
+    } else if (productId || nameParam) {
+        // Fallback: inline sample for silk-midi-dress, or minimal from URL params + navData
+        const navImage = (navData && navData.image) || imageParam;
+        const navPrice = (navData && navData.price) || priceParam;
+        const fallbackProduct = (productId === 'silk-midi-dress') ? {
+            id: 'silk-midi-dress',
+            name: 'Silk Midi Dress',
+            brand: 'Zara',
+            price: navPrice || 89,
+            currency: 'USD',
+            merchant: 'Zara',
+            images: navImage ? [navImage] : ['https://storage.googleapis.com/uxpilot-auth.appspot.com/a1fa951de5-1df3707f3a394528a723.png'],
+            description: 'Elegant flowy silk midi dress. Perfect for spring days and special occasions. Features a flattering A-line silhouette with a delicate floral print.',
+            material_and_care: '100% silk. Dry clean only. Do not bleach.',
+            shipping_and_returns: 'Free shipping on orders over $50. 30-day returns.',
+            sizingChart: { US: ['XS', 'S', 'M', 'L', 'XL'], EU: ['34', '36', '38', '40', '42'], UK: ['6', '8', '10', '12', '14'] },
+            similar: [
+                { id: 'floral-midi-dress', name: 'Floral Midi Dress', brand: 'Reformation', price: 248, image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/ed54ed626a-c0cdcdbb57dc6381c4fd.png' },
+                { id: 'silk-slip-dress', name: 'Silk Slip Dress', brand: 'Reformation', price: 248, image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/1d822aec75-b3cb13c31948045b34c1.png' }
+            ],
+            reviews: []
+        } : {
+            id: productId || (nameParam || "").toLowerCase().replace(/\s+/g, "-"),
+            name: nameParam || (navData && navData.name) || "Product",
+            brand: brandParam || (navData && navData.brand) || "",
+            price: navPrice || "",
+            currency: "USD",
+            merchant: brandParam || (navData && navData.brand) || "",
+            images: navImage ? [navImage] : [],
+            description: "Product details load from the database or API. Connect your API at window.GOSHOPME_API_BASE_URL.",
+            material_and_care: "",
+            shipping_and_returns: "",
+            similar: [],
+            reviews: []
+        };
+        window.loadProductData(fallbackProduct);
+    }
+});
+
+// Test dynamic sizing â€“ call with sizing chart from API. Example:
+// testProductSizes({ US: ["7","7.5","8","8.5","9"], EU: ["40","41","42","43","44"], UK: ["6","6.5","7","7.5","8"] })
+// testProductSizes({ OneSize: ["One Size"] })
+// testProductSizes(["XS","S","M","L","XL"])
+window.testProductSizes = function(sizesOrChart) {
+    if (!sizesOrChart) return console.warn("testProductSizes: pass sizes object or array");
+    const normalized = (typeof sizesOrChart === 'object' && !Array.isArray(sizesOrChart))
+        ? sizesOrChart
+        : { '': Array.isArray(sizesOrChart) ? sizesOrChart : [String(sizesOrChart)] };
+    window.__currentProductSizes = normalized;
+    window.__currentSizeUnits = Object.keys(normalized).filter(k => k);
+    selectedUnit = window.__currentSizeUnits[0] || Object.keys(normalized)[0] || '';
+    selectedSize = null;
+    document.getElementById("size-selector")?.classList.remove("hidden");
+    if (typeof window.renderProductSizes === 'function') window.renderProductSizes();
+    console.log("testProductSizes:", normalized);
+};
+
+// Set user preferred size (from onboarding quiz). Example: testUserPreferredSize("US", "8")
+// Onboarding should save to localStorage __userPreferredSize: { unit: "US", size: "8" }
+window.testUserPreferredSize = function(unit, size) {
+    try { localStorage.setItem("__userPreferredSize", JSON.stringify({ unit: unit || "US", size: String(size || "8") })); } catch (e) {}
+    userPreferredSize = { unit: unit || "US", size: String(size || "8") };
+    if (typeof window.renderProductSizes === 'function') window.renderProductSizes();
+    console.log("testUserPreferredSize:", userPreferredSize);
+};
+
+</script>
+
+<script>
+(() => { 
+  function upgradeToAutoGrowTextarea(cfg) {
+    const old = document.querySelector(cfg.selector);
+    if (!old) return;
+
+    // Create textarea with same identity & classes
+    const ta = document.createElement('textarea');
+    ta.id = old.id;
+    ta.className = old.className + ' resize-none';
+    ta.placeholder = old.placeholder || '';
+    ta.value = old.value || '';
+    ta.rows = 1;
+    ta.autocomplete = 'off';
+    ta.spellcheck = true;
+    ta.style.overflowY = 'hidden';
+
+    // Swap in DOM
+    old.parentNode.replaceChild(ta, old);
+
+    // Controls
+    const mic  = document.querySelector(cfg.mic);
+    const add  = document.querySelector(cfg.add);
+    const send = document.querySelector(cfg.send);
+    const chatScroll = document.getElementById('chat-messages');
+
+    // Helpers
+    const rowH = () => {
+      const lh = parseFloat(getComputedStyle(ta).lineHeight);
+      return Number.isFinite(lh) ? lh : 20;
+    };
+    const autoResize = () => {
+      ta.style.height = 'auto';
+      ta.style.height = Math.min(ta.scrollHeight, 6 * rowH()) + 'px'; // cap ~6 rows
+    };
+    const updateButtons = () => {
+      const hasText = ta.value.trim().length > 0;
+      if (mic)  mic.classList.toggle('hidden',  hasText);
+      if (add)  add.classList.toggle('hidden',  hasText);
+      if (send) send.classList.toggle('hidden', !hasText);
+    };
+    const sendNow = () => {
+      const text = ta.value.trim();
+      if (!text) return;
+      const container = document.querySelector('#chat-messages .p-4');
+      if (container) {
+        const wrap = document.createElement('div');
+        wrap.className = 'flex justify-end mb-4';
+        wrap.innerHTML = `
+          <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%]">
+            <p class="text-sm"></p>
+          </div>`;
+        wrap.querySelector('p').textContent = text;
+        container.appendChild(wrap);
+        if (chatScroll) chatScroll.scrollTop = chatScroll.scrollHeight;
+      }
+      ta.value = '';
+      autoResize();
+      updateButtons();
+    };
+
+    // Events
+    ta.addEventListener('input', () => { autoResize(); updateButtons(); });
+    ta.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault(); // Enter = send
+        sendNow();
+      }
+      // Shift+Enter = newline (default)
+    });
+    if (send) {
+      // Original click handler still targets the old <input>; add a fresh one for the textarea
+      send.addEventListener('click', sendNow);
+    }
+
+    // Init
+    autoResize();
+    updateButtons();
+
+    // Optional: grow on focus inside the drawer
+    if (cfg.onFocusGrow) {
+      ta.addEventListener('focus', () => {
+        const drawer = document.getElementById('chat-drawer');
+        if (drawer) drawer.style.height = '50vh';
+      });
+    }
+  }
+
+  // Apply to both chat inputs
+  upgradeToAutoGrowTextarea({
+    selector: '#message-input',
+    mic: '#mic-btn',
+    add: '#add-friend-btn',
+    send: '#send-btn'
+  });
+
+  upgradeToAutoGrowTextarea({
+    selector: '#chat-input-drawer-field',
+    mic: '#mic-btn-drawer',
+    add: '#add-friend-btn-drawer',
+    send: '#send-btn-drawer',
+    onFocusGrow: true
+  });
+})();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // ShAI avatar: set from DB when loaded. Call window.setShAIAvatar(url) from API response.
+    window.setShAIAvatar = function(url) {
+        window.__shaiAvatarUrl = url || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+        document.querySelectorAll('[data-shai-avatar]').forEach(function(img) { img.src = window.__shaiAvatarUrl; });
+    };
+    window.testShAIAvatar = function(url) {
+        const testUrl = url || 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg';
+        window.setShAIAvatar(testUrl);
+        console.log('testShAIAvatar:', testUrl);
+    };
+
+    const chatDrawer = document.getElementById("chat-drawer");
+    const chatOverlay = document.getElementById("chat-overlay");
+    const chatMessages = document.getElementById("chat-messages");
+    const chatInput = document.getElementById("message-input");
+    const chatInputDrawer = document.getElementById("chat-input-drawer-field");
+    const micBtn = document.getElementById("mic-btn");
+    const sendBtn = document.getElementById("send-btn");
+    const addFriendBtn = document.getElementById("add-friend-btn");
+    const micBtnDrawer = document.getElementById("mic-btn-drawer");
+    const sendBtnDrawer = document.getElementById("send-btn-drawer");
+    const addFriendBtnDrawer = document.getElementById("add-friend-btn-drawer");
+    const dragHandleZone = document.getElementById("drag-handle-zone") || document.getElementById("drag-handle");
+    const chatInputBar = document.getElementById("chat-input-bar");
+
+    let autoScrollEnabled = true;
+    let isDrawerExpanded = false;
+    let startY = 0;
+    let currentHeight = 80;
+    let isDragging = false;
+
+    // --- 1) Fix wrapping for all text bubbles ---
+    function fixWrapping() {
+        document.querySelectorAll("#chat-messages p.text-sm").forEach(p => {
+            p.classList.add("break-words","whitespace-pre-wrap");
+        });
+    }
+    fixWrapping();
+
+    // --- 2) Auto-scroll helper ---
+    function scrollToBottom(force=false) {
+        const chatMessages = document.getElementById("chat-messages");
+        if (!chatMessages) return;
+        const atBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 20;
+        if (force || atBottom) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }
+
+    // --- 3) Observe for any new bubbles (text, image, video, voice) ---
+    if (chatMessages) {
+        const observer = new MutationObserver(() => {
+            fixWrapping();
+            setTimeout(() => scrollToBottom(true), 50);
+        });
+        observer.observe(chatMessages, { childList:true, subtree:true });
+    }
+
+    // === Scroll Behavior ===
+    chatMessages.addEventListener("scroll", () => {
+        const atBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 20;
+        autoScrollEnabled = atBottom;
+    });
+
+    // === SEND MESSAGE ===
+    function sendMessage(inputEl, mic, addFriend, send) {
+        const text = inputEl.value.trim();
+        if (!text) return;
+
+        const chatMessagesContainer = chatMessages.querySelector(".p-4");
+        if (chatMessagesContainer) {
+            const userMsg = document.createElement("div");
+            userMsg.className = "flex justify-end mb-4";
+            userMsg.innerHTML = `
+                <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%]">
+                    <p class="text-sm break-words whitespace-pre-wrap">${text}</p>
+                </div>`;
+            chatMessagesContainer.appendChild(userMsg);
+        }
+
+        inputEl.value = "";
+        mic.classList.remove("hidden");
+        addFriend.classList.remove("hidden");
+        send.classList.add("hidden");
+
+        setTimeout(() => scrollToBottom(true), 50);
+    }
+
+    // === Update Input State ===
+    function updateInputState(inputEl, mic, addFriend, send) {
+        if (inputEl.value.trim()) {
+            mic.classList.add("hidden");
+            addFriend.classList.add("hidden");
+            send.classList.remove("hidden");
+        } else {
+            mic.classList.remove("hidden");
+            addFriend.classList.remove("hidden");
+            send.classList.add("hidden");
+        }
+    }
+
+    [chatInput, chatInputDrawer].forEach((inputEl, idx) => {
+        if (!inputEl) return;
+        const mic = idx === 0 ? micBtn : micBtnDrawer;
+        const send = idx === 0 ? sendBtn : sendBtnDrawer;
+        const add = idx === 0 ? addFriendBtn : addFriendBtnDrawer;
+
+        inputEl.addEventListener("input", () => updateInputState(inputEl, mic, add, send));
+        inputEl.addEventListener("keydown", e => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(inputEl, mic, add, send);
+            }
+        });
+        send.addEventListener("click", () => sendMessage(inputEl, mic, add, send));
+    });
+
+    // === Drawer Expand/Collapse (authoritative, default 80%) ===
+    function expandDrawer() {
+        if (!chatDrawer) return;
+        chatDrawer.classList.remove('translate-y-full');
+        chatOverlay.classList.remove('hidden');
+        chatInputBar.classList.add('hidden');
+        isDrawerExpanded = true;
+        currentHeight = 80;
+        chatDrawer.style.height = '50vh';
+    }
+
+    function collapseDrawer() {
+        if (!chatDrawer) return;
+        chatDrawer.classList.add('translate-y-full');
+        chatOverlay.classList.add('hidden');
+        chatInputBar.classList.remove('hidden');
+        isDrawerExpanded = false;
+        currentHeight = 80;
+        chatDrawer.style.height = '50vh';
+        if (isAddFriendMode) {
+            hideAddFriendFlow();
+        }
+    }
+
+    if (chatOverlay) {
+        chatOverlay.addEventListener("click", collapseDrawer);
+    }
+
+    // === Dragging Drawer ===
+    if (dragHandleZone) {
+        dragHandleZone.addEventListener("mousedown", e => { isDragging = true; startY = e.clientY; });
+        dragHandleZone.addEventListener("touchstart", e => { isDragging = true; startY = e.touches[0].clientY; }, { passive: true });
+    }
+
+    document.addEventListener("mousemove", e => {
+        if (!isDragging) return;
+        const deltaY = startY - e.clientY;
+        const newHeight = Math.min(90, Math.max(0, currentHeight + (deltaY / window.innerHeight) * 100));
+        chatDrawer.style.height = newHeight + "vh";
+    });
+
+    function stopDrag() {
+        if (!isDragging) return;
+        isDragging = false;
+        const rect = chatDrawer.getBoundingClientRect();
+        const heightVH = (rect.height / window.innerHeight) * 100;
+        if (heightVH < 30) {
+            collapseDrawer();
+            return;
+        }
+        currentHeight = heightVH;
+        chatDrawer.style.height = heightVH + "vh";
+    }
+    document.addEventListener("mouseup", stopDrag);
+
+document.addEventListener("touchmove", e => {
+    if (!isDragging) return;
+
+    const deltaY = startY - e.touches[0].clientY;
+    const newHeight = Math.min(90, Math.max(0, currentHeight + (deltaY / window.innerHeight) * 100));
+
+    chatDrawer.style.height = newHeight + "vh";
+});
+
+    document.addEventListener("touchend", stopDrag);
+    document.addEventListener("touchcancel", stopDrag);
+
+    // Auto-expand drawer for demo
+    setTimeout(() => { expandDrawer(); }, 1000);
+
+    const addFriendContent = document.getElementById("add-friend-content");
+    const chatContent = document.getElementById("chat-content");
+    const contactSearch = document.getElementById("contact-search");
+    const contactsContainer = document.getElementById("contacts-container");
+    const backBtn = document.getElementById("back-btn");
+    const headerTitle = document.getElementById("header-title");
+    const headerSubtitle = document.getElementById("header-subtitle");
+    const heroInviteBtn = document.getElementById("hero-invite-btn");
+    const smartPrompts = document.querySelectorAll('#smart-prompts button');
+    
+    const camBtns = [
+        document.getElementById("cam-btn"),
+        document.getElementById("cam-btn-drawer")
+    ];
+
+    const micBtns = [micBtn, micBtnDrawer];
+    const sendBtns = [sendBtn, sendBtnDrawer];
+    
+    let isAddFriendMode = false;
+    let isRecording = false;
+    let mediaRecorder;
+    let audioChunks = [];
+    let startX;
+    let wishlistItems = new Set();
+    let micAccessDenied = false;
+    let mediaStream = null;
+    
+    // === Toggle buttons based on typing (dup guard but harmless) ===
+    function updateInputStateLegacy(inputEl, mic, addFriend, send) {
+        if (inputEl.value.trim()) {
+            mic.classList.add("hidden");
+            addFriend.classList.add("hidden");
+            send.classList.remove("hidden");
+        } else {
+            mic.classList.remove("hidden");
+            addFriend.classList.remove("hidden");
+            send.classList.add("hidden");
+        }
+    }
+
+    if (chatInput) {
+        chatInput.addEventListener("input", () => {
+            updateInputStateLegacy(chatInput, micBtn, addFriendBtn, sendBtn);
+        });
+    }
+    if (chatInputDrawer) {
+        chatInputDrawer.addEventListener("input", () => {
+            updateInputStateLegacy(chatInputDrawer, micBtnDrawer, addFriendBtnDrawer, sendBtnDrawer);
+        });
+    }
+
+    // === SEND TEXT MESSAGE (legacy usages) ===
+    function sendMessageLegacy(inputEl, mic, addFriend, send) {
+        const text = inputEl.value.trim();
+        if (!text) return;
+        const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+        if (chatMessagesContainer) {
+            const userMsg = document.createElement('div');
+            userMsg.className = 'flex justify-end mb-4';
+            userMsg.innerHTML = `
+                <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%]">
+                    <p class="text-sm break-words whitespace-pre-wrap">${text}</p>
+                </div>`;
+            chatMessagesContainer.appendChild(userMsg);
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+            inputEl.value = "";
+
+            mic.classList.remove("hidden");
+            addFriend.classList.remove("hidden");
+            send.classList.add("hidden");
+        }
+    }
+
+    sendBtn.addEventListener("click", () => sendMessageLegacy(chatInput, micBtn, addFriendBtn, sendBtn));
+    sendBtnDrawer.addEventListener("click", () => sendMessageLegacy(chatInputDrawer, micBtnDrawer, addFriendBtnDrawer, sendBtnDrawer));
+
+    chatInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            sendMessageLegacy(chatInput, micBtn, addFriendBtn, sendBtn);
+        }
+    });
+
+    chatInputDrawer.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            sendMessageLegacy(chatInputDrawer, micBtnDrawer, addFriendBtnDrawer, sendBtnDrawer);
+        }
+    });
+
+    // === Helper: System Bubble (permission denied, errors, etc.) ===
+    function renderSystemBubble(message) {
+        const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+        if (chatMessagesContainer) {
+            const bubble = document.createElement('div');
+            bubble.className = 'flex justify-center mb-2';
+            bubble.innerHTML = `
+                <div class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                    ${message}
+                </div>
+            `;
+            chatMessagesContainer.appendChild(bubble);
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
+    }
+
+    // === Camera handler ===
+    function handleCameraAccess() {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*,video/*";
+        input.onchange = (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (file) handleFileSelection(file);
+            input.value = "";
+        };
+        input.click();
+    }
+
+    function handleFileSelection(file) {
+        const url = URL.createObjectURL(file);
+        const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+        if (chatMessagesContainer) {
+            let bubble;
+            if (file.type.startsWith("image/")) {
+                bubble = document.createElement('div');
+                bubble.className = 'flex justify-end mb-4';
+                bubble.innerHTML = `
+                    <div class="rounded-2xl border border-[#939BFB] max-w-[60%] overflow-hidden shadow-sm">
+                        <img src="${url}" class="w-full h-auto" alt="Uploaded image" />
+                    </div>
+                `;
+            } else if (file.type.startsWith("video/")) {
+                bubble = document.createElement('div');
+                bubble.className = 'flex justify-end mb-4';
+                bubble.innerHTML = `
+                    <div class="rounded-2xl border border-[#939BFB] max-w-[60%] overflow-hidden shadow-sm relative">
+                        <video src="${url}" controls class="w-full h-auto"></video>
+                    </div>
+                `;
+            }
+            
+            if (bubble) {
+                chatMessagesContainer.appendChild(bubble);
+                chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+                
+                setTimeout(() => {
+                    const isVideo = file.type.startsWith("video/");
+                    if (isVideo) {
+                        addShAIMessage("Great! I can analyze your video. Let me find products that match what I see.");
+                    } else {
+                        addShAIMessage("Perfect! I can see your image. Let me analyze it and find similar products for you.");
+                    }
+                }, 1500);
+            }
+        }
+    }
+
+    function setupCameraButton() {
+        camBtns.forEach(btn => {
+            if (!btn) return;
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const openAndPick = () => {
+                    handleCameraAccess();
+                };
+                if (!chatDrawer.classList.contains('translate-y-full')) {
+                    openAndPick();
+                } else {
+                    expandDrawer();
+                    setTimeout(openAndPick, 300);
+                }
+            });
+        });
+    }
+
+    // === VOICE RECORDING ===
+    function setupVoiceRecording() {
+        micBtns.forEach(btn => {
+            if (!btn) return;
+            btn.addEventListener("mousedown", startRecording);
+            btn.addEventListener("touchstart", startRecording);
+
+            btn.addEventListener("mouseup", stopRecording);
+            btn.addEventListener("mouseleave", cancelRecording);
+            btn.addEventListener("touchend", stopRecording);
+            btn.addEventListener("touchcancel", cancelRecording);
+            btn.addEventListener("touchmove", handleSwipeCancel);
+        });
+    }
+
+    async function startRecording(e) {
+        e.preventDefault();
+        if (!isDrawerExpanded) {
+            expandDrawer();
+            return;
+        }
+
+        if (micAccessDenied) {
+            renderSystemBubble("Microphone access denied. Enable it in Settings to record voice messages.");
+            return;
+        }
+
+        startX = e.touches ? e.touches[0].clientX : e.clientX;
+
+        try {
+            if (!mediaStream || !mediaStream.active) {
+                mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            }
+
+            mediaRecorder = new MediaRecorder(mediaStream);
+            isRecording = true;
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = event => {
+                if (event.data.size > 0) audioChunks.push(event.data);
+            };
+            mediaRecorder.start();
+
+            this.classList.add("scale-110", "ring-2", "ring-[#939BFB]", "ring-offset-2");
+
+            const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+            if (chatMessagesContainer) {
+                const tempBubble = document.createElement('div');
+                tempBubble.id = 'temp-recording';
+                tempBubble.className = 'flex justify-end mb-2';
+                tempBubble.innerHTML = `
+                    <div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]">
+                        <span class="mr-2">ðŸŽ™ï¸</span>
+                        <span class="text-xs">
+                            Recording... swipe left to cancel
+                        </span>
+                    </div>
+                `;
+                chatMessagesContainer.appendChild(tempBubble);
+                chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+            }
+        } catch (err) {
+            if (err && (err.name === "NotAllowedError" || err.name === "SecurityError")) {
+                micAccessDenied = true;
+                renderSystemBubble("Microphone access denied. Enable it in Settings to record voice messages.");
+            } else {
+                renderSystemBubble("Could not access microphone. Please try again.");
+            }
+        }
+    }
+
+    function stopRecording(e) {
+        e.preventDefault();
+        if (!isRecording) return;
+        isRecording = false;
+        this.classList.remove("scale-110", "ring-2", "ring-[#939BFB]", "ring-offset-2");
+        const temp = document.getElementById("temp-recording");
+        if (temp) temp.remove();
+
+        if (mediaRecorder) {
+            mediaRecorder.stop();
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                renderAudioBubble(audioUrl);
+            };
+        }
+    }
+
+    function cancelRecording(e) {
+        if (!isRecording) return;
+        isRecording = false;
+        this.classList.remove("scale-110", "ring-2", "ring-[#939BFB]", "ring-offset-2");
+        const temp = document.getElementById("temp-recording");
+        if (temp) temp.remove();
+        if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
+        renderSystemBubble("Recording cancelled");
+    }
+
+    function handleSwipeCancel(e) {
+        if (!isRecording || !e.touches || !e.touches.length) return;
+        const currentX = e.touches[0].clientX;
+        if (startX - currentX > 30) { 
+            cancelRecording.call(this, e);
+        }
+    }
+
+    function renderAudioBubble(url) {
+    const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+    if (chatMessagesContainer) {
+        const bubble = document.createElement('div');
+        bubble.className = 'flex justify-end mb-2';
+        bubble.innerHTML = `
+            <div role="group" aria-label="Voice message from you" class="voice-message-bubble bg-[#939BFB] text-white rounded-full px-3 py-2 flex items-center gap-2 h-11 shadow-sm">
+                <button aria-label="Play voice message from you" class="play-btn flex-shrink-0 w-6 h-6 border border-white rounded-full flex items-center justify-center hover:bg-white/20 transition-all duration-150 hover:scale-105" onclick="toggleVoicePlayback(this, '${url}')">
+                    <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <div class="waveform flex-1 flex items-center justify-center gap-0.5 h-4 max-w-[120px]">
+                    <div class="wave-bar w-0.5 bg-white/90 rounded-full transition-all duration-300" style="height: 8px; --i: 0"></div>
+                    <div class="wave-bar w-0.5 bg-white/90 rounded-full transition-all duration-300" style="height: 12px; --i: 1"></div>
+                    <div class="wave-bar w-0.5 bg-white/90 rounded-full transition-all duration-300" style="height: 6px; --i: 2"></div>
+                    <div class="wave-bar w-0.5 bg-white/90 rounded-full transition-all duration-300" style="height: 16px; --i: 3"></div>
+                    <div class="wave-bar w-0.5 bg-white/90 rounded-full transition-all duration-300" style="height: 10px; --i: 4"></div>
+                    <div class="wave-bar w-0.5 bg-white/90 rounded-full transition-all duration-300" style="height: 14px; --i: 5"></div>
+                    <div class="wave-bar w-0.5 bg-white/90 rounded-full transition-all duration-300" style="height: 8px; --i: 6"></div>
+                    <div class="wave-bar w-0.5 bg-white/90 rounded-full transition-all duration-300" style="height: 12px; --i: 7"></div>
+                    <div class="wave-bar w-0.5 bg-white/90 rounded-full transition-all duration-300" style="height: 6px; --i: 8"></div>
+                    <div class="wave-bar w-0.5 bg-white/90 rounded-full transition-all duration-300" style="height: 10px; --i: 9"></div>
+                </div>
+                <span class="duration-text text-white/90 text-xs font-medium flex-shrink-0" style="font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;">0:00</span>
+                <audio src="${url}" preload="auto" class="hidden"></audio>
+            </div>
+        `;
+        chatMessagesContainer.appendChild(bubble);
+        
+        // Get the audio element and duration text element
+        const audio = bubble.querySelector('audio');
+        const durationText = bubble.querySelector('.duration-text');
+        
+        // Wait for audio metadata to load, then display actual duration
+        audio.addEventListener('loadedmetadata', () => {
+            const duration = Math.ceil(audio.duration);
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            durationText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        });
+        
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        setTimeout(() => addShAIMessage("Got your voice message! I'm on it â€” let me find the best options for you."), 800);
+    }
+}
+    window.toggleVoicePlayback = function(button, audioUrl) {
+        const container = button.closest('.voice-message-bubble');
+        const audio = container.querySelector('audio');
+        const playIcon = button.querySelector('svg');
+        const waveBars = container.querySelectorAll('.wave-bar');
+        const durationText = container.querySelector('.duration-text');
+        
+        if (audio.paused) {
+            audio.play();
+            playIcon.innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
+            
+            waveBars.forEach((bar, index) => {
+                bar.style.animation = `wavePulse 1.1s ease-in-out infinite`;
+                bar.style.animationDelay = `${index * 0.08}s`;
+            });
+            
+            audio.addEventListener('timeupdate', () => {
+                const remaining = Math.ceil(audio.duration - audio.currentTime);
+                const minutes = Math.floor(remaining / 60);
+                const seconds = remaining % 60;
+                durationText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            });
+            
+           audio.addEventListener('ended', () => {
+    playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+    waveBars.forEach(bar => {
+        bar.style.animation = 'none';
+    });
+    // Reset to actual duration instead of hardcoded value
+    const duration = Math.ceil(audio.duration);
+    const minutes = Math.floor(duration / 60);
+    const seconds = duration % 60;
+    durationText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+});
+            
+        } else {
+            audio.pause();
+            playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+            waveBars.forEach(bar => {
+                bar.style.animation = 'none';
+            });
+        }
+    };
+
+    function addShAIMessage(message, thumbUrls) {
+        const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+        if (chatMessagesContainer) {
+            const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+            const thumbHtml = (thumbUrls && thumbUrls.length) ? '<div class="flex gap-1.5 mt-2 flex-wrap">' + thumbUrls.slice(0, 4).map(function(t) { return '<img class="w-12 h-12 rounded-lg object-cover border border-gray-200" src="' + (t || '').replace(/"/g, '&quot;') + '" alt="">'; }).join('') + '</div>' : '';
+            const aiMessage = document.createElement('div');
+            aiMessage.className = 'flex items-start space-x-3 mb-4';
+            aiMessage.innerHTML = `
+                <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                    <img class="w-full h-full object-cover" src="${avatarUrl.replace(/"/g, '&quot;')}" alt="ShAI avatar" data-shai-avatar />
+                </div>
+                <div class="flex-1">
+                    <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3">
+                        <p class="text-sm text-black">${(message || '').replace(/</g, '&lt;')}</p>
+                        ${thumbHtml}
+                    </div>
+                </div>
+            `;
+            chatMessagesContainer.appendChild(aiMessage);
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
+    }
+
+    window.openRecentChat = function(chatId) {
+        if (!isDrawerExpanded) {
+            expandDrawer();
+        }
+        
+        setTimeout(() => {
+            const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+            if (chatMessagesContainer) {
+                const messages = chatMessagesContainer.querySelectorAll('.flex:not(:first-child)');
+                messages.forEach(msg => msg.remove());
+                
+                if (chatId === 'power-blazer-chat') {
+                    addProductBubbleToChat('Theory Power Blazer', '$295', 'https://storage.googleapis.com/uxpilot-auth.appspot.com/a07f271826-cee3c765a05f3b2170c5.png');
+                    setTimeout(() => {
+                        addShAIMessage("I see you're interested in the Theory Power Blazer. What size are you usually?");
+                    }, 500);
+                    setTimeout(() => {
+                        addUserMessage("I'm usually a medium, but I'm not sure about the fit");
+                    }, 1000);
+                    setTimeout(() => {
+                        addShAIMessage("The Theory Power Blazer runs slightly large. I'd recommend a Small for you. It has a structured fit that's perfect for professional settings.");
+                    }, 1500);
+                } else if (chatId === 'midi-dress-chat') {
+                    addProductBubbleToChat('Reformation Midi Dress', '$178', 'https://storage.googleapis.com/uxpilot-auth.appspot.com/ed54ed626a-c0cdcdbb57dc6381c4fd.png');
+                    setTimeout(() => {
+                        addShAIMessage("This Reformation Midi Dress is gorgeous! Are you looking for it in a different color?");
+                    }, 500);
+                    setTimeout(() => {
+                        addUserMessage("Yes, do you have it in black or navy?");
+                    }, 1000);
+                    setTimeout(() => {
+                        addShAIMessage("I found similar styles in both black and navy! Let me show you some options that have the same silhouette.");
+                    }, 1500);
+                } else if (chatId === 'chain-necklace-chat') {
+                    addProductBubbleToChat('Mejuri Chain Necklace', '$128', 'https://storage.googleapis.com/uxpilot-auth.appspot.com/27896e6e43-779d8991cbb35505b4d8.png');
+                    setTimeout(() => {
+                        addShAIMessage("This Mejuri chain necklace is a great choice! Are you looking to layer it or wear it alone?");
+                    }, 500);
+                    setTimeout(() => {
+                        addUserMessage("I want to layer it. What would go well with it?");
+                    }, 1000);
+                    setTimeout(() => {
+                        addShAIMessage("For layering, I'd recommend a shorter delicate chain and maybe a longer pendant necklace. The gold tone will work beautifully together!");
+                    }, 1500);
+                }
+            }
+        }, 300);
+    };
+
+    function addUserMessage(message) {
+        const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+        if (chatMessagesContainer) {
+            const userMessage = document.createElement('div');
+            userMessage.className = 'flex justify-end mb-4';
+            userMessage.innerHTML = `
+                <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%]">
+                    <p class="text-sm break-words whitespace-pre-wrap">${message}</p>
+                </div>
+            `;
+            chatMessagesContainer.appendChild(userMessage);
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
+    }
+
+    if (heroInviteBtn) {
+        heroInviteBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            // Hero Invite: open native app picker (share sheet) directly, not Add Friend flow
+            const shareData = {
+                title: 'Join me on GoShopMe',
+                text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me",
+                url: 'https://app.goshopme.ai'
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch(err => console.error('Share failed:', err));
+            } else {
+                const msg = `${shareData.text} ${shareData.url}`;
+                navigator.clipboard.writeText(msg).then(() => {
+                    if (typeof showToast === 'function') showToast('Invite link copied!');
+                    else alert('Invite link copied to clipboard!');
+                });
+            }
+        });
+    }
+
+    smartPrompts.forEach(button => {
+        button.addEventListener('click', function() {
+            const promptText = this.textContent;
+            const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+            if (chatMessagesContainer) {
+                const userMessage = document.createElement('div');
+                userMessage.className = 'flex justify-end mb-4';
+                userMessage.innerHTML = `
+                    <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%]">
+                        <p class="text-sm">${promptText}</p>
+                    </div>
+                `;
+                chatMessagesContainer.appendChild(userMessage);
+                
+                setTimeout(() => {
+                    const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+                    const aiResponse = document.createElement('div');
+                    aiResponse.className = 'flex items-start space-x-3 mb-4';
+                    aiResponse.innerHTML = `
+                        <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                            <img class="w-full h-full object-cover" src="${avatarUrl.replace(/"/g, '&quot;')}" alt="ShAI avatar" data-shai-avatar />
+                        </div>
+                        <div class="flex-1">
+                            <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3">
+                                <p class="text-sm text-black">I'd be happy to help you with that! Let me find some perfect options for you.</p>
+                            </div>
+                        </div>
+                    `;
+                    chatMessagesContainer.appendChild(aiResponse);
+                    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+                }, 1000);
+                
+                chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+            }
+        });
+    });
+
+    if (contactSearch) {
+        contactSearch.addEventListener('input', function() {
+            filterContacts(this.value);
+        });
+    }
+
+    if (backBtn) {
+        backBtn.addEventListener('click', function() {
+            hideAddFriendFlow();
+        });
+    }
+
+    if (addFriendBtn) {
+        addFriendBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (!isDrawerExpanded) {
+                expandDrawer();
+                setTimeout(() => {
+                    showAddFriendFlow();
+                }, 300);
+            } else {
+                showAddFriendFlow();
+            }
+        });
+    }
+
+    if (addFriendBtnDrawer) {
+        addFriendBtnDrawer.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            showAddFriendFlow();
+        });
+    }
+
+    if (chatInput) {
+        chatInput.addEventListener('focus', function() {
+            if (!isDrawerExpanded) {
+                expandDrawer();
+                setTimeout(() => {
+                    if (chatInputDrawer) chatInputDrawer.focus();
+                }, 300);
+            }
+        });
+    }
+
+    function showAddFriendFlow() {
+        isAddFriendMode = true;
+        chatContent.classList.add('hidden');
+        addFriendContent.classList.remove('hidden');
+        backBtn.classList.remove('hidden');
+        
+        headerTitle.textContent = 'Add Friend';
+        headerSubtitle.textContent = 'Choose contacts to add';
+    }
+
+    function hideAddFriendFlow() {
+        isAddFriendMode = false;
+        chatContent.classList.remove('hidden');
+        addFriendContent.classList.add('hidden');
+        backBtn.classList.add('hidden');
+        
+        headerTitle.textContent = 'ShAI';
+        headerSubtitle.textContent = 'Your shopping assistant';
+        
+        if (contactSearch) {
+            contactSearch.value = '';
+            filterContacts('');
+        }
+    }
+
+    function filterContacts(searchTerm) {
+        const contactItems = contactsContainer.querySelectorAll('.contact-item');
+        const term = searchTerm.toLowerCase();
+        
+        contactItems.forEach(item => {
+            const name = item.getAttribute('data-name').toLowerCase();
+            const phone = item.getAttribute('data-phone').toLowerCase();
+            
+            if (name.includes(term) || phone.includes(term)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    if (chatOverlay) {
+        chatOverlay.addEventListener('click', function() {
+            collapseDrawer();
+        });
+    }
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('contact-action')) {
+            const contactItem = e.target.closest('.contact-item');
+            const contactName = contactItem.querySelector('p').textContent;
+            const isGoshopmeUser = contactItem.getAttribute('data-goshopme') === 'true';
+            
+            if (e.target.textContent === 'Add' && isGoshopmeUser) {
+                const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+                if (chatMessagesContainer) {
+                    const notification = document.createElement('div');
+                    notification.className = 'flex justify-center mb-4';
+                    notification.innerHTML = `
+                        <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">
+                            ${contactName.split(' ')[0]} has been added to chat
+                        </div>
+                    `;
+                    chatMessagesContainer.appendChild(notification);
+                    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+                }
+                hideAddFriendFlow();
+            } else if (e.target.textContent === 'Invite') {
+                const shareData = {
+                    title: 'Join me on GoShopMe',
+                    text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me",
+                    url: 'https://app.goshopme.ai'
+                };
+                
+                if (navigator.share) {
+                    navigator.share(shareData).catch(err => {
+                        const shareText = shareData.text + ' ' + shareData.url;
+                        if (navigator.clipboard) {
+                            navigator.clipboard.writeText(shareText);
+                            alert('Invitation link copied to clipboard!');
+                        }
+                    });
+                }
+            }
+        }
+    });
+
+    window.toggleWishlist = function(button, productId) {
+        const heartIcon = button.querySelector('svg');
+        
+        if (wishlistItems.has(productId)) {
+            wishlistItems.delete(productId);
+            heartIcon.classList.remove('heart-filled');
+            heartIcon.setAttribute('fill', 'none');
+        } else {
+            wishlistItems.add(productId);
+            heartIcon.classList.add('heart-filled');
+            heartIcon.setAttribute('fill', '#939BFB');
+        }
+    };
+    
+    window.shareProduct = function(productName, price, productUrl = null, productId = null, brand = null) {
+        const base = window.location.origin + window.location.pathname.split('?')[0];
+        const id = productId || (productName || '').toLowerCase().replace(/\s+/g, '-');
+        const shareUrl = productUrl || (base + '?id=' + encodeURIComponent(id) + (productName ? '&name=' + encodeURIComponent(productName) : '') + (brand ? '&brand=' + encodeURIComponent(brand) : ''));
+        const shareData = {
+            title: `${productName || 'Product'}${brand ? ' by ' + brand : ''}`,
+            text: `Check out this ${productName || 'item'}${price ? ' for ' + price : ''} on GoShopMe`,
+            url: shareUrl
+        };
+        
+        if (navigator.share) {
+            navigator.share(shareData)
+                .then(() => console.log('Share successful'))
+                .catch(err => {
+                    const shareText = `${shareData.text} - ${shareData.url}`;
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(shareText)
+                            .then(() => showToast('Link copied to clipboard!'))
+                            .catch(() => console.log('Clipboard access denied'));
+                    }
+                });
+        } else {
+            const shareText = `${shareData.text} - ${shareData.url}`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText)
+                    .then(() => showToast('Link copied to clipboard!'))
+                    .catch(() => console.log('Clipboard access denied'));
+            }
+        }
+    };
+    
+    window.openProductDetail = function(productId, productName, productBrand) {
+        var q = 'id=' + encodeURIComponent(productId || '') + '&from=product';
+        if (productName) q += '&name=' + encodeURIComponent(productName);
+        if (productBrand) q += '&brand=' + encodeURIComponent(productBrand);
+        window.location.href = 'Product_details_page.html?' + q;
+    };
+    
+    window.openProductChat = function(productName, price, imageUrl) {
+        if (!isDrawerExpanded) {
+            expandDrawer();
+        }
+        
+        setTimeout(() => {
+            addProductBubbleToChat(productName, price, imageUrl);
+            setTimeout(() => {
+                addShAIMessage(`Tell me more about the "${productName}" - would you like styling suggestions or alternatives?`, imageUrl ? [imageUrl] : []);
+            }, 1000);
+        }, 300);
+    };
+    
+    window.openCollectionDetail = function(collectionId) {
+        console.log('Opening collection detail for:', collectionId);
+    };
+    
+    function addProductBubbleToChat(productName, price, imageUrl) {
+        const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+        if (chatMessagesContainer) {
+            const productId = (productName || '').toLowerCase().replace(/\s+/g, '-');
+            const bubbleClick = function(e) {
+                if (e.target.closest('button')) return;
+                window.location.href = 'Product_details_page.html?id=' + encodeURIComponent(productId) + '&name=' + encodeURIComponent(productName || '') + '&from=product';
+            };
+            const productBubble = document.createElement('div');
+            productBubble.className = 'flex justify-end mb-4';
+            productBubble.innerHTML = `
+                <div class="product-bubble outgoing cursor-pointer hover:shadow-md transition-shadow" role="button" tabindex="0">
+                    <div class="relative">
+                        <img src="${imageUrl}" alt="${productName}" class="w-full h-32 object-cover rounded-lg mb-2">
+                        <div class="absolute top-2 right-2 flex space-x-1">
+                            <button type="button" onclick="event.stopPropagation(); toggleWishlist(this, '${productName.toLowerCase().replace(/\s+/g, '-')}')" class="bg-white/80 rounded-full p-1">
+                                <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+                                </svg>
+                            </button>
+                            <button type="button" onclick="event.stopPropagation(); shareProduct('${productName}', '${price}')" class="bg-white/80 rounded-full p-1">
+                                <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Brand</p>
+                        <p class="text-sm font-medium text-black">${productName}</p>
+                        <p class="text-sm font-bold text-black">${price}</p>
+                    </div>
+                </div>
+            `;
+            chatMessagesContainer.appendChild(productBubble);
+            const bubbleEl = productBubble.querySelector('.product-bubble');
+            if (bubbleEl) bubbleEl.addEventListener('click', bubbleClick);
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
+    }
+    
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-2 rounded-full text-sm z-50';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+    
+    setupCameraButton();
+    setupVoiceRecording();
+});
+
+document.addEventListener("click", function(e) {
+
+    // SHARE BUTTON â€“ uses current product from loadProductData or DOM/URL
+    if (e.target.closest('button')?.querySelector('svg.transform.-rotate-45 path[d*="M6 12L3.269"]')) {
+        e.preventDefault();
+        const productData = getCurrentProductData();
+        handleShareClick(productData);
+    }
+
+ // Share functionality â€“ share link to current product (not hardcoded)
+    function getCurrentProductData() {
+        if (window.__currentProduct) return window.__currentProduct;
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const name = document.getElementById('product-name')?.textContent;
+        const brand = document.getElementById('product-brand')?.textContent;
+        const priceEl = document.getElementById('product-price')?.textContent;
+        const price = priceEl ? priceEl.replace(/[^\d.]/g, '') : '';
+        if (id || name) return { id: id || (name || '').toLowerCase().replace(/\s+/g, '-'), name: name || '', brand: brand || '', price: price || '' };
+        return null;
+    }
+    function handleShareClick(productData = null) {
+        const baseUrl = window.location.origin + window.location.pathname.split('?')[0];
+        const shareUrl = productData && productData.id
+            ? baseUrl + '?id=' + encodeURIComponent(productData.id) + (productData.name ? '&name=' + encodeURIComponent(productData.name) : '') + (productData.brand ? '&brand=' + encodeURIComponent(productData.brand) : '')
+            : baseUrl;
+        const shareData = {
+            title: productData ? `${productData.name || 'Product'} by ${productData.brand || 'GoShopMe'}` : 'Check out GoShopMe',
+            text: productData ? `Found this on GoShopMe: ${productData.name} by ${productData.brand}${productData.price ? ' - $' + productData.price : ''}` : "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me",
+            url: shareUrl
+        };
+        
+        if (navigator.share) {
+            navigator.share(shareData).catch(err => {
+                console.log('Error sharing:', err);
+                // Fallback to clipboard
+                const shareText = `${shareData.text} ${shareData.url}`;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareText);
+                    alert('Product link copied to clipboard!');
+                }
+            });
+        } else {
+            // Fallback for browsers without Web Share API
+            const shareText = `${shareData.text} ${shareData.url}`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText);
+                alert('Product link copied to clipboard!');
+            } else {
+                // Ultimate fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = shareText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Product link copied to clipboard!');
+            }
+        }
+    }
+
+    // HEART BUTTON
+    if (e.target.closest('button')?.querySelector('svg path[d*="M21 8.25c0-2.485"]')) {
+        e.preventDefault();
+        const button = e.target.closest('button');
+        toggleWishlist(button);
+    }
+
+    // CHAT PRODUCT BUTTON â€“ open drawer with product context and thumbnail (like Picks)
+    const chatProductBtn = e.target.closest('#chat-product-btn');
+    if (chatProductBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const p = window.__currentProduct || (function() {
+            const name = document.getElementById('product-name')?.textContent;
+            const img = document.getElementById('product-main-image');
+            const priceEl = document.getElementById('product-price')?.textContent;
+            return name ? { name: name, images: img?.src ? [img.src] : [], price: priceEl || '' } : null;
+        }());
+        if (p && typeof expandDrawer === 'function' && typeof addShAIMessage === 'function') {
+            expandDrawer();
+            const imgUrl = (p.images && p.images[0]) || document.getElementById('product-main-image')?.src || '';
+            addShAIMessage('Tell me more about the "' + (p.name || '').replace(/"/g, '&quot;') + '" - would you like styling suggestions or alternatives?', imgUrl ? [imgUrl] : []);
+        }
+    }
+});
+// ----------------------------------------
+// SIZE SELECTION SYSTEM â€“ dynamic from product.sizes / product.sizingChart (DB/API)
+// ----------------------------------------
+
+const PREFERRED_SIZE_KEY = "__userPreferredSize";  // Set by onboarding quiz: { unit: "US", size: "8" }
+let userPreferredSize = null;
+let selectedUnit = "";
+let selectedSize = null;
+
+function loadUserPreferredSize() {
+    try {
+        const stored = localStorage.getItem(PREFERRED_SIZE_KEY);
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed && (parsed.unit != null || parsed.size != null)) userPreferredSize = { unit: parsed.unit || "", size: String(parsed.size || "") };
+        }
+    } catch (e) {}
+}
+
+const FALLBACK_SIZES = { US: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5"], EU: ["40", "40.5", "41", "42", "42.5", "43", "44", "44.5"], UK: ["6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5"] };
+
+function renderProductSizes() {
+    const grid = document.getElementById("size-options-grid");
+    const unitContainer = document.getElementById("unit-buttons-container");
+    const placeholder = document.getElementById("size-placeholder");
+    if (!grid) return;
+
+    loadUserPreferredSize();
+    const sizeMap = window.__currentProductSizes || FALLBACK_SIZES;
+    const units = window.__currentSizeUnits || Object.keys(sizeMap).filter(k => k);
+    // Prefer user's unit from onboarding quiz when available
+    if (!selectedUnit && userPreferredSize?.unit && units.includes(userPreferredSize.unit)) selectedUnit = userPreferredSize.unit;
+    const unit = selectedUnit || units[0] || Object.keys(sizeMap)[0];
+    selectedUnit = unit;
+    const sizes = sizeMap[unit] || sizeMap[Object.keys(sizeMap)[0]] || [];
+
+    if (userPreferredSize && !selectedSize && sizes.length) {
+        const preferred = userPreferredSize.size;
+        if ((!userPreferredSize.unit || userPreferredSize.unit === unit) && sizes.includes(preferred)) selectedSize = preferred;
+    }
+
+    if (units.length > 1 && unitContainer) {
+        unitContainer.classList.remove("hidden");
+        unitContainer.innerHTML = units.map(u => `
+            <button type="button" class="unit-btn px-3 py-1 text-sm rounded-md cursor-pointer ${u === unit ? 'active bg-white shadow-sm' : 'text-gray-600 hover:text-gray-900'}" data-unit="${u}" onclick="window.selectUnit('${String(u).replace(/'/g, "\\'")}')">${u}</button>
+        `).join("");
+    } else if (unitContainer) {
+        unitContainer.classList.add("hidden");
+    }
+
+    if (sizes.length) {
+        if (placeholder) placeholder.classList.add("hidden");
+        grid.classList.remove("hidden");
+        const sizeStr = (v) => String(v);
+        grid.innerHTML = sizes.map(s => {
+            const isSelected = selectedSize === sizeStr(s);
+            const sVal = sizeStr(s);
+            const unselectedClass = "border border-gray-300 text-gray-900 bg-white hover:bg-gray-50 hover:border-[#939BFB]/60 hover:shadow-sm active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#939BFB] focus:ring-offset-1";
+            const selectedClass = "border-2 border-[#939BFB] bg-[#939BFB] text-white";
+            return `<button type="button" class="size-option py-1.5 px-2 text-center rounded-md text-xs font-medium cursor-pointer select-none active:scale-95 transition-all min-h-[32px] ${isSelected ? selectedClass : unselectedClass}" data-size="${sVal}" onclick="window.selectSize('${sVal.replace(/'/g, "\\'")}')">${s}</button>`;
+        }).join("");
+    } else {
+        grid.innerHTML = "";
+        if (placeholder) { placeholder.textContent = "No sizes available."; placeholder.classList.remove("hidden"); }
+    }
+}
+
+function applyUserDefaultSize() {
+    if (!userPreferredSize) return;
+    if (userPreferredSize.unit === selectedUnit) selectedSize = userPreferredSize.size;
+    renderProductSizes();
+}
+
+window.renderProductSizes = renderProductSizes;
+
+window.selectSize = function(size) {
+    selectedSize = size;
+    renderProductSizes();
+};
+
+window.selectUnit = function(unit) {
+    selectedUnit = unit;
+    selectedSize = null;
+    renderProductSizes();
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+    if (window.__currentProductSizes) renderProductSizes();
+    else {
+        const grid = document.getElementById("size-options-grid");
+        const ph = document.getElementById("size-placeholder");
+        if (grid) grid.innerHTML = "";
+        if (ph) { ph.textContent = "Sizes load from product data."; ph.classList.remove("hidden"); }
+    }
+});
+
+// Size/unit clicks â€“ event delegation so all size options stay clickable (change from default)
+document.addEventListener("click", function(e) {
+    const sizeBtn = e.target.closest(".size-option");
+    if (sizeBtn && sizeBtn.dataset.size) {
+        e.preventDefault();
+        e.stopPropagation();
+        selectedSize = sizeBtn.dataset.size;
+        renderProductSizes();
+        return;
+    }
+    const unitBtn = e.target.closest(".unit-btn");
+    if (unitBtn && unitBtn.dataset.unit) {
+        e.preventDefault();
+        e.stopPropagation();
+        selectedUnit = unitBtn.dataset.unit || unitBtn.textContent.trim();
+        selectedSize = null;
+        document.querySelectorAll(".unit-btn").forEach(b => { b.classList.remove("active","bg-white","shadow-sm"); b.classList.add("text-gray-600"); });
+        unitBtn.classList.add("active","bg-white","shadow-sm");
+        unitBtn.classList.remove("text-gray-600");
+        renderProductSizes();
+    }
+});
+
+// ----------------------------------------
+// REQUIRE SIZE BEFORE ADD TO BAG OR BUY NOW
+// ----------------------------------------
+function requireSizeBefore(action) {
+    if (!selectedSize) {
+        // TRIGGER CHAT MESSAGE FROM ShAI
+        const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+        if (chatMessagesContainer) {
+            const bubble = document.createElement('div');
+            bubble.className = 'flex items-start space-x-3 mb-4';
+            const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+            bubble.innerHTML = `
+                <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                    <img class="w-full h-full object-cover" src="${avatarUrl.replace(/"/g, '&quot;')}" alt="ShAI" data-shai-avatar />
+                </div>
+                <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3">
+                    <p class="text-sm text-gray-900 dm-sans">Select a size first so I can add it to your bag.</p>
+                </div>
+            `;
+            chatMessagesContainer.appendChild(bubble);
+            chatMessagesContainer.parentElement.scrollTop = chatMessagesContainer.parentElement.scrollHeight;
+        }
+        return false;
+    }
+    return true;
+}
+
+// Add to Bag button inside chat drawer
+document.addEventListener("click", function(e) {
+    const addBtn = e.target.closest("button");
+    if (!addBtn) return;
+
+    if (addBtn.textContent.trim().toLowerCase() === "add to bag") {
+        if (!requireSizeBefore("add")) return;
+        // Continue with your existing Add-to-Bag flow
+    }
+
+    if (addBtn.textContent.trim().toLowerCase() === "buy now") {
+        if (!requireSizeBefore("buy")) return;
+        // Continue with Buy Now flow
+    }
+});
+
+// Initial rendering
+document.addEventListener("DOMContentLoaded", function() { loadUserPreferredSize(); });
+
+// -------------------------------------------------------
+// GLOBAL BADGE SYSTEM (with localStorage persistence - dynamic on all screens)
+// -------------------------------------------------------
+
+const BADGE_KEYS = { notif: "goshopme_notif_count", cart: "goshopme_cart_count" };
+let cartCountValue = 0;
+let notifCountValue = 0;
+
+function getBadgeElements() {
+    return {
+        cartIndicator: document.getElementById("cart-indicator"),
+        cartCount: document.getElementById("cart-count"),
+        notifIndicator: document.getElementById("notif-indicator"),
+        notifCount: document.getElementById("notif-count"),
+    };
+}
+
+function updateCartBadge() {
+    const el = getBadgeElements();
+    if (!el.cartIndicator || !el.cartCount) return;
+    const show = cartCountValue > 0;
+    el.cartIndicator.classList.toggle("hidden", !show);
+    el.cartIndicator.classList.toggle("flex", show);
+    el.cartCount.textContent = show ? (cartCountValue > 99 ? "99+" : cartCountValue) : "";
+    try { localStorage.setItem(BADGE_KEYS.cart, String(cartCountValue)); } catch (e) {}
+}
+
+function updateNotifBadge() {
+    const el = getBadgeElements();
+    if (!el.notifIndicator || !el.notifCount) return;
+    const show = notifCountValue > 0;
+    el.notifIndicator.classList.toggle("hidden", !show);
+    el.notifIndicator.classList.toggle("flex", show);
+    el.notifCount.textContent = show ? (notifCountValue > 99 ? "99+" : notifCountValue) : "";
+    try { localStorage.setItem(BADGE_KEYS.notif, String(notifCountValue)); } catch (e) {}
+}
+
+window.addToCart = function () {
+    cartCountValue++;
+    updateCartBadge();
+};
+
+window.addNotification = function () {
+    notifCountValue++;
+    updateNotifBadge();
+};
+
+window.setCartCount = function (n) {
+    cartCountValue = Math.max(0, n);
+    updateCartBadge();
+};
+
+window.setNotifCount = function (n) {
+    notifCountValue = Math.max(0, n);
+    updateNotifBadge();
+};
+
+window.testBadges = function (unread, cart) {
+    notifCountValue = Math.max(0, unread ?? 5);
+    cartCountValue = Math.max(0, cart ?? 3);
+    updateNotifBadge();
+    updateCartBadge();
+    console.log("testBadges:", notifCountValue, cartCountValue);
+};
+
+window.resetBadges = function () {
+    cartCountValue = 0;
+    notifCountValue = 0;
+    try { localStorage.setItem(BADGE_KEYS.notif, "0"); localStorage.setItem(BADGE_KEYS.cart, "0"); } catch (e) {}
+    updateCartBadge();
+    updateNotifBadge();
+    console.log("resetBadges");
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    try {
+        notifCountValue = parseInt(localStorage.getItem(BADGE_KEYS.notif) || "0", 10);
+        cartCountValue = parseInt(localStorage.getItem(BADGE_KEYS.cart) || "0", 10);
+    } catch (e) {}
+    updateCartBadge();
+    updateNotifBadge();
+});
+</script>
+<script>document.addEventListener('DOMContentLoaded',function(){var u=localStorage.getItem('profilePhoto')||localStorage.getItem('profileAvatarUrl');if(u){document.querySelectorAll('img[data-profile-avatar]').forEach(function(i){i.src=u;});}});</script>
+</div> <!-- end #app-shell -->
+
+</body>
+</html>
+
+

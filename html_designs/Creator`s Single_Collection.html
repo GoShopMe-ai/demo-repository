@@ -1,10 +1,14 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Power Looks for Fall - GoShopMe</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+<script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -100,8 +104,8 @@
                         </div>
                         
                         <!-- Creator Name and Title -->
-                        <h2 id="creator-name" class="text-xl font-fahkwang font-bold text-black mb-1">—</h2>
-                        <p id="creator-tagline" class="text-sm text-gray-600 mb-4">—</p>
+                        <h2 id="creator-name" class="text-xl font-fahkwang font-bold text-black mb-1">â€”</h2>
+                        <p id="creator-tagline" class="text-sm text-gray-600 mb-4">â€”</p>
                         
                         <!-- Follow Button -->
                         <div class="mb-4">
@@ -119,13 +123,13 @@
                     
                     <!-- Collection Info -->
                     <div class="text-center">
-                        <h3 id="collection-name" class="text-2xl font-fahkwang font-bold text-black mb-2">—</h3>
-                        <p id="collection-description" class="text-sm text-gray-600 mb-4">—</p>
+                        <h3 id="collection-name" class="text-2xl font-fahkwang font-bold text-black mb-2">â€”</h3>
+                        <p id="collection-description" class="text-sm text-gray-600 mb-4">â€”</p>
                         <div id="collection-meta" class="flex items-center justify-center space-x-4 text-sm text-gray-500">
                             <span>0 items</span>
-                            <span>•</span>
-                            <span>—</span>
-                            <span>•</span>
+                            <span>â€¢</span>
+                            <span>â€”</span>
+                            <span>â€¢</span>
                             <span>0 saves</span>
                         </div>
                     </div>
@@ -348,17 +352,17 @@
                 }
                 if (creator.avatar) { creatorAvatar.src = creator.avatar; creatorAvatar.classList.remove('hidden'); creatorInitials.classList.add('hidden'); }
                 else { creatorAvatar.classList.add('hidden'); creatorInitials.textContent = getInitials(creator.name); creatorInitials.classList.remove('hidden'); }
-                if (creatorName) creatorName.textContent = creator.name || '—';
-                if (creatorTagline) creatorTagline.textContent = creator.tagline || '—';
+                if (creatorName) creatorName.textContent = creator.name || 'â€”';
+                if (creatorTagline) creatorTagline.textContent = creator.tagline || 'â€”';
                 if (creatorFollowBtn) creatorFollowBtn.textContent = creator.isFollowing ? 'Following' : 'Follow';
                 if (creatorSocialLinks) creatorSocialLinks.innerHTML = Object.keys(SOCIAL).filter(k => creator.social && creator.social[k]).map(k => {
                     const s = SOCIAL[k], h = creator.social[k];
                     const href = (typeof h === 'string' && h.startsWith('http')) ? h : (s.url + (h.startsWith('@') ? h.slice(1) : h));
                     return '<a href="' + href + '" target="_blank" rel="noopener noreferrer" class="p-2 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors"><svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 24 24"><path d="' + s.path + '"/></svg></a>';
                 }).join('');
-                if (collectionName) collectionName.textContent = col.name || '—';
-                if (collectionDesc) collectionDesc.textContent = col.description || '—';
-                if (collectionMeta) collectionMeta.innerHTML = '<span>' + (col.itemCount || products.length || 0) + ' items</span><span>•</span><span>' + (col.priceRange || '') + '</span><span>•</span><span>' + (col.saves || '0 saves') + '</span>';
+                if (collectionName) collectionName.textContent = col.name || 'â€”';
+                if (collectionDesc) collectionDesc.textContent = col.description || 'â€”';
+                if (collectionMeta) collectionMeta.innerHTML = '<span>' + (col.itemCount || products.length || 0) + ' items</span><span>â€¢</span><span>' + (col.priceRange || '') + '</span><span>â€¢</span><span>' + (col.saves || '0 saves') + '</span>';
                 if (collectionPageTitle) collectionPageTitle.textContent = col.name || 'Collection';
                 document.title = (col.name || 'Collection') + ' - GoShopMe';
                 const productCardHtml = (p) => {
@@ -656,7 +660,7 @@
                     contextMessage.className = 'flex items-start space-x-3 mb-4';
                     const collectionName = window.__currentCollectionName || '';
                     const collectionPart = collectionName ? ' from the "' + collectionName + '" collection' : '';
-                    contextMessage.innerHTML = '<div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-500 text-xs font-medium">AI</span></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs"><p class="text-sm text-black">Looking at: ' + productName + ' by ' + brandName + ' – ' + price + collectionPart + '. Want it in another size or color? I can also show you similar styles!</p></div>';
+                    contextMessage.innerHTML = '<div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-500 text-xs font-medium">AI</span></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs"><p class="text-sm text-black">Looking at: ' + productName + ' by ' + brandName + ' â€“ ' + price + collectionPart + '. Want it in another size or color? I can also show you similar styles!</p></div>';
                     cnt.appendChild(contextMessage);
                     scrollChatToBottom();
                 }
@@ -681,7 +685,7 @@
                     }
                     hideAddFriendFlow();
                 } else if (e.target.textContent === 'Invite') {
-                    const shareData = { title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me", url: 'https://app.goshopme.ai' };
+                    const shareData = { title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me", url: 'https://app.goshopme.ai' };
                     if (navigator.share) {
                         navigator.share(shareData).catch(() => {});
                     } else if (contactPhone) {
@@ -863,3 +867,5 @@
 
 </body>
 </html>
+
+

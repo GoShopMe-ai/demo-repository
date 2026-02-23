@@ -1,0 +1,433 @@
+﻿<!DOCTYPE html><html><head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <title>Style Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: {
+                        'mobile': '390px',
+                    }
+                }
+            }
+        }
+    </script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fuhkwang:wght@400;500;600;700&display=swap');
+        .font-fuhkwang { font-family: 'Fuhkwang', sans-serif; }
+        .font-wix { font-family: 'Wix Madefor Display', sans-serif; }
+        
+        .mobile-container {
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 844px;
+            background: #ffffff;
+        }
+        
+        @media (min-width: 391px) {
+            .mobile-container {
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 20px 20px;
+            }
+        }
+
+        .option-button {
+            transition: all 0.2s ease;
+            border: 1.5px solid #E5E7EB;
+        }
+
+        .option-button.selected {
+            background: #939BFB;
+            color: white;
+            border-color: #939BFB;
+        }
+
+        .heel-tile {
+            transition: all 0.2s ease;
+            border: 1.5px solid #E5E7EB;
+        }
+
+        .heel-tile.selected {
+            background: #F5F7FF;
+            border-color: #939BFB;
+        }
+
+        .heel-tile .checkmark {
+            width: 16px;
+            height: 16px;
+            border: 1.5px solid #E5E7EB;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .heel-tile.selected .checkmark {
+            background: #939BFB;
+            border-color: #939BFB;
+        }
+
+        .heel-tile .checkmark i {
+            display: none;
+        }
+
+        .heel-tile.selected .checkmark i {
+            display: block;
+        }
+
+        .heel-tile-image {
+            mix-blend-mode: multiply;
+        }
+
+        .size-chart-card {
+            transition: all 0.2s ease;
+            border: 1.5px solid #E5E7EB;
+        }
+
+        .size-chart-card.selected {
+            border-color: #939BFB;
+            background: #F5F7FF;
+        }
+
+        .size-chart-card.selected .card-radio {
+            background: #939BFB;
+            border-color: #939BFB;
+        }
+
+        .size-chart-card.selected .card-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .card-radio {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #D1D5DB;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        ::placeholder {
+            color: #9CA3AF;
+        }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-gray-50 font-wix overflow-x-hidden">
+
+<div class="mobile-container">
+    <!-- Header -->
+    <div id="header" class="sticky top-0 left-0 right-0 bg-white z-50 border-b border-gray-100">
+        <div class="flex items-center justify-between px-5 py-4">
+            <button type="button" onclick="goBack()" class="header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800" aria-label="Go back">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+            </button>
+            <h2 class="text-lg font-wix font-semibold text-gray-900">Style Quiz</h2>
+            <div class="w-6"></div>
+        </div>
+        <!-- Progress Bar -->
+        <div class="px-5 pb-4">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-gray-500 font-wix">Step 4 of 6</span>
+                <span class="text-xs text-[#939BFB] font-medium font-wix">67%</span>
+            </div>
+            <div class="flex space-x-2">
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1.5 rounded-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto pb-32" style="height: calc(844px - 160px);">
+        
+        <!-- Section 1: Heel Height -->
+        <div id="heel-height-section" class="px-5 py-6 bg-white">
+    <h3 class="text-2xl font-wix font-semibold text-gray-900 mb-2">What heel height do you usually prefer?</h3>
+    <p class="text-gray-600 text-sm font-wix mb-6">You can select multiple options</p>
+    
+    <div class="space-y-1.5">
+        <div class="heel-tile flex items-center justify-between p-3 rounded-lg bg-white cursor-pointer" onclick="toggleHeelHeight(this, 'flat')" data-heel="flat">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 flex items-center justify-center overflow-hidden shrink-0">
+                    <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/html_designs/images/flat-shoe.png" alt="Flat" class="w-10 h-9 object-contain heel-tile-image">
+                </div>
+                <span class="text-gray-900 font-semibold text-sm">Flat</span>
+            </div>
+            <div class="checkmark shrink-0">
+                <i class="fas fa-check text-white text-[10px]"></i>
+            </div>
+        </div>
+        <div class="heel-tile flex items-center justify-between p-3 rounded-lg bg-white cursor-pointer" onclick="toggleHeelHeight(this, 'low')" data-heel="low">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 flex items-center justify-center overflow-hidden shrink-0">
+                    <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/html_designs/images/low-shoe.png" alt="Low heel" class="w-10 h-9 object-contain heel-tile-image">
+                </div>
+                <span class="text-gray-900 font-semibold text-sm">Low</span>
+            </div>
+            <div class="checkmark shrink-0">
+                <i class="fas fa-check text-white text-[10px]"></i>
+            </div>
+        </div>
+        <div class="heel-tile flex items-center justify-between p-3 rounded-lg bg-white cursor-pointer" onclick="toggleHeelHeight(this, 'mid')" data-heel="mid">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 flex items-center justify-center overflow-hidden shrink-0">
+                    <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/html_designs/images/mid-shoe.png" alt="Mid heel" class="w-10 h-9 object-contain heel-tile-image">
+                </div>
+                <span class="text-gray-900 font-semibold text-sm">Mid</span>
+            </div>
+            <div class="checkmark shrink-0">
+                <i class="fas fa-check text-white text-[10px]"></i>
+            </div>
+        </div>
+        <div class="heel-tile flex items-center justify-between p-3 rounded-lg bg-white cursor-pointer" onclick="toggleHeelHeight(this, 'high')" data-heel="high">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 flex items-center justify-center overflow-hidden shrink-0">
+                    <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/html_designs/images/high-shoe.png" alt="High heel" class="w-10 h-9 object-contain heel-tile-image">
+                </div>
+                <span class="text-gray-900 font-semibold text-sm">High</span>
+            </div>
+            <div class="checkmark shrink-0">
+                <i class="fas fa-check text-white text-[10px]"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!-- Section 2: Size Chart Preference -->
+        <div id="size-chart-section" class="px-5 py-6 bg-white border-t border-gray-100">
+            <h3 class="text-2xl font-wix font-semibold text-gray-900 mb-2">Select your sizes</h3>
+            <p class="text-gray-600 text-sm font-wix mb-6">Choose your size chart and enter your measurements</p>
+            
+            <!-- Size Chart Tabs -->
+            <div class="flex space-x-2 mb-6">
+                <button class="size-tab px-4 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 transition-all" onclick="selectSizeSystem(this, 'eu')">EU</button>
+                <button class="size-tab px-4 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 transition-all" onclick="selectSizeSystem(this, 'uk')">UK</button>
+                <button class="size-tab px-4 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 transition-all" onclick="selectSizeSystem(this, 'us')">US</button>
+            </div>
+
+            <!-- Size Dropdowns -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Top Size</label>
+                    <select id="top-size" class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#939BFB] focus:border-transparent">
+                        <option value="">Select size</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Bottom Size</label>
+                    <select id="bottom-size" class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#939BFB] focus:border-transparent">
+                        <option value="">Select size</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Dress Size</label>
+                    <select id="dress-size" class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#939BFB] focus:border-transparent">
+                        <option value="">Select size</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Shoe Size</label>
+                    <select id="shoe-size" class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#939BFB] focus:border-transparent">
+                        <option value="">Select size</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Helper Text -->
+        <div class="px-5 py-4 bg-gray-50">
+            <p class="text-xs text-gray-500 text-center">You can always change these preferences later in your settings</p>
+        </div>
+    </div>
+
+    <!-- Fixed Bottom CTA -->
+    <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 px-5 py-5">
+        <button id="next-btn" class="w-3/4 mx-auto flex items-center justify-center py-2.5 px-4 rounded-full bg-[#939BFB] text-white font-medium text-sm hover:bg-[#7B85F7] transition-colors shadow-md shadow-[#939BFB]/20 disabled:opacity-50 disabled:cursor-not-allowed" onclick="nextStep()" disabled="">
+            <span>Continue</span>
+        </button>
+    </div>
+</div>
+
+<script>
+let selectedHeelHeights = [];
+let selectedSizeSystem = null;
+let selectedSizes = {
+    top: null,
+    bottom: null,
+    dress: null,
+    shoe: null
+};
+
+const sizeData = {
+    eu: {
+        top: ['32', '34', '36', '38', '40', '42', '44', '46', '48'],
+        bottom: ['32', '34', '36', '38', '40', '42', '44', '46', '48'],
+        dress: ['32', '34', '36', '38', '40', '42', '44', '46', '48'],
+        shoe: ['35', '36', '37', '38', '39', '40', '41', '42']
+    },
+    uk: {
+        top: ['4', '6', '8', '10', '12', '14', '16', '18', '20'],
+        bottom: ['4', '6', '8', '10', '12', '14', '16', '18', '20'],
+        dress: ['4', '6', '8', '10', '12', '14', '16', '18', '20'],
+        shoe: ['2', '3', '4', '5', '6', '7', '8', '9']
+    },
+    us: {
+        top: ['0', '2', '4', '6', '8', '10', '12', '14', '16', '18'],
+        bottom: ['0', '2', '4', '6', '8', '10', '12', '14', '16', '18'],
+        dress: ['0', '2', '4', '6', '8', '10', '12', '14', '16', '18'],
+        shoe: ['4', '5', '6', '7', '8', '9', '10', '11', '12']
+    }
+};
+
+function goBack() {
+    window.location.href = 'QuizStep3_ColorsLike&Dislike.html';
+}
+
+function toggleHeelHeight(button, height) {
+    button.classList.toggle('selected');
+    
+    const index = selectedHeelHeights.indexOf(height);
+    if (index > -1) {
+        selectedHeelHeights.splice(index, 1);
+    } else {
+        selectedHeelHeights.push(height);
+    }
+    
+    checkFormCompletion();
+}
+
+function selectSizeSystem(button, system) {
+    document.querySelectorAll('.size-tab').forEach(btn => {
+        btn.classList.remove('bg-[#939BFB]', 'text-white');
+        btn.classList.add('bg-gray-100', 'text-gray-700');
+    });
+    
+    button.classList.remove('bg-gray-100', 'text-gray-700');
+    button.classList.add('bg-[#939BFB]', 'text-white');
+    
+    selectedSizeSystem = system;
+    populateSizeDropdowns(system);
+    checkFormCompletion();
+}
+
+function populateSizeDropdowns(system) {
+    const sizes = sizeData[system];
+    
+    populateDropdown('top-size', sizes.top);
+    populateDropdown('bottom-size', sizes.bottom);
+    populateDropdown('dress-size', sizes.dress);
+    populateDropdown('shoe-size', sizes.shoe);
+}
+
+function populateDropdown(id, options) {
+    const select = document.getElementById(id);
+    select.innerHTML = '<option value="">Select size</option>';
+    
+    options.forEach(size => {
+        const option = document.createElement('option');
+        option.value = size;
+        option.textContent = size;
+        select.appendChild(option);
+    });
+    
+    select.addEventListener('change', function() {
+        const sizeType = id.replace('-size', '');
+        selectedSizes[sizeType] = this.value;
+        checkFormCompletion();
+    });
+}
+
+function checkFormCompletion() {
+    const nextBtn = document.getElementById('next-btn');
+    
+    const hasHeelHeight = selectedHeelHeights.length > 0;
+    const hasSizeSystem = selectedSizeSystem !== null;
+    const hasAllSizes = selectedSizes.top && selectedSizes.bottom && selectedSizes.dress && selectedSizes.shoe;
+    
+    if (hasHeelHeight && hasSizeSystem && hasAllSizes) {
+        nextBtn.disabled = false;
+    } else {
+        nextBtn.disabled = true;
+    }
+}
+
+function nextStep() {
+    if (selectedHeelHeights.length > 0 && selectedSizeSystem && selectedSizes.top && selectedSizes.bottom && selectedSizes.dress && selectedSizes.shoe) {
+        if (typeof window.GoShopMeQuizAPI !== 'undefined' && window.GoShopMeQuizAPI.submitQuizStep4) {
+            window.GoShopMeQuizAPI.submitQuizStep4({
+                heelHeights: selectedHeelHeights.slice(),
+                sizeSystem: selectedSizeSystem,
+                sizes: Object.assign({}, selectedSizes)
+            });
+        }
+        try {
+            var d = JSON.parse(localStorage.getItem('__quizData') || '{}');
+            d.heelHeights = selectedHeelHeights.slice(); d.sizeSystem = selectedSizeSystem; d.sizes = Object.assign({}, selectedSizes);
+            localStorage.setItem('__quizData', JSON.stringify(d));
+        } catch (e) {}
+        window.location.href = 'QuizStep5_Brands.html';
+    }
+}
+
+// API readiness: prefill from window.__QUIZ_STEP4_DATA__, get/set for API
+(function() {
+    window.getQuizStep4Data = function() {
+        return { heelHeights: selectedHeelHeights.slice(), sizeSystem: selectedSizeSystem, sizes: Object.assign({}, selectedSizes) };
+    };
+    window.setQuizStep4Data = function(data) {
+        if (!data) return;
+        if (data.heelHeights && data.heelHeights.length) {
+            data.heelHeights.forEach(function(h) {
+                var el = document.querySelector('.heel-tile[data-heel="' + h + '"]');
+                if (el && !el.classList.contains('selected')) { toggleHeelHeight(el, h); }
+            });
+        }
+        if (data.sizeSystem) {
+            var tab = document.querySelector('.size-tab[onclick*="' + data.sizeSystem + '"]');
+            if (tab) selectSizeSystem(tab, data.sizeSystem);
+        }
+        if (data.sizes) {
+            selectedSizes = Object.assign({}, data.sizes);
+            ['top','bottom','dress','shoe'].forEach(function(k) {
+                var sel = document.getElementById(k + '-size');
+                if (sel && selectedSizes[k]) sel.value = selectedSizes[k];
+            });
+            checkFormCompletion();
+        }
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.__QUIZ_STEP4_DATA__) window.setQuizStep4Data(window.__QUIZ_STEP4_DATA__);
+    });
+})();
+</script>
+
+</body></html>
+

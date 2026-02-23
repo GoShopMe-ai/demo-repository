@@ -1,0 +1,615 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <title>Receipt Details â€“ GoShopMe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'shine-primary': '#939BFB',
+                        'shine-accent': '#F96226'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        * { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .bottom-nav-btn { display: flex; flex-direction: column; align-items: center; color: #6B7280; transition: color 0.2s ease-in-out; min-width: 60px; }
+        .bottom-nav-btn:hover, .bottom-nav-btn.active { color: #939BFB; }
+        .bottom-nav-btn:hover svg, .bottom-nav-btn:hover span, .bottom-nav-btn.active svg, .bottom-nav-btn.active span { color: #939BFB; }
+        .bottom-nav-btn svg { width: 20px; height: 20px; stroke-width: 1.5; margin-bottom: 4px; }
+        #cart-indicator, #notif-indicator { min-width: 18px; min-height: 18px; padding: 0 5px; display: flex; align-items: center; justify-content: center; }
+        #cart-indicator.hidden, #notif-indicator.hidden { display: none !important; }
+        #cart-indicator.badge-numeric, #notif-indicator.badge-numeric { min-width: 18px; padding: 0 5px; }
+    </style>
+</head>
+<body class="bg-[#F6F6F6] dm-sans">
+<div class="w-full max-w-[390px] mx-auto min-h-screen bg-white shadow-2xl relative">
+    <div id="header" class="sticky top-0 bg-white z-50 border-b border-gray-100">
+        <div class="px-5 py-4">
+            <div class="flex items-center">
+                <div class="w-20 flex-shrink-0 flex items-center">
+                    <a href="Orders.html" onclick="goBack(event)" class="p-2 text-gray-600 hover:text-gray-800 transition-colors" aria-label="Back to orders">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+                        </svg>
+                    </a>
+                </div>
+                <div class="flex-1 flex justify-center min-w-0">
+                    <h1 class="poppins text-xl font-semibold text-gray-900">Receipt Details</h1>
+                </div>
+                <div class="w-20 flex-shrink-0 flex justify-end items-center gap-0">
+                    <a href="Notifications_Screen.html?from=receipt" class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-gray-800 transition-colors relative overflow-visible" aria-label="Notifications">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
+                        </svg>
+                        <div id="notif-indicator" class="absolute -top-0.5 -right-0.5 min-w-[18px] min-h-[18px] px-1 bg-shine-accent rounded-full hidden items-center justify-center flex">
+                            <span id="notif-count" class="text-[10px] text-white font-medium leading-none whitespace-nowrap"></span>
+                        </div>
+                    </a>
+                    <a href="Shopping_bag.html?from=receipt" class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-gray-800 transition-colors relative overflow-visible" aria-label="Shopping bag">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z"></path>
+                        </svg>
+                        <div id="cart-indicator" class="absolute -top-0.5 -right-0.5 min-w-[18px] min-h-[18px] px-1 bg-shine-primary rounded-full hidden items-center justify-center flex">
+                            <span id="cart-count" class="text-[10px] text-white font-medium leading-none whitespace-nowrap"></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main id="main-content" class="pt-8 px-4 pb-28 overflow-y-auto">
+        <section id="header-section" class="px-5 py-4 bg-white mb-4">
+            <h2 id="receipt-order-title" class="text-lg poppins font-semibold text-gray-900 mb-2">Receipt for Order</h2>
+            <p class="text-gray-600 dm-sans text-sm">This is your official receipt. You can download or email it for your records.</p>
+        </section>
+        <section id="receipt-summary" class="mx-4 mb-4 bg-white rounded-lg p-4 border border-gray-100">
+            <h3 class="poppins text-sm font-semibold text-gray-900 mb-3">Receipt Summary</h3>
+            <div id="receipt-summary-content" class="space-y-2"></div>
+        </section>
+        <section id="receipt-details" class="mx-4 mb-4 bg-white rounded-lg p-4 border border-gray-100">
+            <h3 class="poppins text-sm font-semibold text-gray-900 mb-3">Order Details</h3>
+            <div id="receipt-items" class="space-y-3 mb-4">
+                    <!-- Items populated dynamically -->
+            </div>
+            <div class="border-t pt-3">
+                <div id="receipt-totals" class="space-y-2">
+                    <!-- Totals populated dynamically -->
+                </div>
+            </div>
+        </section>
+        <section id="billing-delivery" class="mx-4 mb-4 bg-white rounded-lg p-4 border border-gray-100">
+            <h3 class="poppins text-sm font-semibold text-gray-900 mb-3">Billing &amp; Delivery Information</h3>
+            <div id="receipt-billing" class="space-y-3">
+                <!-- Billing populated dynamically -->
+            </div>
+        </section>
+        <section id="action-buttons" class="px-5 py-4">
+            <div class="flex gap-2 justify-center">
+                <button onclick="downloadReceipt()" class="flex items-center justify-center rounded-full bg-shine-primary py-2.5 px-4 text-xs font-medium text-white dm-sans hover:opacity-90 transition-opacity flex-1 max-w-[140px]">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-4 h-4 mr-1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"></path>
+                    </svg>
+                    Download
+                </button>
+                <button onclick="shareReceipt()" class="flex items-center justify-center rounded-full border border-[#B7C7FF] py-2.5 px-4 text-xs font-medium text-shine-primary dm-sans hover:bg-shine-primary hover:text-white transition-colors flex-1 max-w-[140px]">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-4 h-4 mr-1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"></path>
+                    </svg>
+                    Share
+                </button>
+            </div>
+        </section>
+    </main>
+    <nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] border-t border-gray-100 bg-white px-4 py-3 z-50">
+        <div class="flex items-center justify-around">
+            <a href="Home.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px]">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+            </svg>
+            <span class="text-xs mt-1">Home</span>
+        </a>
+        <a href="Picks.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px]">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"></path>
+            </svg>
+            <span class="text-xs mt-1">Picks</span>
+        </a>
+        <a href="Wishlist.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px]">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
+            </svg>
+            <span class="text-xs mt-1">Wishlist</span>
+        </a>
+            <a id="receipt-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px]">
+                <span id="receipt-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1 text-shine-primary">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
+                    </svg>
+                </span>
+                <img id="receipt-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile">
+                <span class="text-xs mt-1">Profile</span>
+            </a>
+        </div>
+    </nav>
+</div>
+<script>
+(function() {
+    var BADGE_KEYS = { notif: 'goshopme_notif_count', cart: 'goshopme_cart_count' };
+    var cartCountValue = 0, notifCountValue = 0;
+    function getBadgeElements() {
+        return { cartIndicator: document.getElementById('cart-indicator'), cartCount: document.getElementById('cart-count'), notifIndicator: document.getElementById('notif-indicator'), notifCount: document.getElementById('notif-count') };
+    }
+    function updateCartBadge() {
+        var el = getBadgeElements();
+        if (!el.cartIndicator || !el.cartCount) return;
+        var show = cartCountValue > 0;
+        el.cartIndicator.classList.toggle('hidden', !show);
+        el.cartIndicator.classList.toggle('flex', show);
+        el.cartCount.textContent = show ? (cartCountValue > 99 ? '99+' : cartCountValue) : '';
+        try { localStorage.setItem(BADGE_KEYS.cart, String(cartCountValue)); localStorage.setItem('__cartCount', String(cartCountValue)); } catch (e) {}
+    }
+    function updateNotifBadge() {
+        var el = getBadgeElements();
+        if (!el.notifIndicator || !el.notifCount) return;
+        var show = notifCountValue > 0;
+        el.notifIndicator.classList.toggle('hidden', !show);
+        el.notifIndicator.classList.toggle('flex', show);
+        el.notifCount.textContent = show ? (notifCountValue > 99 ? '99+' : notifCountValue) : '';
+        try { localStorage.setItem(BADGE_KEYS.notif, String(notifCountValue)); localStorage.setItem('notifCount', String(notifCountValue)); } catch (e) {}
+    }
+    window.updateCartBadge = updateCartBadge;
+    window.updateNotifBadge = updateNotifBadge;
+    window.testBadges = function(notif, cart) { notifCountValue = Math.max(0, notif != null ? notif : 5); cartCountValue = Math.max(0, cart != null ? cart : 3); updateNotifBadge(); updateCartBadge(); console.log('testBadges:', notifCountValue, cartCountValue); };
+    window.resetBadges = function() { cartCountValue = 0; notifCountValue = 0; try { localStorage.setItem(BADGE_KEYS.notif, '0'); localStorage.setItem(BADGE_KEYS.cart, '0'); localStorage.setItem('__cartCount', '0'); localStorage.setItem('notifCount', '0'); } catch (e) {} updateCartBadge(); updateNotifBadge(); };
+    document.addEventListener('DOMContentLoaded', function() {
+        try { notifCountValue = parseInt(localStorage.getItem(BADGE_KEYS.notif) || localStorage.getItem('notifCount') || '0', 10); cartCountValue = parseInt(localStorage.getItem(BADGE_KEYS.cart) || localStorage.getItem('__cartCount') || '0', 10); } catch (e) {}
+        updateCartBadge(); updateNotifBadge();
+    });
+})();
+
+(function() {
+    var DEFAULT_ORDER = {
+        id: '#S04589',
+        date: 'July 15, 2025',
+        total: '$289.50',
+        status: 'delivered',
+        statusLabel: 'Delivered',
+        payment: 'Visa â€¢â€¢â€¢â€¢ 4242',
+        receiptNumber: 'RCT-20250715-0001',
+        subtotal: '$250.00',
+        shipping: '$9.50',
+        taxes: '$30.00',
+        billedTo: 'Maria Lopez',
+        shippingAddress: '123 Rue Saint-HonorÃ©',
+        shippingCity: 'Paris, France 75001',
+        items: [
+            { image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/e3f92e89da-91c7ebe70b64c417c52b.png', title: 'Summer Floral Dress', meta: 'Size M â€¢ Qty 1', price: '$250.00' }
+        ]
+    };
+
+    function getOrder() {
+        try {
+            var s = localStorage.getItem('__receiptOrder');
+            if (s) return JSON.parse(s);
+        } catch (e) {}
+        var params = new URLSearchParams(window.location.search);
+        var orderId = params.get('orderId') || params.get('order');
+        if (orderId) {
+            var orders = [];
+            try { orders = JSON.parse(localStorage.getItem('__orders') || '[]'); } catch (e) {}
+            if (!orders.length && window.SAMPLE_ORDERS) orders = window.SAMPLE_ORDERS;
+            var order = orders.find(function(o) { return (o.id || o.orderNumber || '') === orderId || String(o.id || '').replace(/^#/,'') === String(orderId || '').replace(/^#/,''); });
+            if (order) return enrichOrderFromSource(order);
+        }
+        return null;
+    }
+
+    function enrichOrderFromSource(o) {
+        var r = { id: o.id, orderNumber: o.orderNumber, date: o.date, total: o.total, status: o.status, statusLabel: o.statusLabel, payment: o.payment };
+        r.receiptNumber = o.receiptNumber || (r.id ? 'RCT-' + String(r.id).replace(/^#/,'').replace(/\s/g,'') + '-' + (o.date || '').replace(/\s/g,'').replace(/,/g,'') : 'RCT-0001');
+        r.subtotal = o.subtotal != null ? o.subtotal : o.total;
+        r.shipping = o.shipping != null ? o.shipping : 'â€”';
+        r.taxes = o.taxes != null ? o.taxes : 'â€”';
+        r.billedTo = o.billedTo || o.billed_to || 'â€”';
+        r.shippingAddress = o.shippingAddress || o.shipping_address || '';
+        r.shippingCity = o.shippingCity || o.shipping_city || '';
+        var items = (o.items || []).map(function(it) {
+            var item = { title: it.title, meta: it.meta || it.variant || it.size || '', image: it.image || it.img || '' };
+            item.price = it.price != null ? it.price : null;
+            item.quantity = it.quantity || 1;
+            return item;
+        });
+        if (items.length > 1 && items.every(function(i){ return i.price == null; })) {
+            var sub = r.subtotal;
+            var num = parseFloat(String(sub).replace(/[^0-9.]/g,'')) || 0;
+            var per = num / items.length;
+            var curr = String(sub).replace(/[0-9.]+/,'') || '$';
+            items.forEach(function(i){ i.price = curr + per.toFixed(2); });
+        } else if (items.length === 1 && !items[0].price) {
+            items[0].price = r.total || 'â€”';
+        }
+        r.items = items;
+        return r;
+    }
+
+    function escapeHtml(str) {
+        if (str == null) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function getStatusClass(status) {
+        var s = (status || '').toLowerCase();
+        if (s === 'delivered' || s === 'returned') return 'bg-green-100 text-green-800';
+        if (s === 'processing') return 'bg-yellow-100 text-yellow-800';
+        if (s === 'in_transit' || s === 'shipped') return 'bg-blue-100 text-blue-800';
+        return 'bg-gray-100 text-gray-800';
+    }
+
+    window.SAMPLE_ORDERS = window.SAMPLE_ORDERS || [
+        { id: '#S04589', date: 'July 12, 2025', total: '$289.50', status: 'delivered', statusLabel: 'Delivered', payment: 'Visa â€¢â€¢â€¢â€¢ 4242', subtotal: '$265.00', shipping: '$12.50', taxes: '$12.00', billedTo: 'Maria Lopez', shippingAddress: '123 Rue Saint-HonorÃ©', shippingCity: 'Paris, France 75001', items: [{ image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/e3f92e89da-91c7ebe70b64c417c52b.png', title: 'Summer Floral Dress', meta: 'Size M â€¢ Qty 1', price: '$265.00' }] },
+        { id: '#S04561', date: 'June 28, 2025', total: '$420.00', status: 'processing', statusLabel: 'Processing', payment: 'Mastercard â€¢â€¢â€¢â€¢ 8901', subtotal: '$385.00', shipping: '$20.00', taxes: '$15.00', billedTo: 'John Doe', shippingAddress: '456 Oak Avenue', shippingCity: 'Los Angeles, CA 90001', items: [{ image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/735d94a031-5cb1d1a892fb7ee5d735.png', title: 'Designer Leather Bag', meta: 'Black â€¢ Qty 1', price: '$280.00' }, { image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/1e0bed3f51-bdf0bc7e52d30c4b8bda.png', title: 'Silk Pattern Scarf', meta: 'Blue â€¢ Qty 1', price: '$105.00' }] }
+    ];
+
+    function renderReceipt(order) {
+        order = order || DEFAULT_ORDER;
+        order.items = order.items || [];
+        if (order.items.length === 0 && DEFAULT_ORDER.items) order.items = DEFAULT_ORDER.items;
+        try { localStorage.setItem('__receiptOrder', JSON.stringify(order)); } catch (e) {}
+        var items = order.items;
+        var id = order.id || order.orderNumber || '';
+        var receiptNum = order.receiptNumber || (id ? 'RCT-' + String(id).replace(/^#/, '').replace(/\s/g, '') + '-' + (order.date || '').replace(/\s/g, '').replace(/,/g, '') : 'RCT-0001');
+        var subtotal = order.subtotal != null ? order.subtotal : order.total || 'â€”';
+        var shipping = order.shipping != null ? order.shipping : 'â€”';
+        var taxes = order.taxes != null ? order.taxes : 'â€”';
+        var statusLabel = order.statusLabel || order.status || 'Paid';
+        var statusClass = getStatusClass(order.status);
+
+        var titleEl = document.getElementById('receipt-order-title');
+        if (titleEl) titleEl.textContent = 'Receipt for Order ' + (id ? (String(id).startsWith('#') ? id : '#' + id) : 'â€”');
+
+        var summaryEl = document.getElementById('receipt-summary-content');
+        if (summaryEl) {
+            summaryEl.innerHTML = '<div class="flex justify-between"><span class="text-gray-600 text-sm">Receipt Number</span><span class="font-medium text-sm text-black">' + escapeHtml(receiptNum) + '</span></div>' +
+                '<div class="flex justify-between"><span class="text-gray-600 text-sm">Date Issued</span><span class="font-medium text-sm text-black">' + escapeHtml(order.date || 'â€”') + '</span></div>' +
+                '<div class="flex justify-between"><span class="text-gray-600 text-sm">Payment Method</span><span class="font-medium text-sm text-black">' + escapeHtml(order.payment || 'â€”') + '</span></div>' +
+                '<div class="flex justify-between"><span class="text-gray-600 text-sm">Transaction Status</span><span class="inline-block px-2 py-1 text-xs rounded-full ' + statusClass + '">' + escapeHtml(statusLabel) + '</span></div>' +
+                '<div class="flex justify-between"><span class="text-gray-600 text-sm">Receipt Type</span><span class="font-medium text-sm text-black">Purchase</span></div>';
+        }
+
+        var itemsEl = document.getElementById('receipt-items');
+        if (itemsEl) {
+            itemsEl.innerHTML = items.map(function(item) {
+                var img = item.image || '';
+                var title = escapeHtml(item.title || 'Item');
+                var meta = escapeHtml(item.meta || (item.size ? 'Size ' + item.size + (item.quantity > 1 ? ' â€¢ Qty ' + item.quantity : '') : (item.quantity > 1 ? 'Qty ' + item.quantity : '')));
+                var price = item.price != null ? item.price : (items.length === 1 ? order.total : 'â€”');
+                var qty = item.quantity || 1;
+                var qtyLine = qty > 1 && price !== 'â€”' ? '<p class="text-xs text-gray-600">' + escapeHtml(price) + ' Ã— ' + qty + '</p>' : '';
+                var imgHtml = img ? '<img class="w-12 h-12 rounded-lg object-cover flex-shrink-0" src="' + escapeHtml(img) + '" alt="' + title + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
+                    '<div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 hidden"><span class="text-gray-400 text-xs">â€”</span></div>' :
+                    '<div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0"><span class="text-gray-400 text-xs">â€”</span></div>';
+                return '<div class="flex items-center gap-3 pb-3 border-b border-gray-100 last:border-0"><div class="relative">' + imgHtml + '</div><div class="flex-1 min-w-0"><p class="font-medium text-sm text-gray-900 truncate">' + title + '</p><p class="text-xs text-gray-600">' + meta + '</p></div><div class="text-right flex-shrink-0"><p class="font-medium text-sm text-black">' + (price !== 'â€”' ? escapeHtml(price) : 'â€”') + '</p>' + qtyLine + '</div></div>';
+            }).join('');
+        }
+
+        var totalsEl = document.getElementById('receipt-totals');
+        if (totalsEl) {
+            totalsEl.innerHTML = '<div class="flex justify-between"><span class="text-gray-600 text-sm">Subtotal</span><span class="font-medium text-sm text-black">' + escapeHtml(subtotal) + '</span></div>' +
+                '<div class="flex justify-between"><span class="text-gray-600 text-sm">Shipping</span><span class="font-medium text-sm text-black">' + escapeHtml(shipping) + '</span></div>' +
+                '<div class="flex justify-between"><span class="text-gray-600 text-sm">Taxes</span><span class="font-medium text-sm text-black">' + escapeHtml(taxes) + '</span></div>' +
+                '<div class="flex justify-between border-t pt-2 mt-2"><span class="poppins font-semibold text-black">Total Amount Paid</span><span class="poppins font-semibold text-black text-lg">' + escapeHtml(order.total || 'â€”') + '</span></div>';
+        }
+
+        var billingEl = document.getElementById('receipt-billing');
+        if (billingEl) {
+            var billedTo = order.billedTo || order.billed_to || 'â€”';
+            var addr = order.shippingAddress || order.shipping_address || '';
+            var city = order.shippingCity || order.shipping_city || '';
+            var addrLine = [addr, city].filter(Boolean).join(', ') || 'â€”';
+            billingEl.innerHTML = '<div><p class="text-gray-600 text-sm mb-1">Billed To</p><p class="font-medium text-sm text-gray-900">' + escapeHtml(billedTo) + '</p></div>' +
+                '<div><p class="text-gray-600 text-sm mb-1">Shipping Address</p><p class="font-medium text-sm text-gray-900">' + escapeHtml(addrLine) + '</p></div>';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var order = getOrder();
+        renderReceipt(order);
+    });
+
+    window.testReceipt = function(order) {
+        order = order || {
+            id: '#TEST-' + Date.now(),
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            total: '$199.99',
+            status: 'delivered',
+            statusLabel: 'Delivered',
+            payment: 'Visa â€¢â€¢â€¢â€¢ 4242',
+            receiptNumber: 'RCT-TEST-001',
+            subtotal: '$175.00',
+            shipping: '$9.99',
+            taxes: '$15.00',
+            billedTo: 'Test User',
+            shippingAddress: '123 Test Street',
+            shippingCity: 'New York, NY 10001',
+            items: [
+                { title: 'Test Product A', meta: 'Size M â€¢ Qty 1', price: '$89.99', image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/e3f92e89da-91c7ebe70b64c417c52b.png' },
+                { title: 'Test Product B', meta: 'Size S â€¢ Qty 2', price: '$42.50', quantity: 2 }
+            ]
+        };
+        try {
+            localStorage.setItem('__receiptOrder', JSON.stringify(order));
+            var isReceipt = /Receipt_Details/i.test(window.location.pathname || window.location.href);
+            if (isReceipt) window.location.reload();
+            else window.location.href = 'Receipt_Details_Screen.html';
+        } catch (e) { console.error('testReceipt failed:', e); }
+    };
+})();
+
+(function() {
+    var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
+    var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+    var link = document.getElementById('receipt-nav-profile-link');
+    if (link) link.href = profileHref;
+
+    var saved = null;
+    try { saved = localStorage.getItem('profilePhoto'); } catch (e) {}
+    var img = document.getElementById('receipt-nav-profile-photo');
+    var icon = document.getElementById('receipt-nav-profile-icon');
+    if (img && icon) {
+        if (saved) {
+            img.src = saved;
+            img.classList.remove('hidden');
+            icon.classList.add('hidden');
+        } else {
+            img.src = '';
+            img.classList.add('hidden');
+            icon.classList.remove('hidden');
+        }
+    }
+})();
+
+function downloadReceipt() {
+    var order = null;
+    try { order = JSON.parse(localStorage.getItem('__receiptOrder') || '{}'); } catch (e) {}
+    if (typeof window.GoShopMeOrdersAPI !== 'undefined' && window.GoShopMeOrdersAPI.onDownloadReceipt && order) {
+        window.GoShopMeOrdersAPI.onDownloadReceipt(order);
+    }
+    generateAndDownloadPdf(function() {}, function() {});
+}
+
+function generateAndDownloadPdf(onSuccess, onFail) {
+    var order = null;
+    try { order = JSON.parse(localStorage.getItem('__receiptOrder') || '{}'); } catch (e) {}
+    if (!order || !order.items || order.items.length === 0) {
+        order = { id: '#S04589', date: 'July 15, 2025', total: '$289.50', statusLabel: 'Delivered', payment: 'Visa â€¢â€¢â€¢â€¢ 4242', receiptNumber: 'RCT-20250715-0001', subtotal: '$250.00', shipping: '$9.50', taxes: '$30.00', billedTo: 'Maria Lopez', shippingAddress: '123 Rue Saint-HonorÃ©', shippingCity: 'Paris, France 75001', items: [{ title: 'Summer Floral Dress', meta: 'Size M â€¢ Qty 1', price: '$250.00' }] };
+    }
+    var orderId = (order && (order.id || order.orderNumber)) ? String(order.id || order.orderNumber).replace(/^#/,'') : 'S04589';
+    var html = buildReceiptPdfHtml(order);
+    if (!html) { onFail(); return; }
+    var container = document.createElement('div');
+    container.style.cssText = 'position:fixed;top:0;left:0;right:0;display:flex;justify-content:center;padding:10px;background:#fff;z-index:-1;opacity:0.001;pointer-events:none';
+    var el = document.createElement('div');
+    el.innerHTML = html;
+    container.appendChild(el);
+    document.body.appendChild(container);
+    var targetEl = el.firstElementChild || el;
+    var runCapture = function() {
+        var h2c = (typeof html2canvas !== 'undefined') ? html2canvas : null;
+        var JsPDF = (typeof jspdf !== 'undefined' && jspdf.jsPDF) ? jspdf.jsPDF : (typeof window.jspdf !== 'undefined' && window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : null;
+        if (!h2c || !JsPDF) { if (container.parentNode) container.remove(); onFail(); return; }
+        h2c(targetEl, { scale: 3, useCORS: true, letterRendering: true, logging: false }).then(function(canvas) {
+            if (container.parentNode) container.remove();
+            var imgW = canvas.width;
+            var imgH = canvas.height;
+            var pdf = new JsPDF('p', 'mm', 'a4');
+            var pgW = pdf.internal.pageSize.getWidth();
+            var pgH = pdf.internal.pageSize.getHeight();
+            var margin = 12;
+            var maxW = pgW - 2 * margin;
+            var maxH = pgH - 2 * margin;
+            var ratio = Math.min(maxW / imgW, maxH / imgH);
+            var w = imgW * ratio;
+            var h = imgH * ratio;
+            var x = margin + (maxW - w) / 2;
+            var y = margin;
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', x, y, w, h);
+            pdf.save('GoShopMe-Receipt-' + orderId + '.pdf');
+            onSuccess();
+        }).catch(function(err) {
+            if (container.parentNode) container.remove();
+            onFail();
+        });
+    };
+    requestAnimationFrame(function() { setTimeout(runCapture, 200); });
+}
+
+function shareReceipt() {
+    var order = null;
+    try { order = JSON.parse(localStorage.getItem('__receiptOrder') || '{}'); } catch (e) {}
+    if (typeof window.GoShopMeOrdersAPI !== 'undefined' && window.GoShopMeOrdersAPI.onShareReceipt && order) {
+        window.GoShopMeOrdersAPI.onShareReceipt(order);
+    }
+    generateAndSharePdf(function() {}, function() {});
+}
+
+function enrichReceiptOrder(order) {
+    if (!order) return null;
+    var o = {};
+    o.id = order.id || order.orderNumber || '';
+    o.receiptNumber = order.receiptNumber || (o.id ? 'RCT-' + String(o.id).replace(/^#/,'').replace(/\s/g,'') + '-' + (order.date || '').replace(/\s/g,'').replace(/,/g,'') : 'RCT-0001');
+    o.date = order.date || 'â€”';
+    o.payment = order.payment || 'â€”';
+    o.statusLabel = order.statusLabel || order.status || 'Paid';
+    o.subtotal = order.subtotal != null ? order.subtotal : order.total || 'â€”';
+    o.shipping = order.shipping != null ? order.shipping : 'â€”';
+    o.taxes = order.taxes != null ? order.taxes : 'â€”';
+    o.total = order.total || 'â€”';
+    o.billedTo = order.billedTo || order.billed_to || 'â€”';
+    o.shippingAddress = order.shippingAddress || order.shipping_address || '';
+    o.shippingCity = order.shippingCity || order.shipping_city || '';
+    var items = (order.items || []).map(function(it) {
+        return { title: it.title || 'Item', meta: it.meta || it.variant || it.size || '', price: it.price };
+    });
+    if (items.length > 1 && items.every(function(i){ return i.price == null; })) {
+        var subVal = parseFloat(String(o.subtotal).replace(/[^0-9.]/g,'')) || 0;
+        var curr = String(o.subtotal).replace(/[0-9.]+/,'') || '$';
+        items.forEach(function(i){ i.price = curr + (subVal / items.length).toFixed(2); });
+    } else if (items.length === 1 && items[0].price == null) {
+        items[0].price = o.total || 'â€”';
+    }
+    o.items = items;
+    return o;
+}
+
+function buildReceiptPdfHtml(order) {
+    order = enrichReceiptOrder(order);
+    if (!order || !order.items) return '';
+    function esc(s) { return (s == null) ? '' : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    var id = order.id || '';
+    var rn = order.receiptNumber || 'RCT-0001';
+    var st = order.subtotal || 'â€”', sh = order.shipping || 'â€”', tx = order.taxes || 'â€”';
+    var addr = [order.shippingAddress || '', order.shippingCity || ''].filter(Boolean).join(', ') || 'â€”';
+    var now = new Date().toLocaleDateString('en-US', { year:'numeric',month:'long',day:'numeric' }) + ' at ' + new Date().toLocaleTimeString('en-US', { hour:'numeric',minute:'2-digit' });
+    var itemRows = order.items.map(function(i) {
+        var p = i.price != null ? i.price : (order.items.length === 1 ? order.total : null);
+        if (p == null) p = 'â€”';
+        return '<tr><td style="padding:5px 0;border-bottom:1px solid #e5e7eb;font-size:12px;vertical-align:top;text-align:left;">' +
+            '<div style="font-weight:500;color:#111;">' + esc(i.title || 'Item') + '</div>' +
+            (i.meta ? '<div style="font-size:11px;color:#6b7280;">' + esc(i.meta) + '</div>' : '') + '</td>' +
+            '<td style="padding:5px 0;border-bottom:1px solid #e5e7eb;font-size:12px;font-weight:500;text-align:right;vertical-align:top;white-space:nowrap;">' + esc(p) + '</td></tr>';
+    }).join('');
+    var receiptInner = '<div style="font-family:\'DM Sans\',sans-serif;background:#fff;width:300px;margin:0 auto;color:#374151;page-break-inside:avoid;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">' +
+        '<div style="text-align:center;border-bottom:2px solid #939BFB;padding:10px 0;">' +
+            '<h1 style="margin:0;font-size:22px;color:#939BFB;font-weight:700;">GoShopMe</h1>' +
+            '<p style="margin:3px 0 0;font-size:12px;color:#6b7280;">Your Personal Shopper</p></div>' +
+        '<div style="text-align:center;padding:8px 12px 4px;border-bottom:1px solid #e5e7eb;">' +
+            '<h2 style="margin:0 0 8px;font-size:16px;font-weight:600;color:#111;">RECEIPT</h2>' +
+            '<table style="width:100%;border-collapse:collapse;font-size:12px;margin:0 auto;"><tr>' +
+            '<td style="padding:2px 0;color:#6b7280;text-align:left;">Order No.</td><td style="padding:2px 0;font-weight:500;text-align:right;">' + esc(id || 'â€”') + '</td></tr>' +
+            '<tr><td style="padding:2px 0;color:#6b7280;text-align:left;">Receipt No.</td><td style="padding:2px 0;font-weight:500;text-align:right;">' + esc(rn) + '</td></tr>' +
+            '<tr><td style="padding:2px 0;color:#6b7280;text-align:left;">Date</td><td style="padding:2px 0;font-weight:500;text-align:right;">' + esc(order.date) + '</td></tr>' +
+            '<tr><td style="padding:2px 0;color:#6b7280;text-align:left;">Payment</td><td style="padding:2px 0;font-weight:500;text-align:right;">' + esc(order.payment) + '</td></tr>' +
+            '<tr><td style="padding:2px 0;color:#6b7280;text-align:left;">Status</td><td style="padding:2px 0;font-weight:500;color:#16a34a;text-align:right;">' + esc(order.statusLabel) + '</td></tr></table></div>' +
+        '<div style="padding:6px 12px;border-bottom:1px solid #e5e7eb;text-align:left;">' +
+            '<h3 style="margin:0 0 4px;font-size:12px;font-weight:600;color:#111;">Bill To</h3>' +
+            '<p style="margin:0;font-size:12px;font-weight:500;">' + esc(order.billedTo) + '</p>' +
+            '<p style="margin:2px 0 0;font-size:11px;color:#6b7280;">' + esc(addr) + '</p></div>' +
+        '<div style="padding:6px 12px;border-bottom:1px solid #e5e7eb;">' +
+            '<h3 style="margin:0 0 4px;font-size:12px;font-weight:600;color:#111;">Items</h3>' +
+            '<table style="width:100%;border-collapse:collapse;">' + itemRows + '</table></div>' +
+        '<div style="padding:6px 12px;border-bottom:1px solid #e5e7eb;">' +
+            '<h3 style="margin:0 0 4px;font-size:12px;font-weight:600;color:#111;">Price Breakdown</h3>' +
+            '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
+            '<tr><td style="padding:4px 0;color:#6b7280;text-align:left;">Subtotal</td><td style="padding:4px 0;font-weight:500;text-align:right;">' + esc(st) + '</td></tr>' +
+            '<tr><td style="padding:4px 0;color:#6b7280;text-align:left;">Shipping</td><td style="padding:4px 0;font-weight:500;text-align:right;">' + esc(sh) + '</td></tr>' +
+            '<tr><td style="padding:4px 0;color:#6b7280;text-align:left;">Taxes</td><td style="padding:4px 0;font-weight:500;text-align:right;">' + esc(tx) + '</td></tr>' +
+            '<tr><td style="padding:6px 0 0;border-top:1px solid #e5e7eb;font-weight:700;font-size:14px;color:#939BFB;text-align:left;">Total Paid</td><td style="padding:6px 0 0;border-top:1px solid #e5e7eb;font-weight:700;font-size:14px;color:#939BFB;text-align:right;">' + esc(order.total) + '</td></tr></table></div>' +
+        '<div style="padding:8px 12px;text-align:center;">' +
+            '<p style="margin:0 0 2px;font-size:11px;color:#6b7280;">Thank you for shopping with GoShopMe</p>' +
+            '<p style="margin:0 0 2px;font-size:11px;color:#6b7280;">support@goshopme.com</p>' +
+            '<p style="margin:0;font-size:10px;color:#9ca3af;">Generated: ' + esc(now) + '</p></div></div>';
+    return receiptInner;
+}
+
+function generateAndSharePdf(onSuccess, onFail) {
+    var order = null;
+    try { order = JSON.parse(localStorage.getItem('__receiptOrder') || '{}'); } catch (e) {}
+    if (!order || !order.items || order.items.length === 0) {
+        order = { id: '#S04589', date: 'July 15, 2025', total: '$289.50', statusLabel: 'Delivered', payment: 'Visa â€¢â€¢â€¢â€¢ 4242', receiptNumber: 'RCT-20250715-0001', subtotal: '$250.00', shipping: '$9.50', taxes: '$30.00', billedTo: 'Maria Lopez', shippingAddress: '123 Rue Saint-HonorÃ©', shippingCity: 'Paris, France 75001', items: [{ title: 'Summer Floral Dress', meta: 'Size M â€¢ Qty 1', price: '$250.00' }] };
+    }
+    var orderId = (order && (order.id || order.orderNumber)) ? String(order.id || order.orderNumber).replace(/^#/,'') : 'S04589';
+    var html = buildReceiptPdfHtml(order);
+    if (!html) { onFail(); return; }
+    var container = document.createElement('div');
+    container.style.cssText = 'position:fixed;top:0;left:0;right:0;display:flex;justify-content:center;padding:10px;background:#fff;z-index:-1;opacity:0.001;pointer-events:none';
+    var el = document.createElement('div');
+    el.innerHTML = html;
+    container.appendChild(el);
+    document.body.appendChild(container);
+    var targetEl = el.firstElementChild || el;
+    var runCapture = function() {
+        var h2c = (typeof html2canvas !== 'undefined') ? html2canvas : null;
+        var JsPDF = (typeof jspdf !== 'undefined' && jspdf.jsPDF) ? jspdf.jsPDF : (typeof window.jspdf !== 'undefined' && window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : null;
+        if (!h2c || !JsPDF) { if (container.parentNode) container.remove(); onFail(); return; }
+        h2c(targetEl, { scale: 3, useCORS: true, letterRendering: true, logging: false }).then(function(canvas) {
+            if (container.parentNode) container.remove();
+            var imgW = canvas.width;
+            var imgH = canvas.height;
+            var pdf = new JsPDF('p', 'mm', 'a4');
+            var pgW = pdf.internal.pageSize.getWidth();
+            var pgH = pdf.internal.pageSize.getHeight();
+            var margin = 12;
+            var maxW = pgW - 2 * margin;
+            var maxH = pgH - 2 * margin;
+            var ratio = Math.min(maxW / imgW, maxH / imgH);
+            var w = imgW * ratio;
+            var h = imgH * ratio;
+            var x = margin + (maxW - w) / 2;
+            var y = margin;
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', x, y, w, h);
+            var blob = pdf.output('blob');
+            var file = new File([blob], 'GoShopMe-Receipt-' + orderId + '.pdf', { type: 'application/pdf' });
+            if (navigator.share) {
+                var shareData = { title: 'GoShopMe Receipt ' + orderId, text: 'My receipt from GoShopMe', files: [file] };
+                if (navigator.canShare && navigator.canShare(shareData)) {
+                    navigator.share(shareData).then(onSuccess).catch(function() {
+                        pdf.save('GoShopMe-Receipt-' + orderId + '.pdf');
+                        onSuccess();
+                    });
+                } else {
+                    pdf.save('GoShopMe-Receipt-' + orderId + '.pdf');
+                    onSuccess();
+                }
+            } else {
+                pdf.save('GoShopMe-Receipt-' + orderId + '.pdf');
+                onSuccess();
+            }
+        }).catch(function(err) {
+            if (container.parentNode) container.remove();
+            onFail();
+        });
+    };
+    requestAnimationFrame(function() { setTimeout(runCapture, 200); });
+}
+
+function goBack(e) {
+    if (e) e.preventDefault();
+    if (window.history.length > 1) window.history.back();
+    else window.location.href = 'Orders.html';
+}
+
+// API readiness: get/set receipt data
+(function() {
+    window.getReceiptData = function() {
+        try { return JSON.parse(localStorage.getItem('__receiptOrder') || 'null'); } catch (e) { return null; }
+    };
+    window.setReceiptData = function(data) {
+        if (data) try { localStorage.setItem('__receiptOrder', JSON.stringify(data)); } catch (e) {}
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.__RECEIPT_DATA__) window.setReceiptData(window.__RECEIPT_DATA__);
+    });
+})();
+</script>
+  </body>
+</html>

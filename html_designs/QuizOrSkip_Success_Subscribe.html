@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#939BFB',
+                        accent: '#F96226',
+                    },
+                    fontFamily: {
+                        'fuhkwang': ['Fuhkwang', 'serif'],
+                        'wix': ['Wix Madefor Display', 'sans-serif'],
+                    },
+                    screens: {
+                        'mobile': '390px',
+                    }
+                }
+            }
+        }
+    </script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fuhkwang:wght@400;600;700&family=Wix+Madefor+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        .font-fuhkwang { font-family: 'Fuhkwang', sans-serif; }
+        .font-wix { font-family: 'Wix Madefor Display', sans-serif; }
+        
+        .mobile-container {
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 844px;
+            background: #ffffff;
+        }
+        
+        @media (min-width: 391px) {
+            .mobile-container {
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 20px 20px;
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-gray-50 font-wix overflow-x-hidden">
+
+<div class="mobile-container">
+    <!-- Success Banner (shown only when coming from premium payment) -->
+    <div id="success-banner" class="slide-in bg-gradient-to-r from-green-100 to-emerald-100 border-b border-green-200 px-4 py-4" style="display: none;">
+        <div class="flex items-start justify-between">
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i class="fas fa-check text-white text-sm"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="text-sm font-semibold text-green-800 mb-1">You're all set! Your Premium Plan is now active.</p>
+                    <p class="text-xs text-green-700 leading-relaxed">Enjoy unlimited AI searches, full return automation, and more.</p>
+                </div>
+            </div>
+            <button onclick="dismissBanner()" class="text-green-600 hover:text-green-800 p-1 -mt-1">
+                <i class="fas fa-xmark text-sm"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div id="header" class="sticky top-0 left-0 right-0 bg-white/90 backdrop-blur-lg z-50 border-b border-gray-100">
+        <div class="flex items-center justify-between px-4 py-3">
+            <a href="QuizOrSkip_Screen.html" class="header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800" aria-label="Go back">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+            </a>
+            <h2 class="text-lg font-fuhkwang font-semibold text-gray-900">Style Preferences</h2>
+            <div class="w-6"></div>
+        </div>
+        <!-- Progress Bar -->
+        <div class="px-4 pb-3">
+            <div class="flex space-x-2">
+                <div class="flex-1 bg-primary h-1 rounded-full"></div>
+                <div class="flex-1 bg-primary h-1 rounded-full"></div>
+                <div class="flex-1 bg-primary h-1 rounded-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto pb-32" style="height: calc(844px - 200px);">
+        <!-- Welcome Section -->
+        <div id="welcome-section" class="px-6 py-8 bg-white">
+            <h2 class="text-2xl font-fuhkwang font-semibold text-gray-900 mb-3">
+                Let's discover your style
+            </h2>
+            <p class="text-gray-500 font-wix text-base leading-relaxed">The style quiz helps us understand your size and preferences better, leading to more accurate recommendations from day one.</p>
+        </div>
+
+        <!-- Style Setup Options -->
+        <div id="style-options" class="px-6 space-y-4">
+            <!-- Quiz Option -->
+            <div class="bg-white rounded-2xl border-2 border-primary/30 p-6 hover:bg-primary/10 transition-colors cursor-pointer" onclick="selectOption('quiz')">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-clipboard-list text-primary text-xl"></i>
+                    </div>
+                    <div class="bg-accent text-white text-xs px-3 py-1 rounded-full font-medium">
+                        5 mins
+                    </div>
+                </div>
+                <h3 class="text-lg font-fuhkwang font-semibold text-gray-900 mb-2">
+                    Take Style Quiz
+                </h3>
+                <p class="text-gray-500 text-base font-wix leading-relaxed">
+                    Answer a few questions about your style preferences, favorite brands, and lifestyle to get highly personalized recommendations.
+                </p>
+                <div class="mt-4 flex items-center text-primary text-base font-medium">
+                    <span>Get started</span>
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Fixed Bottom Section -->
+    <div id="bottom-section" class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 px-6 py-4">
+        <p class="text-xs text-gray-400 text-center font-wix leading-relaxed">
+            You can always update your preferences later in settings
+        </p>
+    </div>
+</div>
+
+<script>
+let selectedOption = null;
+
+function dismissBanner() {
+    const banner = document.getElementById('success-banner');
+    banner.style.transform = 'translateY(-100%)';
+    banner.style.opacity = '0';
+    setTimeout(() => {
+        banner.style.display = 'none';
+    }, 300);
+}
+
+function selectOption(option) {
+    selectedOption = option;
+    
+    document.querySelectorAll('#style-options > div').forEach(div => {
+        div.classList.remove('border-primary', 'bg-primary/5');
+        div.classList.add('border-primary/30');
+    });
+    
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.remove('border-primary/30');
+        event.currentTarget.classList.add('border-primary', 'bg-primary/5');
+    }
+    
+    if (typeof window.GoShopMeQuizAPI !== 'undefined' && window.GoShopMeQuizAPI.submitQuizOrSkipChoice) {
+        window.GoShopMeQuizAPI.submitQuizOrSkipChoice(option);
+    }
+    setTimeout(function() {
+        window.location.href = 'QuizStep1_BodyShape.html';
+    }, 300);
+}
+
+// Auto-dismiss banner after 8s (only relevant when banner is shown for premium users)
+
+// API readiness: prefill from window.__QUIZ_SUCCESS_DATA__, get/set for API
+(function() {
+    window.getQuizSuccessData = function() { return { choice: selectedOption }; };
+    window.setQuizSuccessData = function(data) {
+        if (data && data.choice) {
+            selectedOption = data.choice;
+            var opts = document.querySelectorAll('#style-options > div');
+            opts.forEach(function(div) {
+                div.classList.remove('border-primary', 'bg-primary/5');
+                div.classList.add('border-primary/30');
+                if (div.textContent.indexOf('Take Style Quiz') >= 0) {
+                    div.classList.remove('border-primary/30');
+                    div.classList.add('border-primary', 'bg-primary/5');
+                }
+            });
+        }
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.__QUIZ_SUCCESS_DATA__) window.setQuizSuccessData(window.__QUIZ_SUCCESS_DATA__);
+        // Show payment success banner only when coming from premium payment (not free plan)
+        try {
+            var showBanner = sessionStorage.getItem('__showPaymentSuccessBanner');
+            sessionStorage.removeItem('__showPaymentSuccessBanner');
+            if (showBanner === '1') {
+                var banner = document.getElementById('success-banner');
+                if (banner) {
+                    banner.style.display = '';
+                    setTimeout(function() { dismissBanner(); }, 8000);
+                }
+            }
+        } catch (e) {}
+    });
+})();
+</script>
+
+</body>
+</html>

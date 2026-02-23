@@ -1,0 +1,422 @@
+﻿<!DOCTYPE html>
+<html><head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <title>Style Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: {
+                        'mobile': '390px',
+                    }
+                }
+            }
+        }
+    </script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fuhkwang:wght@400;500;600;700&display=swap');
+        .font-fuhkwang { font-family: 'Fuhkwang', sans-serif; }
+        .font-wix { font-family: 'Wix Madefor Display', sans-serif; }
+        
+        .mobile-container {
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 844px;
+            background: #ffffff;
+        }
+        
+        @media (min-width: 391px) {
+            .mobile-container {
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 20px 20px;
+            }
+        }
+
+        .upload-area {
+            border: 1.5px dashed #D1D5DB;
+            transition: all 0.2s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #939BFB;
+            background: #F9FAFB;
+        }
+
+        .option-item {
+            transition: all 0.2s ease;
+            border: 1.5px solid #E5E7EB;
+        }
+
+        .option-item.selected {
+            background: #F5F7FF;
+            border-color: #939BFB;
+        }
+
+        .option-item .checkmark {
+            width: 20px;
+            height: 20px;
+            border: 1.5px solid #E5E7EB;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .option-item.selected .checkmark {
+            background: #939BFB;
+            border-color: #939BFB;
+        }
+
+        .option-item .checkmark i {
+            display: none;
+        }
+
+        .option-item.selected .checkmark i {
+            display: block;
+        }
+
+        .thumbnail-preview {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .thumbnail-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail-preview .remove-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        ::placeholder {
+            color: #9CA3AF;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-gray-50 font-wix overflow-x-hidden">
+
+<div class="mobile-container">
+    <div id="header" class="sticky top-0 left-0 right-0 bg-white z-50 border-b border-gray-100">
+        <div class="flex items-center justify-between px-5 py-4">
+            <button type="button" onclick="goBack()" class="header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800" aria-label="Go back">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+            </button>
+            <h2 class="text-lg font-wix font-semibold text-gray-900">Style Quiz</h2>
+            <div class="w-6"></div>
+        </div>
+        <div class="px-5 pb-4">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-gray-500 font-wix">Step 6 of 6</span>
+                <span class="text-xs text-[#939BFB] font-medium font-wix">100%</span>
+            </div>
+            <div class="flex space-x-2">
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto pb-32" style="height: calc(844px - 160px);">
+        <div id="final-step-section" class="px-5 py-6 bg-white">
+            <h3 class="text-2xl font-wix font-semibold text-gray-900 mb-2">Help us personalize your experience</h3>
+            <p class="text-gray-600 text-sm font-wix mb-6">Optional photos and a few quick questions</p>
+            
+            <div id="fullbody-upload" class="mb-8">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-base font-wix font-semibold text-gray-900">Full-body photo</h4>
+                    <span class="text-xs text-gray-500 font-wix">Optional</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">Helps improve fit recommendations</p>
+                <div class="upload-area flex flex-col items-center justify-center p-6 rounded-xl bg-white cursor-pointer" onclick="document.getElementById('fullbody-input').click()">
+                    <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                    <span class="text-sm text-gray-600 font-medium">Upload photo</span>
+                </div>
+                <input type="file" id="fullbody-input" accept="image/*" class="hidden" onchange="handleFullBodyUpload(event)">
+                <div id="fullbody-preview" class="mt-3 hidden">
+                    <div class="thumbnail-preview">
+                        <img id="fullbody-img" src="" alt="Full body">
+                        <div class="remove-btn" onclick="removeFullBody()">
+                            <i class="fas fa-times text-white text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2"><i class="fas fa-lock text-xs mr-1"></i>Private. Never shared.</p>
+            </div>
+
+            <div id="inspiration-upload" class="mb-8">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-base font-wix font-semibold text-gray-900">Style inspiration</h4>
+                    <span class="text-xs text-gray-500 font-wix">Optional</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">Upload up to 5 images (celebrities, influencers, saved looks)</p>
+                <div class="upload-area flex flex-col items-center justify-center p-6 rounded-xl bg-white cursor-pointer" onclick="document.getElementById('inspiration-input').click()">
+                    <i class="fas fa-images text-3xl text-gray-400 mb-2"></i>
+                    <span class="text-sm text-gray-600 font-medium">Upload inspiration</span>
+                    <span class="text-xs text-gray-500 mt-1" id="inspiration-count">0/5 images</span>
+                </div>
+                <input type="file" id="inspiration-input" accept="image/*" multiple class="hidden" onchange="handleInspirationUpload(event)">
+                <div id="inspiration-preview" class="mt-3 hidden flex flex-wrap gap-2"></div>
+            </div>
+
+            <div id="quick-questions" class="mb-8">
+                <h4 class="text-lg font-wix font-semibold text-gray-900 mb-4">Quick questions</h4>
+                
+                <div class="mb-6">
+                    <p class="text-sm font-medium text-gray-900 mb-3">When shopping, you usually:</p>
+                    <div class="space-y-2">
+                        <div class="option-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="selectOption(this, 'q1')" data-question="q1" data-answer="decide-quickly">
+                            <span class="text-sm text-gray-900">Decide quickly</span>
+                            <div class="checkmark">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="option-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="selectOption(this, 'q1')" data-question="q1" data-answer="compare-options">
+                            <span class="text-sm text-gray-900">Compare options</span>
+                            <div class="checkmark">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="option-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="selectOption(this, 'q1')" data-question="q1" data-answer="save-decide-later">
+                            <span class="text-sm text-gray-900">Save and decide later</span>
+                            <div class="checkmark">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <p class="text-sm font-medium text-gray-900 mb-3">You mostly shop because:</p>
+                    <div class="space-y-2">
+                        <div class="option-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="selectOption(this, 'q2')" data-question="q2" data-answer="need-specific">
+                            <span class="text-sm text-gray-900">You need something specific</span>
+                            <div class="checkmark">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="option-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="selectOption(this, 'q2')" data-answer="refresh-wardrobe">
+                            <span class="text-sm text-gray-900">You want to refresh your wardrobe</span>
+                            <div class="checkmark">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="option-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="selectOption(this, 'q2')" data-question="q2" data-answer="saw-something">
+                            <span class="text-sm text-gray-900">You saw something you liked</span>
+                            <div class="checkmark">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <p class="text-sm font-medium text-gray-900 mb-3">When trying something new, you prefer:</p>
+                    <div class="space-y-2">
+                        <div class="option-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="selectOption(this, 'q3')" data-question="q3" data-answer="safe-choices">
+                            <span class="text-sm text-gray-900">Safe choices</span>
+                            <div class="checkmark">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="option-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="selectOption(this, 'q3')" data-question="q3" data-answer="slight-variation">
+                            <span class="text-sm text-gray-900">Slight variation</span>
+                            <div class="checkmark">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="option-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="selectOption(this, 'q3')" data-question="q3" data-answer="something-different">
+                            <span class="text-sm text-gray-900">Something different</span>
+                            <div class="checkmark">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 px-5 py-5">
+        <div class="flex items-center justify-center">
+            <button id="continue-btn" class="w-3/4 mx-auto flex items-center justify-center py-2.5 px-4 rounded-full bg-gray-300 text-gray-500 font-medium text-sm cursor-not-allowed transition-colors shadow-md disabled:opacity-50" disabled>
+                <span>Continue</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+let answers = {
+    q1: null,
+    q2: null,
+    q3: null
+};
+
+let fullBodyImage = null;
+let inspirationImages = [];
+
+function goBack() {
+    window.location.href = 'QuizStep5_Brands.html';
+}
+
+function selectOption(element, question) {
+    const allOptions = document.querySelectorAll(`[data-question="${question}"]`);
+    allOptions.forEach(opt => opt.classList.remove('selected'));
+    
+    element.classList.add('selected');
+    answers[question] = element.getAttribute('data-answer');
+    
+    checkFormCompletion();
+}
+
+function checkFormCompletion() {
+    const allAnswered = answers.q1 && answers.q2 && answers.q3;
+    const continueBtn = document.getElementById('continue-btn');
+    
+    if (allAnswered) {
+        continueBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+        continueBtn.classList.add('bg-[#939BFB]', 'text-white', 'hover:bg-[#7B85F7]', 'shadow-md', 'shadow-[#939BFB]/20');
+        continueBtn.disabled = false;
+        continueBtn.onclick = completeQuiz;
+    } else {
+        continueBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+        continueBtn.classList.remove('bg-[#939BFB]', 'text-white', 'hover:bg-[#7B85F7]', 'shadow-md', 'shadow-[#939BFB]/20');
+        continueBtn.disabled = true;
+        continueBtn.onclick = null;
+    }
+}
+
+function handleFullBodyUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            fullBodyImage = e.target.result;
+            document.getElementById('fullbody-img').src = e.target.result;
+            document.getElementById('fullbody-preview').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function removeFullBody() {
+    fullBodyImage = null;
+    document.getElementById('fullbody-preview').classList.add('hidden');
+    document.getElementById('fullbody-input').value = '';
+}
+
+function handleInspirationUpload(event) {
+    const files = Array.from(event.target.files);
+    const remaining = 5 - inspirationImages.length;
+    const filesToAdd = files.slice(0, remaining);
+    
+    filesToAdd.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            inspirationImages.push(e.target.result);
+            updateInspirationPreview();
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function updateInspirationPreview() {
+    const preview = document.getElementById('inspiration-preview');
+    const count = document.getElementById('inspiration-count');
+    
+    count.textContent = `${inspirationImages.length}/5 images`;
+    
+    if (inspirationImages.length > 0) {
+        preview.classList.remove('hidden');
+        preview.innerHTML = inspirationImages.map((img, index) => `
+            <div class="thumbnail-preview">
+                <img src="${img}" alt="Inspiration ${index + 1}">
+                <div class="remove-btn" onclick="removeInspiration(${index})">
+                    <i class="fas fa-times text-white text-xs"></i>
+                </div>
+            </div>
+        `).join('');
+    } else {
+        preview.classList.add('hidden');
+    }
+}
+
+function removeInspiration(index) {
+    inspirationImages.splice(index, 1);
+    updateInspirationPreview();
+}
+
+function completeQuiz() {
+    if (typeof window.GoShopMeQuizAPI !== 'undefined' && window.GoShopMeQuizAPI.submitQuizComplete) {
+        window.GoShopMeQuizAPI.submitQuizComplete({
+            answers: Object.assign({}, answers),
+            fullBodyImage: fullBodyImage,
+            inspirationImages: inspirationImages.slice()
+        });
+    }
+    try {
+        var d = JSON.parse(localStorage.getItem('__quizData') || '{}');
+        d.answers = Object.assign({}, answers);
+        localStorage.setItem('__quizData', JSON.stringify(d));
+    } catch (e) {}
+    window.location.href = 'QuizComplete.html';
+}
+
+// API readiness: prefill from window.__QUIZ_STEP6_DATA__, get/set for API
+(function() {
+    window.getQuizStep6Data = function() {
+        return { answers: Object.assign({}, answers), fullBodyImage: fullBodyImage, inspirationImages: inspirationImages.slice() };
+    };
+    window.setQuizStep6Data = function(data) {
+        if (data && data.answers) {
+            Object.keys(data.answers).forEach(function(q) {
+                answers[q] = data.answers[q];
+                var opt = document.querySelector('[data-question="' + q + '"][data-answer="' + data.answers[q] + '"]');
+                if (opt) { document.querySelectorAll('[data-question="' + q + '"]').forEach(function(o) { o.classList.remove('selected'); }); opt.classList.add('selected'); }
+            });
+            checkFormCompletion();
+        }
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.__QUIZ_STEP6_DATA__) window.setQuizStep6Data(window.__QUIZ_STEP6_DATA__);
+    });
+})();
+</script>
+
+</body></html>

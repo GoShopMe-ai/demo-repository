@@ -1,0 +1,320 @@
+﻿<!DOCTYPE html>
+<html><head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <title>Style Quiz - Colors</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: {
+                        'mobile': '390px',
+                    }
+                }
+            }
+        }
+    </script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fuhkwang:wght@400;500;600;700&display=swap');
+        .font-fuhkwang { font-family: 'Fuhkwang', sans-serif; }
+        .font-wix { font-family: 'Wix Madefor Display', sans-serif; }
+        
+        .mobile-container {
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 844px;
+            background: #ffffff;
+        }
+        
+        @media (min-width: 391px) {
+            .mobile-container {
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 20px 20px;
+            }
+        }
+
+        .color-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.05);
+        }
+
+        .color-swatch.selected {
+            border: 2px solid #939BFB;
+            box-shadow: 0 0 0 2px rgba(147, 155, 251, 0.2);
+        }
+
+        .color-swatch.selected::after {
+            content: 'âœ“';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .color-swatch.avoid-selected {
+            border: 2px solid #EF4444;
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+        }
+
+        .color-swatch.avoid-selected::after {
+            content: 'Ã—';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        ::placeholder {
+            color: #9CA3AF;
+        }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-gray-50 font-wix overflow-x-hidden">
+
+<div class="mobile-container">
+    <div id="header" class="sticky top-0 left-0 right-0 bg-white z-50 border-b border-gray-100">
+        <div class="flex items-center justify-between px-5 py-4">
+            <button type="button" onclick="goBack()" class="header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800" aria-label="Go back">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+            </button>
+            <h2 class="text-lg font-wix font-semibold text-gray-900">Style Quiz</h2>
+            <div class="w-6"></div>
+        </div>
+        <div class="px-5 pb-4">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-gray-500 font-wix">Step 3 of 6</span>
+                <span class="text-xs text-[#939BFB] font-medium font-wix">50%</span>
+            </div>
+            <div class="flex space-x-1.5">
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1.5 rounded-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto pb-32" style="height: calc(844px - 160px);">
+        
+        <div id="like-colors-section" class="px-5 py-6 bg-white">
+            <h3 class="text-2xl font-wix font-semibold text-gray-900 mb-2">Which colors do you usually like to wear?</h3>
+            <p class="text-gray-600 text-sm font-wix mb-6">Select all colors that match your style</p>
+            
+            <div class="grid grid-cols-5 gap-2 mb-2">
+                <div class="color-swatch" style="background: #000000;" onclick="toggleLikeColor(this, 'Black')" data-color="Black"></div>
+                <div class="color-swatch" style="background: #FFFFFF; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'White')" data-color="White"></div>
+                <div class="color-swatch" style="background: #6B7280;" onclick="toggleLikeColor(this, 'Gray')" data-color="Gray"></div>
+                <div class="color-swatch" style="background: #F3F4F6; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Light Gray')" data-color="Light Gray"></div>
+                <div class="color-swatch" style="background: #F5F5DC; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Beige')" data-color="Beige"></div>
+                
+                <div class="color-swatch" style="background: #1E40AF;" onclick="toggleLikeColor(this, 'Navy')" data-color="Navy"></div>
+                <div class="color-swatch" style="background: #3B82F6;" onclick="toggleLikeColor(this, 'Blue')" data-color="Blue"></div>
+                <div class="color-swatch" style="background: #DBEAFE; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Pastel Blue')" data-color="Pastel Blue"></div>
+                <div class="color-swatch" style="background: #BAE6FD; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Baby Blue')" data-color="Baby Blue"></div>
+                <div class="color-swatch" style="background: #E0F2FE; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Powder Blue')" data-color="Powder Blue"></div>
+                
+                <div class="color-swatch" style="background: #14B8A6;" onclick="toggleLikeColor(this, 'Teal')" data-color="Teal"></div>
+                <div class="color-swatch" style="background: #CCFBF1; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Mint')" data-color="Mint"></div>
+                <div class="color-swatch" style="background: #10B981;" onclick="toggleLikeColor(this, 'Green')" data-color="Green"></div>
+                <div class="color-swatch" style="background: #D1FAE5; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Pastel Green')" data-color="Pastel Green"></div>
+                <div class="color-swatch" style="background: #ECFDF5; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Sage')" data-color="Sage"></div>
+                
+                <div class="color-swatch" style="background: #EAB308;" onclick="toggleLikeColor(this, 'Yellow')" data-color="Yellow"></div>
+                <div class="color-swatch" style="background: #FEF9C3; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Cream')" data-color="Cream"></div>
+                <div class="color-swatch" style="background: #FEF3C7; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Lemon')" data-color="Lemon"></div>
+                <div class="color-swatch" style="background: #F59E0B;" onclick="toggleLikeColor(this, 'Orange')" data-color="Orange"></div>
+                <div class="color-swatch" style="background: #FFEDD5; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Peach')" data-color="Peach"></div>
+                
+                <div class="color-swatch" style="background: #EF4444;" onclick="toggleLikeColor(this, 'Red')" data-color="Red"></div>
+                <div class="color-swatch" style="background: #FEE2E2; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Blush')" data-color="Blush"></div>
+                <div class="color-swatch" style="background: #DC2626;" onclick="toggleLikeColor(this, 'Crimson')" data-color="Crimson"></div>
+                <div class="color-swatch" style="background: #EC4899;" onclick="toggleLikeColor(this, 'Pink')" data-color="Pink"></div>
+                <div class="color-swatch" style="background: #FCE7F3; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Rose')" data-color="Rose"></div>
+                
+                <div class="color-swatch" style="background: #FBCFE8; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Pastel Pink')" data-color="Pastel Pink"></div>
+                <div class="color-swatch" style="background: #A855F7;" onclick="toggleLikeColor(this, 'Purple')" data-color="Purple"></div>
+                <div class="color-swatch" style="background: #F3E8FF; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Lavender')" data-color="Lavender"></div>
+                <div class="color-swatch" style="background: #E9D5FF; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Lilac')" data-color="Lilac"></div>
+                <div class="color-swatch" style="background: #D946EF;" onclick="toggleLikeColor(this, 'Fuchsia')" data-color="Fuchsia"></div>
+                
+                <div class="color-swatch" style="background: #92400E;" onclick="toggleLikeColor(this, 'Brown')" data-color="Brown"></div>
+                <div class="color-swatch" style="background: #D97706;" onclick="toggleLikeColor(this, 'Amber')" data-color="Amber"></div>
+                <div class="color-swatch" style="background: #FED7AA; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Apricot')" data-color="Apricot"></div>
+                <div class="color-swatch" style="background: #FDE68A; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Champagne')" data-color="Champagne"></div>
+                <div class="color-swatch" style="background: #FFF7ED; border: 2px solid #E5E7EB;" onclick="toggleLikeColor(this, 'Ivory')" data-color="Ivory"></div>
+            </div>
+        </div>
+
+        <div id="avoid-colors-section" class="px-5 py-6 bg-white border-t border-gray-100">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-2xl font-wix font-semibold text-gray-900">Any colors you don't like wearing?</h3>
+                <button class="text-sm text-[#939BFB] font-medium" onclick="skipAvoidColors()">Skip</button>
+            </div>
+            <p class="text-gray-600 text-sm font-wix mb-2">Select colors you prefer to avoid</p>
+            <p class="text-gray-500 text-xs font-wix mb-6">Avoided colors will be excluded from your recommendations</p>
+            
+            <div class="grid grid-cols-5 gap-2 mb-2">
+                <div class="color-swatch" style="background: #000000;" onclick="toggleAvoidColor(this, 'Black')" data-color="Black"></div>
+                <div class="color-swatch" style="background: #FFFFFF; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'White')" data-color="White"></div>
+                <div class="color-swatch" style="background: #6B7280;" onclick="toggleAvoidColor(this, 'Gray')" data-color="Gray"></div>
+                <div class="color-swatch" style="background: #F3F4F6; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Light Gray')" data-color="Light Gray"></div>
+                <div class="color-swatch" style="background: #F5F5DC; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Beige')" data-color="Beige"></div>
+                
+                <div class="color-swatch" style="background: #1E40AF;" onclick="toggleAvoidColor(this, 'Navy')" data-color="Navy"></div>
+                <div class="color-swatch" style="background: #3B82F6;" onclick="toggleAvoidColor(this, 'Blue')" data-color="Blue"></div>
+                <div class="color-swatch" style="background: #DBEAFE; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Pastel Blue')" data-color="Pastel Blue"></div>
+                <div class="color-swatch" style="background: #BAE6FD; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Baby Blue')" data-color="Baby Blue"></div>
+                <div class="color-swatch" style="background: #E0F2FE; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Powder Blue')" data-color="Powder Blue"></div>
+                
+                <div class="color-swatch" style="background: #14B8A6;" onclick="toggleAvoidColor(this, 'Teal')" data-color="Teal"></div>
+                <div class="color-swatch" style="background: #CCFBF1; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Mint')" data-color="Mint"></div>
+                <div class="color-swatch" style="background: #10B981;" onclick="toggleAvoidColor(this, 'Green')" data-color="Green"></div>
+                <div class="color-swatch" style="background: #D1FAE5; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Pastel Green')" data-color="Pastel Green"></div>
+                <div class="color-swatch" style="background: #ECFDF5; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Sage')" data-color="Sage"></div>
+                
+                <div class="color-swatch" style="background: #EAB308;" onclick="toggleAvoidColor(this, 'Yellow')" data-color="Yellow"></div>
+                <div class="color-swatch" style="background: #FEF9C3; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Cream')" data-color="Cream"></div>
+                <div class="color-swatch" style="background: #FEF3C7; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Lemon')" data-color="Lemon"></div>
+                <div class="color-swatch" style="background: #F59E0B;" onclick="toggleAvoidColor(this, 'Orange')" data-color="Orange"></div>
+                <div class="color-swatch" style="background: #FFEDD5; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Peach')" data-color="Peach"></div>
+                
+                <div class="color-swatch" style="background: #EF4444;" onclick="toggleAvoidColor(this, 'Red')" data-color="Red"></div>
+                <div class="color-swatch" style="background: #FEE2E2; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Blush')" data-color="Blush"></div>
+                <div class="color-swatch" style="background: #DC2626;" onclick="toggleAvoidColor(this, 'Crimson')" data-color="Crimson"></div>
+                <div class="color-swatch" style="background: #EC4899;" onclick="toggleAvoidColor(this, 'Pink')" data-color="Pink"></div>
+                <div class="color-swatch" style="background: #FCE7F3; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Rose')" data-color="Rose"></div>
+                
+                <div class="color-swatch" style="background: #FBCFE8; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Pastel Pink')" data-color="Pastel Pink"></div>
+                <div class="color-swatch" style="background: #A855F7;" onclick="toggleAvoidColor(this, 'Purple')" data-color="Purple"></div>
+                <div class="color-swatch" style="background: #F3E8FF; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Lavender')" data-color="Lavender"></div>
+                <div class="color-swatch" style="background: #E9D5FF; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Lilac')" data-color="Lilac"></div>
+                <div class="color-swatch" style="background: #D946EF;" onclick="toggleAvoidColor(this, 'Fuchsia')" data-color="Fuchsia"></div>
+                
+                <div class="color-swatch" style="background: #92400E;" onclick="toggleAvoidColor(this, 'Brown')" data-color="Brown"></div>
+                <div class="color-swatch" style="background: #D97706;" onclick="toggleAvoidColor(this, 'Amber')" data-color="Amber"></div>
+                <div class="color-swatch" style="background: #FED7AA; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Apricot')" data-color="Apricot"></div>
+                <div class="color-swatch" style="background: #FDE68A; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Champagne')" data-color="Champagne"></div>
+                <div class="color-swatch" style="background: #FFF7ED; border: 2px solid #E5E7EB;" onclick="toggleAvoidColor(this, 'Ivory')" data-color="Ivory"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 px-5 py-5">
+        <button id="next-btn" class="w-3/4 mx-auto flex items-center justify-center py-2.5 px-4 rounded-full bg-[#939BFB] text-white font-medium text-sm hover:bg-[#7B85F7] transition-colors shadow-md shadow-[#939BFB]/20" onclick="nextStep()">
+            <span>Continue</span>
+        </button>
+    </div>
+</div>
+
+<script>
+let likedColors = [];
+let avoidedColors = [];
+
+function goBack() {
+    window.location.href = 'QuizStep2_Hair&SkinColor.html';
+}
+
+function toggleLikeColor(element, colorName) {
+    if (element.classList.contains('selected')) {
+        element.classList.remove('selected');
+        likedColors = likedColors.filter(c => c !== colorName);
+    } else {
+        element.classList.add('selected');
+        likedColors.push(colorName);
+    }
+}
+
+function toggleAvoidColor(element, colorName) {
+    if (element.classList.contains('avoid-selected')) {
+        element.classList.remove('avoid-selected');
+        avoidedColors = avoidedColors.filter(c => c !== colorName);
+    } else {
+        element.classList.add('avoid-selected');
+        avoidedColors.push(colorName);
+    }
+}
+
+function skipAvoidColors() {
+    avoidedColors = [];
+    document.querySelectorAll('#avoid-colors-section .color-swatch').forEach(swatch => {
+        swatch.classList.remove('avoid-selected');
+    });
+    if (typeof window.GoShopMeQuizAPI !== 'undefined' && window.GoShopMeQuizAPI.submitQuizStep3) {
+        window.GoShopMeQuizAPI.submitQuizStep3({ likedColors: likedColors, avoidedColors: avoidedColors });
+    }
+    try {
+        var d = JSON.parse(localStorage.getItem('__quizData') || '{}');
+        d.likedColors = likedColors.slice(); d.avoidedColors = avoidedColors.slice();
+        localStorage.setItem('__quizData', JSON.stringify(d));
+    } catch (e) {}
+    window.location.href = 'QuizStep4_Sizes_HeelsHeight.html';
+}
+
+function nextStep() {
+    if (typeof window.GoShopMeQuizAPI !== 'undefined' && window.GoShopMeQuizAPI.submitQuizStep3) {
+        window.GoShopMeQuizAPI.submitQuizStep3({ likedColors: likedColors, avoidedColors: avoidedColors });
+    }
+    try {
+        var d = JSON.parse(localStorage.getItem('__quizData') || '{}');
+        d.likedColors = likedColors.slice(); d.avoidedColors = avoidedColors.slice();
+        localStorage.setItem('__quizData', JSON.stringify(d));
+    } catch (e) {}
+    window.location.href = 'QuizStep4_Sizes_HeelsHeight.html';
+}
+
+// API readiness: prefill from window.__QUIZ_STEP3_DATA__, get/set for API
+(function() {
+    window.getQuizStep3Data = function() { return { likedColors: likedColors.slice(), avoidedColors: avoidedColors.slice() }; };
+    window.setQuizStep3Data = function(data) {
+        if (data && data.likedColors) {
+            likedColors = data.likedColors.slice();
+            document.querySelectorAll('#like-colors-section .color-swatch').forEach(function(sw) {
+                var c = sw.getAttribute('data-color');
+                sw.classList.toggle('selected', likedColors.indexOf(c) >= 0);
+            });
+        }
+        if (data && data.avoidedColors) {
+            avoidedColors = data.avoidedColors.slice();
+            document.querySelectorAll('#avoid-colors-section .color-swatch').forEach(function(sw) {
+                var c = sw.getAttribute('data-color');
+                sw.classList.toggle('avoid-selected', avoidedColors.indexOf(c) >= 0);
+            });
+        }
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.__QUIZ_STEP3_DATA__) window.setQuizStep3Data(window.__QUIZ_STEP3_DATA__);
+    });
+})();
+</script>
+
+</body></html>

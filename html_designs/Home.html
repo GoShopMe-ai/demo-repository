@@ -2,14 +2,19 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/heroicons@2.0.16/24/outline/index.js"></script>
-    <<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/chat-drawer-drag.css">
     <style>
-        ::-webkit-scrollbar { display: none;}
+        ::-webkit-scrollbar { display: none; }
        * { 
     font-family: 'DM Sans', 
                  'Karla',
@@ -89,6 +94,20 @@
             stroke-width: 1.5;
             margin-bottom: 4px;
         }
+
+        #cart-indicator, #notif-indicator {
+            min-width: 18px;
+            min-height: 18px;
+            padding: 0 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #cart-indicator.hidden, #notif-indicator.hidden { display: none !important; }
+        #cart-indicator.badge-numeric, #notif-indicator.badge-numeric {
+            min-width: 18px;
+            padding: 0 5px;
+        }
         
         /* Wishlist heart filled state */
         .heart-filled {
@@ -157,6 +176,16 @@
             animation-delay: calc(var(--i) * 0.08s);
         }
 
+        .product-overlay-icon {
+            /* Plain white icons - Instagram style */
+        }
+        .product-image-overlay-wrap::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.08); pointer-events: none; z-index: 0; }
+        .product-image-overlay-wrap > [class*="absolute"][class*="top-"] { z-index: 1; }
+
+        /* Product/creator tiles: pointer cursor (desktop), touch-optimized (mobile) */
+        .creator-card { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: rgba(147, 155, 251, 0.12); }
+        span.block.cursor-pointer { touch-action: manipulation; -webkit-tap-highlight-color: rgba(147, 155, 251, 0.12); }
+
         .voice-message-bubble {
             min-width: 140px;
             max-width: 260px;
@@ -176,7 +205,15 @@
     height: 100%;
     z-index: 0;
 }
-
+   #hero-bg video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 15%;
+}
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
+        #header img[alt="GoShopMe Logo"] { image-rendering: -webkit-optimize-contrast; transform: translateZ(0); backface-visibility: hidden; }
     </style>
 
 <script>
@@ -185,6 +222,7 @@
 // -------------------------------------------------------
 // Initialize
 
+const BADGE_KEYS = { notif: 'goshopme_notif_count', cart: 'goshopme_cart_count' };
 let cartCountValue = 0;
 let notifCountValue = 0;
 
@@ -203,7 +241,8 @@ function updateCartBadge() {
 
     const show = cartCountValue > 0;
     el.cartIndicator.classList.toggle("hidden", !show);
-    el.cartCount.textContent = show ? cartCountValue : "";
+    el.cartCount.textContent = show ? (cartCountValue > 99 ? '99+' : cartCountValue) : "";
+    try { localStorage.setItem(BADGE_KEYS.cart, String(cartCountValue)); } catch (e) {}
 }
 
 function updateNotifBadge() {
@@ -212,7 +251,8 @@ function updateNotifBadge() {
 
     const show = notifCountValue > 0;
     el.notifIndicator.classList.toggle("hidden", !show);
-    el.notifCount.textContent = show ? notifCountValue : "";
+    el.notifCount.textContent = show ? (notifCountValue > 99 ? '99+' : notifCountValue) : "";
+    try { localStorage.setItem(BADGE_KEYS.notif, String(notifCountValue)); } catch (e) {}
 }
 
 window.addToCart = function () {
@@ -233,6 +273,10 @@ window.resetBadges = function () {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+    try {
+        notifCountValue = parseInt(localStorage.getItem(BADGE_KEYS.notif) || '0', 10);
+        cartCountValue = parseInt(localStorage.getItem(BADGE_KEYS.cart) || '0', 10);
+    } catch (e) {}
     updateCartBadge();
     updateNotifBadge();
 });
@@ -247,57 +291,51 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     </script>
 </head>
-<body class="bg-[#F6F6F6]">
+<body class="bg-[#F6F6F6] min-h-screen overflow-x-hidden">
 
-<div id="app-shell" class="relative mx-auto w-full max-w-[390px] bg-white">
+<div id="app-shell" class="relative w-full max-w-[390px] mx-auto min-h-screen bg-white shadow-2xl overflow-x-hidden">
 
-<header id="header" class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white z-50 border-b border-gray-100">
-    <div class="flex items-center justify-between p-4">
-        <div class="flex items-center">
-            <img src="/assets/logo-goshopme.png" alt="GoShopMe Logo" class="h-8">
+<header id="header" class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-50 bg-white border-b border-gray-100">
+    <div class="flex items-center justify-between pl-4 pr-4 py-3">
+        <div class="flex items-center justify-start flex-shrink-0 min-w-0">
+            <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/html_designs/GoShopMe%20logo.svg" alt="GoShopMe Logo" class="h-10 w-auto max-w-[180px] object-contain object-left block">
         </div>
-        <div class="flex items-center space-x-3">
-         <!-- NOTIFICATIONS -->
-<button id="notif-btn" class="icon-button hover:opacity-70 transition-opacity relative overflow-visible">
-    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-              d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 
-              8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 
-              01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 
-              0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 
-              0 11-5.714 0" />
-    </svg>
+        <div class="flex items-center gap-0">
+            <!-- Notifications (no grey background, unified size) -->
+            <a href="Notifications_Screen.html?from=home" id="notif-btn" class="header-icon-btn w-10 h-10 flex items-center justify-center relative overflow-visible text-gray-600 hover:text-gray-800" aria-label="Notifications">
+                <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 
+                             8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 
+                             01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 
+                             0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 
+                             0 11-5.714 0" />
+                </svg>
+                <div id="notif-indicator" class="absolute -top-0.5 -right-0.5 min-w-[18px] min-h-[18px] px-1 bg-[#F96226] rounded-full hidden items-center justify-center flex">
+                    <span id="notif-count" class="text-[10px] text-white font-medium leading-none whitespace-nowrap"></span>
+                </div>
+            </a>
 
-    <!-- DYNAMIC BADGE -->
-    <div id="notif-indicator"
-     class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-[#F96226] rounded-full hidden flex items-center justify-center">
-    <span id="notif-count" class="text-[10px] text-white font-medium leading-none"></span>
-</div>
-</button>
-  
-           <!-- SHOPPING CART -->
-<button id="cart-btn" class="icon-button hover:opacity-70 transition-opacity relative overflow-visible">
-    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-              d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 
-                12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 
-                01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 
-                1.059.435 1.119.993z" />
-    </svg>
-
-    <!-- DYNAMIC BADGE -->
-    <div id="cart-indicator"
-     class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-[#939BFB] rounded-full hidden flex items-center justify-center">
-    <span id="cart-count" class="text-[10px] text-white font-medium leading-none"></span>
-</div>
-</button>
+            <!-- Shopping cart (no grey background, unified size) -->
+            <a href="Shopping_bag.html?from=home" id="cart-btn" class="header-icon-btn w-10 h-10 flex items-center justify-center relative overflow-visible text-gray-600 hover:text-gray-800" aria-label="Shopping bag">
+                <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 
+                             12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 
+                             01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 
+                             1.059.435 1.119.993z" />
+                </svg>
+                <div id="cart-indicator" class="absolute -top-0.5 -right-0.5 min-w-[18px] min-h-[18px] px-1 bg-[#939BFB] rounded-full hidden items-center justify-center flex">
+                    <span id="cart-count" class="text-[10px] text-white font-medium leading-none whitespace-nowrap"></span>
+                </div>
+            </a>
         </div>
     </div>
 </header>
 
-<main id="main-content" class="pb-[140px] overflow-y-auto">
+<main id="main-content" class="pt-20 pb-40 relative w-full max-w-[390px] mx-auto overflow-y-auto bg-white">
 
-    <section id="hero-section"  class="relative mt-16 h-[300px] min-h-[300px]">
+    <section id="hero-section" class="relative mt-0 h-[300px] min-h-[300px]">
 <div id="hero-container" class="w-full h-full relative overflow-hidden bg-gray-100 isolate">
         <!-- Dynamic hero background (image or video) injected here -->
   <div id="hero-bg" class="absolute inset-0 w-full h-full z-0"></div>
@@ -339,7 +377,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     <section id="trending-now" class="px-4 py-6">
  <div class="px-4 max-w-[390px] mx-auto">
-        <h3 class="text-xl font-semibold text-black poppins mb-4">Trending Now</h3>
+        <a href="Trending_Now.html" class="block group">
+        <h3 class="text-xl font-semibold text-black poppins mb-4 hover:text-[#939BFB] transition-colors cursor-pointer">Trending Now</h3>
+        </a>
         <div id="trending-list" class="flex space-x-4 overflow-x-auto pb-2">
     <!-- dynamic trending cards -->
 </div>
@@ -354,7 +394,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-        <h3 class="text-xl font-semibold text-black poppins mb-4">Creator Picks</h3>
+        <a href="Picks.html" class="block group">
+        <h3 class="text-xl font-semibold text-black poppins mb-4 hover:text-[#939BFB] transition-colors cursor-pointer">Creator's Picks</h3>
+        </a>
        <div id="creator-list" class="flex space-x-4 overflow-x-auto pb-2">
     <!-- Dynamic creator collection cards will be injected here -->
 
@@ -403,7 +445,9 @@ document.addEventListener("DOMContentLoaded", () => {
     <section id="shop-by-category" class="px-4 py-6">
   <div class="px-4 max-w-[390px] mx-auto">
     <div class="flex items-center justify-between mb-4">
-      <h3 class="text-xl font-semibold text-black poppins">Shop by Category</h3>
+      <a href="ShopbyCategory.html" class="block group">
+      <h3 class="text-xl font-semibold text-black poppins hover:text-[#939BFB] transition-colors cursor-pointer">Shop by Category</h3>
+      </a>
     </div>
 
     <div id="category-grid" class="grid grid-cols-2 gap-3">
@@ -448,9 +492,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <div id="chat-overlay" class="fixed inset-0 bg-black/40 z-40 hidden"></div>
 
-<div id="chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[80vh] transform translate-y-full transition-transform duration-300 flex flex-col">
-    <div class="flex justify-center pt-2 flex-shrink-0">
-        <div id="drag-handle" class="w-10 h-1 bg-gray-300 rounded-full cursor-pointer"></div>
+<div id="chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[50vh] transform translate-y-full transition-transform duration-300 flex flex-col border-t border-gray-100">
+    <div id="drag-handle-zone" class="chat-drawer-drag-zone flex justify-center pt-2 flex-shrink-0">
+        <div id="drag-handle" class="w-10 h-1 bg-gray-300 rounded-full pointer-events-none"></div>
     </div>
 
     <div id="chat-header" class="flex items-center p-4 pb-2 flex-shrink-0">
@@ -460,7 +504,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </svg>
         </button>
         <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-            <img class="w-full h-full object-cover" src="/assets/shai-avatar.png" alt="ShAI avatar" />
+            <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
         </div>
         <div class="flex-1">
             <p class="font-semibold text-black text-sm" id="header-title">ShAI</p>
@@ -473,7 +517,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="p-4 pb-0">
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="w-full h-full object-cover" src="/assets/shai-avatar.png" alt="ShAI avatar" />
+                        <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar />
                     </div>
                     <div class="flex-1">
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3">
@@ -524,100 +568,12 @@ document.addEventListener("DOMContentLoaded", () => {
         <div id="contact-list" class="flex-1 overflow-y-auto p-4">
             <div class="mb-4">
                 <div class="relative">
+                    <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
                     <input type="text" id="contact-search" placeholder="Search contacts..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 pl-10 text-sm">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 </div>
             </div>
             
-            <div id="contacts-container" class="space-y-2">
-                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Alex Johnson" data-phone="+1 (555) 123-4567" data-goshopme="true">
-                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Contact" class="w-full h-full object-cover">
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-medium text-sm text-black">Alex Johnson</p>
-                        <p class="text-xs text-gray-500">+1 (555) 123-4567</p>
-                    </div>
-                    <button class="contact-action bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>
-                </div>
-                
-                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Maria Rodriguez" data-phone="+1 (555) 987-6543" data-goshopme="false">
-                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-                        <span class="text-gray-600 font-medium text-xs">MR</span>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-medium text-sm text-black">Maria Rodriguez</p>
-                        <p class="text-xs text-gray-500">+1 (555) 987-6543</p>
-                    </div>
-                    <button class="contact-action bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>
-                </div>
-                
-                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="David Kim" data-phone="+1 (555) 456-7890" data-goshopme="true">
-                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" alt="Contact" class="w-full h-full object-cover">
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-medium text-sm text-black">David Kim</p>
-                        <p class="text-xs text-gray-500">+1 (555) 456-7890</p>
-                    </div>
-                    <button class="contact-action bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>
-                </div>
-                
-                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Sarah Thompson" data-phone="+1 (555) 234-5678" data-goshopme="false">
-                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-                        <span class="text-gray-600 font-medium text-xs">ST</span>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-medium text-sm text-black">Sarah Thompson</p>
-                        <p class="text-xs text-gray-500">+1 (555) 234-5678</p>
-                    </div>
-                    <button class="contact-action bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>
-                </div>
-
-                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Emma Wilson" data-phone="+1 (555) 345-6789" data-goshopme="true">
-                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="Contact" class="w-full h-full object-cover">
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-medium text-sm text-black">Emma Wilson</p>
-                        <p class="text-xs text-gray-500">+1 (555) 345-6789</p>
-                    </div>
-                    <button class="contact-action bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>
-                </div>
-
-                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Michael Brown" data-phone="+1 (555) 678-9012" data-goshopme="false">
-                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-                        <span class="text-gray-600 font-medium text-xs">MB</span>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-medium text-sm text-black">Michael Brown</p>
-                        <p class="text-xs text-gray-500">+1 (555) 678-9012</p>
-                    </div>
-                    <button class="contact-action bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>
-                </div>
-
-                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Jennifer Lee" data-phone="+1 (555) 789-0123" data-goshopme="true">
-                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="Contact" class="w-full h-full object-cover">
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-medium text-sm text-black">Jennifer Lee</p>
-                        <p class="text-xs text-gray-500">+1 (555) 789-0123</p>
-                    </div>
-                    <button class="contact-action bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>
-                </div>
-
-                <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Robert Davis" data-phone="+1 (555) 890-1234" data-goshopme="false">
-                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-                        <span class="text-gray-600 font-medium text-xs">RD</span>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-medium text-sm text-black">Robert Davis</p>
-                        <p class="text-xs text-gray-500">+1 (555) 890-1234</p>
-                    </div>
-                    <button class="contact-action bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>
-                </div>
-            </div>
+            <div id="contacts-container" class="space-y-2"><!-- Contacts rendered dynamically --></div>
         </div>
 
         <div id="add-friend-input" class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
@@ -646,36 +602,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 z-50">
     <div class="flex items-center justify-around py-2">
-        <button class="bottom-nav-btn active">
+        <a href="Home.html" class="bottom-nav-btn active">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
             </svg>
             <span class="text-xs">Home</span>
-        </button>
-        <button class="bottom-nav-btn">
+        </a>
+        <a href="Picks.html" class="bottom-nav-btn">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
             </svg>
             <span class="text-xs">Picks</span>
-        </button>
-        <button class="bottom-nav-btn">
+        </a>
+        <a href="Wishlist.html" class="bottom-nav-btn">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
             </svg>
             <span class="text-xs">Wishlist</span>
-        </button>
-        <button class="bottom-nav-btn">
+        </a>
+        <a id="home-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn">
             <span id="home-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1 text-shine-primary">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
             </span>
             <img id="home-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile">
             <span class="text-xs">Profile</span>
-        </button>
+        </a>
     </div>
 </nav>
 <script>
-// Bottom nav profile: show profile icon if no uploaded photo, else show saved photo from localStorage
+// Bottom nav profile: show profile icon if no uploaded photo, else show saved photo from localStorage; Profile link = paid/free based on __userPlan
 (function() {
+    var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
+    var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+    var profileLink = document.getElementById('home-nav-profile-link');
+    if (profileLink) profileLink.href = profileHref;
     var saved = null;
     try { saved = localStorage.getItem('profilePhoto'); } catch (e) {}
     var img = document.getElementById('home-nav-profile-photo');
@@ -720,15 +680,16 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
     </div>
 </div>
+<script src="js/home-api.js"></script>
 <!-- =========================================================
      UNIVERSAL PRODUCT CARD TEMPLATE (Used by ALL dynamic feeds)
      ========================================================= -->
 <script>
 window.renderProductCard = function (product) {
     return `
-<span class="flex-shrink-0 w-40 block cursor-pointer" onclick="openProductDetail('${product.id}')">
+<span class="flex-shrink-0 w-40 block cursor-pointer" onclick="openProductDetail('${(product.id || '').replace(/'/g, "\\'")}', '${(product.name || '').replace(/'/g, "\\'")}', '${(product.brand || '').replace(/'/g, "\\'")}', '${(product.image || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${(product.price || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">
 
-    <div class="relative bg-gray-100 rounded-xl h-48 mb-3 overflow-hidden">
+    <div class="relative product-image-overlay-wrap bg-gray-100 rounded-xl h-48 mb-3 overflow-hidden">
 
         <img class="w-full h-full object-cover" 
              src="${product.image}" 
@@ -737,9 +698,9 @@ window.renderProductCard = function (product) {
         <div class="absolute top-2 right-2 flex flex-col space-y-2">
 
             <!-- HEART -->
-            <button class="hover:opacity-70 transition-opacity"
+            <button class="p-1 flex items-center justify-center hover:opacity-80 transition-opacity"
                     onclick="event.stopPropagation(); toggleWishlist(this, '${product.id}')">
-                <svg class="w-[18px] h-[18px] text-white" fill="none" 
+                <svg class="w-[18px] h-[18px] text-white product-overlay-icon" fill="none" 
                      stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                           d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5
@@ -751,9 +712,9 @@ window.renderProductCard = function (product) {
             </button>
 
             <!-- SHARE -->
-            <button class="hover:opacity-70 transition-opacity"
-                    onclick="event.stopPropagation(); shareProduct('${product.name}', '${product.price}')">
-                <svg class="w-[18px] h-[18px] text-white share-icon-tilted" 
+            <button class="p-1 flex items-center justify-center hover:opacity-80 transition-opacity"
+                    onclick="event.stopPropagation(); shareProduct('${(product.name || '').replace(/'/g, "\\'")}', '${(product.price || '').replace(/'/g, "\\'")}', null, '${(product.id || '').replace(/'/g, "\\'")}', '${(product.brand || '').replace(/'/g, "\\'")}')">
+                <svg class="w-[18px] h-[18px] text-white product-overlay-icon share-icon-tilted" 
                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                           d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12
@@ -762,20 +723,11 @@ window.renderProductCard = function (product) {
             </button>
 
             <!-- CHAT -->
-            <button class="hover:opacity-70 transition-opacity"
+            <button class="p-1 flex items-center justify-center hover:opacity-80 transition-opacity chat-trigger"
+                    data-item="${product.name}"
                     onclick="event.stopPropagation(); openProductChat('${product.name}', '${product.price}', '${product.image}')">
-                <svg class="w-[18px] h-[18px] text-white" fill="none"
-                     stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                          d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 
-                             1.068.157 2.148.279 3.238.364.466.037.893.281 
-                             1.153.671L12 21l2.652-3.978c.26-.39.687-.634 
-                             1.153-.671 1.09-.085 2.17-.207 3.238-.364 
-                             1.584-.233 2.707-1.627 2.707-3.228V6.741
-                             c0-1.602-1.123-2.995-2.707-3.228
-                             A48.394 48.394 0 0012 3
-                             c-2.392 0-4.744.175-7.043.513
-                             C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/>
+                <svg class="w-4 h-4 text-white product-overlay-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/>
                 </svg>
             </button>
 
@@ -811,7 +763,9 @@ function injectProducts(listId, fallbackId, products) {
 
     fallback?.classList.add("hidden");
 
+    window.__productCache = window.__productCache || {};
     products.forEach(p => {
+        if (p.id) window.__productCache[p.id] = p;
         const cardHtml = window.renderProductCard(p);
         const wrapper = document.createElement("div");
         wrapper.innerHTML = cardHtml;
@@ -839,6 +793,61 @@ window.loadHomeDynamicSections = function (data) {
         data.trending || []
     );
 };
+
+/* ----------------------------------------------
+   INLINE FALLBACK (works when file:// blocks fetch/CORS)
+---------------------------------------------- */
+window.__HOME_FALLBACK_DATA = {"justForYou":[{"id":"silk-midi-dress","name":"Silk Midi Dress","brand":"Reformation","price":"$248","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/silk%20midi%20dress.jpg"},{"id":"cashmere-sweater","name":"Cashmere Sweater","brand":"Brunello Cucinelli","price":"$1,850","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/cashmere%20sweater.jpg"},{"id":"leather-ankle-boots","name":"Leather Ankle Boots","brand":"Totême","price":"$640","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/leather%20ankle%20boots.jpg"},{"id":"gold-chain-necklace","name":"Gold Chain Necklace","brand":"Cartier","price":"$2,100","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/gold%20necklace.jpg"},{"id":"structured-blazer","name":"Le Smoking Blazer","brand":"Saint Laurent","price":"$1,890","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Saint%20Laurent%20Blazer.jpg"},{"id":"designer-tote","name":"Le 5 À 7 Tote","brand":"Saint Laurent","price":"$1,490","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Saint%20Laurent%20bag.jpg"}],"trending":[{"id":"vintage-blazer","name":"Vintage Blazer","brand":"Mugler","price":"$850","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/mugler%20blazer.jpg"},{"id":"editorial-dress","name":"Editorial Midi Dress","brand":"Bottega Veneta","price":"$2,400","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/bottega%20venetta%20dress.jpg"},{"id":"runway-heels","name":"Tribute Sandals","brand":"Saint Laurent","price":"$695","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Saint%20Laurent%20sandals.jpg"},{"id":"statement-earrings","name":"Statement Earrings","brand":"Bottega Veneta","price":"$1,200","image":"https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&h=650&fit=crop"},{"id":"paris-editorial","name":"Paris FW Blazer","brand":"Chanel","price":"$4,200","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/chanel%20blazer.jpg"}],"creatorCollections":[{"id":"minimalist-chic","title":"Paris in Spring","creatorName":"Emma Style","creatorAvatarUrl":"https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg","coverType":"image","coverUrl":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Paris%20in%20Spring.jpg","wishlistId":"minimalist-chic-collection"},{"id":"bold-bright","title":"Power Business","creatorName":"Anna Rivera","creatorAvatarUrl":"https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg","coverType":"image","coverUrl":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Business%20collection.jpg","wishlistId":"bold-bright-collection"},{"id":"neutral-power","title":"Neutral Power","creatorName":"StyledByMira","creatorAvatarUrl":"https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg","coverType":"image","coverUrl":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Neutrals.jpg","wishlistId":"neutral-power-collection"},{"id":"urban-street","title":"Urban Street Style","creatorName":"Maya Johnson","creatorAvatarUrl":"https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg","coverType":"image","coverUrl":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Urban%20style.jpg","wishlistId":"urban-street-collection"}],"categories":[{"id":"shoes","name":"Shoes","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shoes%201.jpg"},{"id":"dresses","name":"Dresses","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/dresses.jpg"},{"id":"bags","name":"Bags","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/bags.jpg"},{"id":"workwear","name":"Workwear","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Workwear.jpg"},{"id":"swimwear","name":"Swimwear","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/swimwear%201.jpg"},{"id":"sale","name":"Sale","image":"https://storage.googleapis.com/uxpilot-auth.appspot.com/179cee2d51-68640f3705cf734d5d3e.png"}],"recentActivity":[{"chatId":"theory-blazer","title":"Theory Power Blazer","subtitle":"Size advice","timeAgo":"2h ago","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Power%20blazer.jpg"},{"chatId":"reformation-dress","title":"Reformation Midi Dress","subtitle":"Color options","timeAgo":"Yesterday","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/reformation%20midi%20dress.jpg"},{"chatId":"mejuri-necklace","title":"Mejuri Chain Necklace","subtitle":"Layering tips","timeAgo":"2 days ago","image":"https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/chain%20necklace.jpg"}]};
+
+/* ----------------------------------------------
+   LOAD HOME DATA (API / data/home.json / inline fallback)
+---------------------------------------------- */
+async function loadHomeData() {
+    let data = null;
+    if (typeof window.GoShopMeHomeAPI !== 'undefined') {
+        data = await window.GoShopMeHomeAPI.fetchHomeFeed();
+    }
+    if (!data) {
+        try {
+            const r = await fetch('data/home.json');
+            if (r.ok) data = await r.json();
+        } catch (e) {}
+    }
+    if (!data) data = window.__HOME_FALLBACK_DATA || { justForYou: [], trending: [], creatorCollections: [], categories: [], recentActivity: [] };
+
+    if (data.justForYou || data.trending) {
+        loadHomeDynamicSections({
+            justForYou: data.justForYou || [],
+            trending: data.trending || []
+        });
+    }
+    if (data.creatorCollections && data.creatorCollections.length) {
+        loadCreatorCollections(data.creatorCollections);
+    } else {
+        loadCreatorCollections([]);
+    }
+    if (data.categories && data.categories.length) {
+        window.renderCategories(data.categories);
+    } else {
+        try {
+            const r = await fetch('data/shop-by-category.json');
+            if (r.ok) {
+                const j = await r.json();
+                const cats = (j.categories || []).map(function(c) { return { id: c.id, name: c.name, image: c.imageUrl || c.image }; });
+                if (cats.length) window.renderCategories(cats);
+            }
+        } catch (e) {
+            var fb = window.__HOME_FALLBACK_DATA;
+            if (fb && fb.categories && fb.categories.length) window.renderCategories(fb.categories);
+        }
+    }
+    if (data.recentActivity && data.recentActivity.length) {
+        window.renderRecentActivity(data.recentActivity);
+    } else if (window.__HOME_FALLBACK_DATA && window.__HOME_FALLBACK_DATA.recentActivity) {
+        window.renderRecentActivity(window.__HOME_FALLBACK_DATA.recentActivity);
+    }
+}
+document.addEventListener('DOMContentLoaded', loadHomeData);
 </script>
 
 
@@ -925,7 +934,7 @@ window.loadHomeDynamicSections = function (data) {
     if (cfg.onFocusGrow) {
       ta.addEventListener('focus', () => {
         const drawer = document.getElementById('chat-drawer');
-        if (drawer) drawer.style.height = '80vh';
+        if (drawer) drawer.style.height = '50vh';
       });
     }
   }
@@ -950,6 +959,17 @@ window.loadHomeDynamicSections = function (data) {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+    // ShAI avatar: set from DB when loaded. Call window.setShAIAvatar(url) from API response.
+    window.setShAIAvatar = function(url) {
+        window.__shaiAvatarUrl = url || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+        document.querySelectorAll('[data-shai-avatar]').forEach(function(img) { img.src = window.__shaiAvatarUrl; });
+    };
+    window.testShAIAvatar = function(url) {
+        const testUrl = url || 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg';
+        window.setShAIAvatar(testUrl);
+        console.log('testShAIAvatar:', testUrl);
+    };
+
     const chatDrawer = document.getElementById("chat-drawer");
     const chatOverlay = document.getElementById("chat-overlay");
     const chatMessages = document.getElementById("chat-messages");
@@ -961,11 +981,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const micBtnDrawer = document.getElementById("mic-btn-drawer");
     const sendBtnDrawer = document.getElementById("send-btn-drawer");
     const addFriendBtnDrawer = document.getElementById("add-friend-btn-drawer");
-    const dragHandle = document.getElementById("drag-handle");
+    const dragHandleZone = document.getElementById("drag-handle-zone") || document.getElementById("drag-handle");
     const chatInputBar = document.getElementById("chat-input-bar");
 
     let autoScrollEnabled = true;
-    let isDrawerExpanded = false;
+    let isDrawerExpanded = false; // Set true after expandDrawer() on init
     let startY = 0;
     let currentHeight = 80;
     let isDragging = false;
@@ -978,13 +998,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     fixWrapping();
 
-    // --- 2) Auto-scroll helper ---
+    // --- 2) Auto-scroll helper - scroll to last message ---
     function scrollToBottom(force=false) {
         const chatMessages = document.getElementById("chat-messages");
         if (!chatMessages) return;
         const atBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 20;
         if (force || atBottom) {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                });
+            });
         }
     }
 
@@ -1014,7 +1038,7 @@ document.addEventListener("DOMContentLoaded", function () {
             userMsg.className = "flex justify-end mb-4";
             userMsg.innerHTML = `
                 <div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%]">
-                    <p class="text-sm break-words whitespace-pre-wrap">${text}</p>
+                    <p class="text-sm break-words whitespace-pre-wrap">${text.replace(/</g, '&lt;')}</p>
                 </div>`;
             chatMessagesContainer.appendChild(userMsg);
         }
@@ -1024,7 +1048,12 @@ document.addEventListener("DOMContentLoaded", function () {
         addFriend.classList.remove("hidden");
         send.classList.add("hidden");
 
-        setTimeout(() => scrollToBottom(true), 50);
+        scrollToBottom(true);
+
+        // Contextual ShAI reply to text message
+        setTimeout(() => {
+            addShAIMessage("Perfect! Let me help you find exactly what you're looking for. I'll show you some great options that match your style.");
+        }, 1000);
     }
 
     // === Update Input State ===
@@ -1064,7 +1093,7 @@ document.addEventListener("DOMContentLoaded", function () {
         chatInputBar.classList.add('hidden');
         isDrawerExpanded = true;
         currentHeight = 80;
-        chatDrawer.style.height = '80vh';
+        chatDrawer.style.height = '50vh';
     }
 
     function collapseDrawer() {
@@ -1074,7 +1103,7 @@ document.addEventListener("DOMContentLoaded", function () {
         chatInputBar.classList.remove('hidden');
         isDrawerExpanded = false;
         currentHeight = 80;
-        chatDrawer.style.height = '80vh';
+        chatDrawer.style.height = '50vh';
         if (isAddFriendMode) {
             hideAddFriendFlow();
         }
@@ -1084,46 +1113,90 @@ document.addEventListener("DOMContentLoaded", function () {
         chatOverlay.addEventListener("click", collapseDrawer);
     }
 
+    // Open drawer by default
+    expandDrawer();
+
     // === Dragging Drawer ===
-    if (dragHandle) {
-        dragHandle.addEventListener("mousedown", e => { isDragging = true; startY = e.clientY; });
-        dragHandle.addEventListener("touchstart", e => { isDragging = true; startY = e.touches[0].clientY; });
+    if (dragHandleZone) {
+        dragHandleZone.addEventListener("mousedown", e => { isDragging = true; startY = e.clientY; });
+        dragHandleZone.addEventListener("touchstart", e => { isDragging = true; startY = e.touches[0].clientY; }, { passive: true });
     }
 
-    document.addEventListener("mousemove", e => {
+    function getClientY(e) { return e.touches ? e.touches[0].clientY : e.clientY; }
+    function handleDragMove(e) {
         if (!isDragging) return;
-        const deltaY = startY - e.clientY;
-        const newHeight = Math.min(90, Math.max(35, currentHeight + (deltaY / window.innerHeight) * 100));
-        chatDrawer.style.height = newHeight + "vh";
-    });
-
-    document.addEventListener("mouseup", () => {
-        if (isDragging) {
-            isDragging = false;
-            const rect = chatDrawer.getBoundingClientRect();
-            currentHeight = (rect.height / window.innerHeight) * 100;
-        }
-    });
-
+        const clientY = getClientY(e);
+        const deltaY = startY - clientY;
+        startY = clientY;
+        currentHeight = Math.min(90, Math.max(0, currentHeight + (deltaY / window.innerHeight) * 100));
+        chatDrawer.style.height = currentHeight + "vh";
+    }
+    document.addEventListener("mousemove", handleDragMove);
     document.addEventListener("touchmove", e => {
-        if (!isDragging) return;
-        const deltaY = startY - e.touches[0].clientY;
-        const newHeight = Math.min(90, Math.max(35, currentHeight + (deltaY / window.innerHeight) * 100));
-        chatDrawer.style.height = newHeight + "vh";
-    });
+        if (isDragging) { e.preventDefault(); handleDragMove(e); }
+    }, { passive: false });
 
-    document.addEventListener("touchend", () => {
-        if (isDragging) {
-            isDragging = false;
-            const rect = chatDrawer.getBoundingClientRect();
-            currentHeight = (rect.height / window.innerHeight) * 100;
+    const CLOSE_THRESHOLD = 30;
+    function handleDragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        const rect = chatDrawer.getBoundingClientRect();
+        const h = (rect.height / window.innerHeight) * 100;
+        if (h < CLOSE_THRESHOLD) {
+            collapseDrawer();
+        } else {
+            currentHeight = Math.max(35, Math.min(90, h));
+            chatDrawer.style.height = currentHeight + "vh";
         }
-    });
+    }
+    document.addEventListener("mouseup", handleDragEnd);
+    document.addEventListener("touchend", handleDragEnd);
+    document.addEventListener("touchcancel", handleDragEnd);
 
     const addFriendContent = document.getElementById("add-friend-content");
     const chatContent = document.getElementById("chat-content");
     const contactSearch = document.getElementById("contact-search");
     const contactsContainer = document.getElementById("contacts-container");
+
+    // Add Friend contacts: dynamic. Set window.__addFriendContacts before load or call loadAddFriendContacts(apiData).
+    // Each contact: { name, phone, goshopme: boolean, avatar?: string }
+    // GoShopMe user with avatar -> show photo; GoShopMe user without avatar -> initials; non-GoShopMe -> initials
+    window.__addFriendContacts = window.__addFriendContacts || [
+        { name: 'Alex Johnson', phone: '+1 (555) 123-4567', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg' },
+        { name: 'Maria Rodriguez', phone: '+1 (555) 987-6543', goshopme: false },
+        { name: 'David Kim', phone: '+1 (555) 456-7890', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg' },
+        { name: 'Sarah Thompson', phone: '+1 (555) 234-5678', goshopme: false },
+        { name: 'Emma Wilson', phone: '+1 (555) 345-6789', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg' },
+        { name: 'Michael Brown', phone: '+1 (555) 678-9012', goshopme: false },
+        { name: 'Jennifer Lee', phone: '+1 (555) 789-0123', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg' },
+        { name: 'Robert Davis', phone: '+1 (555) 890-1234', goshopme: false },
+        { name: 'Lisa Chen', phone: '+1 (555) 111-2222', goshopme: true }
+    ];
+    function getInitials(name) {
+        const parts = (name || '').trim().split(/\s+/);
+        if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+        return (parts[0] ? parts[0].slice(0, 2) : '??').toUpperCase();
+    }
+    function renderAddFriendContacts(container) {
+        if (!container) return;
+        const list = Array.isArray(window.__addFriendContacts) ? window.__addFriendContacts : [];
+        container.innerHTML = list.map(c => {
+            const initials = getInitials(c.name);
+            const hasAvatar = c.goshopme && c.avatar;
+            const avatarHtml = hasAvatar
+                ? `<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img src="${c.avatar}" alt="${c.name}" class="w-full h-full object-cover"></div>`
+                : `<div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-600 font-medium text-xs">${initials}</span></div>`;
+            const btnHtml = c.goshopme
+                ? '<button class="contact-action bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>'
+                : '<button class="contact-action bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>';
+            return `<div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="${(c.name || '').replace(/"/g, '&quot;')}" data-phone="${(c.phone || '').replace(/"/g, '&quot;')}" data-goshopme="${c.goshopme ? 'true' : 'false'}">${avatarHtml}<div class="flex-1"><p class="font-medium text-sm text-black">${(c.name || '').replace(/</g, '&lt;')}</p><p class="text-xs text-gray-500">${(c.phone || '').replace(/</g, '&lt;')}</p></div>${btnHtml}</div>`;
+        }).join('');
+    }
+    window.loadAddFriendContacts = function(data) {
+        window.__addFriendContacts = Array.isArray(data) ? data : [];
+        renderAddFriendContacts(contactsContainer);
+    };
+    renderAddFriendContacts(contactsContainer);
     const backBtn = document.getElementById("back-btn");
     const headerTitle = document.getElementById("header-title");
     const headerSubtitle = document.getElementById("header-subtitle");
@@ -1242,6 +1315,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function handleFileSelection(file) {
         const url = URL.createObjectURL(file);
         const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+        const chatMessagesEl = document.getElementById('chat-messages');
         if (chatMessagesContainer) {
             let bubble;
             if (file.type.startsWith("image/")) {
@@ -1264,8 +1338,9 @@ document.addEventListener("DOMContentLoaded", function () {
             
             if (bubble) {
                 chatMessagesContainer.appendChild(bubble);
-                chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+                if (chatMessagesEl) requestAnimationFrame(function() { requestAnimationFrame(function() { chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight; }); });
                 
+                // Contextual ShAI reply to image/video
                 setTimeout(() => {
                     const isVideo = file.type.startsWith("video/");
                     if (isVideo) {
@@ -1461,8 +1536,8 @@ function removeTempRecordingBubble() {
             durationText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
         });
         
-        chatMessagesContainer.appendChild(bubble);
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        setTimeout(() => addShAIMessage("Got your voice message! I'm on it — let me find the best options for you."), 800);
     }
 }
     window.toggleVoicePlayback = function(button, audioUrl) {
@@ -1509,23 +1584,27 @@ function removeTempRecordingBubble() {
         }
     };
 
-    function addShAIMessage(message) {
+    function addShAIMessage(message, thumbUrls) {
         const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
+        const chatMessages = document.getElementById('chat-messages');
         if (chatMessagesContainer) {
+            const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+            const thumbHtml = (thumbUrls && thumbUrls.length) ? '<div class="flex gap-1.5 mt-2 flex-wrap">' + thumbUrls.slice(0, 4).map(function(t) { return '<img class="w-12 h-12 rounded-lg object-cover border border-gray-200" src="' + (t || '').replace(/"/g, '&quot;') + '" alt="">'; }).join('') + '</div>' : '';
             const aiMessage = document.createElement('div');
             aiMessage.className = 'flex items-start space-x-3 mb-4';
             aiMessage.innerHTML = `
                 <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                    <img class="w-full h-full object-cover" src="/assets/shai-avatar.png" alt="ShAI avatar" />
+                    <img class="w-full h-full object-cover" src="${avatarUrl.replace(/"/g, '&quot;')}" alt="ShAI avatar" data-shai-avatar />
                 </div>
                 <div class="flex-1">
                     <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3">
-                        <p class="text-sm text-black">${message}</p>
+                        <p class="text-sm text-black">${(message || '').replace(/</g, '&lt;')}</p>
+                        ${thumbHtml}
                     </div>
                 </div>
             `;
             chatMessagesContainer.appendChild(aiMessage);
-            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+            if (chatMessages) requestAnimationFrame(function() { requestAnimationFrame(function() { chatMessages.scrollTop = chatMessages.scrollHeight; }); });
         }
     }
 
@@ -1597,14 +1676,20 @@ function removeTempRecordingBubble() {
         heroInviteBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            
-            if (!isDrawerExpanded) {
-                expandDrawer();
-                setTimeout(() => {
-                    showAddFriendFlow();
-                }, 300);
+            // Hero Invite: open native app picker (share sheet) directly, not Add Friend flow
+            const shareData = {
+                title: 'Join me on GoShopMe',
+                text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me",
+                url: 'https://app.goshopme.ai'
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch(err => console.error('Share failed:', err));
             } else {
-                showAddFriendFlow();
+                const msg = `${shareData.text} ${shareData.url}`;
+                navigator.clipboard.writeText(msg).then(() => {
+                    if (typeof showToast === 'function') showToast('Invite link copied!');
+                    else alert('Invite link copied to clipboard!');
+                });
             }
         });
     }
@@ -1624,11 +1709,12 @@ function removeTempRecordingBubble() {
                 chatMessagesContainer.appendChild(userMessage);
                 
                 setTimeout(() => {
+                    const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
                     const aiResponse = document.createElement('div');
                     aiResponse.className = 'flex items-start space-x-3 mb-4';
                     aiResponse.innerHTML = `
                         <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                            <img class="w-full h-full object-cover" src="/assets/shai-avatar.png" alt="ShAI avatar" />
+                            <img class="w-full h-full object-cover" src="${avatarUrl.replace(/"/g, '&quot;')}" alt="ShAI avatar" data-shai-avatar />
                         </div>
                         <div class="flex-1">
                             <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3">
@@ -1751,7 +1837,7 @@ function removeTempRecordingBubble() {
                     const notification = document.createElement('div');
                     notification.className = 'flex justify-center mb-4';
                     notification.innerHTML = `
-                        <div class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm">
+                        <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">
                             ${contactName.split(' ')[0]} has been added to chat
                         </div>
                     `;
@@ -1793,11 +1879,13 @@ function removeTempRecordingBubble() {
         }
     };
     
-    window.shareProduct = function(productName, price, productUrl = null) {
-        const shareUrl = productUrl || `${window.location.origin}/product/${productName.toLowerCase().replace(/\s+/g, '-')}`;
+    window.shareProduct = function(productName, price, productUrl = null, productId = null, brand = null) {
+        const base = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+        const id = productId || (productName || '').toLowerCase().replace(/\s+/g, '-');
+        const shareUrl = productUrl || (base + 'Product_details_page.html?id=' + encodeURIComponent(id) + (productName ? '&name=' + encodeURIComponent(productName) : '') + (brand ? '&brand=' + encodeURIComponent(brand) : ''));
         const shareData = {
-            title: `${productName} - ${price}`,
-            text: `Check out this ${productName} for ${price} on GoShopMe`,
+            title: `${productName || 'Product'}${brand ? ' by ' + brand : ''}`,
+            text: `Check out this ${productName || 'item'}${price ? ' for ' + price : ''} on GoShopMe`,
             url: shareUrl
         };
         
@@ -1822,8 +1910,24 @@ function removeTempRecordingBubble() {
         }
     };
     
-    window.openProductDetail = function(productId) {
-        console.log('Opening product detail for:', productId);
+    window.openProductDetail = function(productId, productName, productBrand, productImage, productPrice) {
+        var navData = null;
+        if (window.__productCache && productId && window.__productCache[productId]) {
+            var p = window.__productCache[productId];
+            navData = { id: p.id, name: p.name, brand: p.brand, image: p.image, price: p.price };
+        }
+        if (!navData) {
+            navData = { id: productId, name: productName, brand: productBrand, image: productImage || '', price: productPrice || '' };
+        }
+        if (navData) try { sessionStorage.setItem('__productNavData', JSON.stringify(navData)); } catch (e) {}
+        var q = 'id=' + encodeURIComponent(productId || '') + '&from=home';
+        if (productName) q += '&name=' + encodeURIComponent(productName);
+        if (productBrand) q += '&brand=' + encodeURIComponent(productBrand);
+        var img = (navData && navData.image) || productImage;
+        var prc = (navData && navData.price) || productPrice;
+        if (img) q += '&image=' + encodeURIComponent(img);
+        if (prc) q += '&price=' + encodeURIComponent(prc);
+        window.location.href = 'Product_details_page.html?' + q;
     };
     
     window.openProductChat = function(productName, price, imageUrl) {
@@ -1832,10 +1936,7 @@ function removeTempRecordingBubble() {
         }
         
         setTimeout(() => {
-            addProductBubbleToChat(productName, price, imageUrl);
-            setTimeout(() => {
-                addShAIMessage(`I see you're interested in ${productName}. Would you like details or similar options?`);
-            }, 1000);
+            addShAIMessage(`Tell me more about the "${productName}" - would you like styling suggestions or alternatives?`, imageUrl ? [imageUrl] : []);
         }, 300);
     };
     
@@ -1843,22 +1944,35 @@ function removeTempRecordingBubble() {
         console.log('Opening collection detail for:', collectionId);
     };
     
+    window.shareCollection = function(name) {
+        const base = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+        const shareUrl = base + "Creator`s Single_Collection.html?collection=" + encodeURIComponent(name || '');
+        const shareData = { title: (name || '') + ' - GoShopMe', text: 'Check out this collection on GoShopMe', url: shareUrl };
+        if (navigator.share) navigator.share(shareData).catch(() => { if (navigator.clipboard) navigator.clipboard.writeText(shareData.text + ' ' + shareData.url); });
+        else if (navigator.clipboard) navigator.clipboard.writeText(shareData.text + ' ' + shareData.url);
+    };
+    
     function addProductBubbleToChat(productName, price, imageUrl) {
         const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
         if (chatMessagesContainer) {
+            const productId = (productName || '').toLowerCase().replace(/\s+/g, '-');
+            const bubbleClick = function(e) {
+                if (e.target.closest('button')) return;
+                window.location.href = 'Product_details_page.html?id=' + encodeURIComponent(productId) + '&name=' + encodeURIComponent(productName || '') + '&from=home';
+            };
             const productBubble = document.createElement('div');
             productBubble.className = 'flex justify-end mb-4';
             productBubble.innerHTML = `
-                <div class="product-bubble outgoing">
+                <div class="product-bubble outgoing cursor-pointer hover:shadow-md transition-shadow" role="button" tabindex="0">
                     <div class="relative">
                         <img src="${imageUrl}" alt="${productName}" class="w-full h-32 object-cover rounded-lg mb-2">
                         <div class="absolute top-2 right-2 flex space-x-1">
-                            <button onclick="toggleWishlist(this, '${productName.toLowerCase().replace(/\s+/g, '-')}')" class="bg-white/80 rounded-full p-1">
+                            <button type="button" onclick="event.stopPropagation(); toggleWishlist(this, '${productName.toLowerCase().replace(/\s+/g, '-')}')" class="bg-white/80 rounded-full p-1">
                                 <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
                                 </svg>
                             </button>
-                            <button onclick="shareProduct('${productName}', '${price}')" class="bg-white/80 rounded-full p-1">
+                            <button type="button" onclick="event.stopPropagation(); shareProduct('${productName}', '${price}')" class="bg-white/80 rounded-full p-1">
                                 <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
                                 </svg>
@@ -1873,6 +1987,8 @@ function removeTempRecordingBubble() {
                 </div>
             `;
             chatMessagesContainer.appendChild(productBubble);
+            const bubbleEl = productBubble.querySelector('.product-bubble');
+            if (bubbleEl) bubbleEl.addEventListener('click', bubbleClick);
             chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
         }
     }
@@ -1895,41 +2011,26 @@ function removeTempRecordingBubble() {
 <div class="hidden"></div>
 
 <script>
-async function loadCreatorCollections() {
+async function loadCreatorCollections(collections) {
     const container = document.getElementById("creator-list");
     const template = document.getElementById("creator-card-template");
+    if (!container || !template) return;
 
-    // TEMPORARY MOCK DATA (replace with DB fetch)
-    const collections = [
-        {
-            id: "minimalist-chic",
-            title: "Minimalist Chic",
-            creatorName: "Emma Style",
-            creatorAvatarUrl: "https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg",
-            coverType: "image",
-            coverUrl: "https://storage.googleapis.com/uxpilot-auth.appspot.com/007be72faf-425b1484d2500ed925b0.png",
-            wishlistId: "minimalist-chic-collection"
-        },
-        {
-            id: "bold-bright",
-            title: "Bold & Bright",
-            creatorName: "Maya Colors",
-            creatorAvatarUrl: "https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg",
-            coverType: "image",
-            coverUrl: "https://storage.googleapis.com/uxpilot-auth.appspot.com/2946cb0278-78c9e9c29833f1b9ba93.png",
-            wishlistId: "bold-bright-collection"
-        }
-    ];
+    const list = Array.isArray(collections) ? collections : [];
+    container.innerHTML = '';
+    container.appendChild(template);
 
-    collections.forEach(col => {
+    list.forEach(col => {
         const clone = template.content.cloneNode(true);
 
         // COVER HANDLING
         const cover = clone.querySelector(".creator-cover");
+        const showTopPosition = col.id === "bold-bright";
+        const posClass = showTopPosition ? " object-top" : "";
         if (col.coverType === "video") {
-            cover.innerHTML = `<video src="${col.coverUrl}" class="w-full h-full object-cover" autoplay muted loop playsinline ></video>`;
+            cover.innerHTML = `<video src="${col.coverUrl}" class="w-full h-full object-cover${posClass}" autoplay muted loop playsinline ></video>`;
         } else {
-            cover.innerHTML = `<img src="${col.coverUrl}" class="w-full h-full object-cover"/>`;
+            cover.innerHTML = `<img src="${col.coverUrl}" class="w-full h-full object-cover${posClass}"/>`;
         }
 
         // AVATAR: show image if URL exists, else show initials
@@ -1961,17 +2062,16 @@ async function loadCreatorCollections() {
             toggleWishlist(e.currentTarget, col.wishlistId);
         };
 
-        // SHARE BUTTON
+        // SHARE BUTTON – collection link (dynamic)
         clone.querySelector(".share-btn").onclick = (e) => {
             e.stopPropagation();
-            shareProduct(col.title, `by ${col.creatorName}`);
+            shareCollection(col.title);
         };
 
         container.appendChild(clone);
     });
 }
 
-document.addEventListener("DOMContentLoaded", loadCreatorCollections);
 </script>
 <script>
 /* -------------------------------------------------------
@@ -1998,12 +2098,13 @@ function renderHero(hero) {
         bg.innerHTML = `
             <video
                 src="${hero.coverUrl}"
-                class="absolute inset-0 w-full h-full object-cover"
+                class="absolute inset-0 w-full h-full object-cover object-center"
                 autoplay
                 muted
                 loop
                 playsinline
-                preload="auto">
+                preload="auto"
+                style="min-width:100%;min-height:100%;">
             </video>
         `;
     } else {
@@ -2028,12 +2129,12 @@ async function loadHeroContent() {
     if (heroInitialized) return;
     heroInitialized = true;
 
-    // 1) Fallback hero
+    // 1) Fallback hero (local video from assets – fits hero section perfectly)
     const fallbackHero = {
         title: "Best finds must be shared",
         subtitle: "Add your friends and have fun together.",
-        coverType: "image",
-        coverUrl: "./assets/placeholder-hero.png"
+        coverType: "video",
+        coverUrl: "https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Home-hero%202.mp4"
     };
 
     let heroData = { ...fallbackHero };
@@ -2141,7 +2242,12 @@ window.renderRecentActivity = function (historyItems = []) {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    window.renderRecentActivity([]);
+    var fallback = window.__HOME_FALLBACK_DATA || {};
+    if (fallback.recentActivity && fallback.recentActivity.length) {
+        window.renderRecentActivity(fallback.recentActivity);
+    } else {
+        window.renderRecentActivity([]);
+    }
 });
 </script>
 <script>
@@ -2154,16 +2260,18 @@ window.renderCategories = function (categories = []) {
   if (!categories.length) return;
 
   categories.forEach(cat => {
-    const el = document.createElement("button");
+    const el = document.createElement("a");
+    el.href = "ShopbyCategory.html?category=" + encodeURIComponent(cat.id || "");
     el.className =
       "relative bg-gray-100 rounded-xl h-24 overflow-hidden flex flex-col justify-end p-2 text-left";
+    const shoesPos = cat.id === "shoes" ? " object-[center_75%]" : "";
+    const workwearPos = cat.id === "workwear" ? " object-top" : "";
     el.innerHTML = `
       <img src="${cat.image}" alt="${cat.name}"
-           class="absolute inset-0 w-full h-full object-cover" />
+           class="absolute inset-0 w-full h-full object-cover${shoesPos}${workwearPos}" />
       <div class="absolute inset-0 bg-black/20"></div>
       <span class="relative text-white font-medium text-sm">${cat.name}</span>
     `;
-    el.onclick = () => console.log("Category clicked:", cat.id);
     grid.appendChild(el);
   });
 };
@@ -2172,3 +2280,5 @@ window.renderCategories = function (categories = []) {
 
 </body>
 </html>
+
+

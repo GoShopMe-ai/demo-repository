@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
     <title>Payment Unsuccessful - GoShopMe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +19,8 @@
         .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
         .font-fuhkwang { font-family: 'Poppins', sans-serif; }
         .font-wix { font-family: 'DM Sans', sans-serif; }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
     </style>
     <script>
         tailwind.config = {
@@ -41,7 +47,7 @@
     <!-- Header - same width as main screen -->
     <div id="header" class="w-full bg-white border-b border-gray-100 px-5 py-4 flex-shrink-0">
     <div class="flex items-center justify-between">
-        <button class="p-2 -ml-2 text-gray-600 hover:opacity-70 transition-opacity" onclick="goBack()" aria-label="Go back">
+        <button type="button" class="header-icon-btn w-10 h-10 flex items-center justify-center p-2 -ml-2 text-gray-600 hover:text-gray-800" onclick="goBack()" aria-label="Go back">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
             </svg>
@@ -66,7 +72,7 @@
             </h2>
             
             <p class="text-gray-500 font-wix leading-relaxed text-base">
-                Something went wrong while trying to activate your Premium Plan. Don't worry — you can try again or use a different payment method.
+                Something went wrong while trying to activate your Premium Plan. Don't worry â€” you can try again or use a different payment method.
             </p>
         </div>
 
@@ -137,13 +143,26 @@ function goBack() {
 }
 
 function editPaymentDetails() {
-    console.log('Navigating to payment details...');
-    window.history.back();
+    if (typeof window.GoShopMeOnboardingAPI !== 'undefined' && window.GoShopMeOnboardingAPI.onEditPaymentDetails) {
+        window.GoShopMeOnboardingAPI.onEditPaymentDetails();
+    }
+    window.location.href = 'Onboarding_Subscribe_Payment.html';
 }
 
 function goBackToPlans() {
-    console.log('Navigating to plan selection...');
+    if (typeof window.GoShopMeOnboardingAPI !== 'undefined' && window.GoShopMeOnboardingAPI.onGoBackToPlans) {
+        window.GoShopMeOnboardingAPI.onGoBackToPlans();
+    }
+    window.location.href = 'Onboarding_Choose_Plan.html';
 }
+
+// API readiness: prefill from window.__PAYMENT_ERROR_DATA__
+(function() {
+    window.getPaymentErrorData = function() { return {}; };
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.__PAYMENT_ERROR_DATA__) { /* optional error details for display */ }
+    });
+})();
 </script>
 
 </body></html>

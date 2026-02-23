@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
     <title>Wishlist</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -21,6 +25,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/chat-drawer-drag.css">
     <style>
         ::-webkit-scrollbar { display: none;}
         * { 
@@ -60,7 +65,7 @@
                          sans-serif; 
         }
         
-        .container-mobile { max-width: 390px; }
+        .container-mobile { max-width: 390px; width: 100%; margin-left: auto; margin-right: auto; }
         
         /* Icon styling */
         .icon-button svg {
@@ -154,11 +159,27 @@
             border-color: #939BFB;
             margin-left: auto;
         }
+
+        /* Wishlist product tiles: pointer cursor (desktop), touch-optimized (mobile) */
+        [id^="wishlist-item-"] { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: rgba(147, 155, 251, 0.12); }
         
         /* Share button - Instagram-style tilted paper plane */
         .share-icon-tilted {
             transform: rotate(-35deg);
         }
+        .product-overlay-icon {
+            /* Plain white icons - Instagram style */
+        }
+        /* Subtle dark overlay on product images for icon contrast (esp. on light backgrounds) */
+        .product-image-overlay-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.08);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .product-image-overlay-wrap > [class*="absolute"][class*="top-"] { z-index: 1; }
         
         /* Wave pulse animation for voice messages */
         @keyframes wavePulse {
@@ -180,45 +201,46 @@
             max-width: 260px;
             width: fit-content;
         }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
     </style>
 </head>
-<body class="bg-[#F6F6F6]">
+<body class="bg-[#F6F6F6] dm-sans">
 
-<div class="container-mobile mx-auto">
+<div id="app-shell" class="relative mx-auto w-full max-w-[390px] bg-white min-h-screen dm-sans">
     <!-- App Header -->
     <header id="app-header" class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white z-50 border-b border-gray-100">
-        <div class="flex items-center justify-between px-4 py-3">
-            <div class="flex items-center">
-                <h1 class="text-lg poppins font-bold text-black">My Wishlist</h1>
-            </div>
-            <div class="flex items-center space-x-3">
-                <button class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center relative overflow-visible hover:opacity-70 transition-opacity">
+        <div class="relative flex items-center justify-between px-4 py-3">
+            <span class="w-20 h-10 flex-shrink-0"></span>
+            <h1 class="absolute left-0 right-0 text-center text-lg font-semibold poppins text-gray-900 pointer-events-none">My Wishlist</h1>
+            <div class="relative z-10 flex items-center gap-0">
+                <a href="Notifications_Screen.html?from=wishlist" id="wishlist-notif-btn" class="header-icon-btn w-10 h-10 flex items-center justify-center relative overflow-visible text-gray-600 hover:text-gray-800" aria-label="Notifications">
                     <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                     </svg>
-                </button>
-                <button class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center relative overflow-visible hover:opacity-70 transition-opacity">
+                </a>
+                <a href="Shopping_bag.html?from=wishlist" id="wishlist-cart-btn" class="header-icon-btn w-10 h-10 flex items-center justify-center relative overflow-visible text-gray-600 hover:text-gray-800" aria-label="Shopping bag">
                     <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z" />
                     </svg>
-                </button>
+                </a>
             </div>
         </div>
     </header>
 
     <!-- Main Content Container -->
-    <main id="main-content" class="pt-16 pb-20 relative">
+    <main id="main-content" class="pt-20 px-4 pb-40 relative">
         
         <!-- Background Content - Wishlist -->
         <div id="background-content" class="min-h-screen bg-white">
             
             <!-- Wishlist Gifting & Sharing Block -->
-            <section id="wishlist-sharing-block" class="px-4 py-4">
+            <section id="wishlist-sharing-block" class="pt-0 pb-6">
                 <div class="container-mobile">
                     <div class="relative bg-white border border-gray-100 rounded-2xl p-4 shadow-sm text-center overflow-hidden">
                         <!-- Background Hero Image -->
                         <div class="absolute inset-0 rounded-2xl overflow-hidden">
-                            <img class="w-full h-full object-cover" src="" data-wishlist-hero-image alt="Wishlist hero background" />
+                            <img class="w-full h-full object-cover" src="" data-wishlist-hero-image alt="" />
                             <div class="absolute inset-0 bg-black/50"></div>
                         </div>
                         
@@ -226,7 +248,7 @@
                         <div class="relative z-10 flex flex-col items-center space-y-3">
                             <div>
                                 <h3 class="text-lg poppins font-bold text-white mb-2">Turn your wishlist into a gift list</h3>
-                                <p class="text-sm text-white/90 mb-4">Send your wishlist to friends or family, and let them shop the items you truly love — for birthdays, holidays or just because.</p>
+                                <p class="text-sm text-white/90 mb-4">Send your wishlist to friends or family, and let them shop the items you truly love â€” for birthdays, holidays or just because.</p>
                                 <button id="share-wishlist-btn" class="bg-[#939BFB] text-white px-4 py-2.5 rounded-full font-medium text-sm hover:bg-[#939BFB]/90 transition-colors flex items-center justify-center space-x-2 mx-auto">
                                     <span>Share My Wishlist</span>
                                     <svg class="w-4 h-4 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -240,414 +262,14 @@
             </section>
 
             <!-- Wishlist Items Section -->
-            <section id="wishlist-items" class="px-4">
+            <section id="wishlist-items" class="pt-6 pb-8">
                 <div class="container-mobile">
                     <h2 class="text-lg poppins font-bold text-black mb-4">Your Items (<span data-wishlist-count>0</span>)</h2>
                     
                     <!-- Wishlist Items Grid -->
-                    <!-- NOTE: Product items will be dynamically populated from database -->
-                    <!-- Each product item should have: data-product-id, data-product-image, data-product-name, data-product-brand, data-product-price, data-product-slug -->
+                    <!-- Product items are rendered dynamically from data/wishlist.json (or fallback) -->
                     <div class="grid grid-cols-2 gap-4" id="wishlist-items-grid">
-                        
-                        <!-- Item 1 -->
-                        <div id="wishlist-item-1" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="" data-product-slug="" onclick="openProductDetail('')">
-                            <div class="relative">
-                                <img class="w-full h-40 object-cover" src="" data-product-image alt="" data-product-image-alt />
-                                <div class="absolute top-2 right-2 flex flex-col space-y-1">
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95 chat-trigger" data-item="" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <p class="text-xs text-gray-500 mb-1" data-product-brand>Brand</p>
-                                <h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>Product Name</h4>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-black font-medium text-sm" data-product-price>$0.00</span>
-                                    <span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 2 -->
-                        <div id="wishlist-item-2" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="" data-product-slug="" onclick="openProductDetail('')">
-                            <div class="relative">
-                                <img class="w-full h-40 object-cover" src="" data-product-image alt="" data-product-image-alt />
-                                <div class="absolute top-2 right-2 flex flex-col space-y-1">
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95 chat-trigger" data-item="" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="absolute bottom-2 left-2 bg-[#F96226] text-white px-2 py-1 rounded-full text-xs font-medium hidden" data-product-discount>
-                                    <span data-product-discount-text></span>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <p class="text-xs text-gray-500 mb-1" data-product-brand>Brand</p>
-                                <h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>Product Name</h4>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-black font-medium text-sm" data-product-price>$0.00</span>
-                                    <span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 3 -->
-                        <div id="wishlist-item-3" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="" data-product-slug="" onclick="openProductDetail('')">
-                            <div class="relative">
-                                <img class="w-full h-40 object-cover" src="" data-product-image alt="" data-product-image-alt />
-                                <div class="absolute top-2 right-2 flex flex-col space-y-1">
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95 chat-trigger" data-item="" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <p class="text-xs text-gray-500 mb-1" data-product-brand>Brand</p>
-                                <h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>Product Name</h4>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-black font-medium text-sm" data-product-price>$0.00</span>
-                                    <span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 4 -->
-                        <div id="wishlist-item-4" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="" data-product-slug="" onclick="openProductDetail('')">
-                            <div class="relative">
-                                <img class="w-full h-40 object-cover" src="" data-product-image alt="" data-product-image-alt />
-                                <div class="absolute top-2 right-2 flex flex-col space-y-1">
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95 chat-trigger" data-item="" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="absolute bottom-2 left-2 bg-[#F96226] text-white px-2 py-1 rounded-full text-xs font-medium hidden" data-product-discount>
-                                    <span data-product-discount-text></span>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <p class="text-xs text-gray-500 mb-1" data-product-brand>Brand</p>
-                                <h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>Product Name</h4>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-black font-medium text-sm" data-product-price>$0.00</span>
-                                    <span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 5 -->
-                        <div id="wishlist-item-5" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="" data-product-slug="" onclick="openProductDetail('')">
-                            <div class="relative">
-                                <img class="w-full h-40 object-cover" src="" data-product-image alt="" data-product-image-alt />
-                                <div class="absolute top-2 right-2 flex flex-col space-y-1">
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95 chat-trigger" data-item="" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="absolute bottom-2 left-2 bg-[#F96226] text-white px-2 py-1 rounded-full text-xs font-medium hidden" data-product-discount>
-                                    <span data-product-discount-text></span>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <p class="text-xs text-gray-500 mb-1" data-product-brand>Brand</p>
-                                <h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>Product Name</h4>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-black font-medium text-sm" data-product-price>$0.00</span>
-                                    <span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 6 -->
-                        <div id="wishlist-item-6" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="" data-product-slug="" onclick="openProductDetail('')">
-                            <div class="relative">
-                                <img class="w-full h-40 object-cover" src="" data-product-image alt="" data-product-image-alt />
-                                <div class="absolute top-2 right-2 flex flex-col space-y-1">
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95 chat-trigger" data-item="" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <p class="text-xs text-gray-500 mb-1" data-product-brand>Brand</p>
-                                <h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>Product Name</h4>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-black font-medium text-sm" data-product-price>$0.00</span>
-                                    <span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 7 -->
-                        <div id="wishlist-item-7" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="" data-product-slug="" onclick="openProductDetail('')">
-                            <div class="relative">
-                                <img class="w-full h-40 object-cover" src="" data-product-image alt="" data-product-image-alt />
-                                <div class="absolute top-2 right-2 flex flex-col space-y-1">
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95 chat-trigger" data-item="" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <p class="text-xs text-gray-500 mb-1" data-product-brand>Brand</p>
-                                <h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>Product Name</h4>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-black font-medium text-sm" data-product-price>$0.00</span>
-                                    <span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 8 -->
-                        <div id="wishlist-item-8" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="" data-product-slug="" onclick="openProductDetail('')">
-                            <div class="relative">
-                                <img class="w-full h-40 object-cover" src="" data-product-image alt="" data-product-image-alt />
-                                <div class="absolute top-2 right-2 flex flex-col space-y-1">
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95 chat-trigger" data-item="" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="absolute bottom-2 left-2 bg-[#F96226] text-white px-2 py-1 rounded-full text-xs font-medium hidden" data-product-discount>
-                                    <span data-product-discount-text></span>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <p class="text-xs text-gray-500 mb-1" data-product-brand>Brand</p>
-                                <h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>Product Name</h4>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-black font-medium text-sm" data-product-price>$0.00</span>
-                                    <span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 9 -->
-                        <div id="wishlist-item-9" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="" data-product-slug="" onclick="openProductDetail('')">
-                            <div class="relative">
-                                <img class="w-full h-40 object-cover" src="" data-product-image alt="" data-product-image-alt />
-                                <div class="absolute top-2 right-2 flex flex-col space-y-1">
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95 chat-trigger" data-item="" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <p class="text-xs text-gray-500 mb-1" data-product-brand>Brand</p>
-                                <h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>Product Name</h4>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-black font-medium text-sm" data-product-price>$0.00</span>
-                                    <span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 10 -->
-                        <div id="wishlist-item-10" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="" data-product-slug="" onclick="openProductDetail('')">
-                            <div class="relative">
-                                <img class="w-full h-40 object-cover" src="" data-product-image alt="" data-product-image-alt />
-                                <div class="absolute top-2 right-2 flex flex-col space-y-1">
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95 chat-trigger" data-item="" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <p class="text-xs text-gray-500 mb-1" data-product-brand>Brand</p>
-                                <h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>Product Name</h4>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-black font-medium text-sm" data-product-price>$0.00</span>
-                                    <span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 11 -->
-                        <div id="wishlist-item-11" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="" data-product-slug="" onclick="openProductDetail('')">
-                            <div class="relative">
-                                <img class="w-full h-40 object-cover" src="" data-product-image alt="" data-product-image-alt />
-                                <div class="absolute top-2 right-2 flex flex-col space-y-1">
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95 chat-trigger" data-item="" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="absolute bottom-2 left-2 bg-[#F96226] text-white px-2 py-1 rounded-full text-xs font-medium hidden" data-product-discount>
-                                    <span data-product-discount-text></span>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <p class="text-xs text-gray-500 mb-1" data-product-brand>Brand</p>
-                                <h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>Product Name</h4>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-black font-medium text-sm" data-product-price>$0.00</span>
-                                    <span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 12 -->
-                        <div id="wishlist-item-12" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="" data-product-slug="" onclick="openProductDetail('')">
-                            <div class="relative">
-                                <img class="w-full h-40 object-cover" src="" data-product-image alt="" data-product-image-alt />
-                                <div class="absolute top-2 right-2 flex flex-col space-y-1">
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-7 h-7 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 transform hover:scale-110 active:scale-95 chat-trigger" data-item="" onclick="event.stopPropagation()">
-                                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <p class="text-xs text-gray-500 mb-1" data-product-brand>Brand</p>
-                                <h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>Product Name</h4>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-black font-medium text-sm" data-product-price>$0.00</span>
-                                    <span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>
-                                </div>
-                            </div>
-                        </div>
-
+                        <!-- Items injected by renderWishlistGrid() -->
                     </div>
                 </div>
             </section>
@@ -658,10 +280,10 @@
         <div id="chat-overlay" class="fixed inset-0 bg-black/40 z-40"></div>
 
         <!-- ShAI Chat Drawer -->
-        <div id="shai-chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[80vh] flex flex-col">
+        <div id="shai-chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[50vh] flex flex-col">
             <!-- Drag Handle -->
-            <div class="flex justify-center pt-2 flex-shrink-0">
-                <div id="drag-handle" class="w-10 h-1 bg-gray-300 rounded-full cursor-pointer"></div>
+            <div id="drag-handle-zone" class="chat-drawer-drag-zone flex justify-center pt-2 flex-shrink-0">
+                <div id="drag-handle" class="w-10 h-1 bg-gray-300 rounded-full pointer-events-none"></div>
             </div>
             
             <!-- Drawer Header -->
@@ -672,7 +294,7 @@
                     </svg>
                     </button>
                 <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-                    <img class="w-full h-full object-cover" src="" data-shai-avatar alt="ShAI avatar" />
+                    <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" data-shai-avatar alt="ShAI avatar" />
                     </div>
                 <div class="flex-1">
                     <p class="font-semibold text-black text-sm">ShAI</p>
@@ -686,7 +308,7 @@
                 <!-- ShAI Greeting -->
                 <div class="flex items-start space-x-3 mb-4">
                         <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                            <img class="w-full h-full object-cover" src="" data-shai-avatar alt="ShAI avatar" />
+                            <img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" data-shai-avatar alt="ShAI avatar" />
                         </div>
                         <div class="flex-1">
                             <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3">
@@ -790,15 +412,15 @@
             </div>
 
             <!-- Chat Input Bar - Inside Drawer -->
-            <div id="chat-input-drawer" class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
-                <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+            <div id="chat-input-drawer" class="bg-white border-t border-gray-100 p-4 flex-shrink-0 min-w-0 overflow-hidden">
+                <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm min-w-0 w-full overflow-hidden">
                     <button id="cam-btn-drawer" class="icon-button hover:opacity-70 transition-opacity">
                         <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
                         </svg>
                     </button>
-                    <textarea id="chat-input-drawer-field" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none min-h-[24px] max-h-[144px] overflow-y-auto" rows="1"></textarea>
+                    <textarea id="chat-input-drawer-field" placeholder="Message ShAI..." class="flex-1 min-w-0 max-w-full bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none min-h-[24px] max-h-[144px] overflow-y-auto" rows="1"></textarea>
                     <button id="add-friend-btn-drawer" class="icon-button hover:opacity-70 transition-opacity">
                         <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
@@ -820,15 +442,15 @@
         </div>
 
         <!-- Chat Input Bar - Collapsed State -->
-        <div id="chat-input-bar" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 p-4 z-30 hidden">
-            <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+        <div id="chat-input-bar" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 p-4 z-30 hidden min-w-0 overflow-hidden">
+            <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm min-w-0 w-full overflow-hidden">
                 <button id="cam-btn" class="icon-button hover:opacity-70 transition-opacity">
                     <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
                     </svg>
                 </button>
-                <textarea id="message-input" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none min-h-[24px] max-h-[144px] overflow-y-auto" rows="1"></textarea>
+                <textarea id="message-input" placeholder="Message ShAI..." class="flex-1 min-w-0 max-w-full bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none min-h-[24px] max-h-[144px] overflow-y-auto" rows="1"></textarea>
                 <button id="add-friend-btn" class="icon-button hover:opacity-70 transition-opacity">
                     <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
@@ -853,39 +475,43 @@
     <nav id="bottom-navigation" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 z-50">
         <div>
             <div class="flex items-center justify-around py-2">
-                <button class="bottom-nav-btn">
+                <a href="Home.html" class="bottom-nav-btn">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
                     </svg>
                     <span class="text-xs">Home</span>
-                </button>
-                <button class="bottom-nav-btn">
+                </a>
+                <a href="Picks.html" class="bottom-nav-btn">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
                     </svg>
                     <span class="text-xs">Picks</span>
-                </button>
-                <button class="bottom-nav-btn active">
+                </a>
+                <a href="Wishlist.html" class="bottom-nav-btn active">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
                     </svg>
                     <span class="text-xs">Wishlist</span>
-                </button>
-                <button class="bottom-nav-btn">
+                </a>
+                <a id="wishlist-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn">
                     <span id="wishlist-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1 text-shine-primary">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
                     </span>
                     <img id="wishlist-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile" data-profile-avatar>
                     <span class="text-xs">Profile</span>
-                </button>
+                </a>
             </div>
         </div>
     </nav>
 </div>
 
 <script>
-// Bottom nav profile: show profile icon if no uploaded photo, else show saved photo from localStorage
+// Bottom nav profile: show profile icon if no uploaded photo, else show saved photo from localStorage; Profile link = paid/free based on __userPlan
 (function() {
+    var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
+    var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+    var profileLink = document.getElementById('wishlist-nav-profile-link');
+    if (profileLink) profileLink.href = profileHref;
     var saved = null;
     try { saved = localStorage.getItem('profilePhoto'); } catch (e) {}
     var img = document.getElementById('wishlist-nav-profile-photo');
@@ -976,7 +602,7 @@
     if (cfg.onFocusGrow) {
       ta.addEventListener('focus', () => {
         const drawer = document.getElementById('shai-chat-drawer');
-        if (drawer) drawer.style.height = '80vh';
+        if (drawer) drawer.style.height = '50vh';
       });
     }
   }
@@ -1000,8 +626,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        if (typeof window.populateShAIAvatar === 'function') window.populateShAIAvatar('https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png');
         const chatDrawer = document.getElementById('shai-chat-drawer');
-        const dragHandle = document.getElementById('drag-handle');
+        const dragHandleZone = document.getElementById('drag-handle-zone') || document.getElementById('drag-handle');
         const chatOverlay = document.getElementById('chat-overlay');
     const chatInputBar = document.getElementById('chat-input-bar');
     const chatInputDrawer = document.getElementById('chat-input-drawer-field');
@@ -1014,7 +641,6 @@
     const sendBtnDrawer = document.getElementById('send-btn-drawer');
     const addFriendBtnDrawer = document.getElementById('add-friend-btn-drawer');
         const bottomNavigation = document.getElementById('bottom-navigation');
-        const chatTriggers = document.querySelectorAll('.chat-trigger');
         const shareWishlistBtn = document.getElementById('share-wishlist-btn');
         const addFriendContent = document.getElementById('add-friend-content');
         const backButton = document.getElementById('back-button');
@@ -1043,13 +669,13 @@
     if (bottomNavigation) bottomNavigation.classList.remove('hidden');
     if (chatDrawer) {
         chatDrawer.classList.remove('translate-y-full');
-        chatDrawer.style.height = '80vh';
+        chatDrawer.style.height = '50vh';
     }
         
         shareWishlistBtn.addEventListener('click', () => {
             const shareData = {
                 title: 'My GoShopMe Wishlist',
-                text: "Check out my wishlist on GoShopMe! 👀✨",
+                text: "Check out my wishlist on GoShopMe! ðŸ‘€âœ¨",
                 url: 'https://goshopme.ai/u/jane-doe/wishlist'
             };
             if (navigator.share) {
@@ -1108,7 +734,7 @@
             btn.addEventListener('click', () => {
                 const shareData = {
                     title: 'Join me on GoShopMe!',
-                    text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me",
+                    text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me",
                     url: 'https://app.goshopme.ai'
                 };
                 if (navigator.share) {
@@ -1122,30 +748,7 @@
             });
         });
 
-        chatTriggers.forEach(trigger => {
-            trigger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const itemName = trigger.dataset.item;
-                hideAddFriendMode();
-                expandDrawer();
-                
-            const container = chatMessages.querySelector('.p-4');
-            if (container) {
-                const contextMessage = document.createElement('div');
-                contextMessage.className = 'flex items-start space-x-3 mb-4';
-                contextMessage.innerHTML = `
-                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="w-full h-full object-cover" src="" data-shai-avatar alt="ShAI avatar" />
-                    </div>
-                    <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%]">
-                        <p class="text-sm text-black break-words whitespace-pre-wrap">Tell me more about the "${itemName}" - would you like styling suggestions or alternatives?</p>
-                    </div>
-                `;
-                container.appendChild(contextMessage);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-            });
-        });
+        // Chat triggers handled by setupProductTileButtons (document delegation with product thumbnail)
 
     if (chatInput) {
         chatInput.addEventListener('focus', () => {
@@ -1156,6 +759,18 @@
         });
     }
 
+    function addContextualMessage(message, thumbUrls) {
+        const container = document.querySelector('#chat-messages .p-4');
+        if (!container) return;
+        const avatarUrl = window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png';
+        const thumbHtml = (thumbUrls && thumbUrls.length) ? '<div class="flex gap-1.5 mt-2 flex-wrap">' + thumbUrls.slice(0, 4).map(function(t) { return '<img class="w-12 h-12 rounded-lg object-cover border border-gray-200" src="' + (t || '').replace(/"/g, '&quot;') + '" alt="">'; }).join('') + '</div>' : '';
+        const contextMessage = document.createElement('div');
+        contextMessage.className = 'flex items-start space-x-3 mb-4';
+        contextMessage.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover shai-avatar-img" src="' + avatarUrl.replace(/"/g, '&quot;') + '" alt="ShAI avatar" data-shai-avatar /></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%]"><p class="text-sm text-black break-words whitespace-pre-wrap">' + (message || '').replace(/</g, '&lt;') + '</p>' + thumbHtml + '</div>';
+        container.appendChild(contextMessage);
+        if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
     function expandDrawer() {
         if (!chatDrawer) return;
             chatDrawer.classList.remove('translate-y-full');
@@ -1163,7 +778,7 @@
         if (chatInputBar) chatInputBar.classList.add('hidden');
             isDrawerExpanded = true;
         currentHeight = 80;
-        chatDrawer.style.height = '80vh';
+        chatDrawer.style.height = '50vh';
         }
 
         function collapseDrawer() {
@@ -1173,26 +788,26 @@
         if (chatInputBar) chatInputBar.classList.remove('hidden');
             isDrawerExpanded = false;
         currentHeight = 80;
-        chatDrawer.style.height = '80vh';
+        chatDrawer.style.height = '50vh';
         if (isAddFriendMode) {
             hideAddFriendMode();
         }
     }
 
     // Dragging Drawer
-    if (dragHandle && chatDrawer) {
-        dragHandle.addEventListener("mousedown", e => { 
+    if (dragHandleZone && chatDrawer) {
+        dragHandleZone.addEventListener("mousedown", e => { 
             isDragging = true; 
             startY = e.clientY; 
             currentHeight = (chatDrawer.clientHeight / window.innerHeight) * 100;
             chatDrawer.style.transition = 'none'; // Disable transition during drag
         });
-        dragHandle.addEventListener("touchstart", e => { 
+        dragHandleZone.addEventListener("touchstart", e => { 
             isDragging = true;
             startY = e.touches[0].clientY; 
             currentHeight = (chatDrawer.clientHeight / window.innerHeight) * 100;
             chatDrawer.style.transition = 'none'; // Disable transition during drag
-        });
+        }, { passive: true });
     }
 
     document.addEventListener("mousemove", e => {
@@ -1200,31 +815,6 @@
         const deltaY = startY - e.clientY;
         const newHeight = Math.min(90, Math.max(0, currentHeight + (deltaY / window.innerHeight) * 100));
         chatDrawer.style.height = newHeight + "vh";
-    });
-
-    document.addEventListener("mouseup", () => {
-        if (isDragging && chatDrawer) {
-            isDragging = false;
-            chatDrawer.style.transition = 'height 0.3s ease-in-out'; // Re-enable transition
-            const rect = chatDrawer.getBoundingClientRect();
-            currentHeight = (rect.height / window.innerHeight) * 100;
-            
-            if (currentHeight < 15) {
-                // Fully collapse if dragged below 15%
-                collapseDrawer();
-            } else if (currentHeight > 85) {
-                // Snap to max if dragged above 85%
-                chatDrawer.style.height = '90vh';
-                currentHeight = 90;
-            } else {
-                // Keep the user's exact selected height (no clamping, just use what they dragged to)
-                chatDrawer.style.height = currentHeight + 'vh';
-                // Update isDrawerExpanded state
-                isDrawerExpanded = true;
-                if (chatOverlay) chatOverlay.classList.remove('hidden');
-                if (chatInputBar) chatInputBar.classList.add('hidden');
-            }
-        }
     });
 
     document.addEventListener("touchmove", e => {
@@ -1235,7 +825,7 @@
         chatDrawer.style.height = newHeight + "vh";
     });
 
-    document.addEventListener("touchend", () => {
+    function handleDragEnd() {
         if (isDragging && chatDrawer) {
             isDragging = false;
             chatDrawer.style.transition = 'height 0.3s ease-in-out'; // Re-enable transition
@@ -1258,7 +848,10 @@
                 if (chatInputBar) chatInputBar.classList.add('hidden');
             }
         }
-    });
+    }
+    document.addEventListener("touchend", handleDragEnd);
+    document.addEventListener("touchcancel", handleDragEnd);
+    document.addEventListener("mouseup", handleDragEnd);
 
     // Fix wrapping for all text bubbles
     function fixWrapping() {
@@ -1485,7 +1078,7 @@
                 tempBubble.className = 'flex justify-end mb-2';
                 tempBubble.innerHTML = `
                     <div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]">
-                        <span class="mr-2">🎙️</span>
+                        <span class="mr-2">ðŸŽ™ï¸</span>
                         <span class="text-xs">Recording... swipe left to cancel</span>
                     </div>
                 `;
@@ -1583,6 +1176,7 @@
             });
             
             chatMessages.scrollTop = chatMessages.scrollHeight;
+            setTimeout(() => addContextualMessage("Got your voice message! I'm on it â€” let me find the best options for you.", []), 800);
         }
     }
 
@@ -1622,23 +1216,45 @@
     }
     setupVoiceRecording();
 
-        window.openProductDetail = function(productSlug) {
-            console.log('Opening product detail for:', productSlug);
-            alert(`Opening product detail page for: ${productSlug.replace(/-/g, ' ')}`);
+        window.openProductDetail = function(productSlug, productName, productBrand, productImage, productPrice) {
+            try {
+                if (productSlug || productName) sessionStorage.setItem('__productNavData', JSON.stringify({ id: productSlug, name: productName, brand: productBrand, image: productImage || '', price: productPrice || '' }));
+            } catch (e) {}
+            var q = 'id=' + encodeURIComponent(productSlug || '') + '&from=wishlist';
+            if (productName) q += '&name=' + encodeURIComponent(productName);
+            if (productBrand) q += '&brand=' + encodeURIComponent(productBrand);
+            if (productImage) q += '&image=' + encodeURIComponent(productImage);
+            if (productPrice) q += '&price=' + encodeURIComponent(productPrice);
+            window.location.href = 'Product_details_page.html?' + q;
         }
+
+        // Wishlist state (match Home) - used by toggleWishlist
+        const wishlistItems = new Set();
+        window.toggleWishlist = function(button, productId) {
+            const heartIcon = button.querySelector('svg');
+            if (!heartIcon) return;
+            if (wishlistItems.has(productId)) {
+                wishlistItems.delete(productId);
+                heartIcon.classList.remove('heart-filled');
+                heartIcon.setAttribute('fill', 'none');
+                heartIcon.setAttribute('stroke', 'currentColor');
+            } else {
+                wishlistItems.add(productId);
+                heartIcon.classList.add('heart-filled');
+                heartIcon.setAttribute('fill', '#939BFB');
+                heartIcon.setAttribute('stroke', '#939BFB');
+            }
+        };
 
         // Product tile button handlers
         function setupProductTileButtons() {
-            // Track wishlist state
-            const wishlistState = new Map();
-            
             // Like/Wishlist button handler (heart icon - first button)
             document.querySelectorAll('[id^="wishlist-item-"]').forEach(item => {
                 const itemId = item.id;
+                const productId = item.getAttribute('data-product-id') || itemId;
                 const buttons = item.querySelectorAll('.absolute.top-2.right-2 button');
                 
-                // Initialize wishlist state - all items start as in wishlist (since this is the wishlist page)
-                wishlistState.set(itemId, true);
+                if (productId) wishlistItems.add(productId);
                 
                 if (buttons.length >= 1) {
                     // Like/Wishlist button (first button - heart icon)
@@ -1646,21 +1262,17 @@
                     const svg = likeBtn.querySelector('svg');
                     const path = svg.querySelector('path');
                     
-                    // Set initial state - filled with primary color
-                    svg.classList.add('text-[#939BFB]');
-                    svg.classList.remove('text-black');
+                    // Set initial state - filled with primary color (items on wishlist page are wishlisted)
+                    svg.classList.add('heart-filled', 'text-[#939BFB]');
                     path.setAttribute('fill', 'currentColor');
-                    path.removeAttribute('stroke');
-                    path.removeAttribute('stroke-width');
+                    path.setAttribute('stroke', '#939BFB');
                     
                     likeBtn.addEventListener('click', function(e) {
                         e.stopPropagation();
-                        
-                        const isInWishlist = wishlistState.get(itemId);
-                        
-                        if (isInWishlist) {
-                            // Remove from wishlist - animate out and remove from DOM
-                            wishlistState.set(itemId, false);
+                        const pid = item.getAttribute('data-product-id') || productId;
+                        toggleWishlist(likeBtn, pid);
+                        const isInWishlist = wishlistItems.has(pid);
+                        if (!isInWishlist) {
                             
                             // Add fade-out animation
                             item.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
@@ -1693,14 +1305,6 @@
                                     }
                                 }
                             }, 300);
-                        } else {
-                            // Add to wishlist - fill with primary color
-                            wishlistState.set(itemId, true);
-                            svg.classList.remove('text-black');
-                            svg.classList.add('text-[#939BFB]');
-                            path.setAttribute('fill', 'currentColor');
-                            path.removeAttribute('stroke');
-                            path.removeAttribute('stroke-width');
                         }
                     });
                 }
@@ -1709,20 +1313,42 @@
                     // Share button (second button - paper plane icon)
                     buttons[1].addEventListener('click', function(e) {
                         e.stopPropagation();
-                        const itemName = item.querySelector('h4')?.textContent || 'Product';
-                        const itemPrice = item.querySelector('span.text-black.font-medium')?.textContent || '';
-                        shareProduct(itemName, itemPrice);
+                        const itemName = (item.querySelector('[data-product-name]') || item.querySelector('h4'))?.textContent || 'Product';
+                        const itemPrice = (item.querySelector('[data-product-price]') || item.querySelector('span.text-black.font-medium'))?.textContent || '';
+                        const brand = (item.querySelector('[data-product-brand]'))?.textContent || '';
+                        const pid = item.getAttribute('data-product-id') || productId;
+                        shareProduct(itemName, itemPrice, null, pid, brand);
                     });
                 }
+                
+                if (buttons.length >= 3) {
+                    // Chat button (third button) - wired via event delegation below
+                }
             });
+            
+            // Chat trigger - use capture phase so we intercept before tile onclick (which would navigate)
+            document.addEventListener('click', function(e) {
+                const trigger = e.target.closest('.chat-trigger');
+                if (!trigger) return;
+                const item = trigger.closest('[id^="wishlist-item-"]');
+                if (!item) return;
+                e.stopPropagation();
+                e.preventDefault();
+                const productName = trigger.getAttribute('data-item') || (item.querySelector('[data-product-name]') || item.querySelector('h4'))?.textContent || 'Product';
+                const productImage = trigger.getAttribute('data-product-image') || item.querySelector('[data-product-image]')?.src || item.querySelector('.product-image-overlay-wrap img')?.src || item.querySelector('img')?.src || '';
+                expandDrawer();
+                addContextualMessage('Tell me more about the "' + (productName || '').replace(/"/g, '&quot;') + '" - would you like styling suggestions or alternatives?', productImage ? [productImage] : []);
+            }, true);
         }
 
-        // Share product function
-        window.shareProduct = function(productName, price, productUrl = null) {
-            const shareUrl = productUrl || `${window.location.origin}/product/${productName.toLowerCase().replace(/\s+/g, '-')}`;
+        // Share product function â€“ dynamic link to product page (not hardcoded)
+        window.shareProduct = function(productName, price, productUrl = null, productId = null, brand = null) {
+            const base = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+            const id = productId || (productName || '').toLowerCase().replace(/\s+/g, '-');
+            const shareUrl = productUrl || (base + 'Product_details_page.html?id=' + encodeURIComponent(id) + (productName ? '&name=' + encodeURIComponent(productName) : '') + (brand ? '&brand=' + encodeURIComponent(brand) : ''));
             const shareData = {
-                title: `${productName} - ${price}`,
-                text: `Check out this ${productName} for ${price} on GoShopMe`,
+                title: `${productName || 'Product'}${brand ? ' by ' + brand : ''}`,
+                text: `Check out this ${productName || 'item'}${price ? ' for ' + price : ''} on GoShopMe`,
                 url: shareUrl
             };
             
@@ -1746,8 +1372,75 @@
             }
         };
 
-        // Setup product tile buttons after DOM is ready
-        setupProductTileButtons();
+        // ===== DYNAMIC WISHLIST RENDER (presentation data from data/wishlist.json only) =====
+        // Mock items live in data/wishlist.json â€” edit that file to change presentation content.
+        const WISHLIST_FALLBACK = {
+            hero: { imageUrl: "https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/Paris%20in%20Spring.jpg", alt: "Wishlist gift sharing hero" },
+            items: []
+        };
+
+        function escapeHtml(s) {
+            if (s == null || s === '') return '';
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function renderWishlistGrid(data) {
+            const grid = document.getElementById('wishlist-items-grid');
+            const countEl = document.querySelector('[data-wishlist-count]');
+            if (!grid) return;
+            const items = (data && data.items) ? data.items : [];
+            if (items.length === 0) {
+                grid.innerHTML = '<div class="col-span-2 text-center py-12"><p class="text-gray-500 text-sm">Your wishlist is empty</p></div>';
+                if (countEl) countEl.textContent = '0';
+                return;
+            }
+            const html = items.map((p, i) => {
+                const idx = i + 1;
+                const imgSrc = escapeHtml(p.image || '');
+                const imgAlt = escapeHtml(p.imageAlt || p.name || 'Product');
+                const brand = escapeHtml(p.brand || '');
+                const name = escapeHtml(p.name || 'Product');
+                const price = escapeHtml(p.price || '');
+                const origPrice = p.originalPrice ? escapeHtml(p.originalPrice) : '';
+                const discount = p.discount ? escapeHtml(p.discount) : '';
+                const hasDiscount = !!(p.discount && p.originalPrice);
+                const priceClass = hasDiscount ? 'text-[#F96226]' : 'text-black';
+                const origPriceHtml = origPrice ? '<span class="text-gray-400 line-through text-xs" data-product-original-price>' + origPrice + '</span>' : '<span class="text-gray-400 line-through text-xs hidden" data-product-original-price></span>';
+                const discountHtml = discount ? '<div class="absolute bottom-2 left-2 bg-[#F96226] text-white px-2 py-1 rounded-full text-xs font-medium" data-product-discount><span data-product-discount-text>' + discount + '</span></div>' : '<div class="absolute bottom-2 left-2 bg-[#F96226] text-white px-2 py-1 rounded-full text-xs font-medium hidden" data-product-discount><span data-product-discount-text></span></div>';
+                return '<div id="wishlist-item-' + idx + '" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" data-product-id="' + escapeHtml(p.id || '') + '" data-product-slug="' + escapeHtml(p.slug || '') + '" onclick="var e=this; var img=e.querySelector(\'[data-product-image]\'); openProductDetail(e.getAttribute(\'data-product-id\')||e.getAttribute(\'data-product-slug\')||\'\', (e.querySelector(\'[data-product-name]\')||{}).textContent||\'\', (e.querySelector(\'[data-product-brand]\')||{}).textContent||\'\', img?img.src:\'\' , (e.querySelector(\'[data-product-price]\')||{}).textContent||\'\')"><div class="relative product-image-overlay-wrap"><img class="w-full h-40 object-cover" src="' + imgSrc + '" data-product-image alt="' + imgAlt + '" data-product-image-alt /><div class="absolute top-2 right-2 flex flex-col space-y-1"><button class="p-1 flex items-center justify-center hover:opacity-80 transition-opacity wishlist-btn" aria-label="Add to wishlist"><svg class="w-4 h-4 text-white product-overlay-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg></button><button class="p-1 flex items-center justify-center hover:opacity-80 transition-opacity share-product-btn" aria-label="Share"><svg class="w-4 h-4 text-white product-overlay-icon share-icon-tilted" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></button><button class="p-1 flex items-center justify-center hover:opacity-80 transition-opacity chat-trigger" data-item="' + escapeHtml(p.name || '') + '" data-product-image="' + imgSrc + '" aria-label="Chat"><svg class="w-4 h-4 text-white product-overlay-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" /></svg></button></div>' + discountHtml + '</div><div class="p-3"><p class="text-xs text-gray-500 mb-1" data-product-brand>' + brand + '</p><h4 class="poppins font-medium text-black text-sm mb-2" data-product-name>' + name + '</h4><div class="flex items-center space-x-2"><span class="' + priceClass + ' font-medium text-sm" data-product-price>' + price + '</span>' + origPriceHtml + '</div></div></div>';
+            }).join('');
+            grid.innerHTML = html;
+            if (countEl) countEl.textContent = String(items.length);
+            items.forEach(function(p) { if (p.id) wishlistItems.add(p.id); });
+            setupProductTileButtons();
+        }
+        window.renderWishlistGrid = renderWishlistGrid;
+
+        function initWishlistFromData() {
+            var dataPath = 'data/wishlist.json';
+            fetch(dataPath)
+                .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+                .then(function(data) {
+                    renderWishlistGrid(data);
+                    if (data && data.hero && data.hero.imageUrl) {
+                        populateWishlistHero(data.hero.imageUrl);
+                    } else if (WISHLIST_FALLBACK.hero && WISHLIST_FALLBACK.hero.imageUrl) {
+                        populateWishlistHero(WISHLIST_FALLBACK.hero.imageUrl);
+                    }
+                })
+                .catch(function() {
+                    renderWishlistGrid(WISHLIST_FALLBACK);
+                    if (WISHLIST_FALLBACK.hero && WISHLIST_FALLBACK.hero.imageUrl) {
+                        populateWishlistHero(WISHLIST_FALLBACK.hero.imageUrl);
+                    }
+                });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initWishlistFromData);
+        } else {
+            initWishlistFromData();
+        }
 
         // ===== DYNAMIC DATA POPULATION FUNCTIONS =====
         // Function to populate wishlist hero image
@@ -1758,7 +1451,7 @@
                 heroImg.onerror = function() {
                     console.warn('Failed to load wishlist hero image:', imageUrl);
                 };
-                console.log(`✓ Updated wishlist hero image with: ${imageUrl}`);
+                console.log(`âœ“ Updated wishlist hero image with: ${imageUrl}`);
                 return true;
             } else {
                 console.warn('Hero image element not found');
@@ -1766,8 +1459,8 @@
             }
         };
 
-        // Function to populate ShAI avatar
-        window.populateShAIAvatar = function(avatarUrl) {
+        // Function to populate ShAI avatar (alias: setShAIAvatar for consistency)
+        window.populateShAIAvatar = window.setShAIAvatar = function(avatarUrl) {
             const images = document.querySelectorAll('[data-shai-avatar]');
             let count = 0;
             images.forEach(img => {
@@ -1777,8 +1470,13 @@
                 };
                 count++;
             });
-            console.log(`✓ Updated ${count} ShAI avatar(s) with: ${avatarUrl}`);
+            console.log(`âœ“ Updated ${count} ShAI avatar(s) with: ${avatarUrl}`);
             return count;
+        };
+        window.testShAIAvatar = function(url) {
+            const testUrl = url || 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg';
+            window.setShAIAvatar(testUrl);
+            console.log('testShAIAvatar:', testUrl);
         };
 
         // Function to populate user avatars
@@ -1792,7 +1490,7 @@
                 };
                 count++;
             });
-            console.log(`✓ Updated ${count} user avatar(s) with: ${avatarUrl}`);
+            console.log(`âœ“ Updated ${count} user avatar(s) with: ${avatarUrl}`);
             return count;
         };
 
@@ -1805,7 +1503,7 @@
             if (productData.id) item.setAttribute('data-product-id', productData.id);
             if (productData.slug) {
                 item.setAttribute('data-product-slug', productData.slug);
-                item.setAttribute('onclick', `openProductDetail('${productData.slug}')`);
+                item.setAttribute('onclick', `openProductDetail('${(productData.slug || '').replace(/'/g, "\\'")}', '${(productData.name || '').replace(/'/g, "\\'")}', '${(productData.brand || '').replace(/'/g, "\\'")}')`);
             }
 
             // Set product image
@@ -1830,11 +1528,13 @@
                 nameEl.textContent = productData.name;
             }
 
-            // Set chat trigger data-item
+            // Set chat trigger data-item and data-product-image (for contextual message with thumbnail)
             const chatTrigger = item.querySelector('.chat-trigger');
-            if (chatTrigger && productData.name) {
-                chatTrigger.setAttribute('data-item', productData.name);
+            if (chatTrigger) {
+                if (productData.name) chatTrigger.setAttribute('data-item', productData.name);
+                if (productData.image) chatTrigger.setAttribute('data-product-image', productData.image);
             }
+            if (productData.id) wishlistItems.add(productData.id);
 
             // Set prices
             const priceEl = item.querySelector('[data-product-price]');
@@ -2121,3 +1821,4 @@ populateWishlistItems([
 
 </body>
 </html>
+

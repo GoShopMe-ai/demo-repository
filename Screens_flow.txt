@@ -1,0 +1,38 @@
+# GoShopMe Screen Flows (Quick Reference)
+# Full documentation: docs/screens_flow_documentation.md
+
+Onboarding:
+
+Welcome Screen → Get started → SignUp_Screen.html → Onboarding_Personal_Details.html → Continue → Onboarding_Choose_Plan.html
+Onboarding_Choose_Plan (if premium) → Continue → Onboarding_Subscribe_Payment.html (premium)
+Onboarding_Subscribe_Payment → Start My Premium Plan → QuizOrSkip_Success_Subscribe.html; Go Back → Onboarding_Choose_Plan.html
+Onboarding_Payment_Unsuccesful → Edit Payment Details → Onboarding_Subscribe_Payment.html; Go Back to Plans → Onboarding_Choose_Plan.html
+Onboarding_Choose_Plan (if free) → Continue → QuizOrSkip_Success_Subscribe.html (remove the successful payment notification); Go Back → Onboarding_Choose_Plan.html
+
+Quiz:
+
+QuizOrSkip_Screen → Take Style Quiz → QuizStep1_BodyShape.html; Go Back → Onboarding_Choose_Plan.html
+QuizOrSkip_Success_Subscribe (if premium show the successful payment notification) → Take Style Quiz → QuizStep1_BodyShape.html; Go Back → QuizOrSkip_Screen.html
+QuizStep1 → Next → QuizStep2_Hair&SkinColor.html; Go Back → QuizOrSkip_Screen.html
+QuizStep2 → Next → QuizStep3_ColorsLike&Dislike.html; Go Back → QuizStep1_BodyShape.html
+QuizStep3 → Next / Skip → QuizStep4_Sizes_HeelsHeight.html; Go Back → QuizStep2_Hair&SkinColor.html
+QuizStep4 → Next → QuizStep5_Brands.html; Go Back → QuizStep3_ColorsLike&Dislike.html
+QuizStep5 → Next / Skip → QuizStep6_UploadPics.html; Go Back → QuizStep4_Sizes_HeelsHeight.html
+QuizStep6 → Continue → QuizComplete.html; Go Back → QuizStep5_Brands.html
+QuizComplete → Start Shopping → Home.html
+
+
+Auth:
+
+Welcome Screen → Sign In → SignIn_Screen.html; Go Back → Welcome_Screen.html
+SignIn_Screen.html (forgotten password link) → Forgotten_Password_Main.html; Go Back → SignIn_Screen.html
+Forgotten_Password_Main → Forgotten_Pass_Email_Sent.html (if there is an existing user with this email); Go Back → Forgotten_Password_Main.html
+Forgotten_Pass_Email_Sent → Create_New_Password.html; Go Back → Forgotten_Password_Main.html
+Forgotten_Password_Main → Forgotten_Pass_AccountNotFound → Contact Support → mailto:support@goshopme.com
+Create_New_Password → Back → SignIn_Screen.html; after success → Password_Updated_Success.html (after 1.5s)
+Password_Updated_Success → Return to Login → SignIn_Screen.html
+
+Profile & Style Goals:
+
+User_Profile_Free_Plan / User_Profile_Paid_Plan → Current Style Goals → Style_Goals.html; Log out → Welcome_Screen.html
+Style_Goals → Back → User_Profile_*; Retake Style Quiz → QuizOrSkip_Screen.html

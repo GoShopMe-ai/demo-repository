@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
     <title>Personal Details - GoShopMe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,6 +23,8 @@
         .dob-error .rounded-lg { border-color: #EF4444 !important; }
         .input-error:focus { --tw-ring-color: #EF4444 !important; }
         .error-msg { color: #EF4444; font-size: 12px; margin-top: 4px; }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
     </style>
     <script>
         tailwind.config = {
@@ -45,7 +51,7 @@
     <!-- Header - same width as main screen -->
     <div id="header" class="w-full bg-white border-b border-gray-100 px-5 py-4 flex-shrink-0">
         <div class="flex items-center justify-between">
-            <button class="p-2 -ml-2 text-gray-600 hover:opacity-70 transition-opacity" aria-label="Go back">
+            <button type="button" onclick="window.location.href='SignUp_Screen.html'" class="header-icon-btn w-10 h-10 flex items-center justify-center p-2 -ml-2 text-gray-600 hover:text-gray-800" aria-label="Go back">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
                 </svg>
@@ -329,7 +335,7 @@
                     <div class="w-32 min-w-0">
                         <label class="block text-sm text-gray-600 mb-2">Code *</label>
                         <button type="button" id="phoneCodeDropdown" class="w-full px-3 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm text-left flex items-center justify-between gap-2 bg-white font-wix min-w-0">
-                            <span id="selectedPhoneCode" class="truncate">🇺🇸 +1</span>
+                            <span id="selectedPhoneCode" class="truncate">ðŸ‡ºðŸ‡¸ +1</span>
                             <svg class="w-4 h-4 text-gray-400 shrink-0 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
                             </svg>
@@ -397,85 +403,85 @@
 
 <script>
 const phoneCodes = [
-    {flag: '🇦🇫', code: '+93', country: 'Afghanistan'},
-    {flag: '🇦🇱', code: '+355', country: 'Albania'},
-    {flag: '🇩🇿', code: '+213', country: 'Algeria'},
-    {flag: '🇦🇩', code: '+376', country: 'Andorra'},
-    {flag: '🇦🇴', code: '+244', country: 'Angola'},
-    {flag: '🇦🇷', code: '+54', country: 'Argentina'},
-    {flag: '🇦🇲', code: '+374', country: 'Armenia'},
-    {flag: '🇦🇺', code: '+61', country: 'Australia'},
-    {flag: '🇦🇹', code: '+43', country: 'Austria'},
-    {flag: '🇦🇿', code: '+994', country: 'Azerbaijan'},
-    {flag: '🇧🇭', code: '+973', country: 'Bahrain'},
-    {flag: '🇧🇩', code: '+880', country: 'Bangladesh'},
-    {flag: '🇧🇾', code: '+375', country: 'Belarus'},
-    {flag: '🇧🇪', code: '+32', country: 'Belgium'},
-    {flag: '🇧🇦', code: '+387', country: 'Bosnia and Herzegovina'},
-    {flag: '🇧🇷', code: '+55', country: 'Brazil'},
-    {flag: '🇧🇬', code: '+359', country: 'Bulgaria'},
-    {flag: '🇨🇦', code: '+1', country: 'Canada'},
-    {flag: '🇨🇱', code: '+56', country: 'Chile'},
-    {flag: '🇨🇳', code: '+86', country: 'China'},
-    {flag: '🇨🇴', code: '+57', country: 'Colombia'},
-    {flag: '🇭🇷', code: '+385', country: 'Croatia'},
-    {flag: '🇨🇾', code: '+357', country: 'Cyprus'},
-    {flag: '🇨🇿', code: '+420', country: 'Czech Republic'},
-    {flag: '🇩🇰', code: '+45', country: 'Denmark'},
-    {flag: '🇪🇬', code: '+20', country: 'Egypt'},
-    {flag: '🇪🇪', code: '+372', country: 'Estonia'},
-    {flag: '🇫🇮', code: '+358', country: 'Finland'},
-    {flag: '🇫🇷', code: '+33', country: 'France'},
-    {flag: '🇬🇪', code: '+995', country: 'Georgia'},
-    {flag: '🇩🇪', code: '+49', country: 'Germany'},
-    {flag: '🇬🇷', code: '+30', country: 'Greece'},
-    {flag: '🇭🇺', code: '+36', country: 'Hungary'},
-    {flag: '🇮🇸', code: '+354', country: 'Iceland'},
-    {flag: '🇮🇳', code: '+91', country: 'India'},
-    {flag: '🇮🇩', code: '+62', country: 'Indonesia'},
-    {flag: '🇮🇷', code: '+98', country: 'Iran'},
-    {flag: '🇮🇶', code: '+964', country: 'Iraq'},
-    {flag: '🇮🇪', code: '+353', country: 'Ireland'},
-    {flag: '🇮🇱', code: '+972', country: 'Israel'},
-    {flag: '🇮🇹', code: '+39', country: 'Italy'},
-    {flag: '🇯🇵', code: '+81', country: 'Japan'},
-    {flag: '🇰🇿', code: '+7', country: 'Kazakhstan'},
-    {flag: '🇰🇼', code: '+965', country: 'Kuwait'},
-    {flag: '🇱🇻', code: '+371', country: 'Latvia'},
-    {flag: '🇱🇹', code: '+370', country: 'Lithuania'},
-    {flag: '🇱🇺', code: '+352', country: 'Luxembourg'},
-    {flag: '🇲🇾', code: '+60', country: 'Malaysia'},
-    {flag: '🇲🇽', code: '+52', country: 'Mexico'},
-    {flag: '🇲🇩', code: '+373', country: 'Moldova'},
-    {flag: '🇳🇱', code: '+31', country: 'Netherlands'},
-    {flag: '🇳🇿', code: '+64', country: 'New Zealand'},
-    {flag: '🇳🇬', code: '+234', country: 'Nigeria'},
-    {flag: '🇲🇰', code: '+389', country: 'North Macedonia'},
-    {flag: '🇳🇴', code: '+47', country: 'Norway'},
-    {flag: '🇵🇰', code: '+92', country: 'Pakistan'},
-    {flag: '🇵🇭', code: '+63', country: 'Philippines'},
-    {flag: '🇵🇱', code: '+48', country: 'Poland'},
-    {flag: '🇵🇹', code: '+351', country: 'Portugal'},
-    {flag: '🇶🇦', code: '+974', country: 'Qatar'},
-    {flag: '🇷🇴', code: '+40', country: 'Romania'},
-    {flag: '🇷🇺', code: '+7', country: 'Russia'},
-    {flag: '🇸🇦', code: '+966', country: 'Saudi Arabia'},
-    {flag: '🇷🇸', code: '+381', country: 'Serbia'},
-    {flag: '🇸🇬', code: '+65', country: 'Singapore'},
-    {flag: '🇸🇰', code: '+421', country: 'Slovakia'},
-    {flag: '🇸🇮', code: '+386', country: 'Slovenia'},
-    {flag: '🇿🇦', code: '+27', country: 'South Africa'},
-    {flag: '🇰🇷', code: '+82', country: 'South Korea'},
-    {flag: '🇪🇸', code: '+34', country: 'Spain'},
-    {flag: '🇸🇪', code: '+46', country: 'Sweden'},
-    {flag: '🇨🇭', code: '+41', country: 'Switzerland'},
-    {flag: '🇹🇭', code: '+66', country: 'Thailand'},
-    {flag: '🇹🇷', code: '+90', country: 'Turkey'},
-    {flag: '🇺🇦', code: '+380', country: 'Ukraine'},
-    {flag: '🇦🇪', code: '+971', country: 'United Arab Emirates'},
-    {flag: '🇬🇧', code: '+44', country: 'United Kingdom'},
-    {flag: '🇺🇸', code: '+1', country: 'United States'},
-    {flag: '🇻🇳', code: '+84', country: 'Vietnam'}
+    {flag: 'ðŸ‡¦ðŸ‡«', code: '+93', country: 'Afghanistan'},
+    {flag: 'ðŸ‡¦ðŸ‡±', code: '+355', country: 'Albania'},
+    {flag: 'ðŸ‡©ðŸ‡¿', code: '+213', country: 'Algeria'},
+    {flag: 'ðŸ‡¦ðŸ‡©', code: '+376', country: 'Andorra'},
+    {flag: 'ðŸ‡¦ðŸ‡´', code: '+244', country: 'Angola'},
+    {flag: 'ðŸ‡¦ðŸ‡·', code: '+54', country: 'Argentina'},
+    {flag: 'ðŸ‡¦ðŸ‡²', code: '+374', country: 'Armenia'},
+    {flag: 'ðŸ‡¦ðŸ‡º', code: '+61', country: 'Australia'},
+    {flag: 'ðŸ‡¦ðŸ‡¹', code: '+43', country: 'Austria'},
+    {flag: 'ðŸ‡¦ðŸ‡¿', code: '+994', country: 'Azerbaijan'},
+    {flag: 'ðŸ‡§ðŸ‡­', code: '+973', country: 'Bahrain'},
+    {flag: 'ðŸ‡§ðŸ‡©', code: '+880', country: 'Bangladesh'},
+    {flag: 'ðŸ‡§ðŸ‡¾', code: '+375', country: 'Belarus'},
+    {flag: 'ðŸ‡§ðŸ‡ª', code: '+32', country: 'Belgium'},
+    {flag: 'ðŸ‡§ðŸ‡¦', code: '+387', country: 'Bosnia and Herzegovina'},
+    {flag: 'ðŸ‡§ðŸ‡·', code: '+55', country: 'Brazil'},
+    {flag: 'ðŸ‡§ðŸ‡¬', code: '+359', country: 'Bulgaria'},
+    {flag: 'ðŸ‡¨ðŸ‡¦', code: '+1', country: 'Canada'},
+    {flag: 'ðŸ‡¨ðŸ‡±', code: '+56', country: 'Chile'},
+    {flag: 'ðŸ‡¨ðŸ‡³', code: '+86', country: 'China'},
+    {flag: 'ðŸ‡¨ðŸ‡´', code: '+57', country: 'Colombia'},
+    {flag: 'ðŸ‡­ðŸ‡·', code: '+385', country: 'Croatia'},
+    {flag: 'ðŸ‡¨ðŸ‡¾', code: '+357', country: 'Cyprus'},
+    {flag: 'ðŸ‡¨ðŸ‡¿', code: '+420', country: 'Czech Republic'},
+    {flag: 'ðŸ‡©ðŸ‡°', code: '+45', country: 'Denmark'},
+    {flag: 'ðŸ‡ªðŸ‡¬', code: '+20', country: 'Egypt'},
+    {flag: 'ðŸ‡ªðŸ‡ª', code: '+372', country: 'Estonia'},
+    {flag: 'ðŸ‡«ðŸ‡®', code: '+358', country: 'Finland'},
+    {flag: 'ðŸ‡«ðŸ‡·', code: '+33', country: 'France'},
+    {flag: 'ðŸ‡¬ðŸ‡ª', code: '+995', country: 'Georgia'},
+    {flag: 'ðŸ‡©ðŸ‡ª', code: '+49', country: 'Germany'},
+    {flag: 'ðŸ‡¬ðŸ‡·', code: '+30', country: 'Greece'},
+    {flag: 'ðŸ‡­ðŸ‡º', code: '+36', country: 'Hungary'},
+    {flag: 'ðŸ‡®ðŸ‡¸', code: '+354', country: 'Iceland'},
+    {flag: 'ðŸ‡®ðŸ‡³', code: '+91', country: 'India'},
+    {flag: 'ðŸ‡®ðŸ‡©', code: '+62', country: 'Indonesia'},
+    {flag: 'ðŸ‡®ðŸ‡·', code: '+98', country: 'Iran'},
+    {flag: 'ðŸ‡®ðŸ‡¶', code: '+964', country: 'Iraq'},
+    {flag: 'ðŸ‡®ðŸ‡ª', code: '+353', country: 'Ireland'},
+    {flag: 'ðŸ‡®ðŸ‡±', code: '+972', country: 'Israel'},
+    {flag: 'ðŸ‡®ðŸ‡¹', code: '+39', country: 'Italy'},
+    {flag: 'ðŸ‡¯ðŸ‡µ', code: '+81', country: 'Japan'},
+    {flag: 'ðŸ‡°ðŸ‡¿', code: '+7', country: 'Kazakhstan'},
+    {flag: 'ðŸ‡°ðŸ‡¼', code: '+965', country: 'Kuwait'},
+    {flag: 'ðŸ‡±ðŸ‡»', code: '+371', country: 'Latvia'},
+    {flag: 'ðŸ‡±ðŸ‡¹', code: '+370', country: 'Lithuania'},
+    {flag: 'ðŸ‡±ðŸ‡º', code: '+352', country: 'Luxembourg'},
+    {flag: 'ðŸ‡²ðŸ‡¾', code: '+60', country: 'Malaysia'},
+    {flag: 'ðŸ‡²ðŸ‡½', code: '+52', country: 'Mexico'},
+    {flag: 'ðŸ‡²ðŸ‡©', code: '+373', country: 'Moldova'},
+    {flag: 'ðŸ‡³ðŸ‡±', code: '+31', country: 'Netherlands'},
+    {flag: 'ðŸ‡³ðŸ‡¿', code: '+64', country: 'New Zealand'},
+    {flag: 'ðŸ‡³ðŸ‡¬', code: '+234', country: 'Nigeria'},
+    {flag: 'ðŸ‡²ðŸ‡°', code: '+389', country: 'North Macedonia'},
+    {flag: 'ðŸ‡³ðŸ‡´', code: '+47', country: 'Norway'},
+    {flag: 'ðŸ‡µðŸ‡°', code: '+92', country: 'Pakistan'},
+    {flag: 'ðŸ‡µðŸ‡­', code: '+63', country: 'Philippines'},
+    {flag: 'ðŸ‡µðŸ‡±', code: '+48', country: 'Poland'},
+    {flag: 'ðŸ‡µðŸ‡¹', code: '+351', country: 'Portugal'},
+    {flag: 'ðŸ‡¶ðŸ‡¦', code: '+974', country: 'Qatar'},
+    {flag: 'ðŸ‡·ðŸ‡´', code: '+40', country: 'Romania'},
+    {flag: 'ðŸ‡·ðŸ‡º', code: '+7', country: 'Russia'},
+    {flag: 'ðŸ‡¸ðŸ‡¦', code: '+966', country: 'Saudi Arabia'},
+    {flag: 'ðŸ‡·ðŸ‡¸', code: '+381', country: 'Serbia'},
+    {flag: 'ðŸ‡¸ðŸ‡¬', code: '+65', country: 'Singapore'},
+    {flag: 'ðŸ‡¸ðŸ‡°', code: '+421', country: 'Slovakia'},
+    {flag: 'ðŸ‡¸ðŸ‡®', code: '+386', country: 'Slovenia'},
+    {flag: 'ðŸ‡¿ðŸ‡¦', code: '+27', country: 'South Africa'},
+    {flag: 'ðŸ‡°ðŸ‡·', code: '+82', country: 'South Korea'},
+    {flag: 'ðŸ‡ªðŸ‡¸', code: '+34', country: 'Spain'},
+    {flag: 'ðŸ‡¸ðŸ‡ª', code: '+46', country: 'Sweden'},
+    {flag: 'ðŸ‡¨ðŸ‡­', code: '+41', country: 'Switzerland'},
+    {flag: 'ðŸ‡¹ðŸ‡­', code: '+66', country: 'Thailand'},
+    {flag: 'ðŸ‡¹ðŸ‡·', code: '+90', country: 'Turkey'},
+    {flag: 'ðŸ‡ºðŸ‡¦', code: '+380', country: 'Ukraine'},
+    {flag: 'ðŸ‡¦ðŸ‡ª', code: '+971', country: 'United Arab Emirates'},
+    {flag: 'ðŸ‡¬ðŸ‡§', code: '+44', country: 'United Kingdom'},
+    {flag: 'ðŸ‡ºðŸ‡¸', code: '+1', country: 'United States'},
+    {flag: 'ðŸ‡»ðŸ‡³', code: '+84', country: 'Vietnam'}
 ];
 
 const countries = ['Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan', 'Bahrain', 'Bangladesh', 'Belarus', 'Belgium', 'Bosnia and Herzegovina', 'Brazil', 'Bulgaria', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Egypt', 'Estonia', 'Finland', 'France', 'Georgia', 'Germany', 'Greece', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Japan', 'Kazakhstan', 'Kuwait', 'Latvia', 'Lithuania', 'Luxembourg', 'Malaysia', 'Mexico', 'Moldova', 'Netherlands', 'New Zealand', 'Nigeria', 'North Macedonia', 'Norway', 'Pakistan', 'Philippines', 'Poland', 'Portugal', 'Qatar', 'Romania', 'Russia', 'Saudi Arabia', 'Serbia', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa', 'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Thailand', 'Turkey', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Vietnam'];
@@ -581,7 +587,7 @@ document.getElementById('profilePhotoInput').addEventListener('change', function
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function validateEmail(value) {
-    if (!value || value.trim() === '') return 'Email is required';
+    if (!value || value.trim() === '') return 'Please enter your email address';
     if (!emailRegex.test(value.trim())) return 'Please enter a valid email address';
     return '';
 }
@@ -628,9 +634,8 @@ function showFieldError(inputOrBtnId, errorId, msg) {
     }
 }
 
-// Validation for all required fields
+// Validation for all required fields (profile picture is optional)
 function validateAll() {
-    const profilePhoto = document.getElementById('profilePhotoImg');
     const firstName = document.getElementById('firstName').value.trim();
     const lastName = document.getElementById('lastName').value.trim();
     const day = document.getElementById('daySelect').value;
@@ -646,22 +651,15 @@ function validateAll() {
 
     let hasError = false;
 
-    if (!profilePhoto || !profilePhoto.src || profilePhoto.classList.contains('hidden')) {
-        showFieldError(null, 'profilePhoto-error', 'Profile picture is required');
-        hasError = true;
-    } else {
-        showFieldError(null, 'profilePhoto-error', '');
-    }
-
     if (!firstName) {
-        showFieldError('firstName', 'firstName-error', 'First name is required');
+        showFieldError('firstName', 'firstName-error', 'Please enter your first name');
         hasError = true;
     } else {
         showFieldError('firstName', 'firstName-error', '');
     }
 
     if (!lastName) {
-        showFieldError('lastName', 'lastName-error', 'Last name is required');
+        showFieldError('lastName', 'lastName-error', 'Please enter your last name');
         hasError = true;
     } else {
         showFieldError('lastName', 'lastName-error', '');
@@ -669,7 +667,7 @@ function validateAll() {
 
     if (!day || !month || !year) {
         document.getElementById('dob-container')?.classList.add('dob-error');
-        showFieldError('daySelect', 'dob-error', 'Date of birth is required');
+        showFieldError('daySelect', 'dob-error', 'Please select your date of birth');
         hasError = true;
     } else {
         document.getElementById('dob-container')?.classList.remove('dob-error');
@@ -685,42 +683,42 @@ function validateAll() {
     }
 
     if (!address1) {
-        showFieldError('address1', 'address1-error', 'Address line 1 is required');
+        showFieldError('address1', 'address1-error', 'Please enter your street address');
         hasError = true;
     } else {
         showFieldError('address1', 'address1-error', '');
     }
 
     if (!city) {
-        showFieldError('city', 'city-error', 'City is required');
+        showFieldError('city', 'city-error', 'Please enter your city');
         hasError = true;
     } else {
         showFieldError('city', 'city-error', '');
     }
 
     if (!postal) {
-        showFieldError('postal', 'postal-error', 'Post code / ZIP is required');
+        showFieldError('postal', 'postal-error', 'Please enter your post code or ZIP');
         hasError = true;
     } else {
         showFieldError('postal', 'postal-error', '');
     }
 
     if (!region) {
-        showFieldError('region', 'region-error', 'Region / State / Province is required');
+        showFieldError('region', 'region-error', 'Please enter your state or province');
         hasError = true;
     } else {
         showFieldError('region', 'region-error', '');
     }
 
     if (!country || country === 'Select Country') {
-        showFieldError('countryDropdown', 'country-error', 'Country is required');
+        showFieldError('countryDropdown', 'country-error', 'Please select your country');
         hasError = true;
     } else {
         showFieldError('countryDropdown', 'country-error', '');
     }
 
     if (phone.length < 7) {
-        showFieldError('phone', 'phone-error', 'Valid phone number is required');
+        showFieldError('phone', 'phone-error', 'Please enter a valid phone number (at least 7 digits)');
         hasError = true;
     } else {
         showFieldError('phone', 'phone-error', '');
@@ -734,6 +732,9 @@ function validateAll() {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', () => showFieldError(id, id + '-error', ''));
 });
+document.getElementById('phone').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '');
+});
 
 ['daySelect', 'monthSelect', 'yearSelect'].forEach(id => {
     const el = document.getElementById(id);
@@ -743,12 +744,86 @@ function validateAll() {
     });
 });
 
+var ADDRESS_STORAGE_KEY = 'goshopme_addresses';
 document.getElementById('continueBtn').addEventListener('click', function() {
     if (validateAll()) {
-        console.log('Form valid - continuing...');
-        // window.location.href = '...';
+        var phoneCode = document.getElementById('selectedPhoneCode').textContent.trim();
+        var addr = {
+            id: 'addr_' + Date.now(),
+            firstName: document.getElementById('firstName').value.trim(),
+            lastName: document.getElementById('lastName').value.trim(),
+            addressLine1: document.getElementById('address1').value.trim(),
+            addressLine2: document.getElementById('address2').value.trim(),
+            city: document.getElementById('city').value.trim(),
+            zipCode: document.getElementById('postal').value.trim(),
+            region: document.getElementById('region').value.trim(),
+            country: document.getElementById('selectedCountry').textContent.trim(),
+            phoneCode: phoneCode,
+            phoneNumber: document.getElementById('phone').value.replace(/\D/g, ''),
+            isDefault: true
+        };
+        try {
+            var list = JSON.parse(localStorage.getItem(ADDRESS_STORAGE_KEY) || '[]');
+            list.forEach(function(a) { a.isDefault = false; });
+            list.push(addr);
+            localStorage.setItem(ADDRESS_STORAGE_KEY, JSON.stringify(list));
+        } catch (err) { console.error('Failed to save address:', err); }
+        if (typeof window.GoShopMeOnboardingAPI !== 'undefined' && window.GoShopMeOnboardingAPI.submitPersonalDetails) {
+            window.GoShopMeOnboardingAPI.submitPersonalDetails(addr);
+        }
+        window.location.href = 'Onboarding_Choose_Plan.html';
     }
 });
+
+// API readiness: prefill from window.__PERSONAL_DETAILS_DATA__, get/set for API
+(function() {
+    window.getPersonalDetailsData = function() {
+        var phoneCode = document.getElementById('selectedPhoneCode').textContent.trim();
+        return {
+            firstName: document.getElementById('firstName').value.trim(),
+            lastName: document.getElementById('lastName').value.trim(),
+            addressLine1: document.getElementById('address1').value.trim(),
+            addressLine2: document.getElementById('address2').value.trim(),
+            city: document.getElementById('city').value.trim(),
+            zipCode: document.getElementById('postal').value.trim(),
+            region: document.getElementById('region').value.trim(),
+            country: document.getElementById('selectedCountry').textContent.trim(),
+            phoneCode: phoneCode,
+            phoneNumber: document.getElementById('phone').value.replace(/\D/g, ''),
+            email: document.getElementById('email').value.trim(),
+            day: document.getElementById('daySelect').value,
+            month: document.getElementById('monthSelect').value,
+            year: document.getElementById('yearSelect').value
+        };
+    };
+    window.setPersonalDetailsData = function(data) {
+        if (!data) return;
+        if (data.firstName) document.getElementById('firstName').value = data.firstName;
+        if (data.lastName) document.getElementById('lastName').value = data.lastName;
+        if (data.addressLine1) document.getElementById('address1').value = data.addressLine1;
+        if (data.addressLine2) document.getElementById('address2').value = data.addressLine2;
+        if (data.city) document.getElementById('city').value = data.city;
+        if (data.zipCode) document.getElementById('postal').value = data.zipCode;
+        if (data.region) document.getElementById('region').value = data.region;
+        if (data.country) document.getElementById('selectedCountry').textContent = data.country;
+        if (data.phoneNumber) document.getElementById('phone').value = data.phoneNumber;
+        if (data.email) document.getElementById('email').value = data.email;
+        if (data.day) document.getElementById('daySelect').value = data.day;
+        if (data.month) document.getElementById('monthSelect').value = data.month;
+        if (data.year) document.getElementById('yearSelect').value = data.year;
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.__PERSONAL_DETAILS_DATA__) window.setPersonalDetailsData(window.__PERSONAL_DETAILS_DATA__);
+        // Prefill email from signup (email+password registration flow)
+        try {
+            var signupEmail = sessionStorage.getItem('__signupEmailForOnboarding');
+            if (signupEmail && document.getElementById('email')) {
+                document.getElementById('email').value = signupEmail;
+                sessionStorage.removeItem('__signupEmailForOnboarding');
+            }
+        } catch (e) {}
+    });
+})();
 </script>
 
 

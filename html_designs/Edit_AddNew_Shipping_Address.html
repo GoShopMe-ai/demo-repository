@@ -1,15 +1,19 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Address – GoShopMe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <title>Add New Address â€“ GoShopMe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { 'shine-primary': '#939BFB', 'shine-accent': '#F96226' }
+                    colors: { 'shine-primary': '#939BFB', 'shine-accent': '#F96226', primary: '#939BFB' }
                 }
             }
         }
@@ -19,123 +23,121 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         ::-webkit-scrollbar { display: none; }
-        * { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        * { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif; }
+        .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif; }
+        .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
         body { -ms-overflow-style: none; scrollbar-width: none; }
         .safe-area-top { padding-top: env(safe-area-inset-top); }
         .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
+        .bottom-nav-btn { display: flex; flex-direction: column; align-items: center; color: #6B7280; transition: color 0.2s ease-in-out; min-width: 60px; }
+        .bottom-nav-btn:hover, .bottom-nav-btn.active { color: #939BFB; }
+        .bottom-nav-btn:hover svg, .bottom-nav-btn:hover span, .bottom-nav-btn.active svg, .bottom-nav-btn.active span { color: #939BFB; }
+        .bottom-nav-btn svg { width: 20px; height: 20px; stroke-width: 1.5; margin-bottom: 4px; }
+        .input-error { border-color: #EF4444 !important; }
+        .input-error:focus { --tw-ring-color: #EF4444 !important; }
+        .error-msg { color: #EF4444; font-size: 12px; margin-top: 4px; display: block; }
+        #cart-indicator, #notif-indicator { min-width: 18px; min-height: 18px; padding: 0 5px; display: flex; align-items: center; justify-content: center; }
+        #cart-indicator.hidden, #notif-indicator.hidden { display: none !important; }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
     </style>
 </head>
 <body class="bg-[#F6F6F6] dm-sans overflow-x-hidden">
 <div class="w-full max-w-[390px] mx-auto min-h-screen bg-white shadow-2xl relative">
 
 <!-- Header -->
-<div id="header" class="sticky top-0 bg-white z-50 safe-area-top border-b border-gray-100">
-    <div class="px-5 py-4">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <button class="text-gray-600" onclick="history.back()">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
-                    </svg>
-                </button>
-                <h1 class="text-xl font-semibold poppins text-gray-900">Add New Address</h1>
-            </div>
-            <div class="flex gap-5">
-                <button class="text-gray-600">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
-                    </svg>
-                </button>
-                <button class="text-gray-600">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z"></path>
-                    </svg>
-                </button>
-            </div>
+<div id="header" class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-50 bg-white border-b border-gray-100 p-4 safe-area-top">
+    <div class="relative flex items-center justify-between">
+        <a id="add-address-back-link" href="Shipping_Address_Settings.html" class="header-icon-btn relative z-10 w-10 h-10 flex items-center justify-center text-gray-600 hover:text-gray-800 p-2" aria-label="Back to addresses">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+            </svg>
+        </a>
+        <h1 id="page-title" class="absolute left-0 right-0 text-center text-lg font-semibold text-gray-900 poppins pointer-events-none">Add New Address</h1>
+        <div class="relative z-10 flex items-center gap-0">
+            <a href="Notifications_Screen.html?from=add-address" id="notif-btn" class="header-icon-btn w-10 h-10 flex items-center justify-center relative overflow-visible text-gray-600 hover:text-gray-800" aria-label="Notifications">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+                <div id="notif-indicator" class="absolute -top-0.5 -right-0.5 min-w-[18px] min-h-[18px] px-1 bg-[#F96226] rounded-full hidden items-center justify-center flex"><span id="notif-count" class="text-[10px] text-white font-medium leading-none whitespace-nowrap"></span></div>
+            </a>
+            <a href="Shopping_bag.html?from=add-address" id="cart-btn" class="header-icon-btn w-10 h-10 flex items-center justify-center relative overflow-visible text-gray-600 hover:text-gray-800" aria-label="Shopping bag">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z"/></svg>
+                <div id="cart-indicator" class="absolute -top-0.5 -right-0.5 min-w-[18px] min-h-[18px] px-1 bg-[#939BFB] rounded-full hidden items-center justify-center flex"><span id="cart-count" class="text-[10px] text-white font-medium leading-none whitespace-nowrap"></span></div>
+            </a>
         </div>
     </div>
 </div>
 
 <!-- Main Content -->
-<main id="main-content" class="pt-20 pb-32 px-5 overflow-y-auto">
-    <form id="address-form" class="space-y-5 py-4">
-        <!-- Full Name Section -->
-        <div id="name-section" class="space-y-4">
+<main id="main-content" class="pt-20 px-4 pb-40 overflow-y-auto">
+    <form id="address-form" class="space-y-5 py-4" novalidate>
+        <!-- Personal Info -->
+        <div class="space-y-4">
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                    <input type="text" id="first-name" class="w-full p-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#939BFB] focus:ring-2 focus:ring-[#939BFB]/20 shadow-sm transition-all" placeholder="First name" required="">
+                    <label class="block text-sm text-gray-600 mb-2" for="first-name">First Name *</label>
+                    <input type="text" id="first-name" required class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm dm-sans" placeholder="Enter first name">
+                    <p id="first-name-error" class="error-msg hidden"></p>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                    <input type="text" id="last-name" class="w-full p-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#939BFB] focus:ring-2 focus:ring-[#939BFB]/20 shadow-sm transition-all" placeholder="Last name" required="">
+                    <label class="block text-sm text-gray-600 mb-2" for="last-name">Last Name *</label>
+                    <input type="text" id="last-name" required class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm dm-sans" placeholder="Enter last name">
+                    <p id="last-name-error" class="error-msg hidden"></p>
                 </div>
             </div>
         </div>
         
-        <!-- Phone Number with Country Code -->
-        <div id="phone-section">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Mobile Phone Number *</label>
-            <div class="flex space-x-2">
-                <select id="country-code" class="w-24 p-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#939BFB] shadow-sm text-sm">
-                    <option value="+1">🇺🇸 +1</option>
-                    <option value="+33">🇫🇷 +33</option>
-                    <option value="+44">🇬🇧 +44</option>
-                    <option value="+49">🇩🇪 +49</option>
-                    <option value="+1">🇨🇦 +1</option>
-                    <option value="+61">🇦🇺 +61</option>
-                    <option value="+81">🇯🇵 +81</option>
-                    <option value="+86">🇨🇳 +86</option>
-                </select>
-                <input type="tel" id="phone-number" class="flex-1 p-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#939BFB] focus:ring-2 focus:ring-[#939BFB]/20 shadow-sm transition-all" placeholder="Enter phone number" required="">
-            </div>
-        </div>
-        
-        <!-- Address Line 1 -->
-        <div id="address-line-1-section">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Address Line 1</label>
-            <input type="text" id="address-line-1" class="w-full p-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#939BFB] focus:ring-2 focus:ring-[#939BFB]/20 shadow-sm transition-all" placeholder="Street address" required="">
-        </div>
-        
-        <!-- Address Line 2 -->
-        <div id="address-line-2-section">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Address Line 2 (Optional)</label>
-            <input type="text" id="address-line-2" class="w-full p-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#939BFB] focus:ring-2 focus:ring-[#939BFB]/20 shadow-sm transition-all" placeholder="Apartment, suite, unit, building, floor, etc.">
-        </div>
-        
-        <!-- City -->
-        <div id="city-section">
-            <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
-            <input type="text" id="city" class="w-full p-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#939BFB] focus:ring-2 focus:ring-[#939BFB]/20 shadow-sm transition-all" placeholder="Enter city" required="">
-        </div>
-        
-        <!-- State/Province and ZIP -->
-        <div id="state-zip-section" class="grid grid-cols-2 gap-3">
+        <!-- Shipping Address -->
+        <div class="space-y-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">State/Province</label>
-                <input type="text" id="state" class="w-full p-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#939BFB] focus:ring-2 focus:ring-[#939BFB]/20 shadow-sm transition-all" placeholder="Enter state/province" required="">
+                <label class="block text-sm text-gray-600 mb-2" for="address-line-1">Address Line 1 *</label>
+                <input type="text" id="address-line-1" required class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm dm-sans" placeholder="Street address">
+                <p id="address-line-1-error" class="error-msg hidden"></p>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">ZIP/Postal Code</label>
-                <input type="text" id="zip-code" class="w-full p-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#939BFB] focus:ring-2 focus:ring-[#939BFB]/20 shadow-sm transition-all" placeholder="ZIP code" required="">
+                <label class="block text-sm text-gray-600 mb-2" for="address-line-2">Address Line 2 (Optional)</label>
+                <input type="text" id="address-line-2" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm dm-sans" placeholder="Apartment, suite, etc.">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-sm text-gray-600 mb-2" for="city">City *</label>
+                    <input type="text" id="city" required class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm dm-sans" placeholder="City">
+                    <p id="city-error" class="error-msg hidden"></p>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600 mb-2" for="zip-code">Post Code / ZIP *</label>
+                    <input type="text" id="zip-code" required class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm dm-sans" placeholder="12345">
+                    <p id="zip-code-error" class="error-msg hidden"></p>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm text-gray-600 mb-2" for="region">Region / State / Province *</label>
+                <input type="text" id="region" required class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm dm-sans" placeholder="State or Province">
+                <p id="region-error" class="error-msg hidden"></p>
+            </div>
+            <div>
+                <label class="block text-sm text-gray-600 mb-2">Country *</label>
+                <button type="button" id="countryDropdown" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm text-left flex items-center justify-between bg-white dm-sans">
+                    <span id="selectedCountry">Select Country</span>
+                    <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+                </button>
+                <p id="country-error" class="error-msg hidden"></p>
             </div>
         </div>
         
-        <!-- Country -->
-        <div id="country-section">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Country</label>
-            <select id="country" class="w-full p-4 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#939BFB] shadow-sm transition-all">
-                <option value="US">United States</option>
-                <option value="CA">Canada</option>
-                <option value="GB">United Kingdom</option>
-                <option value="FR">France</option>
-                <option value="DE">Germany</option>
-                <option value="AU">Australia</option>
-                <option value="JP">Japan</option>
-                <option value="CN">China</option>
-            </select>
+        <!-- Mobile Phone -->
+        <div class="flex space-x-3">
+            <div class="w-32 min-w-0">
+                <label class="block text-sm text-gray-600 mb-2">Code *</label>
+                <button type="button" id="phoneCodeDropdown" class="w-full px-3 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm text-left flex items-center justify-between gap-2 bg-white dm-sans min-w-0">
+                    <span id="selectedPhoneCode" class="truncate">ðŸ‡ºðŸ‡¸ +1</span>
+                    <svg class="w-4 h-4 text-gray-400 shrink-0 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+                </button>
+            </div>
+            <div class="flex-1">
+                <label class="block text-sm text-gray-600 mb-2" for="phone-number">Phone Number *</label>
+                <input type="tel" id="phone-number" required class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm dm-sans" placeholder="5551234567" pattern="[0-9]*" inputmode="numeric">
+                <p id="phone-number-error" class="error-msg hidden"></p>
+            </div>
         </div>
         
         <!-- Set as Default -->
@@ -148,7 +150,7 @@
                         <path d="M5 13l4 4L19 7"/>
                     </svg>
                 </span>
-                <span class="ml-3 text-sm font-medium text-gray-700">Set as Default Address</span>
+                <span class="ml-3 text-sm text-gray-600">Set as Default Address</span>
             </label>
         </div>
     </form>
@@ -157,81 +159,235 @@
 <!-- Action Buttons -->
 <div id="action-buttons" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t safe-area-bottom z-30">
     <div class="p-4 flex justify-center">
-        <button type="submit" form="address-form" class="flex items-center justify-center rounded-full bg-shine-primary py-3 px-10 font-semibold text-white poppins hover:opacity-90 transition-opacity">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
-            </svg>
-            Save Address
-        </button>
+        <button type="submit" form="address-form" class="flex items-center justify-center rounded-full bg-[#939BFB] py-3 px-10 text-sm font-medium text-white dm-sans hover:opacity-90 transition-opacity">Save</button>
     </div>
 </div>
 
 <!-- Bottom Navigation -->
-<nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] border-t border-gray-100 bg-white px-4 py-3 z-50 safe-area-bottom">
-    <div class="flex justify-around items-center">
-        <button class="flex flex-col items-center min-w-[60px] text-gray-500 hover:text-shine-primary transition-colors">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-5 h-5 mb-1">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
-            </svg>
-            <span class="text-xs dm-sans">Home</span>
-        </button>
-        <button class="flex flex-col items-center min-w-[60px] text-gray-500 hover:text-shine-primary transition-colors">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-5 h-5 mb-1">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"></path>
-            </svg>
-            <span class="text-xs dm-sans">Picks</span>
-        </button>
-        <button class="flex flex-col items-center min-w-[60px] text-gray-500 hover:text-shine-primary transition-colors">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-5 h-5 mb-1">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
-            </svg>
-            <span class="text-xs dm-sans">Wishlist</span>
-        </button>
-        <button class="flex flex-col items-center min-w-[60px]">
-            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" class="w-6 h-6 rounded-full object-cover mb-1" alt="Profile">
-            <span class="text-xs dm-sans text-shine-primary">Profile</span>
-        </button>
+<nav id="bottom-navigation" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] border-t border-gray-100 bg-white z-50 safe-area-bottom">
+    <div class="flex items-center justify-around py-2">
+        <a href="Home.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+            <span class="text-xs">Home</span>
+        </a>
+        <a href="Picks.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+            <span class="text-xs">Picks</span>
+        </a>
+        <a href="Wishlist.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+            <span class="text-xs">Wishlist</span>
+        </a>
+        <a id="add-address-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn active flex flex-col items-center min-w-[60px] p-2">
+            <span id="add-address-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg></span>
+            <img id="add-address-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile">
+            <span class="text-xs">Profile</span>
+        </a>
     </div>
 </nav>
 </div>
 
+<!-- Phone Code Overlay -->
+<div id="phoneCodeOverlay" class="fixed left-1/2 top-0 bottom-0 -translate-x-1/2 w-full max-w-[390px] bg-white z-[60] hidden shadow-2xl">
+    <div class="h-full flex flex-col min-h-0">
+        <div class="bg-white border-b border-gray-100 px-5 py-4 flex-shrink-0">
+            <div class="flex items-center justify-between mb-4">
+                <button type="button" id="closePhoneCodeOverlay" class="p-2 -ml-2 text-gray-600 hover:opacity-70 transition-opacity"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                <h2 class="poppins font-semibold text-lg text-gray-800">Select Country Code</h2>
+                <div class="w-8"></div>
+            </div>
+            <input type="text" id="phoneCodeSearch" placeholder="Search country or code..." class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm dm-sans">
+        </div>
+        <div class="flex-1 overflow-y-auto"><div id="phoneCodeList" class="px-5 py-2"></div></div>
+    </div>
+</div>
+
+<!-- Country Overlay -->
+<div id="countryOverlay" class="fixed left-1/2 top-0 bottom-0 -translate-x-1/2 w-full max-w-[390px] bg-white z-[60] hidden shadow-2xl">
+    <div class="h-full flex flex-col min-h-0">
+        <div class="bg-white border-b border-gray-100 px-5 py-4 flex-shrink-0">
+            <div class="flex items-center justify-between mb-4">
+                <button type="button" id="closeCountryOverlay" class="p-2 -ml-2 text-gray-600 hover:opacity-70 transition-opacity"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                <h2 class="poppins font-semibold text-lg text-gray-800">Select Country</h2>
+                <div class="w-8"></div>
+            </div>
+            <input type="text" id="countrySearch" placeholder="Search country..." class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-sm dm-sans">
+        </div>
+        <div class="flex-1 overflow-y-auto"><div id="countryList" class="px-5 py-2"></div></div>
+    </div>
+</div>
+
 <script>
-// Form submission
-document.getElementById('address-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    // Show success toast
-    const toast = document.createElement('div');
-    toast.className = 'fixed bottom-32 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
-    toast.textContent = 'Address saved successfully ✔️';
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.remove();
-        history.back();
-    }, 2000);
+var BADGE_KEYS = { notif: 'goshopme_notif_count', cart: 'goshopme_cart_count' };
+var cartCountValue = 0, notifCountValue = 0;
+function updateCartBadge() {
+    var el = document.getElementById('cart-indicator'), count = document.getElementById('cart-count');
+    if (el && count) {
+        var s = cartCountValue > 0;
+        el.classList.toggle('hidden', !s); el.classList.toggle('flex', s);
+        count.textContent = s ? (cartCountValue > 99 ? '99+' : cartCountValue) : '';
+    }
+    try { localStorage.setItem(BADGE_KEYS.cart, String(cartCountValue)); } catch (e) {}
+}
+function updateNotifBadge() {
+    var el = document.getElementById('notif-indicator'), count = document.getElementById('notif-count');
+    if (el && count) {
+        var s = notifCountValue > 0;
+        el.classList.toggle('hidden', !s); el.classList.toggle('flex', s);
+        count.textContent = s ? (notifCountValue > 99 ? '99+' : notifCountValue) : '';
+    }
+    try { localStorage.setItem(BADGE_KEYS.notif, String(notifCountValue)); } catch (e) {}
+}
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        notifCountValue = parseInt(localStorage.getItem(BADGE_KEYS.notif) || '0', 10);
+        cartCountValue = parseInt(localStorage.getItem(BADGE_KEYS.cart) || '0', 10);
+    } catch (e) {}
+    updateCartBadge();
+    updateNotifBadge();
 });
 
-// Auto-update country code based on country selection
-document.getElementById('country').addEventListener('change', (e) => {
-    const countryCodeSelect = document.getElementById('country-code');
-    const country = e.target.value;
-    
-    const countryCodeMap = {
-        'US': '+1',
-        'CA': '+1',
-        'GB': '+44',
-        'FR': '+33',
-        'DE': '+49',
-        'AU': '+61',
-        'JP': '+81',
-        'CN': '+86'
-    };
-    
-    if (countryCodeMap[country]) {
-        countryCodeSelect.value = countryCodeMap[country];
+const phoneCodes = [
+    {flag: 'ðŸ‡¦ðŸ‡«', code: '+93', country: 'Afghanistan'},{flag: 'ðŸ‡¦ðŸ‡±', code: '+355', country: 'Albania'},{flag: 'ðŸ‡©ðŸ‡¿', code: '+213', country: 'Algeria'},{flag: 'ðŸ‡¦ðŸ‡©', code: '+376', country: 'Andorra'},{flag: 'ðŸ‡¦ðŸ‡´', code: '+244', country: 'Angola'},{flag: 'ðŸ‡¦ðŸ‡·', code: '+54', country: 'Argentina'},{flag: 'ðŸ‡¦ðŸ‡²', code: '+374', country: 'Armenia'},{flag: 'ðŸ‡¦ðŸ‡º', code: '+61', country: 'Australia'},{flag: 'ðŸ‡¦ðŸ‡¹', code: '+43', country: 'Austria'},{flag: 'ðŸ‡¦ðŸ‡¿', code: '+994', country: 'Azerbaijan'},{flag: 'ðŸ‡§ðŸ‡­', code: '+973', country: 'Bahrain'},{flag: 'ðŸ‡§ðŸ‡©', code: '+880', country: 'Bangladesh'},{flag: 'ðŸ‡§ðŸ‡¾', code: '+375', country: 'Belarus'},{flag: 'ðŸ‡§ðŸ‡ª', code: '+32', country: 'Belgium'},{flag: 'ðŸ‡§ðŸ‡¦', code: '+387', country: 'Bosnia and Herzegovina'},{flag: 'ðŸ‡§ðŸ‡·', code: '+55', country: 'Brazil'},{flag: 'ðŸ‡§ðŸ‡¬', code: '+359', country: 'Bulgaria'},{flag: 'ðŸ‡¨ðŸ‡¦', code: '+1', country: 'Canada'},{flag: 'ðŸ‡¨ðŸ‡±', code: '+56', country: 'Chile'},{flag: 'ðŸ‡¨ðŸ‡³', code: '+86', country: 'China'},{flag: 'ðŸ‡¨ðŸ‡´', code: '+57', country: 'Colombia'},{flag: 'ðŸ‡­ðŸ‡·', code: '+385', country: 'Croatia'},{flag: 'ðŸ‡¨ðŸ‡¾', code: '+357', country: 'Cyprus'},{flag: 'ðŸ‡¨ðŸ‡¿', code: '+420', country: 'Czech Republic'},{flag: 'ðŸ‡©ðŸ‡°', code: '+45', country: 'Denmark'},{flag: 'ðŸ‡ªðŸ‡¬', code: '+20', country: 'Egypt'},{flag: 'ðŸ‡ªðŸ‡ª', code: '+372', country: 'Estonia'},{flag: 'ðŸ‡«ðŸ‡®', code: '+358', country: 'Finland'},{flag: 'ðŸ‡«ðŸ‡·', code: '+33', country: 'France'},{flag: 'ðŸ‡¬ðŸ‡ª', code: '+995', country: 'Georgia'},{flag: 'ðŸ‡©ðŸ‡ª', code: '+49', country: 'Germany'},{flag: 'ðŸ‡¬ðŸ‡·', code: '+30', country: 'Greece'},{flag: 'ðŸ‡­ðŸ‡º', code: '+36', country: 'Hungary'},{flag: 'ðŸ‡®ðŸ‡¸', code: '+354', country: 'Iceland'},{flag: 'ðŸ‡®ðŸ‡³', code: '+91', country: 'India'},{flag: 'ðŸ‡®ðŸ‡©', code: '+62', country: 'Indonesia'},{flag: 'ðŸ‡®ðŸ‡·', code: '+98', country: 'Iran'},{flag: 'ðŸ‡®ðŸ‡¶', code: '+964', country: 'Iraq'},{flag: 'ðŸ‡®ðŸ‡ª', code: '+353', country: 'Ireland'},{flag: 'ðŸ‡®ðŸ‡±', code: '+972', country: 'Israel'},{flag: 'ðŸ‡®ðŸ‡¹', code: '+39', country: 'Italy'},{flag: 'ðŸ‡¯ðŸ‡µ', code: '+81', country: 'Japan'},{flag: 'ðŸ‡°ðŸ‡¿', code: '+7', country: 'Kazakhstan'},{flag: 'ðŸ‡°ðŸ‡¼', code: '+965', country: 'Kuwait'},{flag: 'ðŸ‡±ðŸ‡»', code: '+371', country: 'Latvia'},{flag: 'ðŸ‡±ðŸ‡¹', code: '+370', country: 'Lithuania'},{flag: 'ðŸ‡±ðŸ‡º', code: '+352', country: 'Luxembourg'},{flag: 'ðŸ‡²ðŸ‡¾', code: '+60', country: 'Malaysia'},{flag: 'ðŸ‡²ðŸ‡½', code: '+52', country: 'Mexico'},{flag: 'ðŸ‡²ðŸ‡©', code: '+373', country: 'Moldova'},{flag: 'ðŸ‡³ðŸ‡±', code: '+31', country: 'Netherlands'},{flag: 'ðŸ‡³ðŸ‡¿', code: '+64', country: 'New Zealand'},{flag: 'ðŸ‡³ðŸ‡¬', code: '+234', country: 'Nigeria'},{flag: 'ðŸ‡²ðŸ‡°', code: '+389', country: 'North Macedonia'},{flag: 'ðŸ‡³ðŸ‡´', code: '+47', country: 'Norway'},{flag: 'ðŸ‡µðŸ‡°', code: '+92', country: 'Pakistan'},{flag: 'ðŸ‡µðŸ‡­', code: '+63', country: 'Philippines'},{flag: 'ðŸ‡µðŸ‡±', code: '+48', country: 'Poland'},{flag: 'ðŸ‡µðŸ‡¹', code: '+351', country: 'Portugal'},{flag: 'ðŸ‡¶ðŸ‡¦', code: '+974', country: 'Qatar'},{flag: 'ðŸ‡·ðŸ‡´', code: '+40', country: 'Romania'},{flag: 'ðŸ‡·ðŸ‡º', code: '+7', country: 'Russia'},{flag: 'ðŸ‡¸ðŸ‡¦', code: '+966', country: 'Saudi Arabia'},{flag: 'ðŸ‡·ðŸ‡¸', code: '+381', country: 'Serbia'},{flag: 'ðŸ‡¸ðŸ‡¬', code: '+65', country: 'Singapore'},{flag: 'ðŸ‡¸ðŸ‡°', code: '+421', country: 'Slovakia'},{flag: 'ðŸ‡¸ðŸ‡®', code: '+386', country: 'Slovenia'},{flag: 'ðŸ‡¿ðŸ‡¦', code: '+27', country: 'South Africa'},{flag: 'ðŸ‡°ðŸ‡·', code: '+82', country: 'South Korea'},{flag: 'ðŸ‡ªðŸ‡¸', code: '+34', country: 'Spain'},{flag: 'ðŸ‡¸ðŸ‡ª', code: '+46', country: 'Sweden'},{flag: 'ðŸ‡¨ðŸ‡­', code: '+41', country: 'Switzerland'},{flag: 'ðŸ‡¹ðŸ‡­', code: '+66', country: 'Thailand'},{flag: 'ðŸ‡¹ðŸ‡·', code: '+90', country: 'Turkey'},{flag: 'ðŸ‡ºðŸ‡¦', code: '+380', country: 'Ukraine'},{flag: 'ðŸ‡¦ðŸ‡ª', code: '+971', country: 'United Arab Emirates'},{flag: 'ðŸ‡¬ðŸ‡§', code: '+44', country: 'United Kingdom'},{flag: 'ðŸ‡ºðŸ‡¸', code: '+1', country: 'United States'},{flag: 'ðŸ‡»ðŸ‡³', code: '+84', country: 'Vietnam'}
+];
+const countries = ['Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan', 'Bahrain', 'Bangladesh', 'Belarus', 'Belgium', 'Bosnia and Herzegovina', 'Brazil', 'Bulgaria', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Egypt', 'Estonia', 'Finland', 'France', 'Georgia', 'Germany', 'Greece', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Japan', 'Kazakhstan', 'Kuwait', 'Latvia', 'Lithuania', 'Luxembourg', 'Malaysia', 'Mexico', 'Moldova', 'Netherlands', 'New Zealand', 'Nigeria', 'North Macedonia', 'Norway', 'Pakistan', 'Philippines', 'Poland', 'Portugal', 'Qatar', 'Romania', 'Russia', 'Saudi Arabia', 'Serbia', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa', 'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Thailand', 'Turkey', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Vietnam'];
+
+function showFieldError(inputOrBtnId, errorId, msg) {
+    var el = document.getElementById(inputOrBtnId);
+    var err = document.getElementById(errorId);
+    if (msg) {
+        if (el) el.classList.add('input-error');
+        if (err) {
+            err.textContent = msg;
+            err.classList.remove('hidden');
+            err.style.display = 'block';
+        }
+    } else {
+        if (el) el.classList.remove('input-error');
+        if (err) {
+            err.textContent = '';
+            err.classList.add('hidden');
+            err.style.display = 'none';
+        }
     }
+}
+function validateAll() {
+    var fn = document.getElementById('first-name').value.trim();
+    var ln = document.getElementById('last-name').value.trim();
+    var a1 = document.getElementById('address-line-1').value.trim();
+    var city = document.getElementById('city').value.trim();
+    var zip = document.getElementById('zip-code').value.trim();
+    var region = document.getElementById('region').value.trim();
+    var country = document.getElementById('selectedCountry').textContent.trim();
+    var phone = document.getElementById('phone-number').value.replace(/\D/g, '');
+    var hasError = false;
+    if (!fn) { showFieldError('first-name', 'first-name-error', 'Please enter your first name'); hasError = true; } else { showFieldError('first-name', 'first-name-error', ''); }
+    if (!ln) { showFieldError('last-name', 'last-name-error', 'Please enter your last name'); hasError = true; } else { showFieldError('last-name', 'last-name-error', ''); }
+    if (!a1) { showFieldError('address-line-1', 'address-line-1-error', 'Please enter your street address'); hasError = true; } else { showFieldError('address-line-1', 'address-line-1-error', ''); }
+    if (!city) { showFieldError('city', 'city-error', 'Please enter your city'); hasError = true; } else { showFieldError('city', 'city-error', ''); }
+    if (!zip) { showFieldError('zip-code', 'zip-code-error', 'Please enter your post code or ZIP'); hasError = true; } else { showFieldError('zip-code', 'zip-code-error', ''); }
+    if (!region) { showFieldError('region', 'region-error', 'Please enter your state or province'); hasError = true; } else { showFieldError('region', 'region-error', ''); }
+    if (!country || country === 'Select Country') { showFieldError('countryDropdown', 'country-error', 'Please select your country'); hasError = true; } else { showFieldError('countryDropdown', 'country-error', ''); }
+    if (phone.length < 7) { showFieldError('phone-number', 'phone-number-error', 'Please enter a valid phone number (at least 7 digits)'); hasError = true; } else { showFieldError('phone-number', 'phone-number-error', ''); }
+    if (hasError) {
+        var firstErr = document.querySelector('.input-error');
+        if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return !hasError;
+}
+['first-name','last-name','address-line-1','city','zip-code','region','phone-number'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', function(){ showFieldError(id, id+'-error', ''); });
 });
+document.getElementById('phone-number').addEventListener('input', function(){
+    this.value = this.value.replace(/\D/g, '');
+});
+
+document.getElementById('phoneCodeDropdown').onclick = function(){
+    document.getElementById('phoneCodeOverlay').classList.remove('hidden');
+    var list = document.getElementById('phoneCodeList');
+    list.innerHTML = phoneCodes.map(function(item){
+        return '<div class="py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 flex items-center phone-code-option" data-flag="'+item.flag+'" data-code="'+item.code+'"><span class="text-lg mr-3 shrink-0">'+item.flag+'</span><span class="text-sm text-gray-800 flex-1 min-w-0 truncate">'+item.country+'</span><span class="text-sm text-gray-600 shrink-0 ml-2">'+item.code+'</span></div>';
+    }).join('');
+    list.querySelectorAll('.phone-code-option').forEach(function(el){
+        el.onclick = function(){ document.getElementById('selectedPhoneCode').textContent = el.getAttribute('data-flag')+' '+el.getAttribute('data-code'); document.getElementById('phoneCodeOverlay').classList.add('hidden'); document.getElementById('phoneCodeSearch').value = ''; };
+    });
+    document.getElementById('phoneCodeSearch').focus();
+};
+document.getElementById('closePhoneCodeOverlay').onclick = function(){ document.getElementById('phoneCodeOverlay').classList.add('hidden'); };
+document.getElementById('phoneCodeSearch').oninput = function(e){
+    var q = e.target.value.toLowerCase();
+    var f = phoneCodes.filter(function(item){ return item.country.toLowerCase().indexOf(q)>=0 || item.code.indexOf(q)>=0 || item.code.replace('+','').indexOf(q)>=0; });
+    var list = document.getElementById('phoneCodeList');
+    list.innerHTML = f.map(function(item){ return '<div class="py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 flex items-center phone-code-option" data-flag="'+item.flag+'" data-code="'+item.code+'"><span class="text-lg mr-3 shrink-0">'+item.flag+'</span><span class="text-sm text-gray-800 flex-1 min-w-0 truncate">'+item.country+'</span><span class="text-sm text-gray-600 shrink-0 ml-2">'+item.code+'</span></div>'; }).join('');
+    list.querySelectorAll('.phone-code-option').forEach(function(el){ el.onclick = function(){ document.getElementById('selectedPhoneCode').textContent = el.getAttribute('data-flag')+' '+el.getAttribute('data-code'); document.getElementById('phoneCodeOverlay').classList.add('hidden'); document.getElementById('phoneCodeSearch').value = ''; }; });
+};
+
+document.getElementById('countryDropdown').onclick = function(){
+    document.getElementById('countryOverlay').classList.remove('hidden');
+    var list = document.getElementById('countryList');
+    list.innerHTML = countries.map(function(c){ return '<div class="py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50" onclick="selectCountry(\''+c.replace(/'/g,"\\'")+'\')"><span class="text-sm text-gray-800">'+c+'</span></div>'; }).join('');
+    document.getElementById('countrySearch').focus();
+};
+document.getElementById('closeCountryOverlay').onclick = function(){ document.getElementById('countryOverlay').classList.add('hidden'); };
+document.getElementById('countrySearch').oninput = function(e){
+    var q = e.target.value.toLowerCase();
+    var f = countries.filter(function(c){ return c.toLowerCase().indexOf(q)>=0; });
+    var list = document.getElementById('countryList');
+    list.innerHTML = f.map(function(c){ return '<div class="py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50" onclick="selectCountry(\''+c.replace(/'/g,"\\'")+'\')"><span class="text-sm text-gray-800">'+c+'</span></div>'; }).join('');
+};
+function selectCountry(value){
+    document.getElementById('selectedCountry').textContent = value;
+    document.getElementById('countryOverlay').classList.add('hidden');
+    document.getElementById('countrySearch').value = '';
+    showFieldError('countryDropdown', 'country-error', '');
+}
+
+var ADDRESS_STORAGE_KEY = 'goshopme_addresses';
+document.getElementById('address-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!validateAll()) return;
+    var phoneCode = document.getElementById('selectedPhoneCode').textContent.trim();
+    var addr = {
+        id: 'addr_' + Date.now(),
+        firstName: document.getElementById('first-name').value.trim(),
+        lastName: document.getElementById('last-name').value.trim(),
+        addressLine1: document.getElementById('address-line-1').value.trim(),
+        addressLine2: document.getElementById('address-line-2').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        zipCode: document.getElementById('zip-code').value.trim(),
+        region: document.getElementById('region').value.trim(),
+        country: document.getElementById('selectedCountry').textContent.trim(),
+        phoneCode: phoneCode,
+        phoneNumber: document.getElementById('phone-number').value.replace(/\D/g, ''),
+        isDefault: document.getElementById('set-default').checked
+    };
+    try {
+        var list = JSON.parse(localStorage.getItem(ADDRESS_STORAGE_KEY) || '[]');
+        if (addr.isDefault) { list.forEach(function(a){ a.isDefault = false; }); }
+        list.push(addr);
+        localStorage.setItem(ADDRESS_STORAGE_KEY, JSON.stringify(list));
+    } catch (err) { console.error('Failed to save address:', err); }
+    var toast = document.createElement('div');
+    toast.className = 'fixed bottom-32 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+    toast.textContent = 'Address saved successfully âœ”ï¸';
+    document.body.appendChild(toast);
+    setTimeout(function(){ toast.remove(); window.location.href = 'Shipping_Address_Settings.html'; }, 1500);
+});
+
+(function(){
+    var plan = (localStorage.getItem('__userPlan')||'').toLowerCase();
+    document.getElementById('add-address-nav-profile-link').href = (plan==='paid'||plan==='true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+    var saved = localStorage.getItem('profilePhoto'), img = document.getElementById('add-address-nav-profile-photo'), icon = document.getElementById('add-address-nav-profile-icon');
+    if (saved && img && icon) { img.src = saved; img.classList.remove('hidden'); icon.classList.add('hidden'); }
+    else if (img && icon) { img.classList.add('hidden'); icon.classList.remove('hidden'); }
+})();
+(function(){
+    if (new URLSearchParams(window.location.search).get('mode')==='edit'){
+        document.getElementById('page-title').textContent = 'Edit Address';
+        document.title = 'Edit Address â€“ GoShopMe';
+    }
+})();
 </script>
 
 

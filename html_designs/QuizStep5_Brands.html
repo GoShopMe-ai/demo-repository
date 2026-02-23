@@ -1,0 +1,232 @@
+﻿<!DOCTYPE html>
+<html><head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <title>Style Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: {
+                        'mobile': '390px',
+                    }
+                }
+            }
+        }
+    </script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fuhkwang:wght@400;500;600;700&display=swap');
+        .font-fuhkwang { font-family: 'Fuhkwang', sans-serif; }
+        .font-wix { font-family: 'Wix Madefor Display', sans-serif; }
+        
+        .mobile-container {
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 844px;
+            background: #ffffff;
+        }
+        
+        @media (min-width: 391px) {
+            .mobile-container {
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 20px 20px;
+            }
+        }
+
+        .brand-item {
+            transition: all 0.2s ease;
+            border: 1.5px solid #E5E7EB;
+        }
+
+        .brand-item.selected {
+            background: #F5F7FF;
+            border-color: #939BFB;
+        }
+
+        .brand-item .checkmark {
+            width: 20px;
+            height: 20px;
+            border: 1.5px solid #E5E7EB;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .brand-item.selected .checkmark {
+            background: #939BFB;
+            border-color: #939BFB;
+        }
+
+        .brand-item .checkmark i {
+            display: none;
+        }
+
+        .brand-item.selected .checkmark i {
+            display: block;
+        }
+
+        ::placeholder {
+            color: #9CA3AF;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-gray-50 font-wix overflow-x-hidden">
+
+<div class="mobile-container">
+    <div id="header" class="sticky top-0 left-0 right-0 bg-white z-50 border-b border-gray-100">
+        <div class="flex items-center justify-between px-5 py-4">
+            <button type="button" onclick="goBack()" class="header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800" aria-label="Go back">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+            </button>
+            <h2 class="text-lg font-wix font-semibold text-gray-900">Style Quiz</h2>
+            <div class="w-6"></div>
+        </div>
+        <div class="px-5 pb-4">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-gray-500 font-wix">Step 5 of 6</span>
+                <span class="text-xs text-[#939BFB] font-medium font-wix">83%</span>
+            </div>
+            <div class="flex space-x-2">
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1.5 rounded-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto pb-32" style="height: calc(844px - 160px);">
+        <div id="brand-preferences-section" class="px-5 py-6 bg-white">
+            <h3 class="text-2xl font-wix font-semibold text-gray-900 mb-2">Which brands do you usually shop from?</h3>
+            <p class="text-gray-600 text-sm font-wix mb-6">Select all that apply to help us personalize your experience</p>
+            
+            <div id="luxury-group" class="mb-6">
+                <div class="brand-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="toggleBrandItem(this)" data-brand="Luxury / Premium">
+                    <div>
+                        <span class="text-gray-900 font-semibold block mb-1">Luxury / Premium</span>
+                        <span class="text-xs text-gray-500">Prada, Gucci, Saint Laurent, The Row</span>
+                    </div>
+                    <div class="checkmark">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div id="contemporary-group" class="mb-6">
+                <div class="brand-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="toggleBrandItem(this)" data-brand="Contemporary / Mid-range">
+                    <div>
+                        <span class="text-gray-900 font-semibold block mb-1">Contemporary / Mid-range</span>
+                        <span class="text-xs text-gray-500">Michael Kors, Guess, Twinset, Lui Jo</span>
+                    </div>
+                    <div class="checkmark">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div id="highstreet-group" class="mb-6">
+                <div class="brand-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="toggleBrandItem(this)" data-brand="High-Street / Affordable">
+                    <div>
+                        <span class="text-gray-900 font-semibold block mb-1">High-Street / Affordable</span>
+                        <span class="text-xs text-gray-500">Zara, Mango, H&M, Uniqlo</span>
+                    </div>
+                    <div class="checkmark">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sportswear-group" class="mb-6">
+                <div class="brand-item flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer" onclick="toggleBrandItem(this)" data-brand="Sportswear / Casual">
+                    <div>
+                        <span class="text-gray-900 font-semibold block mb-1">Sportswear / Casual</span>
+                        <span class="text-xs text-gray-500">Nike, Adidas, Lululemon, Alo Yoga</span>
+                    </div>
+                    <div class="checkmark">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 px-5 py-5">
+        <div class="flex items-center justify-center">
+            <button id="next-btn" class="w-3/4 flex items-center justify-center py-2.5 px-4 rounded-full bg-[#939BFB] text-white font-medium text-sm hover:bg-[#7B85F7] transition-colors shadow-md shadow-[#939BFB]/20" onclick="nextStep()">
+                <span>Continue</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedBrands = [];
+
+function goBack() {
+    window.location.href = 'QuizStep4_Sizes_HeelsHeight.html';
+}
+
+function toggleBrandItem(element) {
+    const brand = element.getAttribute('data-brand');
+    
+    if (element.classList.contains('selected')) {
+        element.classList.remove('selected');
+        selectedBrands = selectedBrands.filter(b => b !== brand);
+    } else {
+        element.classList.add('selected');
+        selectedBrands.push(brand);
+    }
+    
+    console.log('Selected brands:', selectedBrands);
+}
+
+function nextStep() {
+    if (typeof window.GoShopMeQuizAPI !== 'undefined' && window.GoShopMeQuizAPI.submitQuizStep5) {
+        window.GoShopMeQuizAPI.submitQuizStep5({ brands: selectedBrands.slice() });
+    }
+    try {
+        var d = JSON.parse(localStorage.getItem('__quizData') || '{}');
+        d.brands = selectedBrands.slice();
+        localStorage.setItem('__quizData', JSON.stringify(d));
+    } catch (e) {}
+    window.location.href = 'QuizStep6_UploadPics.html';
+}
+
+// API readiness: prefill from window.__QUIZ_STEP5_DATA__, get/set for API
+(function() {
+    window.getQuizStep5Data = function() { return { brands: selectedBrands.slice() }; };
+    window.setQuizStep5Data = function(data) {
+        if (data && data.brands) {
+            selectedBrands = data.brands.slice();
+            document.querySelectorAll('.brand-item').forEach(function(el) {
+                var b = el.getAttribute('data-brand');
+                el.classList.toggle('selected', selectedBrands.indexOf(b) >= 0);
+            });
+        }
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.__QUIZ_STEP5_DATA__) window.setQuizStep5Data(window.__QUIZ_STEP5_DATA__);
+    });
+})();
+</script>
+
+</body></html>

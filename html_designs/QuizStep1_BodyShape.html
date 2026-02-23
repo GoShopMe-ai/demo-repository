@@ -1,0 +1,289 @@
+﻿<!DOCTYPE html><html><head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <title>Style Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: {
+                        'mobile': '390px',
+                    }
+                }
+            }
+        }
+    </script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fuhkwang:wght@400;500;600;700&display=swap');
+        .font-fuhkwang { font-family: 'Fuhkwang', sans-serif; }
+        .font-wix { font-family: 'Wix Madefor Display', sans-serif; }
+        
+        .mobile-container {
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 844px;
+            background: #ffffff;
+        }
+        
+        @media (min-width: 391px) {
+            .mobile-container {
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 20px 20px;
+            }
+        }
+
+        .body-shape-card {
+            transition: all 0.3s ease;
+            border: 1px solid #E5E7EB;
+            cursor: pointer;
+        }
+
+        .body-shape-card:hover {
+            border-color: #939BFB;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(147, 155, 251, 0.15);
+        }
+
+        .body-shape-card.selected {
+            border-color: #939BFB;
+            background: #F5F7FF;
+            box-shadow: 0 4px 12px rgba(147, 155, 251, 0.2);
+        }
+
+        .body-shape-card.selected .checkmark {
+            opacity: 1;
+        }
+
+        .checkmark {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        ::placeholder {
+            color: #9CA3AF;
+        }
+        ::-webkit-scrollbar { display: none; }
+        * { scrollbar-width: none; }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-gray-50 font-wix overflow-x-hidden">
+
+<div class="mobile-container">
+    <!-- Header -->
+    <div id="header" class="sticky top-0 left-0 right-0 bg-white z-50 border-b border-gray-100">
+        <div class="flex items-center justify-between px-5 py-4">
+            <button type="button" onclick="goBack()" class="header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800" aria-label="Go back">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+            </button>
+            <h2 class="text-lg font-wix font-semibold text-gray-900">Style Quiz</h2>
+            <div class="w-6"></div>
+        </div>
+        <!-- Progress Bar -->
+        <div class="px-5 pb-4">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-gray-500 font-wix">Step 1 of 6</span>
+                <span class="text-xs text-[#939BFB] font-medium font-wix">17%</span>
+            </div>
+            <div class="flex space-x-1.5">
+                <div class="flex-1 bg-[#939BFB] h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1.5 rounded-full"></div>
+                <div class="flex-1 bg-gray-200 h-1.5 rounded-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto pb-32" style="height: calc(844px - 160px);">
+        
+        <!-- Question Section -->
+        <div id="question-section" class="px-5 py-8 bg-white">
+    <h3 class="text-xl font-wix font-semibold text-gray-900 mb-3">Which body shape is closest to yours?</h3>
+    <p class="text-gray-600 text-sm font-wix mb-5">Select the silhouette that best represents your body type</p>
+    
+    <div class="space-y-2">
+        <div class="body-shape-card rounded-lg p-2 bg-white relative" onclick="selectBodyShape(this, 'apple')">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-16 flex items-center justify-center shrink-0">
+                    <svg class="w-10 h-16" viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="40" cy="55" rx="28" ry="32" fill="#939BFB" opacity="0.5"/>
+                        <path d="M40 12c-4 0-7 3-7 7s3 7 7 7 7-3 7-7-3-7-7-7z" stroke="#000" stroke-width="1.2" fill="none"/>
+                        <path d="M40 26v8M32 34l4 4M48 34l-4 4" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                        <path d="M40 34c0 0-8 4-10 12 0 4 2 8 4 10M40 34c0 0 8 4 10 12 0 4-2 8-4 10" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                        <path d="M28 88c2 4 4 8 4 12v12M52 88c-2 4-4 8-4 12v12" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-wix font-semibold text-gray-900 mb-0.5">Apple</h4>
+                    <p class="text-[11px] text-gray-500 font-wix leading-snug">Broader shoulders and bust, narrower hips, weight around midsection</p>
+                </div>
+                <div class="checkmark w-4 h-4 rounded-full bg-[#939BFB] flex items-center justify-center shrink-0">
+                    <i class="fas fa-check text-white text-[8px]"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="body-shape-card rounded-lg p-2 bg-white relative" onclick="selectBodyShape(this, 'pear')">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-16 flex items-center justify-center shrink-0">
+                    <svg class="w-10 h-16" viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="40" cy="75" rx="26" ry="28" fill="#939BFB" opacity="0.5"/>
+                        <path d="M40 12c-4 0-7 3-7 7s3 7 7 7 7-3 7-7-3-7-7-7z" stroke="#000" stroke-width="1.2" fill="none"/>
+                        <path d="M40 26v6M30 32l4 4M50 32l-4 4" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                        <path d="M40 32c0 0-6 2-8 10 0 3 1 6 3 8M40 32c0 0 6 2 8 10 0 3-1 6-3 8" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                        <path d="M22 88c2 6 4 10 4 14v12M58 88c-2 6-4 10-4 14v12" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-wix font-semibold text-gray-900 mb-0.5">Pear (Triangle)</h4>
+                    <p class="text-[11px] text-gray-500 font-wix leading-snug">Narrower shoulders, fuller hips and thighs, defined waist</p>
+                </div>
+                <div class="checkmark w-4 h-4 rounded-full bg-[#939BFB] flex items-center justify-center shrink-0">
+                    <i class="fas fa-check text-white text-[8px]"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="body-shape-card rounded-lg p-2 bg-white relative" onclick="selectBodyShape(this, 'inverted-triangle')">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-16 flex items-center justify-center shrink-0">
+                    <svg class="w-10 h-16" viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 35 L65 35 L40 85 Z" fill="#939BFB" opacity="0.5"/>
+                        <path d="M40 12c-4 0-7 3-7 7s3 7 7 7 7-3 7-7-3-7-7-7z" stroke="#000" stroke-width="1.2" fill="none"/>
+                        <path d="M40 26v6M26 32l4 4M54 32l-4 4" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                        <path d="M40 32c0 0-10 4-12 12 0 4 2 8 4 10M40 32c0 0 10 4 12 12 0 4-2 8-4 10" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                        <path d="M32 88c2 4 4 8 4 12v12M48 88c-2 4-4 8-4 12v12" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-wix font-semibold text-gray-900 mb-0.5">Inverted Triangle</h4>
+                    <p class="text-[11px] text-gray-500 font-wix leading-snug">Broader shoulders and bust, narrower hips, athletic build</p>
+                </div>
+                <div class="checkmark w-4 h-4 rounded-full bg-[#939BFB] flex items-center justify-center shrink-0">
+                    <i class="fas fa-check text-white text-[8px]"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="body-shape-card rounded-lg p-2 bg-white relative" onclick="selectBodyShape(this, 'rectangle')">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-16 flex items-center justify-center shrink-0">
+                    <svg class="w-10 h-16" viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="22" y="32" width="36" height="56" rx="4" fill="#939BFB" opacity="0.5"/>
+                        <path d="M40 12c-4 0-7 3-7 7s3 7 7 7 7-3 7-7-3-7-7-7z" stroke="#000" stroke-width="1.2" fill="none"/>
+                        <path d="M40 26v6M32 32l4 4M48 32l-4 4" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                        <path d="M40 32c0 0-6 2-8 10 0 3 1 6 3 8M40 32c0 0 6 2 8 10 0 3-1 6-3 8" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                        <path d="M30 88c2 4 4 8 4 12v12M50 88c-2 4-4 8-4 12v12" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-wix font-semibold text-gray-900 mb-0.5">Rectangle</h4>
+                    <p class="text-[11px] text-gray-500 font-wix leading-snug">Shoulders, waist, and hips similar width, straight silhouette</p>
+                </div>
+                <div class="checkmark w-4 h-4 rounded-full bg-[#939BFB] flex items-center justify-center shrink-0">
+                    <i class="fas fa-check text-white text-[8px]"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="body-shape-card rounded-lg p-2 bg-white relative" onclick="selectBodyShape(this, 'hourglass')">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-16 flex items-center justify-center shrink-0">
+                    <svg class="w-10 h-16" viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M28 32 L52 32 L40 58 L28 32 Z" fill="#939BFB" opacity="0.5"/>
+                        <path d="M28 88 L52 88 L40 62 L28 88 Z" fill="#939BFB" opacity="0.5"/>
+                        <path d="M40 12c-4 0-7 3-7 7s3 7 7 7 7-3 7-7-3-7-7-7z" stroke="#000" stroke-width="1.2" fill="none"/>
+                        <path d="M40 26v4M30 30l4 4M50 30l-4 4" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                        <path d="M40 30c0 0-8 4-10 12 0 4 2 6 4 8M40 30c0 0 8 4 10 12 0 4-2 6-4 8" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                        <path d="M28 88c4 4 8 6 12 6s8-2 12-6" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                        <path d="M28 94v10M52 94v10" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-wix font-semibold text-gray-900 mb-0.5">Hourglass</h4>
+                    <p class="text-[11px] text-gray-500 font-wix leading-snug">Balanced shoulders and hips, well-defined waist, curves</p>
+                </div>
+                <div class="checkmark w-4 h-4 rounded-full bg-[#939BFB] flex items-center justify-center shrink-0">
+                    <i class="fas fa-check text-white text-[8px]"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <!-- Fixed Bottom CTA -->
+    <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 px-5 py-5">
+        <button id="next-btn" class="w-3/4 mx-auto flex items-center justify-center py-2.5 px-4 rounded-full bg-gray-300 text-gray-500 font-medium text-sm transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed" onclick="nextStep()" disabled="">
+            <span>Continue</span>
+        </button>
+    </div>
+</div>
+
+<script>
+let selectedBodyShape = null;
+
+function goBack() {
+    window.location.href = 'QuizOrSkip_Screen.html';
+}
+
+function selectBodyShape(card, shape) {
+    document.querySelectorAll('.body-shape-card').forEach(c => {
+        c.classList.remove('selected');
+    });
+    
+    card.classList.add('selected');
+    selectedBodyShape = shape;
+    
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.disabled = false;
+    nextBtn.classList.remove('bg-gray-300', 'text-gray-500');
+    nextBtn.classList.add('bg-[#939BFB]', 'text-white', 'hover:bg-[#7B85F7]', 'shadow-[#939BFB]/20');
+}
+
+function nextStep() {
+    if (selectedBodyShape) {
+        if (typeof window.GoShopMeQuizAPI !== 'undefined' && window.GoShopMeQuizAPI.submitQuizStep1) {
+            window.GoShopMeQuizAPI.submitQuizStep1({ bodyShape: selectedBodyShape });
+        }
+        try {
+            var d = JSON.parse(localStorage.getItem('__quizData') || '{}');
+            d.bodyShape = selectedBodyShape;
+            localStorage.setItem('__quizData', JSON.stringify(d));
+        } catch (e) {}
+        window.location.href = 'QuizStep2_Hair&SkinColor.html';
+    }
+}
+
+// API readiness: prefill from window.__QUIZ_STEP1_DATA__, get/set for API
+(function() {
+    window.getQuizStep1Data = function() { return { bodyShape: selectedBodyShape }; };
+    window.setQuizStep1Data = function(data) {
+        if (data && data.bodyShape) {
+            var card = document.querySelector('.body-shape-card[onclick*="' + data.bodyShape + '"]');
+            if (card) selectBodyShape(card, data.bodyShape);
+        }
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.__QUIZ_STEP1_DATA__ && window.__QUIZ_STEP1_DATA__.bodyShape) {
+            window.setQuizStep1Data(window.__QUIZ_STEP1_DATA__);
+        }
+    });
+})();
+</script>
+
+
+</body></html>

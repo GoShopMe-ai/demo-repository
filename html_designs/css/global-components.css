@@ -1,0 +1,59 @@
+/**
+ * GoShopMe Global Components – Shared Styles
+ * Include on screens that use header icons, bottom nav, badges.
+ * Required for: header-icons-badges.js, bottom-nav.js
+ */
+
+/* Header icon buttons (back, bell, bag) */
+.header-icon-btn {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.header-icon-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Badge indicators (cart, notifications) */
+#cart-indicator,
+#notif-indicator {
+  min-width: 18px;
+  min-height: 18px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#cart-indicator.hidden,
+#notif-indicator.hidden {
+  display: none !important;
+}
+#cart-indicator.badge-numeric,
+#notif-indicator.badge-numeric {
+  min-width: 18px;
+  padding: 0 5px;
+}
+
+/* Bottom navigation items */
+.bottom-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #6B7280;
+  transition: color 0.2s ease-in-out;
+  min-width: 60px;
+}
+.bottom-nav-btn:hover,
+.bottom-nav-btn.active {
+  color: #939BFB;
+}
+.bottom-nav-btn:hover svg,
+.bottom-nav-btn:hover span,
+.bottom-nav-btn.active svg,
+.bottom-nav-btn.active span {
+  color: #939BFB;
+}
+.bottom-nav-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.5;
+  margin-bottom: 4px;
+}

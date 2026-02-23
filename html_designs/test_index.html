@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <title>GoShopMe - Test Screens</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F6F6F6;
+        }
+    </style>
+</head>
+<body class="min-h-screen py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">GoShopMe - Standardized Screens</h1>
+        <p class="text-gray-600 mb-8">Test the standardized HTML screens. Click on any screen to open it in a new tab.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Sign In Screen -->
+            <a href="SignIn_Screen.html" target="_blank" class="block bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900 mb-2">Sign In Screen</h2>
+                <p class="text-sm text-gray-600 mb-4">Authentication screen with email/password and social login options</p>
+                <div class="flex items-center text-sm text-blue-600">
+                    <span>Open â†’</span>
+                </div>
+            </a>
+
+            <!-- Sign Up Screen -->
+            <a href="SignUp_Screen.html" target="_blank" class="block bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900 mb-2">Sign Up Screen</h2>
+                <p class="text-sm text-gray-600 mb-4">Registration screen with email/password and social sign-up options</p>
+                <div class="flex items-center text-sm text-blue-600">
+                    <span>Open â†’</span>
+                </div>
+            </a>
+
+            <!-- Wishlist Screen -->
+            <a href="Wishlist.html" target="_blank" class="block bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900 mb-2">Wishlist Screen</h2>
+                <p class="text-sm text-gray-600 mb-4">Wishlist page with product grid, chat drawer, and interactive buttons</p>
+                <div class="flex items-center text-sm text-blue-600">
+                    <span>Open â†’</span>
+                </div>
+                <div class="mt-2 text-xs text-orange-600 font-medium">
+                    âš ï¸ Includes chat drawer - test all button interactions
+                </div>
+            </a>
+        </div>
+
+        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-6">
+            <h3 class="text-lg font-semibold text-blue-900 mb-3">Testing Checklist</h3>
+            <ul class="space-y-2 text-sm text-blue-800">
+                <li>âœ… <strong>Design System:</strong> Check fonts (DM Sans, Poppins), colors (#939BFB, #F96226), spacing</li>
+                <li>âœ… <strong>Icons:</strong> Verify Heroicons are used (not Font Awesome) - check header, buttons, bottom nav</li>
+                <li>âœ… <strong>Chat Drawer (Wishlist):</strong> Test expand/collapse, drag handle, input field, send button</li>
+                <li>âœ… <strong>Buttons:</strong> Test camera, microphone, add friend, share, wishlist heart toggle</li>
+                <li>âœ… <strong>Responsive:</strong> Test on mobile (390px) and desktop (centered layout)</li>
+                <li>âœ… <strong>Header/Bottom Nav:</strong> Verify fixed positioning and correct styling</li>
+            </ul>
+        </div>
+
+        <div class="mt-6 bg-gray-50 border border-gray-200 rounded-xl p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">File Locations</h3>
+            <ul class="space-y-1 text-sm text-gray-700 font-mono">
+                <li>ðŸ“„ html_designs/SignIn_Screen.html</li>
+                <li>ðŸ“„ html_designs/SignUp_Screen.html</li>
+                <li>ðŸ“„ html_designs/Wishlist.html</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+

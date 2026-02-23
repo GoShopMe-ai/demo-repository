@@ -1,0 +1,26 @@
+{
+  "id": "silk-midi-dress",
+  "name": "Silk Midi Dress",
+  "description": "Elegant flowy silk midi dress. Perfect for spring days and special occasions. Features a flattering A-line silhouette with a delicate floral print.",
+  "images": [
+    "https://storage.googleapis.com/uxpilot-auth.appspot.com/a1fa951de5-1df3707f3a394528a723.png"
+  ],
+  "base_price": 149,
+  "discounted_price": 89,
+  "currency": "USD",
+  "brand": "Zara",
+  "merchant_name": "Zara",
+  "metadata": {
+    "material_and_care": "100% silk. Dry clean only. Do not bleach.",
+    "shipping_and_returns": "Free shipping on orders over $50. 30-day returns."
+  },
+  "sizingChart": {
+    "US": ["XS", "S", "M", "L", "XL"],
+    "EU": ["34", "36", "38", "40", "42"],
+    "UK": ["6", "8", "10", "12", "14"]
+  },
+  "similar": [
+    { "id": "floral-midi-dress", "name": "Floral Midi Dress", "brand": "Reformation", "price": 248, "images": ["https://storage.googleapis.com/uxpilot-auth.appspot.com/ed54ed626a-c0cdcdbb57dc6381c4fd.png"] },
+    { "id": "silk-slip-dress", "name": "Silk Slip Dress", "brand": "Reformation", "price": 248, "images": ["https://storage.googleapis.com/uxpilot-auth.appspot.com/1d822aec75-b3cb13c31948045b34c1.png"] }
+  ]
+}

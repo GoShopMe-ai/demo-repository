@@ -1,19 +1,42 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
     <title>Choose Your Plan - GoShopMe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         ::-webkit-scrollbar { display: none; }
         body { font-family: 'DM Sans', sans-serif; }
         .poppins { font-family: 'Poppins', sans-serif; }
         .font-fuhkwang { font-family: 'Poppins', sans-serif; }
         .font-wix { font-family: 'DM Sans', sans-serif; }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
+        input[name="plan-option"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            border: 2px solid #939BFB;
+            border-radius: 50%;
+            background: white;
+            outline: none;
+            cursor: pointer;
+        }
+        input[name="plan-option"]:checked {
+            background: radial-gradient(circle, #939BFB 35%, white 40%);
+        }
+        input[name="plan-option"]:focus { outline: none; }
     </style>
     <script>
         tailwind.config = {
@@ -40,7 +63,7 @@
     <!-- Header -->
     <div id="header" class="w-full bg-white border-b border-gray-100 px-5 py-4 flex-shrink-0">
         <div class="flex items-center justify-between">
-            <button class="p-2 -ml-2 text-gray-600">
+            <button type="button" onclick="window.location.href='Onboarding_Personal_Details.html'" class="header-icon-btn w-10 h-10 flex items-center justify-center p-2 -ml-2 text-gray-600 hover:text-gray-800" aria-label="Go back">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
                 </svg>
@@ -62,7 +85,7 @@
         <div class="px-5 py-6 pb-24">
             <div id="hero-section" class="text-center mb-6">
                 <h2 class="text-xl font-fuhkwang font-bold text-gray-900 mb-2">
-                    Unlock More with ShineOut Premium ✨
+                    Unlock More with ShineOut Premium âœ¨
                 </h2>
                 <p class="text-sm text-gray-600 font-wix">
                     Whether you're a casual shopper or a power user, we've got a plan for you.
@@ -70,13 +93,14 @@
             </div>
 
             <div id="plan-cards" class="space-y-4 mb-6">
-                <div id="free-plan-card" class="bg-white rounded-2xl border border-gray-200 p-5 cursor-pointer transition-all duration-200" onclick="selectPlan('free')">
+                <label class="block cursor-pointer" for="plan-free">
+                <div id="free-plan-card" class="bg-white rounded-2xl border border-gray-200 p-5 transition-all duration-200">
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <h3 class="text-lg font-fuhkwang font-semibold text-gray-900">Free Plan</h3>
-                            <p class="text-xl font-fuhkwang font-bold text-gray-700">$0<span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <p class="text-xl font-fuhkwang font-bold text-gray-700">0 EUR<span class="text-sm font-normal text-gray-500">/month</span></p>
                         </div>
-                        <div id="free-radio" class="w-5 h-5 rounded-full border-2 flex items-center justify-center border-gray-300"></div>
+                        <input type="radio" name="plan-option" id="plan-free" value="free" class="flex-shrink-0">
                     </div>
                     
                     <div class="space-y-2.5">
@@ -98,8 +122,10 @@
                         </div>
                     </div>
                 </div>
+                </label>
 
-                <div id="premium-plan-card" class="bg-white rounded-2xl border p-5 relative cursor-pointer transition-all duration-200 border-primary border-2" style="box-shadow: 0 0 20px rgba(147, 155, 251, 0.3); background: linear-gradient(135deg, rgba(147, 155, 251, 0.05) 0%, rgba(249, 98, 38, 0.02) 100%);" onclick="selectPlan('premium')">
+                <label class="block cursor-pointer" for="plan-premium">
+                <div id="premium-plan-card" class="bg-white rounded-2xl border p-5 relative transition-all duration-200 border-primary border-2" style="box-shadow: 0 0 20px rgba(147, 155, 251, 0.3); background: linear-gradient(135deg, rgba(147, 155, 251, 0.05) 0%, rgba(249, 98, 38, 0.02) 100%);">
                     <div class="absolute -top-2.5 left-1/2 transform -translate-x-1/2">
                         <span class="bg-accent text-white px-3 py-1 rounded-full text-xs font-semibold">Most Popular</span>
                     </div>
@@ -107,11 +133,9 @@
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <h3 class="text-lg font-fuhkwang font-semibold text-gray-900">Premium Plan</h3>
-                            <p class="text-xl font-fuhkwang font-bold text-primary">$19.99<span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <p class="text-xl font-fuhkwang font-bold text-primary">19.99 EUR<span class="text-sm font-normal text-gray-500">/month</span></p>
                         </div>
-                        <div id="premium-radio" class="w-5 h-5 rounded-full border-2 border-primary bg-primary flex items-center justify-center">
-                            <i class="fas fa-check text-white text-xs"></i>
-                        </div>
+                        <input type="radio" name="plan-option" id="plan-premium" value="premium" checked class="flex-shrink-0">
                     </div>
                     
                     <div class="space-y-2.5">
@@ -141,14 +165,15 @@
                         </div>
                     </div>
                 </div>
+                </label>
             </div>
 
             <div id="comparison-table" class="mb-6">
-                <button class="w-full flex items-center justify-between text-base font-fuhkwang font-semibold text-gray-900 mb-3" onclick="toggleComparison()">
+                <button type="button" class="w-full flex items-center justify-between text-base font-fuhkwang font-semibold text-gray-900 mb-3 py-2" onclick="toggleComparison()">
                     <span>Compare Plans</span>
                     <i id="comparison-arrow" class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
                 </button>
-                <div id="comparison-content" class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                <div id="comparison-content" class="bg-white rounded-2xl border border-gray-200 overflow-hidden transition-all duration-300" style="max-height: 0;">
                     <div class="grid grid-cols-3 bg-gray-50 p-3.5 border-b border-gray-200">
                         <div class="font-semibold text-gray-900 text-xs">Feature</div>
                         <div class="font-semibold text-gray-900 text-center text-xs">Free</div>
@@ -223,8 +248,8 @@
         
         const freeCard = document.getElementById('free-plan-card');
         const premiumCard = document.getElementById('premium-plan-card');
-        const freeRadio = document.getElementById('free-radio');
-        const premiumRadio = document.getElementById('premium-radio');
+        const freeRadio = document.getElementById('plan-free');
+        const premiumRadio = document.getElementById('plan-premium');
         
         if (plan === 'free') {
             freeCard.classList.add('border-primary', 'border-2');
@@ -234,12 +259,7 @@
             premiumCard.classList.add('border-gray-200');
             premiumCard.style.boxShadow = '';
             premiumCard.style.background = '';
-            
-            freeRadio.classList.add('border-primary', 'bg-primary');
-            freeRadio.innerHTML = '<i class="fas fa-check text-white text-xs"></i>';
-            premiumRadio.classList.remove('border-primary', 'bg-primary');
-            premiumRadio.classList.add('border-gray-300');
-            premiumRadio.innerHTML = '';
+            if (freeRadio) freeRadio.checked = true;
         } else {
             freeCard.classList.remove('border-primary', 'border-2');
             freeCard.classList.add('border-gray-200');
@@ -249,27 +269,53 @@
             premiumCard.classList.remove('border-gray-200');
             premiumCard.style.boxShadow = '0 0 20px rgba(147, 155, 251, 0.3)';
             premiumCard.style.background = 'linear-gradient(135deg, rgba(147, 155, 251, 0.05) 0%, rgba(249, 98, 38, 0.02) 100%)';
-            
-            freeRadio.classList.remove('border-primary', 'bg-primary');
-            freeRadio.classList.add('border-gray-300');
-            freeRadio.innerHTML = '';
-            premiumRadio.classList.add('border-primary', 'bg-primary');
-            premiumRadio.innerHTML = '<i class="fas fa-check text-white text-xs"></i>';
+            if (premiumRadio) premiumRadio.checked = true;
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('input[name="plan-option"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                selectPlan(this.value);
+            });
+        });
+    });
 
     function toggleComparison() {
         const comparisonContent = document.getElementById('comparison-content');
         const comparisonArrow = document.getElementById('comparison-arrow');
+        const isClosed = !comparisonContent.style.maxHeight || comparisonContent.style.maxHeight === '0px';
         
-        if (comparisonContent.style.maxHeight === '0px') {
-            comparisonContent.style.maxHeight = '1000px';
-            comparisonArrow.classList.remove('rotate-180');
+        if (isClosed) {
+            comparisonContent.style.maxHeight = (comparisonContent.scrollHeight || 400) + 'px';
+            comparisonArrow.classList.add('rotate-180');
         } else {
             comparisonContent.style.maxHeight = '0px';
-            comparisonArrow.classList.add('rotate-180');
+            comparisonArrow.classList.remove('rotate-180');
         }
     }
+
+    // API readiness: prefill from window.__PLAN_SELECTION_DATA__, get/set for API
+    (function() {
+        window.getPlanSelectionData = function() { return { plan: selectedPlan }; };
+        window.setPlanSelectionData = function(data) { if (data && data.plan) selectPlan(data.plan); };
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.__PLAN_SELECTION_DATA__) window.setPlanSelectionData(window.__PLAN_SELECTION_DATA__);
+        });
+        var continueBtn = document.querySelector('#continue-button-section button');
+        if (continueBtn) {
+            continueBtn.addEventListener('click', function() {
+                if (typeof window.GoShopMeOnboardingAPI !== 'undefined' && window.GoShopMeOnboardingAPI.submitPlanSelection) {
+                    window.GoShopMeOnboardingAPI.submitPlanSelection({ plan: selectedPlan });
+                }
+                if (selectedPlan === 'premium') {
+                    window.location.href = 'Onboarding_Subscribe_Payment.html';
+                } else {
+                    window.location.href = 'QuizOrSkip_Screen.html';
+                }
+            });
+        }
+    })();
 </script>
 
 </body>

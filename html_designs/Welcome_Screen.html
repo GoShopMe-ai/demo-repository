@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
     <title>GoShopMe Welcome</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -23,6 +27,7 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         ::-webkit-scrollbar { display: none;}
+        html, body { margin: 0; padding: 0; }
         * { 
             font-family: 'DM Sans', 
                          'Karla',
@@ -103,50 +108,52 @@
             animation: pulse-slow 3s ease-in-out infinite;
         }
 
-        /* Video player: vertical 9:16 (social/mobile), fits screen without taking full space */
+        /* Video player: fits screen, preserves resolution and aspect ratio */
         #video_player_container {
+            width: 100%;
+            max-width: 220px;
+            margin: 0 auto;
             aspect-ratio: 9 / 16;
-            max-width: 260px;
-            max-height: 40vh;
-            width: min(260px, 22.5vh);
+            overflow: hidden;
+        }
+        #presentation_video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
     </style>
 </head>
 <body class="bg-[#F6F6F6] antialiased">
     <div class="min-h-screen flex justify-center">
         <main id="welcome_screen" class="w-full max-w-[390px] min-h-screen bg-white flex flex-col overflow-hidden shadow-2xl relative">
-            <header data-backend-symbol-id="u2lz0YVYry4y4DrmcmQ9" id="header" class="pt-10 pb-4 px-5 flex-shrink-0 flex justify-center">
-                <img src="" data-logo alt="GoShopMe Logo" class="h-10 w-auto object-contain">
+            <header data-backend-symbol-id="u2lz0YVYry4y4DrmcmQ9" id="header" class="pt-8 pb-2 px-6 flex-shrink-0 flex flex-col items-center">
+                <div class="w-full text-center leading-none mb-4">
+                    <img class="w-full max-w-[390px] h-auto mx-auto block align-top" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/html_designs/GoShopMe%20logo.svg" data-logo alt="GoShopMe Logo" title="GoShopMe logo">
+                </div>
             </header>
-            <section id="hero_section" class="text-center px-5 pb-2 flex-shrink-0">
-                <h2 class="poppins text-2xl font-bold text-gray-900 leading-tight">Meet ShAI.</h2>
-                <h3 class="poppins text-xl font-semibold text-gray-900 mt-1">Your AI personal shopper.</h3>
+            <section id="hero_section" class="text-center px-6 pb-2 flex-shrink-0">
+                <h2 class="poppins text-xl font-bold text-gray-900 leading-tight">Meet ShAI.</h2>
+                <h3 class="poppins text-lg font-semibold text-gray-900 mt-1">Your AI personal shopper.</h3>
                 <div class="mt-3">
-                    <p class="dm-sans text-base font-medium text-gray-800 leading-snug">See it. Send it. Buy it.</p>
-                    <p class="dm-sans text-base font-medium text-gray-800">No scrolling. No guessing.</p>
+                    <p class="dm-sans text-sm font-medium text-gray-800 leading-snug">See it. Send it. Buy it.</p>
+                    <p class="dm-sans text-sm font-medium text-gray-800">No scrolling. No guessing.</p>
                 </div>
             </section>
-            <section id="subline_section" class="px-5 pb-3 flex-shrink-0">
-                <p class="dm-sans text-sm text-gray-600 text-center leading-relaxed">
-                    From screenshots, videos, or real life → ShAI finds the right item, in your size, at the best price.
-                </p>
-            </section>
-            <section id="video_section" class="px-5 pb-3 flex-shrink-0 flex justify-center">
+            <section id="video_section" class="px-6 pb-3 flex-shrink-0 flex justify-center">
                 <!-- Vertical 9:16 aspect for social/mobile video; fits screen without taking full space -->
                 <div id="video_player_container" class="bg-black rounded-2xl overflow-hidden border border-gray-100 relative shadow-lg">
                     <video 
                         id="presentation_video"
-                        class="w-full h-full object-cover"
                         controls
                         playsinline
-                        poster=""
+                        preload="metadata"
                         data-video-poster>
-                        <source src="" data-video-source type="video/mp4">
+                        <source src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/GoShopMe%20App_Video.mp4" data-video-source type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 </div>
             </section>
-            <section id="benefits_section" class="px-5 pb-3 flex-shrink-0">
+            <section id="benefits_section" class="px-6 pb-3 flex-shrink-0">
                 <div class="space-y-3">
                     <div id="benefit_1" class="flex items-start gap-3">
                         <div class="flex-shrink-0 w-8 h-8 bg-shine-primary/10 rounded-full flex items-center justify-center">
@@ -176,13 +183,13 @@
                             </svg>
                         </div>
                         <p class="dm-sans text-sm text-gray-700 leading-relaxed pt-1">
-                            Shop together in chat — ShAI + your friends
+                            Shop together in chat â€” ShAI + your friends
                         </p>
                     </div>
                 </div>
             </section>
-            <section id="trust_section" class="px-5 pb-4 flex-shrink-0"></section>
-            <footer id="footer" class="px-5 pb-8 pt-2 flex-shrink-0 mt-auto">
+            <section id="trust_section" class="px-6 pb-4 flex-shrink-0"></section>
+            <footer id="footer" class="px-6 pb-8 pt-2 flex-shrink-0 mt-auto">
                 <div id="cta_section" class="flex flex-col items-center space-y-3">
                     <button id="get_started_button" class="w-3/4 bg-shine-primary text-white font-medium py-2.5 px-3 rounded-full transition-all text-sm shadow-sm hover:shadow-md hover:bg-shine-primary/90 dm-sans">
                         Get started
@@ -206,7 +213,7 @@
                 logoImg.onerror = function() {
                     console.warn('Failed to load logo:', logoUrl);
                 };
-                console.log(`✓ Updated logo with: ${logoUrl}`);
+                console.log(`âœ“ Updated logo with: ${logoUrl}`);
                 return true;
             } else {
                 console.warn('Logo element not found');
@@ -242,7 +249,7 @@
                 console.warn('Failed to load video:', videoUrl);
             };
 
-            console.log(`✓ Updated welcome video with:`);
+            console.log(`âœ“ Updated welcome video with:`);
             console.log(`  - Video URL: ${videoUrl || 'not set'}`);
             console.log(`  - Poster URL: ${posterUrl || 'not set'}`);
             return true;
@@ -278,6 +285,32 @@ populateWelcomeVideo("https://commondatastorage.googleapis.com/gtv-videos-bucket
             populateLogo: typeof window.populateLogo,
             populateWelcomeVideo: typeof window.populateWelcomeVideo
         });
+
+        // API readiness: get started and sign in actions
+        document.addEventListener('DOMContentLoaded', function() {
+            var getStartedBtn = document.getElementById('get_started_button');
+            var signInSpan = document.querySelector('#secondary_option .text-shine-primary');
+            if (getStartedBtn) {
+                getStartedBtn.addEventListener('click', function() {
+                    if (typeof window.GoShopMeAuthAPI !== 'undefined' && window.GoShopMeAuthAPI.onGetStarted) {
+                        window.GoShopMeAuthAPI.onGetStarted();
+                    } else {
+                        window.location.href = 'SignUp_Screen.html';
+                    }
+                });
+            }
+            if (signInSpan) {
+                signInSpan.addEventListener('click', function() {
+                    if (typeof window.GoShopMeAuthAPI !== 'undefined' && window.GoShopMeAuthAPI.onSignIn) {
+                        window.GoShopMeAuthAPI.onSignIn();
+                    } else {
+                        window.location.href = 'SignIn_Screen.html';
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>
+
+

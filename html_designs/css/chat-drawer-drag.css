@@ -1,0 +1,22 @@
+/**
+ * Chat Drawer Drag - Mobile Optimization
+ * Include this on any page with a chat drawer for touch-friendly dragging.
+ * Wrapper must have class .chat-drawer-drag-zone or id ending in -drag-handle-area
+ */
+.chat-drawer-drag-zone,
+[id$="-drag-handle-area"] {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  -webkit-touch-callout: none;
+}
+.chat-drawer-drag-zone:active,
+[id$="-drag-handle-area"]:active {
+  cursor: grabbing;
+}

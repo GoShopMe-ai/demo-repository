@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -30,6 +34,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         ::-webkit-scrollbar { display: none;}
+        html, body { margin: 0; padding: 0; }
+        #auth-screen { padding-top: 1rem; }
         * { 
             font-family: 'DM Sans', 
                          'Karla',
@@ -66,25 +72,39 @@
                          Arial,
                          sans-serif; 
         }
+        .input-error { border-color: #EF4444 !important; }
+        .input-error:focus { --tw-ring-color: #EF4444 !important; }
+        .error-msg { color: #EF4444; font-size: 12px; margin-top: 4px; }
+        #auth-logo h2 { margin-top: 0; margin-bottom: 0.5rem; }
     </style>
 </head>
 <body class="bg-[#F6F6F6]">
 
-<div id="auth-screen" class="relative w-full max-w-[390px] mx-auto h-[844px] max-h-screen bg-white flex flex-col overflow-y-auto">
-    <!-- Main Content -->
-    <div class="relative flex-1 flex flex-col items-center px-6 py-8 min-h-full">
-        <!-- GoShopMe logo placeholder (top of screen) -->
-        <div class="w-full text-center mb-6">
-            <img class="h-10 w-auto mx-auto object-contain" src="" data-logo alt="GoShopMe logo" title="GoShopMe logo">
+<div id="auth-screen" class="relative w-full max-w-[390px] mx-auto min-h-screen max-h-screen bg-white flex flex-col overflow-y-auto">
+    <!-- Back Button -->
+    <div class="absolute top-6 left-6 z-10">
+        <a href="Welcome_Screen.html" class="text-gray-600 hover:opacity-70 transition-opacity" aria-label="Go back">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+        </a>
+    </div>
+    <!-- Main Content: logo + Welcome in same flow to eliminate gap -->
+    <div class="relative flex flex-col items-center px-6 pt-10 pb-8 flex-shrink-0">
+        <!-- Logo -->
+        <div class="w-full text-center leading-none mb-8">
+            <img class="w-full max-w-[390px] h-auto mx-auto block align-top" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/html_designs/GoShopMe%20logo.svg" data-logo alt="GoShopMe logo" title="GoShopMe logo">
         </div>
-        <!-- Logo Section -->
-        <div id="auth-logo" class="w-full text-center mb-6">
-            <h2 class="text-2xl font-semibold poppins text-gray-900 mb-2">Welcome !</h2>
+        <!-- Centered content: Welcome, buttons, form -->
+        <div class="w-full flex flex-col items-center">
+        <!-- Welcome -->
+        <div id="auth-logo" class="w-full text-center mb-4 leading-none">
+            <h2 class="text-lg font-semibold poppins text-gray-900 mb-2">Welcome !</h2>
             <p class="text-gray-500 text-base dm-sans">Sign up to enjoy effortless shopping</p>
         </div>
 
         <!-- Auth Options -->
-        <div id="social-auth" class="w-full space-y-2 mb-6">
+        <div id="social-auth" class="w-full space-y-2 mb-2">
             <button type="button" class="w-full flex items-center justify-center space-x-2 py-2.5 px-3 rounded-full border-2 border-[#939BFB]/30 bg-white hover:bg-[#939BFB]/10 transition-colors">
                 <i class="fab fa-google text-base text-gray-700"></i>
                 <span class="text-gray-700 font-medium text-xs dm-sans">Continue with Google</span>
@@ -102,18 +122,18 @@
         </div>
 
         <!-- Divider -->
-        <div class="w-full flex items-center justify-center space-x-4 mb-6">
+        <div class="w-full flex items-center justify-center space-x-4 mb-2">
             <div class="flex-1 h-px bg-gray-200"></div>
             <span class="text-gray-500 text-sm dm-sans">or</span>
             <div class="flex-1 h-px bg-gray-200"></div>
         </div>
 
         <!-- Email Form -->
-        <form id="email-auth" class="w-full space-y-4 mb-6">
+        <form id="email-auth" class="w-full space-y-4 mb-2">
             <div class="space-y-2">
                 <label class="block text-sm text-gray-600 dm-sans" for="email">Email</label>
                 <input type="text" id="email" inputmode="email" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB]/20 outline-none transition-colors text-base dm-sans" placeholder="Enter your email" autocomplete="email">
-                <span id="email-error" class="text-red-500 text-sm mt-1 dm-sans hidden" role="alert"></span>
+                <span id="email-error" class="error-msg dm-sans hidden" role="alert"></span>
             </div>
             
             <div class="space-y-2">
@@ -127,6 +147,7 @@
                         </svg>
                     </button>
                 </div>
+                <span id="password-error" class="error-msg dm-sans hidden block" role="alert"></span>
                 <!-- Password strength & requirements (shown only when user types in password) -->
                 <div id="signup-password-strength" class="space-y-2 mt-2 hidden">
                     <div class="flex gap-1">
@@ -170,7 +191,8 @@
         <!-- Sign Up Link -->
         <div class="flex items-center justify-center space-x-2 pb-8">
             <span class="text-gray-500 text-sm dm-sans">Already have an account?</span>
-            <span class="text-[#939BFB] font-medium hover:underline cursor-pointer text-sm dm-sans">Sign In</span>
+            <a href="SignIn_Screen.html" class="text-[#939BFB] font-medium hover:underline text-sm dm-sans">Sign In</a>
+        </div>
         </div>
     </div>
 </div>
@@ -252,19 +274,32 @@ document.getElementById('password').addEventListener('input', function() {
     updatePasswordRequirementsSignUp(password);
 });
 
+function showFieldError(inputId, errorId, msg) {
+    var input = inputId ? document.getElementById(inputId) : null;
+    var err = document.getElementById(errorId);
+    if (msg) {
+        if (input) input.classList.add('input-error');
+        if (err) { err.textContent = msg; err.classList.remove('hidden'); }
+    } else {
+        if (input) input.classList.remove('input-error');
+        if (err) { err.textContent = ''; err.classList.add('hidden'); }
+    }
+}
+document.getElementById('email').addEventListener('input', function() { showFieldError('email', 'email-error', ''); });
+document.getElementById('password').addEventListener('input', function() { showFieldError('password', 'password-error', ''); });
 document.getElementById('email-auth').addEventListener('submit', function(e) {
     e.preventDefault();
     var emailEl = document.getElementById('email');
-    var emailErrorEl = document.getElementById('email-error');
     var email = (emailEl && emailEl.value) ? emailEl.value.trim() : '';
     var emailFormatRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (emailErrorEl) { emailErrorEl.classList.add('hidden'); emailErrorEl.textContent = ''; }
+    showFieldError('email', 'email-error', '');
+    showFieldError('password', 'password-error', '');
     if (!email) {
-        if (emailErrorEl) { emailErrorEl.textContent = 'Please enter your email address.'; emailErrorEl.classList.remove('hidden'); }
+        showFieldError('email', 'email-error', 'Please enter your email address');
         return;
     }
     if (!emailFormatRegex.test(email)) {
-        if (emailErrorEl) { emailErrorEl.textContent = 'Please enter a valid email address.'; emailErrorEl.classList.remove('hidden'); }
+        showFieldError('email', 'email-error', 'Please enter a valid email address');
         return;
     }
     var password = (document.getElementById('password') && document.getElementById('password').value) || '';
@@ -273,11 +308,43 @@ document.getElementById('email-auth').addEventListener('submit', function(e) {
     var hasUpper = /[A-Z]/.test(password);
     var hasNumber = /[0-9]/.test(password);
     var hasSpecial = /[^a-zA-Z0-9]/.test(password);
-    if (!hasLength || !hasLower || !hasUpper || !hasNumber || !hasSpecial) {
+    if (!password) {
+        showFieldError('password', 'password-error', 'Please enter your password');
         return;
     }
-    // Validation passed; submit to your backend (e.g. fetch or form.action + form.submit()).
+    if (!hasLength || !hasLower || !hasUpper || !hasNumber || !hasSpecial) {
+        if (!hasLength) showFieldError('password', 'password-error', 'Password must be at least 8 characters');
+        else if (!hasLower || !hasUpper) showFieldError('password', 'password-error', 'Password must contain uppercase and lowercase letters');
+        else if (!hasNumber) showFieldError('password', 'password-error', 'Password must contain at least one number');
+        else showFieldError('password', 'password-error', 'Password must contain at least one symbol (e.g. !@#$%)');
+        return;
+    }
+    // Store user for SignIn validation (replace with API call when backend is ready)
+    try {
+        var users = [];
+        var stored = localStorage.getItem('__registeredUsers');
+        if (stored) {
+            try { users = JSON.parse(stored); } catch (e) {}
+        }
+        if (!Array.isArray(users)) users = [];
+        users.push({ email: email.toLowerCase(), password: password });
+        localStorage.setItem('__registeredUsers', JSON.stringify(users));
+        var emails = [];
+        var emailsStored = localStorage.getItem('__registeredEmails');
+        if (emailsStored) {
+            try { emails = JSON.parse(emailsStored); } catch (e) {}
+        }
+        if (!Array.isArray(emails)) emails = [];
+        if (emails.indexOf(email.toLowerCase()) < 0) emails.push(email.toLowerCase());
+        localStorage.setItem('__registeredEmails', JSON.stringify(emails));
+    } catch (err) {}
+    try {
+        sessionStorage.setItem('__signupEmailForOnboarding', email.trim().toLowerCase());
+    } catch (e) {}
+    window.location.href = 'Onboarding_Personal_Details.html';
 });
 </script>
 
 </body></html>
+
+

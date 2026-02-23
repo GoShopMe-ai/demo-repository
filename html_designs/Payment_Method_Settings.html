@@ -1,169 +1,160 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Methods</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <title>Payment Methods - GoShopMe</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/global-components.css">
     <script>
       tailwind.config = {
         theme: {
           extend: {
+            colors: {
+              'shine-primary': '#939BFB',
+              'shine-accent': '#F96226'
+            },
             fontFamily: {
-              'fuhkwang': ['Fira Sans', 'sans-serif'],
-              'madefor': ['Wix Madefor Display', 'sans-serif']
+              'poppins': ['Poppins', 'sans-serif'],
+              'dm-sans': ['DM Sans', 'sans-serif']
             }
           }
         }
       }
     </script>
+    <script src="js/header-icons-badges.js"></script>
+    <script src="js/back-button.js"></script>
     <style>
-      ::-webkit-scrollbar { display: none;}
-      
-      /* Custom radio button styling */
-      input[type="radio"] {
-        appearance: none;
+      ::-webkit-scrollbar { display: none; }
+      * { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .dm-sans { font-family: 'DM Sans', 'Karla', sans-serif; }
+      .poppins { font-family: 'Poppins', sans-serif; }
+      input[name="default-card"] {
         -webkit-appearance: none;
-        width: 1.25rem;
-        height: 1.25rem;
-        border: 2px solid #d1d5db;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        min-width: 18px;
+        border: 2px solid #939BFB;
         border-radius: 50%;
+        background: white;
         outline: none;
         cursor: pointer;
-        position: relative;
       }
-      
-      input[type="radio"]:checked {
-        border-color: #939bfb;
-        background-color: #939bfb;
+      input[name="default-card"]:checked {
+        background: radial-gradient(circle, #939BFB 35%, white 40%);
       }
-      
-      input[type="radio"]:checked::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 0.5rem;
-        height: 0.5rem;
-        border-radius: 50%;
-        background-color: white;
-      }
+      input[name="default-card"]:focus { outline: none; }
+      #cart-indicator, #notif-indicator { min-width: 18px; min-height: 18px; padding: 0 5px; display: flex; align-items: center; justify-content: center; }
+      #cart-indicator.hidden, #notif-indicator.hidden { display: none !important; }
     </style>
 </head>
 
-<body class="bg-white font-madefor">
-    <!-- Header -->
-    <div id="header" class="fixed top-0 left-0 right-0 bg-white z-50 px-5 py-4 border-b border-gray-100">
-      <div class="flex justify-between items-center">
-        <div class="flex items-center gap-3">
-          <button class="text-gray-600">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
-            </svg>
-          </button>
-          <h1 class="text-xl font-semibold font-fuhkwang text-gray-900">Payment Methods</h1>
-        </div>
-        <div class="flex gap-5">
-          <button class="text-gray-600">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
-            </svg>
-          </button>
-          <button class="text-gray-600">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
+<body class="bg-[#F6F6F6] dm-sans overflow-x-hidden">
+    <div id="app-shell" class="relative w-full max-w-[390px] mx-auto min-h-screen bg-white shadow-2xl overflow-x-hidden">
+        <!-- Header (design system Section 5) -->
+        <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white z-50 border-b border-gray-100">
+            <div class="p-4">
+                <div class="relative flex items-center justify-between">
+                    <a href="#" id="payment-back-btn" class="goshopme-back-btn header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800 flex-shrink-0" data-fallback="User_Profile_Paid_Plan.html" aria-label="Back">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+                        </svg>
+                    </a>
+                    <h1 class="absolute left-1/2 -translate-x-1/2 text-lg font-semibold poppins text-gray-900">Payment Methods</h1>
+                    <div id="header-icons-slot" class="flex items-center gap-0 flex-shrink-0 min-w-10"></div>
+                </div>
+            </div>
+        </header>
 
-    <!-- Main Content -->
-    <main class="pt-20 pb-24 bg-white">
-      <!-- Header Section -->
-      <section id="payment-header" class="px-5 py-6 mb-2">
-        <h2 class="text-lg font-semibold font-fuhkwang text-gray-900 mb-2">
-          Manage Your Payment Methods</h2>
-        <p class="text-gray-600 text-sm">These payment methods are used for your
-          subscription and purchases made through ShineOut.</p>
-      </section>
+        <!-- Main Content -->
+        <main class="pt-20 px-4 pb-40 bg-white min-h-screen">
+            <!-- Header Section -->
+            <section id="payment-header" class="px-5 py-6 mb-2">
+                <h2 class="text-lg font-semibold poppins text-gray-900 mb-2">Manage Your Payment Methods</h2>
+                <p class="text-gray-600 text-sm dm-sans">These payment methods are used for your subscription and purchases made through GoShopMe.</p>
+            </section>
 
-      <!-- Stored Payment Methods -->
-      <section id="payment-methods" class="px-5 py-6 mb-2">
-        <h3 class="text-base font-semibold font-fuhkwang mb-4 text-gray-900">
-          Your Cards</h3>
+            <!-- Stored Payment Methods -->
+            <section id="payment-methods" class="px-5 py-6 mb-2">
+                <h3 class="text-base font-semibold poppins mb-4 text-gray-900">Your Cards</h3>
 
-        <!-- Card 1 -->
-        <div id="card-1" class="border border-gray-100 rounded-2xl p-4 mb-4 bg-white shadow-sm relative">
-          <div class="flex justify-between items-start mb-3">
-            <div class="flex items-center gap-3">
-              <input type="radio" name="default-card" checked="" class="form-radio h-5 w-5 text-[#939bfb] focus:ring-[#939bfb]">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-8 h-8 text-[#939bfb]">
+                <!-- Card 1 -->
+                <div id="card-1" class="border border-gray-100 rounded-2xl p-4 mb-4 bg-white shadow-sm relative" data-cardholder="Maria Lopez" data-last4="4242" data-expiry="09/27" data-brand="Visa">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex items-center gap-3">
+                            <input type="radio" name="default-card" checked="" onchange="updateDefaultCard(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-8 h-8 text-shine-primary">
                 <path fill="currentColor" d="M470.1 231.3s7.6 37.2 9.3 45H446c3.3-8.9 16-43.5 16-43.5-.2.3 3.3-9.1 5.3-14.9l2.8 13.4zM576 80v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48h480c26.5 0 48 21.5 48 48zM152.5 331.2L215.7 176h-42.5l-39.3 106-4.3-21.5-14-71.4c-2.3-9.9-9.4-12.7-18.2-13.1H32.7l-.7 3.1c15.8 4 29.9 9.8 42.2 17.1l35.8 135h42.5zm94.4.2L272.1 176h-40.2l-25.1 155.4h40.1zm139.9-50.8c.2-17.7-10.6-31.2-33.7-42.3-14.1-7.1-22.7-11.9-22.7-19.2.2-6.6 7.3-13.4 23.1-13.4 13.1-.3 22.7 2.8 29.9 5.9l3.6 1.7 5.5-33.6c-7.9-3.1-20.5-6.6-36-6.6-39.7 0-67.6 21.2-67.8 51.4-.3 22.3 20 34.7 35.2 42.2 15.5 7.6 20.8 12.6 20.8 19.3-.2 10.4-12.6 15.2-24.1 15.2-16 0-24.6-2.5-37.7-8.3l-5.3-2.5-5.6 34.9c9.4 4.3 26.8 8.1 44.8 8.3 42.2.1 69.7-20.8 70-53zM528 331.4L495.6 176h-31.1c-9.6 0-16.9 2.8-21 12.9l-59.7 142.5H426s6.9-19.2 8.4-23.3H486c1.2 5.5 4.8 23.3 4.8 23.3H528z">
                 </path>
               </svg>
-              <div>
-                <div class="flex items-center gap-2">
-                  <p class="font-medium text-gray-900">Visa •••• 4242</p>
-                  <button class="text-gray-400 hover:text-gray-600"><i class="fas fa-pencil text-sm"></i></button>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <p class="font-medium text-gray-900 dm-sans">Visa â€¢â€¢â€¢â€¢ 4242</p>
+                                    <button type="button" onclick="openCardModal('edit', this)" class="header-icon-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600" aria-label="Edit card">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/></svg>
+                                    </button>
+                                </div>
+                                <p class="text-sm text-gray-600 dm-sans">Expires 09/27</p>
+                            </div>
+                        </div>
+                        <span class="default-badge bg-shine-primary text-white text-xs font-semibold px-2.5 py-1 rounded-full poppins">Default</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3 dm-sans">Used for Subscription &amp; Purchases</p>
+                    <button type="button" onclick="removeCard(this)" class="remove-card-btn absolute bottom-3 right-3 text-gray-400 hover:text-shine-accent p-1 transition-colors" aria-label="Remove card">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                    </button>
                 </div>
-                <p class="text-sm text-gray-600">Expires 09/27</p>
-              </div>
-            </div>
-            <span class="default-badge bg-[#939bfb] text-white text-xs font-semibold px-2.5 py-1 rounded-full">Default</span>
-          </div>
-          <p class="text-sm text-gray-600 mb-3">Used for Subscription &amp;
-            Purchases</p>
-          <button class="absolute bottom-3 right-3 text-gray-400 hover:text-[#F96226] p-1"><i class="fas fa-trash text-sm"></i></button>
-        </div>
 
-        <!-- Card 2 -->
-        <div id="card-2" class="border border-gray-100 rounded-2xl p-4 mb-4 bg-white shadow-sm relative">
-          <div class="flex justify-between items-start mb-3">
-            <div class="flex items-center gap-3">
-              <input type="radio" name="default-card" class="form-radio h-5 w-5 text-[#939bfb] focus:ring-[#939bfb]">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-8 h-8 text-orange-500">
+                <!-- Card 2 -->
+                <div id="card-2" class="border border-gray-100 rounded-2xl p-4 mb-4 bg-white shadow-sm relative" data-cardholder="John Smith" data-last4="8888" data-expiry="12/26" data-brand="Mastercard">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex items-center gap-3">
+                            <input type="radio" name="default-card" onchange="updateDefaultCard(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-8 h-8 text-orange-500">
                 <path fill="currentColor" d="M304 160a160 160 0 1 0 0 320 160 160 0 1 0 0-320zM128 320a128 128 0 1 1 256 0 128 128 0 1 1 -256 0zM576 320a160 160 0 1 0 -320 0 160 160 0 1 0 320 0zM480 320a96 96 0 1 1 -192 0 96 96 0 1 1 192 0z">
                 </path>
               </svg>
-              <div>
-                <div class="flex items-center gap-2">
-                  <p class="font-medium text-gray-900">Mastercard •••• 8888</p>
-                  <button class="text-gray-400 hover:text-gray-600"><i class="fas fa-pencil text-sm"></i></button>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <p class="font-medium text-gray-900 dm-sans">Mastercard â€¢â€¢â€¢â€¢ 8888</p>
+                                    <button type="button" onclick="openCardModal('edit', this)" class="header-icon-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600" aria-label="Edit card">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/></svg>
+                                    </button>
+                                </div>
+                                <p class="text-sm text-gray-600 dm-sans">Expires 12/26</p>
+                            </div>
+                        </div>
+                        <span class="default-badge bg-shine-primary text-white text-xs font-semibold px-2.5 py-1 rounded-full poppins hidden">Default</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3 dm-sans">Purchases Only</p>
+                    <button type="button" onclick="removeCard(this)" class="remove-card-btn absolute bottom-3 right-3 text-gray-400 hover:text-shine-accent p-1 transition-colors" aria-label="Remove card">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                    </button>
                 </div>
-                <p class="text-sm text-gray-600">Expires 12/26</p>
-              </div>
-            </div>
-            <span class="default-badge bg-[#939bfb] text-white text-xs font-semibold px-2.5 py-1 rounded-full hidden">Default</span>
-          </div>
-          <p class="text-sm text-gray-600 mb-3">Purchases Only</p>
-          <button class="absolute bottom-3 right-3 text-gray-400 hover:text-[#F96226] p-1"><i class="fas fa-trash text-sm"></i></button>
-        </div>
 
-        <button class="w-3/4 mx-auto block bg-[#939bfb] hover:bg-[#838cf3] text-white py-3 rounded-full font-fuhkwang font-medium flex items-center justify-center gap-2 mt-4"><i class="fas fa-plus"></i>
-          Add New Payment Method
-        </button>
-      </section>
+                <button type="button" id="addPaymentMethodBtn" onclick="openCardModal('add')" class="w-2/3 mx-auto block bg-shine-primary hover:opacity-90 text-white py-2 text-sm rounded-full poppins font-medium flex items-center justify-center gap-1.5 mt-4 transition-opacity">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                    Add New Payment Method
+                </button>
+            </section>
 
-      <!-- Security Statement -->
-      <section id="security-statement" class="px-5 py-4">
-        <div class="text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-8 h-8 text-green-500 mx-auto mb-3">
+            <!-- Security Statement -->
+            <section id="security-statement" class="px-5 py-4">
+                <div class="text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-8 h-8 text-green-500 mx-auto mb-3">
             <path fill="currentColor" d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0zm0 66.8V444.8C394 378 431.1 230.1 432 141.4L256 66.8l0 0z">
             </path>
           </svg>
-          <p class="text-sm text-gray-600 mb-4">All payments are processed
-            securely. Your card details are encrypted and never stored on our
-            servers.</p>
-          <div class="flex justify-center items-center gap-4 text-gray-400">
+                    <p class="text-sm text-gray-600 mb-4 dm-sans">All payments are processed securely. Your card details are encrypted and never stored on our servers.</p>
+                    <div class="flex justify-center items-center gap-4 text-gray-400">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-10 h-auto">
               <path fill="currentColor" d="M470.1 231.3s7.6 37.2 9.3 45H446c3.3-8.9 16-43.5 16-43.5-.2.3 3.3-9.1 5.3-14.9l2.8 13.4zM576 80v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48h480c26.5 0 48 21.5 48 48zM152.5 331.2L215.7 176h-42.5l-39.3 106-4.3-21.5-14-71.4c-2.3-9.9-9.4-12.7-18.2-13.1H32.7l-.7 3.1c15.8 4 29.9 9.8 42.2 17.1l35.8 135h42.5zm94.4.2L272.1 176h-40.2l-25.1 155.4h40.1zm139.9-50.8c.2-17.7-10.6-31.2-33.7-42.3-14.1-7.1-22.7-11.9-22.7-19.2.2-6.6 7.3-13.4 23.1-13.4 13.1-.3 22.7 2.8 29.9 5.9l3.6 1.7 5.5-33.6c-7.9-3.1-20.5-6.6-36-6.6-39.7 0-67.6 21.2-67.8 51.4-.3 22.3 20 34.7 35.2 42.2 15.5 7.6 20.8 12.6 20.8 19.3-.2 10.4-12.6 15.2-24.1 15.2-16 0-24.6-2.5-37.7-8.3l-5.3-2.5-5.6 34.9c9.4 4.3 26.8 8.1 44.8 8.3 42.2.1 69.7-20.8 70-53zM528 331.4L495.6 176h-31.1c-9.6 0-16.9 2.8-21 12.9l-59.7 142.5H426s6.9-19.2 8.4-23.3H486c1.2 5.5 4.8 23.3 4.8 23.3H528z">
               </path>
@@ -173,66 +164,85 @@
               </path>
             </svg>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-10 h-auto">
-              <path fill="currentColor" d="M48 480C21.5 480 0 458.5 0 432V80C0 53.5 21.5 32 48 32H528c26.5 0 48 21.5 48 48v352c0 26.5-21.5 48-48 48H48zm133-219.1L262.7 82.4H341.3L307.6 145.6v-1.1H369.4L466.6 82.4l16.9 47.6h17.1V80H576V432c0 17.7-14.3 32-32 32H528c-17.7 0-32-14.3-32-32v-1.1h-61.9l-31.9-35.1-31.9 35.1H246.8V267.1H181z">
-              </path>
+              <path fill="currentColor" d="M48 480C21.5 480 0 458.5 0 432V80C0 53.5 21.5 32 48 32H528c26.5 0 48 21.5 48 48v352c0 26.5-21.5 48-48 48H48zm133-219.1L262.7 82.4H341.3L307.6 145.6v-1.1H369.4L466.6 82.4l16.9 47.6h17.1V80H576V432c0 17.7-14.3 32-32 32H528c-17.7 0-32-14.3-32-32v-1.1h-61.9l-31.9-35.1-31.9 35.1H246.8V267.1H181z"/>
             </svg>
-          </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Add/Edit Card Modal -->
+        <div id="editCardModal" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50 hidden">
+            <div class="bg-white rounded-2xl shadow-lg p-6 w-11/12 max-w-[358px] mx-4">
+                <h3 id="cardModalTitle" class="text-lg font-semibold poppins text-gray-900 mb-4">Edit Card Details</h3>
+                <form id="editCardForm" onsubmit="event.preventDefault(); validateAndSaveCard();">
+                    <div class="mb-4">
+                        <label for="cardholderName" class="block text-sm font-medium text-gray-700 mb-1 dm-sans">Cardholder Name</label>
+                        <input type="text" id="cardholderName" placeholder="Full name on card" class="w-full px-3 py-2 border border-gray-200 rounded-xl dm-sans text-sm focus:outline-none focus:border-shine-primary focus:ring-1 focus:ring-shine-primary">
+                        <p id="cardholderError" class="text-xs text-red-500 mt-1 hidden dm-sans"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label for="cardNumber" class="block text-sm font-medium text-gray-700 mb-1 dm-sans">Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" class="w-full px-3 py-2 border border-gray-200 rounded-xl dm-sans text-sm focus:outline-none focus:border-shine-primary focus:ring-1 focus:ring-shine-primary">
+                        <p id="cardNumberError" class="text-xs text-red-500 mt-1 hidden dm-sans"></p>
+                    </div>
+                    <div class="flex gap-4 mb-4">
+                        <div class="w-1/2">
+                            <label for="expiryDate" class="block text-sm font-medium text-gray-700 mb-1 dm-sans">Expiry</label>
+                            <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5" inputmode="numeric" autocomplete="cc-exp" class="w-full px-3 py-2 border border-gray-200 rounded-xl dm-sans text-sm focus:outline-none focus:border-shine-primary focus:ring-1 focus:ring-shine-primary">
+                            <p id="expiryError" class="text-xs text-red-500 mt-1 hidden dm-sans"></p>
+                        </div>
+                        <div class="w-1/2">
+                            <label for="cvv" class="block text-sm font-medium text-gray-700 mb-1 dm-sans">CVV/CVC</label>
+                            <div class="relative">
+                                <input type="password" id="cvv" placeholder="â€¢â€¢â€¢" maxlength="3" inputmode="numeric" autocomplete="cc-csc" class="w-full px-3 py-2 pr-10 border border-gray-200 rounded-xl dm-sans text-sm focus:outline-none focus:border-shine-primary focus:ring-1 focus:ring-shine-primary">
+                                <button type="button" id="cvcToggleBtn" class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors" aria-label="Show CVC" tabindex="-1">
+                                    <svg id="cvcEyeIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <svg id="cvcEyeSlashIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>
+                                </button>
+                            </div>
+                            <p id="cvcError" class="text-xs text-red-500 mt-1 hidden dm-sans"></p>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-3">
+                        <button type="button" onclick="closeCardModal()" class="px-6 py-2 bg-gray-200 text-gray-800 rounded-full dm-sans font-medium text-sm hover:bg-gray-300 transition-colors">Cancel</button>
+                        <button type="submit" id="cardModalSubmitBtn" class="px-6 py-2 bg-shine-primary text-white rounded-full dm-sans font-medium text-sm hover:opacity-90 transition-opacity">Save Card</button>
+                    </div>
+                </form>
+            </div>
         </div>
-      </section>
-    </main>
 
-    <!-- Edit Card Modal -->
-    <div id="editCardModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
-      <div class="bg-white rounded-2xl shadow-lg p-6 w-11/12 max-w-sm">
-        <h3 class="text-xl font-fuhkwang font-semibold text-gray-900 mb-4">Edit
-          Card Details</h3>
-        <form>
-          <div class="mb-4"><label for="cardholderName" class="block text-sm font-medium text-gray-700 mb-1">Cardholder
-              Name</label><input type="text" id="cardholderName" value="Maria Lopez" class="w-full px-3 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-[#939bfb] focus:border-[#939bfb]">
-          </div>
-          <div class="mb-4"><label for="cardNumber" class="block text-sm font-medium text-gray-700 mb-1">Card
-              Number</label><input type="text" id="cardNumber" value="•••• •••• •••• 4242" class="w-full px-3 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-[#939bfb] focus:border-[#939bfb]">
-          </div>
-          <div class="flex gap-4 mb-4">
-            <div class="w-1/2"><label for="expiryDate" class="block text-sm font-medium text-gray-700 mb-1">Expiry</label><input type="text" id="expiryDate" placeholder="MM/YY" value="09/27" class="w-full px-3 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-[#939bfb] focus:border-[#939bfb]">
+        <!-- Cannot Remove Default Modal -->
+        <div id="cannotRemoveDefaultModal" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50 hidden">
+            <div class="bg-white rounded-2xl shadow-lg p-6 w-11/12 max-w-[358px] mx-4">
+                <p class="text-gray-800 dm-sans text-sm mb-4">Please set another payment method as default before removing this card.</p>
+                <button type="button" onclick="closeCannotRemoveModal()" class="w-full py-2 bg-shine-primary text-white rounded-full dm-sans font-medium text-sm hover:opacity-90 transition-opacity">OK</button>
             </div>
-            <div class="w-1/2"><label for="cvv" class="block text-sm font-medium text-gray-700 mb-1">CVV/CVC</label><input type="password" id="cvv" placeholder="•••" value="123" class="w-full px-3 py-2 border border-gray-200 rounded-lg shadow-sm focus:ring-[#939bfb] focus:border-[#939bfb]">
-            </div>
-          </div>
-          <div class="flex justify-end gap-3"><button type="button" class="px-6 py-2 bg-gray-200 text-gray-800 rounded-full font-fuhkwang font-medium hover:bg-gray-300">Cancel</button><button type="submit" class="px-6 py-2 bg-[#939bfb] text-white rounded-full font-fuhkwang font-medium hover:bg-[#838cf3]">Save
-              Card</button></div>
-        </form>
-      </div>
+        </div>
+
+        <!-- Bottom Navigation (design system Section 6) -->
+        <nav id="bottom-navigation" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 z-50">
+        <div class="flex items-center justify-around py-2">
+            <a href="Home.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+                <span class="text-xs">Home</span>
+            </a>
+            <a href="Picks.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+                <span class="text-xs">Picks</span>
+            </a>
+            <a href="Wishlist.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+                <span class="text-xs">Wishlist</span>
+            </a>
+            <a id="payment-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
+                <span id="payment-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg></span>
+                <img id="payment-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile">
+                <span class="text-xs">Profile</span>
+            </a>
+        </div>
+        </nav>
     </div>
-
-    <!-- Bottom Navigation Menu -->
-    <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 py-3 px-4">
-      <div class="flex justify-between items-center max-w-md mx-auto">
-        <button class="flex flex-col items-center group min-w-[60px]">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 text-gray-400 group-hover:text-[#939bfb] group-active:text-[#939bfb] transition-colors">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
-          </svg>
-          <span class="text-xs mt-1 text-gray-500 group-hover:text-[#939bfb] group-active:text-[#939bfb] transition-colors">Home</span>
-        </button>
-        <button class="flex flex-col items-center group min-w-[60px]">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 text-gray-400 group-hover:text-[#939bfb] group-active:text-[#939bfb] transition-colors">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"></path>
-          </svg>
-          <span class="text-xs mt-1 text-gray-500 group-hover:text-[#939bfb] group-active:text-[#939bfb] transition-colors">Picks</span>
-        </button>
-        <button class="flex flex-col items-center group min-w-[60px]">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 text-gray-400 group-hover:text-[#939bfb] group-active:text-[#939bfb] transition-colors">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
-          </svg>
-          <span class="text-xs mt-1 text-gray-500 group-hover:text-[#939bfb] group-active:text-[#939bfb] transition-colors">Wishlist</span>
-        </button>
-        <button class="flex flex-col items-center min-w-[60px]">
-          <span class="profile-nav-icon flex items-center justify-center w-6 h-6 text-[#939bfb]"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg></span>
-          <img class="profile-nav-photo w-6 h-6 rounded-full object-cover hidden" src="" alt="Profile">
-          <span class="text-xs mt-1 text-[#939bfb]">Profile</span>
-        </button>
-      </div>
-    </nav>
 
     <script>
       function updateDefaultCard(radio) {
@@ -246,24 +256,317 @@
           if (badge) {
             badge.classList.remove('hidden');
           }
+          var params = new URLSearchParams(window.location.search);
+          if (params.get('return') === 'checkout') {
+            try {
+              localStorage.setItem('__checkoutCard', JSON.stringify({
+                brand: card.dataset.brand || 'Card',
+                last4: card.dataset.last4 || '****',
+                expiry: card.dataset.expiry || ''
+              }));
+            } catch (e) {}
+          }
         }
       }
 
+      function removeCard(btn) {
+        var card = btn.closest('.border.rounded-2xl');
+        if (!card) return;
+        var isDefault = card.querySelector('input[name="default-card"]:checked') !== null;
+        if (isDefault) {
+          document.getElementById('cannotRemoveDefaultModal').classList.remove('hidden');
+          return;
+        }
+        card.remove();
+      }
+
+      var cannotRemoveModal = document.getElementById('cannotRemoveDefaultModal');
+      function closeCannotRemoveModal() {
+        cannotRemoveModal.classList.add('hidden');
+      }
+      if (cannotRemoveModal) {
+        cannotRemoveModal.addEventListener('click', function(event) {
+          if (event.target === cannotRemoveModal) closeCannotRemoveModal();
+        });
+      }
+
       const editModal = document.getElementById('editCardModal');
-      
-      function openEditModal() {
+      const cvvInput = document.getElementById('cvv');
+      const expiryInput = document.getElementById('expiryDate');
+      const cvcErrorEl = document.getElementById('cvcError');
+      const expiryErrorEl = document.getElementById('expiryError');
+      const cardholderInput = document.getElementById('cardholderName');
+      const cardNumberInput = document.getElementById('cardNumber');
+      const cardModalTitle = document.getElementById('cardModalTitle');
+      var cardModalMode = 'edit';
+      var cardModalEditCard = null;
+
+      function openCardModal(mode, editBtn) {
+        cardModalMode = mode || 'edit';
+        cardModalEditCard = editBtn ? editBtn.closest('.border.rounded-2xl') : null;
+        cardModalTitle.textContent = cardModalMode === 'add' ? 'Add New Payment Method' : 'Edit Card Details';
+        if (cardModalMode === 'add') {
+          cardholderInput.value = '';
+          cardNumberInput.value = '';
+          expiryInput.value = '';
+          cvvInput.value = '';
+          cvvInput.type = 'password';
+          if (cvcEyeIcon) cvcEyeIcon.classList.remove('hidden');
+          if (cvcEyeSlashIcon) cvcEyeSlashIcon.classList.add('hidden');
+        } else if (cardModalEditCard) {
+          cardholderInput.value = cardModalEditCard.dataset.cardholder || '';
+          cardNumberInput.value = 'â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ ' + (cardModalEditCard.dataset.last4 || '');
+          expiryInput.value = cardModalEditCard.dataset.expiry || '';
+          cvvInput.value = '';
+          cvvInput.type = 'password';
+          if (cvcEyeIcon) cvcEyeIcon.classList.remove('hidden');
+          if (cvcEyeSlashIcon) cvcEyeSlashIcon.classList.add('hidden');
+        }
+        cvcErrorEl.classList.add('hidden');
+        expiryErrorEl.classList.add('hidden');
+        var chErr = document.getElementById('cardholderError');
+        var cnErr = document.getElementById('cardNumberError');
+        if (chErr) chErr.classList.add('hidden');
+        if (cnErr) cnErr.classList.add('hidden');
+        cvvInput.classList.remove('border-red-500');
+        expiryInput.classList.remove('border-red-500');
+        var eyeIcon = document.getElementById('cvcEyeIcon');
+        var eyeSlashIcon = document.getElementById('cvcEyeSlashIcon');
+        if (eyeIcon) eyeIcon.classList.remove('hidden');
+        if (eyeSlashIcon) eyeSlashIcon.classList.add('hidden');
         editModal.classList.remove('hidden');
       }
-      
-      function closeEditModal() {
+
+      function closeCardModal() {
         editModal.classList.add('hidden');
       }
-      
+
       editModal.addEventListener('click', function(event) {
         if (event.target === editModal) {
-          closeEditModal();
+          closeCardModal();
         }
       });
+
+      // Card number: digits only, format as groups of 4
+      if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', function() {
+          var v = this.value.replace(/\D/g, '').slice(0, 19);
+          this.value = v.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+        });
+      }
+
+      // CVC: digits only, max 3
+      if (cvvInput) {
+        cvvInput.addEventListener('input', function() {
+          this.value = this.value.replace(/\D/g, '').slice(0, 3);
+        });
+      }
+
+      // CVC eye toggle
+      var cvcToggleBtn = document.getElementById('cvcToggleBtn');
+      var cvcEyeIcon = document.getElementById('cvcEyeIcon');
+      var cvcEyeSlashIcon = document.getElementById('cvcEyeSlashIcon');
+      if (cvcToggleBtn && cvvInput) {
+        cvcToggleBtn.addEventListener('click', function() {
+          var isPassword = cvvInput.type === 'password';
+          cvvInput.type = isPassword ? 'text' : 'password';
+          cvcEyeIcon.classList.toggle('hidden', isPassword);
+          cvcEyeSlashIcon.classList.toggle('hidden', !isPassword);
+          cvcToggleBtn.setAttribute('aria-label', isPassword ? 'Hide CVC' : 'Show CVC');
+        });
+      }
+
+      // Expiry: format MM/YY (auto-insert slash after 2 digits)
+      if (expiryInput) {
+        expiryInput.addEventListener('input', function() {
+          var v = this.value.replace(/\D/g, '').slice(0, 4);
+          if (v.length > 2) {
+            this.value = v.slice(0, 2) + '/' + v.slice(2);
+          } else {
+            this.value = v;
+          }
+        });
+      }
+
+      function validateCVC(val) {
+        if (!/^\d{3}$/.test(val)) {
+          return { valid: false, msg: 'CVC must be exactly 3 digits' };
+        }
+        return { valid: true };
+      }
+
+      function validateExpiry(val) {
+        var m = val.match(/^(\d{2})\/(\d{2})$/);
+        if (!m) {
+          return { valid: false, msg: 'Use format MM/YY' };
+        }
+        var month = parseInt(m[1], 10);
+        var year = parseInt(m[2], 10);
+        if (month < 1 || month > 12) {
+          return { valid: false, msg: 'Month must be 01â€“12' };
+        }
+        var fullYear = 2000 + year;
+        var lastDay = new Date(fullYear, month, 0);
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        lastDay.setHours(23, 59, 59, 999);
+        if (lastDay < today) {
+          return { valid: false, msg: 'Card has expired' };
+        }
+        return { valid: true };
+      }
+
+      function validateAndSaveCard() {
+        var cvcVal = (cvvInput && cvvInput.value) ? cvvInput.value.trim() : '';
+        var expiryVal = (expiryInput && expiryInput.value) ? expiryInput.value.trim() : '';
+        var cardholderVal = (cardholderInput && cardholderInput.value) ? cardholderInput.value.trim() : '';
+        var cardNumberVal = (cardNumberInput && cardNumberInput.value) ? cardNumberInput.value.replace(/\D/g, '') : '';
+        var hasError = false;
+
+        cvcErrorEl.classList.add('hidden');
+        expiryErrorEl.classList.add('hidden');
+        var cardholderErrorEl = document.getElementById('cardholderError');
+        var cardNumberErrorEl = document.getElementById('cardNumberError');
+        if (cardholderErrorEl) cardholderErrorEl.classList.add('hidden');
+        if (cardNumberErrorEl) cardNumberErrorEl.classList.add('hidden');
+        cvvInput.classList.remove('border-red-500');
+        expiryInput.classList.remove('border-red-500');
+        if (cardholderInput) cardholderInput.classList.remove('border-red-500');
+        if (cardNumberInput) cardNumberInput.classList.remove('border-red-500');
+
+        if (cardModalMode === 'add') {
+          if (!cardholderVal) {
+            if (cardholderErrorEl) {
+              cardholderErrorEl.textContent = 'Cardholder name is required';
+              cardholderErrorEl.classList.remove('hidden');
+            }
+            if (cardholderInput) cardholderInput.classList.add('border-red-500');
+            hasError = true;
+          }
+          if (cardNumberVal.length < 15 || cardNumberVal.length > 19) {
+            if (cardNumberErrorEl) {
+              cardNumberErrorEl.textContent = 'Card number must be 15â€“19 digits';
+              cardNumberErrorEl.classList.remove('hidden');
+            }
+            if (cardNumberInput) cardNumberInput.classList.add('border-red-500');
+            hasError = true;
+          }
+        }
+
+        var cvcRes = validateCVC(cvcVal);
+        if (!cvcRes.valid) {
+          cvcErrorEl.textContent = cvcRes.msg;
+          cvcErrorEl.classList.remove('hidden');
+          cvvInput.classList.add('border-red-500');
+          hasError = true;
+        }
+
+        var expiryRes = validateExpiry(expiryVal);
+        if (!expiryRes.valid) {
+          expiryErrorEl.textContent = expiryRes.msg;
+          expiryErrorEl.classList.remove('hidden');
+          expiryInput.classList.add('border-red-500');
+          hasError = true;
+        }
+
+        if (!hasError) {
+          if (cardModalMode === 'edit' && cardModalEditCard) {
+            cardModalEditCard.dataset.cardholder = cardholderVal || cardModalEditCard.dataset.cardholder;
+            cardModalEditCard.dataset.expiry = expiryVal;
+            var nameEl = cardModalEditCard.querySelector('.font-medium.text-gray-900.dm-sans');
+            var expiryP = cardModalEditCard.querySelectorAll('p.text-sm.text-gray-600.dm-sans');
+            var expiryEl = expiryP && expiryP[0] ? expiryP[0] : null;
+            if (nameEl) nameEl.textContent = (cardModalEditCard.dataset.brand || 'Card') + ' â€¢â€¢â€¢â€¢ ' + (cardModalEditCard.dataset.last4 || '');
+            if (expiryEl) expiryEl.textContent = 'Expires ' + expiryVal;
+          } else if (cardModalMode === 'add') {
+            var last4 = cardNumberVal.slice(-4);
+            var brand = 'Card';
+            var first = cardNumberVal.charAt(0);
+            var first2 = cardNumberVal.slice(0, 2);
+            var first4 = cardNumberVal.slice(0, 4);
+            if (first2 === '34' || first2 === '37') brand = 'Amex';
+            else if (first === '6' && cardNumberVal.charAt(1) === '2') brand = 'UnionPay';
+            else if (first4 >= '3528' && first4 <= '3589') brand = 'JCB';
+            else if (first === '4') brand = 'Visa';
+            else if (first === '5' || first === '2') brand = 'Mastercard';
+            else if (first === '6') brand = 'Discover';
+            var iconClass = 'text-gray-500';
+            var iconPath = '<path fill="currentColor" d="M48 480C21.5 480 0 458.5 0 432V80C0 53.5 21.5 32 48 32H528c26.5 0 48 21.5 48 48v352c0 26.5-21.5 48-48 48H48zm133-219.1L262.7 82.4H341.3L307.6 145.6v-1.1H369.4L466.6 82.4l16.9 47.6h17.1V80H576V432c0 17.7-14.3 32-32 32H528c-17.7 0-32-14.3-32-32v-1.1h-61.9l-31.9-35.1-31.9 35.1H246.8V267.1H181z"/>';
+            if (brand === 'Visa') { iconClass = 'text-shine-primary'; iconPath = '<path fill="currentColor" d="M470.1 231.3s7.6 37.2 9.3 45H446c3.3-8.9 16-43.5 16-43.5-.2.3 3.3-9.1 5.3-14.9l2.8 13.4zM576 80v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48h480c26.5 0 48 21.5 48 48zM152.5 331.2L215.7 176h-42.5l-39.3 106-4.3-21.5-14-71.4c-2.3-9.9-9.4-12.7-18.2-13.1H32.7l-.7 3.1c15.8 4 29.9 9.8 42.2 17.1l35.8 135h42.5zm94.4.2L272.1 176h-40.2l-25.1 155.4h40.1zm139.9-50.8c.2-17.7-10.6-31.2-33.7-42.3-14.1-7.1-22.7-11.9-22.7-19.2.2-6.6 7.3-13.4 23.1-13.4 13.1-.3 22.7 2.8 29.9 5.9l3.6 1.7 5.5-33.6c-7.9-3.1-20.5-6.6-36-6.6-39.7 0-67.6 21.2-67.8 51.4-.3 22.3 20 34.7 35.2 42.2 15.5 7.6 20.8 12.6 20.8 19.3-.2 10.4-12.6 15.2-24.1 15.2-16 0-24.6-2.5-37.7-8.3l-5.3-2.5-5.6 34.9c9.4 4.3 26.8 8.1 44.8 8.3 42.2.1 69.7-20.8 70-53zM528 331.4L495.6 176h-31.1c-9.6 0-16.9 2.8-21 12.9l-59.7 142.5H426s6.9-19.2 8.4-23.3H486c1.2 5.5 4.8 23.3 4.8 23.3H528z"/>'; }
+            else if (brand === 'Mastercard') { iconClass = 'text-orange-500'; iconPath = '<path fill="currentColor" d="M304 160a160 160 0 1 0 0 320 160 160 0 1 0 0-320zM128 320a128 128 0 1 1 256 0 128 128 0 1 1 -256 0zM576 320a160 160 0 1 0 -320 0 160 160 0 1 0 320 0zM480 320a96 96 0 1 1 -192 0 96 96 0 1 1 192 0z"/>'; }
+            else if (brand === 'Amex') iconClass = 'text-blue-600';
+            else if (brand === 'JCB') iconClass = 'text-red-600';
+            else if (brand === 'UnionPay') iconClass = 'text-blue-700';
+            var cardHtml = '<div class="border border-gray-100 rounded-2xl p-4 mb-4 bg-white shadow-sm relative" data-cardholder="' + (cardholderVal || '').replace(/"/g, '&quot;') + '" data-last4="' + last4 + '" data-expiry="' + expiryVal + '" data-brand="' + brand + '">' +
+              '<div class="flex justify-between items-start mb-3">' +
+              '<div class="flex items-center gap-3">' +
+              '<input type="radio" name="default-card" onchange="updateDefaultCard(this)">' +
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-8 h-8 ' + iconClass + '">' + iconPath +
+              '</svg>' +
+              '<div><div class="flex items-center gap-2">' +
+              '<p class="font-medium text-gray-900 dm-sans">' + brand + ' â€¢â€¢â€¢â€¢ ' + last4 + '</p>' +
+              '<button type="button" onclick="openCardModal(\'edit\', this)" class="header-icon-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600" aria-label="Edit card">' +
+              '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/></svg>' +
+              '</button></div><p class="text-sm text-gray-600 dm-sans">Expires ' + expiryVal + '</p></div></div>' +
+              '<span class="default-badge bg-shine-primary text-white text-xs font-semibold px-2.5 py-1 rounded-full poppins hidden">Default</span></div>' +
+              '<p class="text-sm text-gray-600 mb-3 dm-sans">Purchases Only</p>' +
+              '<button type="button" onclick="removeCard(this)" class="remove-card-btn absolute bottom-3 right-3 text-gray-400 hover:text-shine-accent p-1 transition-colors" aria-label="Remove card">' +
+              '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>' +
+              '</button></div>';
+            var container = document.getElementById('payment-methods');
+            var addBtn = document.getElementById('addPaymentMethodBtn');
+            var wrapper = document.createElement('div');
+            wrapper.innerHTML = cardHtml;
+            var newCard = wrapper.firstElementChild;
+            if (addBtn && addBtn.parentNode) {
+              addBtn.parentNode.insertBefore(newCard, addBtn);
+            } else {
+              container.appendChild(newCard);
+            }
+            var params = new URLSearchParams(window.location.search);
+            if (params.get('return') === 'checkout') {
+              try {
+                localStorage.setItem('__checkoutCard', JSON.stringify({ brand: brand, last4: last4, expiry: expiryVal }));
+              } catch (e) {}
+            }
+          }
+          closeCardModal();
+        }
+      }
+
+      (function() {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('return') === 'checkout') {
+          var backBtn = document.getElementById('payment-back-btn');
+          if (backBtn) backBtn.setAttribute('data-fallback', 'Shopping_bag.html?from=cart');
+          var checkedCard = document.querySelector('.border.rounded-2xl input[name="default-card"]:checked');
+          if (checkedCard) {
+            var card = checkedCard.closest('.border.rounded-2xl');
+            if (card) {
+              try {
+                localStorage.setItem('__checkoutCard', JSON.stringify({
+                  brand: card.dataset.brand || 'Card',
+                  last4: card.dataset.last4 || '****',
+                  expiry: card.dataset.expiry || ''
+                }));
+              } catch (e) {}
+            }
+          }
+        }
+        var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
+        var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+        var link = document.getElementById('payment-nav-profile-link');
+        if (link) link.href = profileHref;
+        var saved = null;
+        try { saved = localStorage.getItem('profilePhoto'); } catch (err) {}
+        var navPhoto = document.getElementById('payment-nav-profile-photo');
+        var navIcon = document.getElementById('payment-nav-profile-icon');
+        if (saved && navPhoto && navIcon) {
+          navPhoto.src = saved;
+          navPhoto.classList.remove('hidden');
+          navIcon.classList.add('hidden');
+        }
+      })();
     </script>
 </body>
 </html>

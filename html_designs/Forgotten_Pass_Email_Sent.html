@@ -1,9 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset link sent – GoShopMe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <title>Reset link sent â€“ GoShopMe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -22,6 +26,9 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         ::-webkit-scrollbar { display: none; }
+        html, body { margin: 0; padding: 0; }
+        #auth-screen { padding-top: 1rem; }
+        #auth-logo h2 { margin-top: 0; margin-bottom: 0.5rem; }
         * {
             font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
         }
@@ -29,27 +36,28 @@
         .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
     </style>
 </head>
-<body class="bg-[#F6F6F6]">
+<body class="bg-[#F6F6F6] min-h-screen">
     <div id="auth-screen" class="relative w-full max-w-[390px] mx-auto min-h-screen bg-white overflow-y-auto shadow-2xl">
-        <div class="absolute inset-0 bg-gradient-to-b from-[#B7C7FF]/10 to-white"></div>
-
-        <div class="relative flex flex-col items-center px-6 py-12">
+        <div class="relative flex flex-col items-center px-6 pt-10 pb-8">
             <!-- Back Button -->
             <div class="absolute top-6 left-6">
-                <button type="button" class="text-gray-600 hover:text-gray-800 transition-colors" aria-label="Go back">
+                <a href="Forgotten_Password_Main.html" class="text-gray-600 hover:text-gray-800 transition-colors" aria-label="Go back">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                     </svg>
-                </button>
+                </a>
             </div>
 
-            <!-- Logo Section -->
-            <div id="auth-logo" class="w-full text-center mb-12">
-                <div class="mb-4">
-                    <img class="w-20 h-20 mx-auto object-contain" src="" data-logo alt="GoShopMe logo">
-                </div>
-                <h2 class="poppins text-2xl font-bold text-gray-800 mb-2">We've sent a reset link to your email.</h2>
-                <p class="dm-sans text-gray-600">No worries — we'll help you reset it in a few seconds.</p>
+            <!-- Logo -->
+            <div class="w-full text-center leading-none mb-8">
+                <img class="w-full max-w-[390px] h-auto mx-auto block align-top" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/html_designs/GoShopMe%20logo.svg" data-logo alt="GoShopMe logo" title="GoShopMe logo">
+            </div>
+            <!-- Centered content -->
+            <div class="w-full flex flex-col items-center">
+            <!-- Message Section -->
+            <div id="auth-logo" class="w-full text-center mb-8 leading-none">
+                <h2 class="poppins text-xl font-bold text-gray-800 mb-2">We've sent a reset link to your email.</h2>
+                <p class="dm-sans text-gray-600">No worries â€” we'll help you reset it in a few seconds.</p>
             </div>
 
             <!-- Resend Email Section -->
@@ -64,7 +72,8 @@
             <!-- Sign In Link -->
             <div class="flex items-center justify-center space-x-2">
                 <span class="dm-sans text-gray-600">Remember your password?</span>
-                <span class="poppins text-shine-primary font-semibold hover:underline cursor-pointer">Sign In</span>
+                <a href="SignIn_Screen.html" class="poppins text-shine-primary font-semibold hover:underline cursor-pointer">Sign In</a>
+            </div>
             </div>
         </div>
 
@@ -82,7 +91,6 @@
             </div>
         </div>
 
-        <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#B7C7FF]/10 to-transparent pointer-events-none"></div>
     </div>
 
     <script>
@@ -111,11 +119,32 @@
 
             if (resendButton) {
                 resendButton.addEventListener('click', function() {
-                    if (!this.disabled) runTimer();
+                    if (!this.disabled) {
+                        var params = new URLSearchParams(window.location.search);
+                        var email = params.get('email');
+                        if (typeof window.GoShopMeAuthAPI !== 'undefined' && window.GoShopMeAuthAPI.resendPasswordReset && email) {
+                            window.GoShopMeAuthAPI.resendPasswordReset(email);
+                        }
+                        runTimer();
+                    }
                 });
             }
             runTimer();
         })();
     </script>
+    <script>
+    // API readiness: prefill from window.__EMAIL_SENT_DATA__
+    (function() {
+        window.getEmailSentData = function() {
+            var p = new URLSearchParams(window.location.search);
+            return { email: p.get('email') || '' };
+        };
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.__EMAIL_SENT_DATA__) { /* optional prefill */ }
+        });
+    })();
+    </script>
 </body>
 </html>
+
+

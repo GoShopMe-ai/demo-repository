@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
     <title>Payment Details - GoShopMe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,6 +59,8 @@
         .input-error { border-color: #EF4444 !important; }
         .input-error:focus { --tw-ring-color: #EF4444 !important; }
         .error-msg { color: #EF4444; font-size: 12px; margin-top: 4px; }
+        .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+        .header-icon-btn:hover { transform: translateY(-2px); }
     </style>
 </head>
 <body class="bg-white overflow-x-hidden">
@@ -63,7 +69,7 @@
     <!-- Header -->
     <div id="header" class="sticky top-0 bg-white/90 backdrop-blur-lg z-50 border-b border-gray-100">
         <div class="flex items-center justify-between px-6 py-4">
-            <button class="p-2 -ml-2 text-gray-600 hover:opacity-70 transition-opacity" onclick="goBack()" aria-label="Go back">
+            <button type="button" class="header-icon-btn w-10 h-10 flex items-center justify-center p-2 -ml-2 text-gray-600 hover:text-gray-800" onclick="goBack()" aria-label="Go back">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
                 </svg>
@@ -81,10 +87,10 @@
                 Activate Premium Plan
             </h1>
             <p class="text-gray-500 font-wix mb-3 text-base">
-                $9.99/month — Unlock unlimited AI searches, automated returns, and more.
+                19.99 EUR/month â€” Unlock unlimited AI searches, automated returns, and more.
             </p>
             <div class="inline-flex items-center bg-primary/10 px-4 py-2 rounded-full">
-                <span class="text-sm text-primary font-medium">Billed Monthly — Cancel Anytime</span>
+                <span class="text-sm text-primary font-medium">Billed Monthly â€” Cancel Anytime</span>
             </div>
         </div>
 
@@ -93,17 +99,7 @@
             <!-- Card Number -->
             <div class="space-y-2">
                 <label class="block text-sm text-gray-600 font-wix">Card Number</label>
-                <div class="relative">
-                    <input type="text" id="card-number" inputmode="numeric" maxlength="19" placeholder="1234 5678 9012 3456" class="w-full px-4 py-3 pr-24 bg-white border border-gray-200 rounded-lg font-wix focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-base">
-                    <div class="absolute right-3 top-1/2 transform -translate-y-1/2 flex space-x-1.5">
-                        <div class="w-7 h-5 bg-[#EB001B] rounded flex items-center justify-center">
-                            <span class="text-[10px] font-bold text-white">MC</span>
-                        </div>
-                        <div class="w-7 h-5 bg-[#1A1F71] rounded flex items-center justify-center">
-                            <span class="text-[10px] font-bold text-white">VISA</span>
-                        </div>
-                    </div>
-                </div>
+                <input type="text" id="card-number" inputmode="numeric" maxlength="19" placeholder="1234 5678 9012 3456" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg font-wix focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-base">
                 <p id="card-number-error" class="error-msg hidden"></p>
             </div>
 
@@ -124,7 +120,8 @@
             <!-- Cardholder Name -->
             <div class="space-y-2">
                 <label class="block text-sm text-gray-600 font-wix">Cardholder Name</label>
-                <input type="text" placeholder="John Doe" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg font-wix focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-base">
+                <input type="text" id="cardholder-name" placeholder="John Doe" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg font-wix focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-base">
+                <p id="cardholder-name-error" class="error-msg hidden"></p>
             </div>
 
             <!-- Billing Country -->
@@ -178,7 +175,7 @@
                     <option value="CG">Congo</option>
                     <option value="CD">Congo (Democratic Republic)</option>
                     <option value="CR">Costa Rica</option>
-                    <option value="CI">Côte d'Ivoire</option>
+                    <option value="CI">CÃ´te d'Ivoire</option>
                     <option value="HR">Croatia</option>
                     <option value="CU">Cuba</option>
                     <option value="CY">Cyprus</option>
@@ -337,26 +334,30 @@
 
             <!-- Billing Address -->
             <div class="space-y-4">
-                <div>
+                <div class="space-y-2">
                     <label class="block text-sm text-gray-600 font-wix mb-2">Address Line 1</label>
                     <input type="text" id="address-line-1" placeholder="Street address" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg font-wix focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-base">
+                    <p id="address-line-1-error" class="error-msg hidden"></p>
                 </div>
                 <div>
                     <label class="block text-sm text-gray-600 font-wix mb-2">Address Line 2 (Optional)</label>
                     <input type="text" id="address-line-2" placeholder="Apartment, suite, unit, building, floor, etc." class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg font-wix focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-base">
                 </div>
-                <div>
+                <div class="space-y-2">
                     <label class="block text-sm text-gray-600 font-wix mb-2">City</label>
                     <input type="text" id="city" placeholder="Enter city" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg font-wix focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-base">
+                    <p id="city-error" class="error-msg hidden"></p>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
                         <label class="block text-sm text-gray-600 font-wix">State/Province</label>
                         <input type="text" id="state" placeholder="State/Province" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg font-wix focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-base">
+                        <p id="state-error" class="error-msg hidden"></p>
                     </div>
                     <div class="space-y-2">
                         <label class="block text-sm text-gray-600 font-wix">ZIP/Postal Code</label>
                         <input type="text" id="zip-code" placeholder="ZIP code" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg font-wix focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-base">
+                        <p id="zip-code-error" class="error-msg hidden"></p>
                     </div>
                 </div>
             </div>
@@ -421,7 +422,7 @@
         <!-- Legal Disclaimer -->
         <div id="legal-disclaimer" class="px-6 py-6 text-center">
             <p class="text-xs text-gray-400 leading-relaxed font-wix">
-                By confirming, you agree to monthly billing at $9.99/month. You can cancel anytime in your settings.
+                By confirming, you agree to monthly billing at 19.99 EUR/month. You can cancel anytime in your settings.
             </p>
         </div>
     </div>
@@ -429,7 +430,7 @@
 
 <script>
 function goBack() {
-    window.history.back();
+    window.location.href = 'Onboarding_Choose_Plan.html';
 }
 
 // Validation helpers
@@ -450,27 +451,63 @@ function luhnCheck(value) {
 }
 
 function validateCardNumber(value) {
-    const digits = value.replace(/\s/g, '').replace(/[^0-9]/g, '');
-    if (digits.length < 13 || digits.length > 19) return 'Card number must be 13–19 digits';
-    if (!luhnCheck(value)) return 'Invalid card number';
+    const digits = (value || '').replace(/\s/g, '').replace(/[^0-9]/g, '');
+    if (digits.length === 0) return 'Please enter your card number';
+    if (digits.length < 13 || digits.length > 19) return 'Please enter a valid card number (13â€“19 digits)';
+    if (!luhnCheck(value)) return 'Please enter a valid card number';
     return '';
 }
 
 function validateExpiry(value) {
-    if (!value || value.length !== 5) return 'Enter expiry as MM/YY';
+    if (!value || value.trim() === '') return 'Please enter the expiry date';
+    if (value.length !== 5) return 'Please enter expiry as MM/YY';
     const [mm, yy] = value.split('/');
     const month = parseInt(mm, 10);
     const year = parseInt('20' + yy, 10);
-    if (month < 1 || month > 12) return 'Invalid month';
+    if (month < 1 || month > 12) return 'Please enter a valid month (01â€“12)';
     const now = new Date();
     const expDate = new Date(year, month, 0);
-    if (expDate < now) return 'Card has expired';
+    if (expDate < now) return 'This card has expired';
     return '';
 }
 
 function validateCVV(value) {
-    const digits = value.replace(/\D/g, '');
+    const digits = (value || '').replace(/\D/g, '');
+    if (digits.length === 0) return 'Please enter your CVV';
     if (digits.length !== 3) return 'CVV must be 3 digits';
+    return '';
+}
+
+function validateCardholderName(value) {
+    if (!value || value.trim() === '') return 'Please enter the cardholder name';
+    const latinOnly = /^[A-Za-z\s\-']+$/;
+    if (!latinOnly.test(value.trim())) return 'Cardholder name must contain only Latin letters (Aâ€“Z, aâ€“z)';
+    if (value.trim().length < 2) return 'Please enter a valid cardholder name';
+    return '';
+}
+
+function validateAddressLine1(value) {
+    if (!value || value.trim() === '') return 'Please enter your address';
+    if (value.trim().length < 5) return 'Please enter a valid address';
+    return '';
+}
+
+function validateCity(value) {
+    if (!value || value.trim() === '') return 'Please enter your city';
+    if (value.trim().length < 2) return 'Please enter a valid city';
+    return '';
+}
+
+function validateState(value) {
+    if (!value || value.trim() === '') return 'Please enter state/province';
+    if (value.trim().length < 2) return 'Please enter a valid state/province';
+    return '';
+}
+
+function validateZipCode(value) {
+    if (!value || value.trim() === '') return 'Please enter ZIP/postal code';
+    const trimmed = value.trim();
+    if (trimmed.length < 3 || trimmed.length > 12) return 'Please enter a valid ZIP/postal code';
     return '';
 }
 
@@ -478,13 +515,11 @@ function showError(inputId, errorId, msg) {
     const input = document.getElementById(inputId);
     const errorEl = document.getElementById(errorId);
     if (msg) {
-        input.classList.add('input-error');
-        errorEl.textContent = msg;
-        errorEl.classList.remove('hidden');
+        if (input) input.classList.add('input-error');
+        if (errorEl) { errorEl.textContent = msg; errorEl.classList.remove('hidden'); }
     } else {
-        input.classList.remove('input-error');
-        errorEl.textContent = '';
-        errorEl.classList.add('hidden');
+        if (input) input.classList.remove('input-error');
+        if (errorEl) { errorEl.textContent = ''; errorEl.classList.add('hidden'); }
     }
 }
 
@@ -492,25 +527,78 @@ function validateForm() {
     const cardVal = document.getElementById('card-number').value;
     const expiryVal = document.getElementById('expiry-date').value;
     const cvvVal = document.getElementById('cvv').value;
+    const cardholderVal = document.getElementById('cardholder-name').value;
+    const address1Val = document.getElementById('address-line-1').value;
+    const cityVal = document.getElementById('city').value;
+    const stateVal = document.getElementById('state').value;
+    const zipVal = document.getElementById('zip-code').value;
     
     const cardErr = validateCardNumber(cardVal);
     const expiryErr = validateExpiry(expiryVal);
     const cvvErr = validateCVV(cvvVal);
+    const cardholderErr = validateCardholderName(cardholderVal);
+    const address1Err = validateAddressLine1(address1Val);
+    const cityErr = validateCity(cityVal);
+    const stateErr = validateState(stateVal);
+    const zipErr = validateZipCode(zipVal);
     
     showError('card-number', 'card-number-error', cardErr);
     showError('expiry-date', 'expiry-error', expiryErr);
     showError('cvv', 'cvv-error', cvvErr);
+    showError('cardholder-name', 'cardholder-name-error', cardholderErr);
+    showError('address-line-1', 'address-line-1-error', address1Err);
+    showError('city', 'city-error', cityErr);
+    showError('state', 'state-error', stateErr);
+    showError('zip-code', 'zip-code-error', zipErr);
     
-    return !cardErr && !expiryErr && !cvvErr;
+    return !cardErr && !expiryErr && !cvvErr && !cardholderErr && !address1Err && !cityErr && !stateErr && !zipErr;
 }
 
 // Submit handler
 document.getElementById('submit-payment').addEventListener('click', function() {
     if (validateForm()) {
-        console.log('Payment submitted');
-        // window.location.href = '...';
+        var paymentData = {
+            cardNumber: document.getElementById('card-number').value.replace(/\s/g, ''),
+            expiryDate: document.getElementById('expiry-date').value,
+            cvv: document.getElementById('cvv').value,
+            cardholderName: document.getElementById('cardholder-name')?.value || '',
+            billingCountry: document.getElementById('billing-country')?.value || '',
+            addressLine1: document.getElementById('address-line-1')?.value || '',
+            addressLine2: document.getElementById('address-line-2')?.value || '',
+            city: document.getElementById('city')?.value || '',
+            state: document.getElementById('state')?.value || '',
+            zipCode: document.getElementById('zip-code')?.value || '',
+            savePayment: document.getElementById('save-payment')?.checked || false
+        };
+        if (typeof window.GoShopMeOnboardingAPI !== 'undefined' && window.GoShopMeOnboardingAPI.submitPayment) {
+            window.GoShopMeOnboardingAPI.submitPayment(paymentData);
+        }
+        try { sessionStorage.setItem('__showPaymentSuccessBanner', '1'); } catch (e) {}
+        window.location.href = 'QuizOrSkip_Success_Subscribe.html';
     }
 });
+
+// API readiness: prefill from window.__PAYMENT_DATA__
+(function() {
+    window.getPaymentData = function() {
+        return {
+            cardNumber: document.getElementById('card-number')?.value || '',
+            expiryDate: document.getElementById('expiry-date')?.value || '',
+            cvv: document.getElementById('cvv')?.value || '',
+            billingCountry: document.getElementById('billing-country')?.value || ''
+        };
+    };
+    window.setPaymentData = function(data) {
+        if (!data) return;
+        if (data.cardNumber) document.getElementById('card-number').value = data.cardNumber;
+        if (data.expiryDate) document.getElementById('expiry-date').value = data.expiryDate;
+        if (data.cvv) document.getElementById('cvv').value = data.cvv;
+        if (data.billingCountry) { var sel = document.getElementById('billing-country'); if (sel) sel.value = data.billingCountry; }
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.__PAYMENT_DATA__) window.setPaymentData(window.__PAYMENT_DATA__);
+    });
+})();
 
 // Auto-format card number
 document.getElementById('card-number').addEventListener('input', function(e) {
@@ -533,10 +621,16 @@ document.getElementById('cvv').addEventListener('input', function(e) {
     e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
 });
 
+// Cardholder name: Latin letters only (A-Z, a-z, spaces, hyphens, apostrophes)
+document.getElementById('cardholder-name').addEventListener('input', function(e) {
+    e.target.value = e.target.value.replace(/[^A-Za-z\s\-']/g, '');
+});
+
 // Clear error on input
-['card-number', 'expiry-date', 'cvv'].forEach(function(id) {
+['card-number', 'expiry-date', 'cvv', 'cardholder-name', 'address-line-1', 'city', 'state', 'zip-code'].forEach(function(id) {
     const input = document.getElementById(id);
-    const errorId = id === 'card-number' ? 'card-number-error' : id === 'expiry-date' ? 'expiry-error' : 'cvv-error';
+    const errorIdMap = { 'card-number': 'card-number-error', 'expiry-date': 'expiry-error', 'cvv': 'cvv-error', 'cardholder-name': 'cardholder-name-error', 'address-line-1': 'address-line-1-error', 'city': 'city-error', 'state': 'state-error', 'zip-code': 'zip-code-error' };
+    const errorId = errorIdMap[id] || id + '-error';
     input.addEventListener('input', function() { showError(id, errorId, ''); });
 });
 </script>

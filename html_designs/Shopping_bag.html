@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" href="css/mobile-optimization.css">
     <title>Shopping Bag</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -18,6 +22,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/chat-drawer-drag.css">
     <style>
         ::-webkit-scrollbar { display: none;}
         .dm-sans { font-family: 'DM Sans', sans-serif; }
@@ -94,6 +99,10 @@
             animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
+        /* Product/cart tiles: pointer cursor (desktop), touch-optimized (mobile) */
+        .product-tile,
+        [id^="bag-item-"] { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: rgba(147, 155, 251, 0.12); }
+
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
@@ -115,9 +124,21 @@
             -moz-user-select: none;
             -ms-user-select: none;
         }
+        #cart-indicator, #notif-indicator {
+            min-width: 18px;
+            min-height: 18px;
+            padding: 0 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #cart-indicator.hidden, #notif-indicator.hidden { display: none !important; }
+        .input-error { border-color: #EF4444 !important; }
+        .input-error:focus { --tw-ring-color: #EF4444 !important; }
+        .error-msg { color: #EF4444; font-size: 12px; margin-top: 4px; display: block; }
         #cart-indicator.badge-numeric, #notif-indicator.badge-numeric {
             min-width: 18px;
-            padding: 0 4px;
+            padding: 0 5px;
         }
     </style>
     <script>
@@ -133,8 +154,16 @@
         };
     }
     function syncCartCountFromDOM() {
-        var nodes = document.querySelectorAll('[id^="bag-item-"]');
-        cartCountValue = nodes.length;
+        var total = 0;
+        document.querySelectorAll('[id^="bag-item-"]').forEach(function(item) {
+            var span = item.querySelector('.item-qty-display');
+            total += (span ? parseInt(span.textContent || '1', 10) : 1);
+        });
+        cartCountValue = total;
+        try {
+            localStorage.setItem('__cartCount', String(cartCountValue));
+            localStorage.setItem('goshopme_cart_count', String(cartCountValue));
+        } catch (e) {}
     }
     function updateCartBadge() {
         var el = getBadgeElements();
@@ -156,11 +185,32 @@
     window.updateCartBadge = updateCartBadge;
     window.updateNotifBadge = updateNotifBadge;
     window.syncCartCountFromDOM = syncCartCountFromDOM;
-    window.addToCart = function() { cartCountValue++; updateCartBadge(); };
+    window.addToCart = function() { cartCountValue++; try { localStorage.setItem('__cartCount', String(cartCountValue)); localStorage.setItem('goshopme_cart_count', String(cartCountValue)); } catch (e) {} updateCartBadge(); };
     document.addEventListener('DOMContentLoaded', function() {
         syncCartCountFromDOM();
         updateCartBadge();
         updateNotifBadge();
+        // Contextual back: from param -> previous page
+        var fromMap = { 'home': 'Home.html', 'picks': "Picks.html", 'wishlist': 'Wishlist.html', 'orders': 'Orders.html', 'orders-empty': 'Orders_Screen_Empty_State.html', 'order-tracking': 'Order_Tracking.html', 'product': 'Product_details_page.html', 'collections': "Creator`s Collections_Page.html", 'collection': "Creator`s Single_Collection.html", 'notifications-settings': 'Notifications_Settings.html', 'notifications': 'Notifications_Screen.html', 'cart': 'Shopping_bag.html', 'cart-empty': 'Shopping_bag_empty_state.html', 'category': 'ShopbyCategory.html', 'subscription': 'Subscription_Management.html', 'trending': 'Trending_Now.html', 'profile-free': 'User_Profile_Free_Plan.html', 'profile-paid': 'User_Profile_Paid_Plan.html', 'privacy-settings': 'Privacy_Settings.html', 'return-details': 'Return_Details.html', 'receipt': 'Receipt_Details_Screen.html' };
+        window.goBackShoppingBag = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            var params = new URLSearchParams(window.location.search);
+            var from = (params.get('from') || '').toLowerCase();
+            var target = fromMap[from];
+            if (target) {
+                window.location.href = target;
+            } else if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'Home.html';
+            }
+            return false;
+        };
+        var params = new URLSearchParams(window.location.search);
+        var from = (params.get('from') || '').toLowerCase();
+        var target = fromMap[from] || 'Home.html';
+        var link = document.getElementById('shopping-bag-back-link');
+        if (link) link.href = target;
     });
 
     // Dynamic chat bag preview: read actual bag items from DOM and render in chat
@@ -196,12 +246,12 @@
                 '<img class="w-full h-full object-cover" src="' + (item.imgSrc || '') + '" alt="' + (item.title || '') + '">' +
                 '</div><div class="flex-1 min-w-0">' +
                 '<p class="font-medium text-xs text-gray-900 dm-sans">' + (item.title || '') + '</p>' +
-                '<p class="text-xs text-gray-500 dm-sans">' + (item.brand || '') + (item.details ? ' • ' + item.details : '') + ' • ' + (item.priceDisplay || '') + '</p>' +
+                '<p class="text-xs text-gray-500 dm-sans">' + (item.brand || '') + (item.details ? ' â€¢ ' + item.details : '') + ' â€¢ ' + (item.priceDisplay || '') + '</p>' +
                 '</div></div>';
         }).join('');
         root.innerHTML = '<div class="flex items-start space-x-3 mb-4">' +
             '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">' +
-            '<img class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />' +
+            '<img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />' +
             '</div><div class="flex-1">' +
             '<div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-2 shadow-sm animate-slide-in-left">' +
             '<p class="text-sm text-gray-900 dm-sans">' + intro + '</p></div>' +
@@ -210,17 +260,50 @@
             '<p class="font-semibold text-sm text-gray-900 dm-sans">Total: ' + totalDisplay + '</p></div></div>' +
             '<div class="flex flex-wrap gap-2">' +
             '<button id="checkout-yes-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Yes, let\'s go</button>' +
-            '<button id="edit-bag-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Edit bag</button>' +
+            '<button id="not-yet-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Not yet</button>' +
             '</div>' : '') +
             '</div></div>';
     }
     window.renderChatBagPreview = renderChatBagPreview;
+
+    // Checkout data: from localStorage (user profile) or mock for demo
+    function getCheckoutData() {
+        var mockAddress = { label: 'Home', line1: '123 Main Street', line2: '', city: 'San Francisco', region: 'CA', zip: '94102', country: 'United States', full: '123 Main Street, San Francisco, CA 94102' };
+        var mockCard = { brand: 'Visa', last4: '4242', expiry: '09/27' };
+        try {
+            var addr = localStorage.getItem('__checkoutAddress');
+            if (addr) {
+                var a = JSON.parse(addr);
+                mockAddress = Object.assign({}, a);
+                mockAddress.full = (a.line1 || '') + (a.line2 ? ', ' + a.line2 : '') + ', ' + (a.city || '') + ', ' + (a.region || '') + ' ' + (a.zip || '') + ', ' + (a.country || '');
+            }
+        } catch (e) {}
+        try {
+            var card = localStorage.getItem('__checkoutCard');
+            if (card) {
+                var c = JSON.parse(card);
+                mockCard = { brand: c.brand || 'Card', last4: c.last4 || '****', expiry: c.expiry || '' };
+            }
+        } catch (e) {}
+        var items = getBagItemsFromDOM();
+        var subtotal = items.reduce(function(s, i) { return s + i.priceNum; }, 0);
+        var tax = Math.round(subtotal * 0.08 * 100) / 100;
+        var total = subtotal + tax;
+        return { address: mockAddress, card: mockCard, items: items, subtotal: subtotal, tax: tax, total: total, itemCount: items.length };
+    }
+    window.getCheckoutData = getCheckoutData;
+
     document.addEventListener('DOMContentLoaded', function() { renderChatBagPreview(); });
 
     // ShAI avatar: placeholder used by default; set from DB like the logo via setShaiAvatarFromDb(url)
-    window.setShaiAvatarFromDb = function(url) {
+    window.setShaiAvatarFromDb = window.setShAIAvatar = function(url) {
         if (!url) return;
         document.querySelectorAll('.shai-avatar-img').forEach(function(img) { img.src = url; });
+    };
+    window.testShAIAvatar = function(url) {
+        const testUrl = url || 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg';
+        window.setShAIAvatar(testUrl);
+        console.log('testShAIAvatar:', testUrl);
     };
     </script>
 </head>
@@ -230,37 +313,37 @@
 <!-- Header -->
 <header id="header" class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white z-50 border-b border-gray-100">
     <div class="flex items-center justify-between p-4">
-        <button class="w-10 h-10 flex items-center justify-center p-2">
-             <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+        <a id="shopping-bag-back-link" href="Home.html" onclick="return typeof goBackShoppingBag==='function'?goBackShoppingBag(event):true" class="w-10 h-10 flex items-center justify-center p-2 text-gray-700 hover:text-gray-900 transition-colors" aria-label="Back">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
             </svg>
-        </button>
+        </a>
         <h1 class="text-lg font-semibold text-gray-900 poppins">Shopping Bag</h1>
         <div class="flex items-center space-x-3">
-            <button class="w-10 h-10 flex items-center justify-center p-2 relative overflow-visible">
+            <a href="Notifications_Screen.html?from=cart" class="w-10 h-10 flex items-center justify-center p-2 relative overflow-visible">
                 <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
                 </svg>
-                <div id="notif-indicator" class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-[#F96226] rounded-full hidden flex items-center justify-center min-w-[12px]">
-                    <span id="notif-count" class="text-[10px] text-white font-medium leading-none"></span>
+                <div id="notif-indicator" class="absolute -top-0.5 -right-0.5 min-w-[18px] min-h-[18px] px-1 bg-[#F96226] rounded-full hidden items-center justify-center flex">
+                    <span id="notif-count" class="text-[10px] text-white font-medium leading-none whitespace-nowrap"></span>
                 </div>
-            </button>
-            <button class="w-10 h-10 flex items-center justify-center p-2 relative overflow-visible">
+            </a>
+            <a href="Shopping_bag.html" class="w-10 h-10 flex items-center justify-center p-2 relative overflow-visible">
                 <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z"></path>
                 </svg>
-                <div id="cart-indicator" class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-[#939BFB] rounded-full hidden flex items-center justify-center min-w-[12px] min-h-[12px]">
-                    <span id="cart-count" class="text-[10px] text-white font-medium leading-none"></span>
+                <div id="cart-indicator" class="absolute -top-0.5 -right-0.5 min-w-[18px] min-h-[18px] px-1 bg-[#939BFB] rounded-full hidden items-center justify-center flex">
+                    <span id="cart-count" class="text-[10px] text-white font-medium leading-none whitespace-nowrap"></span>
                 </div>
-            </button>
+            </a>
         </div>
     </div>
 </header>
 
 <!-- Shopping Bag Items -->
-<section id="shopping-bag-items" class="mt-20 px-4 pb-32">
+<section id="shopping-bag-items" class="pt-20 px-4 pb-40">
     <!-- Bag Item 1 -->
-    <div id="bag-item-1" class="bg-white rounded-xl border border-gray-100 p-4 mb-4 shadow-sm">
+    <div id="bag-item-1" class="bg-white rounded-xl border border-gray-100 p-4 mb-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow" data-product-id="air-max-90-essential" data-product-name="Air Max 90 Essential" data-product-brand="Nike" data-unit-price="120" data-product-image="https://storage.googleapis.com/uxpilot-auth.appspot.com/89a9fe6304-6fe070425843fa2ba49b.png" data-product-price="$120" onclick="(function(e){if(e.target.closest('button'))return;var el=e.currentTarget;var q='id='+encodeURIComponent(el.getAttribute('data-product-id')||'')+'&name='+encodeURIComponent(el.getAttribute('data-product-name')||'')+'&brand='+encodeURIComponent(el.getAttribute('data-product-brand')||'')+'&from=cart';var img=el.getAttribute('data-product-image');var prc=el.getAttribute('data-product-price');if(img)q+='&image='+encodeURIComponent(img);if(prc)q+='&price='+encodeURIComponent(prc);try{sessionStorage.setItem('__productNavData',JSON.stringify({id:el.getAttribute('data-product-id'),name:el.getAttribute('data-product-name'),brand:el.getAttribute('data-product-brand'),image:img||'',price:prc||''}));}catch(x){}window.location.href='Product_details_page.html?'+q;})(event)">
         <div class="flex space-x-4">
             <div class="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden">
                 <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/89a9fe6304-6fe070425843fa2ba49b.png" alt="white Nike Air Max 90 sneakers">
@@ -276,7 +359,7 @@
                         <button class="w-8 h-8 flex items-center justify-center wishlist-btn" onclick="toggleWishlist(this, 'bag-item-1')">
                              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path></svg>
                         </button>
-                        <button class="w-8 h-8 flex items-center justify-center share-btn" onclick="shareItem('Air Max 90 Essential', 'Nike', '120')">
+                        <button class="w-8 h-8 flex items-center justify-center share-btn" data-share-item aria-label="Share item">
                             <svg class="w-4 h-4 text-gray-400 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"></path></svg>
                         </button>
                         <button class="w-8 h-8 flex items-center justify-center delete-btn" onclick="deleteItem('bag-item-1')">
@@ -287,23 +370,23 @@
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-3">
                         <div class="flex items-center border border-gray-200 rounded-lg">
-                            <button class="w-8 h-8 flex items-center justify-center text-gray-500">
+                            <button type="button" class="item-qty-minus w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-l-lg transition-colors" aria-label="Decrease quantity">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"></path></svg>
                             </button>
-                            <span class="px-3 text-sm font-medium">1</span>
-                            <button class="w-8 h-8 flex items-center justify-center text-gray-500">
+                            <span class="item-qty-display px-3 text-sm font-medium min-w-[1.5rem] text-center">1</span>
+                            <button type="button" class="item-qty-plus w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-r-lg transition-colors" aria-label="Increase quantity">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
                             </button>
                         </div>
                     </div>
-                    <p class="font-bold text-gray-900">$120</p>
+                    <p class="item-price-display font-bold text-gray-900">$120</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Bag Item 2 -->
-    <div id="bag-item-2" class="bg-white rounded-xl border border-gray-100 p-4 mb-4 shadow-sm">
+    <div id="bag-item-2" class="bg-white rounded-xl border border-gray-100 p-4 mb-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow" data-product-id="leather-crossbody-bag" data-product-name="Leather Crossbody Bag" data-product-brand="Coach" data-unit-price="295" data-product-image="https://storage.googleapis.com/uxpilot-auth.appspot.com/cd629eaf60-b040609181ec837c6da6.png" data-product-price="$295" onclick="(function(e){if(e.target.closest('button'))return;var el=e.currentTarget;var q='id='+encodeURIComponent(el.getAttribute('data-product-id')||'')+'&name='+encodeURIComponent(el.getAttribute('data-product-name')||'')+'&brand='+encodeURIComponent(el.getAttribute('data-product-brand')||'')+'&from=cart';var img=el.getAttribute('data-product-image');var prc=el.getAttribute('data-product-price');if(img)q+='&image='+encodeURIComponent(img);if(prc)q+='&price='+encodeURIComponent(prc);try{sessionStorage.setItem('__productNavData',JSON.stringify({id:el.getAttribute('data-product-id'),name:el.getAttribute('data-product-name'),brand:el.getAttribute('data-product-brand'),image:img||'',price:prc||''}));}catch(x){}window.location.href='Product_details_page.html?'+q;})(event)">
         <div class="flex space-x-4">
             <div class="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden">
                 <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/cd629eaf60-b040609181ec837c6da6.png" alt="black leather handbag minimalist design product photography">
@@ -319,7 +402,7 @@
                         <button class="w-8 h-8 flex items-center justify-center wishlist-btn" onclick="toggleWishlist(this, 'bag-item-2')">
                              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path></svg>
                         </button>
-                        <button class="w-8 h-8 flex items-center justify-center share-btn" onclick="shareItem('Leather Crossbody Bag', 'Coach', '295')">
+                        <button class="w-8 h-8 flex items-center justify-center share-btn" data-share-item aria-label="Share item">
                             <svg class="w-4 h-4 text-gray-400 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"></path></svg>
                         </button>
                         <button class="w-8 h-8 flex items-center justify-center delete-btn" onclick="deleteItem('bag-item-2')">
@@ -330,16 +413,16 @@
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-3">
                         <div class="flex items-center border border-gray-200 rounded-lg">
-                            <button class="w-8 h-8 flex items-center justify-center text-gray-500">
+                            <button type="button" class="item-qty-minus w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-l-lg transition-colors" aria-label="Decrease quantity">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"></path></svg>
                             </button>
-                            <span class="px-3 text-sm font-medium">1</span>
-                            <button class="w-8 h-8 flex items-center justify-center text-gray-500">
+                            <span class="item-qty-display px-3 text-sm font-medium min-w-[1.5rem] text-center">1</span>
+                            <button type="button" class="item-qty-plus w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-r-lg transition-colors" aria-label="Increase quantity">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
                             </button>
                         </div>
                     </div>
-                    <p class="font-bold text-gray-900">$295</p>
+                    <p class="item-price-display font-bold text-gray-900">$295</p>
                 </div>
             </div>
         </div>
@@ -350,8 +433,8 @@
         <h3 class="font-semibold text-gray-900 mb-3 poppins">Order Summary</h3>
         <div class="space-y-2">
             <div class="flex justify-between text-sm">
-                <span class="text-gray-600">Subtotal (2 items)</span>
-                <span class="text-gray-900">$415</span>
+                <span class="text-gray-600" id="order-subtotal-label">Subtotal (<span id="order-items-count">2</span> items)</span>
+                <span class="text-gray-900" id="order-subtotal-amount">$415</span>
             </div>
             <div class="flex justify-between text-sm">
                 <span class="text-gray-600">Shipping</span>
@@ -359,7 +442,11 @@
             </div>
             <div class="flex justify-between text-sm">
                 <span class="text-gray-600">Tax</span>
-                <span class="text-gray-900">$33.20</span>
+                <span class="text-gray-900" id="order-tax-amount">$33.20</span>
+            </div>
+            <div id="order-discount-row" class="flex justify-between text-sm hidden">
+                <span class="text-gray-600">Discount</span>
+                <span class="text-green-600 font-medium" id="order-discount-amount"></span>
             </div>
             
             <!-- Promo Code Section -->
@@ -385,9 +472,9 @@
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-2">
                             <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-green-600 font-medium">SAVE20 Applied</span>
+                            <span class="text-sm text-green-600 font-medium" id="applied-promo-label"></span>
                         </div>
-                        <span class="text-sm text-green-600 font-medium">-$83.00</span>
+                        <span class="text-sm text-green-600 font-medium" id="applied-promo-amount"></span>
                     </div>
                 </div>
             </div>
@@ -405,7 +492,7 @@
     <div id="recommended-items" class="mt-6">
         <h3 class="font-semibold text-gray-900 mb-4 poppins">Complete Your Look</h3>
         <div class="grid grid-cols-2 gap-3">
-            <div class="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
+            <div class="bg-white rounded-xl border border-gray-100 p-3 shadow-sm cursor-pointer hover:shadow-md transition-shadow product-tile" data-product-id="apple-watch-series-9" data-product-name="Apple Watch Series 9" data-product-brand="Apple" data-unit-price="399" onclick="(function(e){if(e.target.closest('.add-to-bag-btn'))return;window.location.href='Product_details_page.html?id='+encodeURIComponent('apple-watch-series-9')+'&name='+encodeURIComponent('Apple Watch Series 9')+'&brand='+encodeURIComponent('Apple')+'&from=cart';})(event)">
                 <div class="w-full h-24 bg-gray-100 rounded-lg mb-3 overflow-hidden">
                     <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/baa5c8ec71-a22d1ba23caf17941544.png" alt="white minimalist watch product photography">
                 </div>
@@ -416,7 +503,7 @@
                     Add to Bag
                 </button>
             </div>
-            <div class="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
+            <div class="bg-white rounded-xl border border-gray-100 p-3 shadow-sm cursor-pointer hover:shadow-md transition-shadow product-tile" data-product-id="silver-chain-necklace" data-product-name="Silver Chain Necklace" data-product-brand="Tiffany & Co." data-unit-price="175" onclick="(function(e){if(e.target.closest('.add-to-bag-btn'))return;window.location.href='Product_details_page.html?id='+encodeURIComponent('silver-chain-necklace')+'&name='+encodeURIComponent('Silver Chain Necklace')+'&brand='+encodeURIComponent('Tiffany & Co.')+'&from=cart';})(event)">
                 <div class="w-full h-24 bg-gray-100 rounded-lg mb-3 overflow-hidden">
                     <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/f261f1931d-8483dedf427a6a44d753.png" alt="silver chain necklace jewelry product photography">
                 </div>
@@ -435,9 +522,9 @@
 <div id="chat-overlay" class="fixed inset-0 bg-black/40 z-40 hidden" aria-hidden="true"></div>
 
 <!-- Chat Drawer -->
-<div id="chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[80vh] transform transition-transform duration-300 flex flex-col">
-    <div class="flex justify-center pt-3 pb-1 flex-shrink-0">
-        <div id="drag-handle" class="w-14 h-1.5 bg-gray-300 rounded-full cursor-grab active:cursor-grabbing flex-shrink-0 hover:bg-gray-400 transition-colors touch-none" aria-label="Drag to resize chat" role="slider"></div>
+<div id="chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[50vh] transform transition-transform duration-300 flex flex-col">
+    <div id="drag-handle-zone" class="chat-drawer-drag-zone flex justify-center pt-3 pb-1 flex-shrink-0">
+        <div id="drag-handle" class="w-14 h-1.5 bg-gray-300 rounded-full flex-shrink-0 hover:bg-gray-400 transition-colors pointer-events-none" aria-label="Drag to resize chat" role="slider"></div>
     </div>
 
     <div id="chat-header" class="flex items-center px-4 py-3 flex-shrink-0 border-b border-gray-50">
@@ -447,7 +534,7 @@
             </svg>
         </button>
         <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
-            <img id="shai-avatar" class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />
+            <img id="shai-avatar" class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
         </div>
         <div class="flex-1">
             <p class="font-semibold text-gray-900 text-sm poppins" id="header-title">Shopping Bag</p>
@@ -472,17 +559,17 @@
 
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />
+                        <img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
                     </div>
                     <div class="flex-1">
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
                             <p class="text-sm text-gray-900 dm-sans">Please confirm your delivery address.</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-xl p-3 mb-3 shadow-sm">
+                        <div id="delivery-address-block" class="bg-white border border-gray-200 rounded-xl p-3 mb-3 shadow-sm">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
-                                    <p class="font-medium text-sm text-gray-900 dm-sans">Home</p>
-                                    <p class="text-xs text-gray-500 dm-sans">123 Main Street<br>San Francisco, CA 94102</p>
+                                    <p id="delivery-address-label" class="font-medium text-sm text-gray-900 dm-sans">Home</p>
+                                    <p id="delivery-address-value" class="text-xs text-gray-500 dm-sans">123 Main Street<br>San Francisco, CA 94102</p>
                                 </div>
                                 <svg class="w-4 h-4 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -508,24 +595,24 @@
 
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />
+                        <img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
                     </div>
                     <div class="flex-1">
-                        <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
+                        <div id="payment-deliver-to" class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
                             <p class="text-sm text-gray-900 dm-sans">Perfect, we'll deliver to: 123 Main Street, San Francisco, CA 94102</p>
                         </div>
-                        <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
-                            <p class="text-sm text-gray-900 dm-sans">You'll be charged $448.20 using your saved card ending in ••••1234.</p>
+                        <div id="payment-charge-msg" class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
+                            <p class="text-sm text-gray-900 dm-sans">You'll be charged $448.20 using your saved card ending in â€¢â€¢â€¢â€¢1234.</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-xl p-3 mb-3 shadow-sm">
+                        <div id="payment-card-block" class="bg-white border border-gray-200 rounded-xl p-3 mb-3 shadow-sm">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-3">
                                     <div class="w-8 h-6 bg-blue-600 rounded-sm flex items-center justify-center">
-                                        <span class="text-white text-xs font-bold">••••</span>
+                                        <span class="text-white text-xs font-bold">â€¢â€¢â€¢â€¢</span>
                                     </div>
                                     <div>
-                                        <p class="font-medium text-sm text-gray-900 dm-sans">•••• 1234</p>
-                                        <p class="text-xs text-gray-500 dm-sans">Expires 12/26</p>
+                                        <p id="payment-card-last4" class="font-medium text-sm text-gray-900 dm-sans">â€¢â€¢â€¢â€¢ 1234</p>
+                                        <p id="payment-card-expiry" class="text-xs text-gray-500 dm-sans">Expires 12/26</p>
                                     </div>
                                 </div>
                                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
@@ -551,13 +638,13 @@
 
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />
+                        <img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
                     </div>
                     <div class="flex-1">
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
                             <p class="text-sm text-gray-900 dm-sans font-medium">Here's your order summary:</p>
                             <div class="mt-3 space-y-2">
-                                <div class="flex justify-between text-xs">
+                                <div id="summary-products" class="flex justify-between text-xs">
                                     <span class="text-gray-600 dm-sans">Products (2 items)</span>
                                     <span class="text-gray-900 dm-sans">$415.00</span>
                                 </div>
@@ -565,26 +652,26 @@
                                     <span class="text-gray-600 dm-sans">Shipping</span>
                                     <span class="text-gray-900 dm-sans">Free</span>
                                 </div>
-                                <div class="flex justify-between text-xs">
+                                <div id="summary-tax" class="flex justify-between text-xs">
                                     <span class="text-gray-600 dm-sans">Tax</span>
                                     <span class="text-gray-900 dm-sans">$33.20</span>
                                 </div>
                                 <div class="border-t border-gray-200 pt-2">
                                     <div class="flex justify-between">
                                         <span class="font-semibold text-sm text-gray-900 dm-sans">Total</span>
-                                        <span class="font-bold text-sm text-gray-900 dm-sans">$448.20</span>
+                                        <span id="summary-total" class="font-bold text-sm text-gray-900 dm-sans">$448.20</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="mt-3 pt-3 border-t border-gray-200">
-                                <p class="text-xs text-gray-600 dm-sans">Shipping to: 123 Main Street, San Francisco, CA 94102</p>
-                                <p class="text-xs text-gray-600 dm-sans">Payment: ••••1234</p>
-                                <p class="text-xs text-gray-600 dm-sans">Estimated delivery: Oct 15–18</p>
+                                <p id="summary-shipping-to" class="text-xs text-gray-600 dm-sans">Shipping to: 123 Main Street, San Francisco, CA 94102</p>
+                                <p id="summary-payment" class="text-xs text-gray-600 dm-sans">Payment: â€¢â€¢â€¢â€¢1234</p>
+                                <p class="text-xs text-gray-600 dm-sans">Estimated delivery: Oct 15â€“18</p>
                             </div>
                         </div>
                         <div class="flex flex-wrap gap-2">
                             <button id="place-order-btn" class="bg-[#939BFB] text-white px-4 py-2 rounded-full text-sm font-medium dm-sans hover:opacity-90 transition-colors">Place Order</button>
-                            <button id="edit-order-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Edit</button>
+                            <button id="cancel-order-btn" class="bg-white border border-[#939BFB] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -600,11 +687,11 @@
 
                 <div class="flex items-start space-x-3 mb-4">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />
+                        <img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
                     </div>
                     <div class="flex-1">
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
-                            <p class="text-sm text-gray-900 dm-sans">🎉 Done! Your order is placed. I'll update you as soon as it ships.</p>
+                            <p class="text-sm text-gray-900 dm-sans">ðŸŽ‰ Done! Your order is placed. I'll update you as soon as it ships.</p>
                         </div>
                         <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 shadow-sm animate-slide-in-left">
                             <p class="text-sm text-gray-900 dm-sans">You can also invite friends to shop with you or share what you just bought.</p>
@@ -751,22 +838,139 @@
     </div>
 </div>
 
+<!-- Shipping Address Modal (for Edit in checkout) -->
+<div id="shipping-address-modal" class="fixed inset-0 bg-black/40 flex justify-center items-end sm:items-center z-[60] hidden">
+    <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full max-w-[390px] max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div class="sticky top-0 bg-white border-b border-gray-100 p-4 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900 poppins">Add Shipping Address</h3>
+            <button type="button" id="close-address-modal" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700" aria-label="Close">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form id="address-modal-form" class="p-4 space-y-4" novalidate>
+            <div>
+                <label class="block text-sm text-gray-600 mb-1" for="modal-address-label">Label (e.g. Home, Office)</label>
+                <input type="text" id="modal-address-label" value="Home" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans" placeholder="Home">
+            </div>
+            <div>
+                <label class="block text-sm text-gray-600 mb-1" for="modal-address-line1">Address Line 1 *</label>
+                <input type="text" id="modal-address-line1" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans" placeholder="Street address">
+                <p id="modal-address-line1-error" class="error-msg hidden dm-sans"></p>
+            </div>
+            <div>
+                <label class="block text-sm text-gray-600 mb-1" for="modal-address-line2">Address Line 2 (Optional)</label>
+                <input type="text" id="modal-address-line2" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans" placeholder="Apartment, suite, etc.">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1" for="modal-address-city">City *</label>
+                    <input type="text" id="modal-address-city" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans" placeholder="City">
+                    <p id="modal-address-city-error" class="error-msg hidden dm-sans"></p>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1" for="modal-address-zip">ZIP *</label>
+                    <input type="text" id="modal-address-zip" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans" placeholder="12345">
+                    <p id="modal-address-zip-error" class="error-msg hidden dm-sans"></p>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm text-gray-600 mb-1" for="modal-address-region">State / Province *</label>
+                <input type="text" id="modal-address-region" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans" placeholder="CA">
+                <p id="modal-address-region-error" class="error-msg hidden dm-sans"></p>
+            </div>
+            <div>
+                <label class="block text-sm text-gray-600 mb-1">Country *</label>
+                <button type="button" id="modal-country-dropdown" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm text-left flex items-center justify-between bg-white dm-sans">
+                    <span id="modal-selected-country">Select Country</span>
+                    <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+                </button>
+                <p id="modal-address-country-error" class="error-msg hidden dm-sans"></p>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="button" id="cancel-address-modal" class="flex-1 py-2.5 bg-gray-200 text-gray-800 rounded-full text-sm font-medium dm-sans hover:bg-gray-300">Cancel</button>
+                <button type="submit" class="flex-1 py-2.5 bg-[#939BFB] text-white rounded-full text-sm font-medium dm-sans hover:opacity-90">Save Address</button>
+            </div>
+        </form>
+        <!-- Country overlay (inside modal) -->
+        <div id="modal-country-overlay" class="absolute inset-0 bg-white z-10 flex flex-col shadow-2xl rounded-t-2xl sm:rounded-2xl overflow-hidden hidden">
+            <div class="border-b border-gray-100 px-4 py-3 flex-shrink-0 flex items-center justify-between">
+                <button type="button" id="modal-close-country-overlay" class="p-2 -ml-2 text-gray-600 hover:opacity-70 transition-opacity"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                <h4 class="poppins font-semibold text-base text-gray-800">Select Country</h4>
+                <div class="w-9"></div>
+            </div>
+            <input type="text" id="modal-country-search" placeholder="Search country..." class="mx-4 mt-2 mb-1 px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans">
+            <div class="flex-1 overflow-y-auto px-4 pb-4"><div id="modal-country-list" class="py-2"></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Method Selection Modal (stays in chat context) -->
+<div id="payment-method-modal" class="fixed inset-0 bg-black/40 flex justify-center items-end sm:items-center z-[60] hidden">
+    <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full max-w-[390px] max-h-[85vh] overflow-hidden shadow-2xl flex flex-col">
+        <div class="sticky top-0 bg-white border-b border-gray-100 p-4 flex justify-between items-center flex-shrink-0">
+            <h3 class="text-lg font-semibold text-gray-900 poppins">Select Payment Method</h3>
+            <button type="button" id="close-payment-modal" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700" aria-label="Close">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div id="payment-modal-list-view" class="flex-1 overflow-y-auto p-4">
+            <div id="payment-modal-cards" class="space-y-3 mb-4"></div>
+            <button type="button" id="payment-modal-add-btn" class="w-full py-2.5 border-2 border-dashed border-gray-300 text-gray-600 rounded-xl text-sm font-medium dm-sans hover:border-[#939BFB] hover:text-[#939BFB] flex items-center justify-center gap-2 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                Add New Payment Method
+            </button>
+            <button type="button" id="payment-modal-use-btn" class="w-full mt-4 py-3 bg-[#939BFB] text-white rounded-full text-sm font-medium dm-sans hover:opacity-90">Use Selected Card</button>
+        </div>
+        <div id="payment-modal-add-view" class="flex-1 overflow-y-auto p-4 hidden">
+            <h4 class="text-base font-semibold text-gray-900 poppins mb-4">Add New Card</h4>
+            <form id="payment-modal-add-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1" for="pm-cardholder">Cardholder Name</label>
+                    <input type="text" id="pm-cardholder" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans" placeholder="Full name on card">
+                    <p id="pm-cardholder-error" class="error-msg hidden dm-sans"></p>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1" for="pm-cardnumber">Card Number</label>
+                    <input type="text" id="pm-cardnumber" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans" placeholder="1234 5678 9012 3456" maxlength="19">
+                    <p id="pm-cardnumber-error" class="error-msg hidden dm-sans"></p>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1" for="pm-expiry">Expiry (MM/YY)</label>
+                        <input type="text" id="pm-expiry" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans" placeholder="MM/YY" maxlength="5">
+                        <p id="pm-expiry-error" class="error-msg hidden dm-sans"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1" for="pm-cvv">CVV</label>
+                        <input type="password" id="pm-cvv" class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#939BFB] focus:ring-1 focus:ring-[#939BFB] outline-none text-sm dm-sans" placeholder="â€¢â€¢â€¢" maxlength="3">
+                        <p id="pm-cvv-error" class="error-msg hidden dm-sans"></p>
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" id="payment-modal-add-back" class="flex-1 py-2.5 bg-gray-200 text-gray-800 rounded-full text-sm font-medium dm-sans hover:bg-gray-300">Back</button>
+                    <button type="submit" class="flex-1 py-2.5 bg-[#939BFB] text-white rounded-full text-sm font-medium dm-sans hover:opacity-90">Save Card</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Bottom Navigation -->
 <nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 z-50">
     <div class="flex items-center justify-around py-2">
-        <button class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 group hover:text-[#939BFB]">
+        <a href="Home.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
             <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
             <span class="text-xs">Home</span>
-        </button>
-        <button class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 group hover:text-[#939BFB]">
+        </a>
+        <a href="Picks.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
             <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"></path></svg>
             <span class="text-xs">Picks</span>
-        </button>
-        <button class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 group hover:text-[#939BFB]">
-             <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path></svg>
+        </a>
+        <a href="Wishlist.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path></svg>
             <span class="text-xs">Wishlist</span>
-        </button>
-        <button class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 group hover:text-[#939BFB]">
+        </a>
+        <a id="bag-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
             <span id="bag-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
@@ -774,13 +978,17 @@
             </span>
             <img id="bag-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile">
             <span class="text-xs">Profile</span>
-        </button>
+        </a>
     </div>
 </nav>
 
 <script>
-// Dynamic profile avatar in bottom nav
+// Dynamic profile avatar and link in bottom nav
 (function() {
+    var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
+    var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+    var profileLink = document.getElementById('bag-nav-profile-link');
+    if (profileLink) profileLink.href = profileHref;
     var navIcon = document.getElementById('bag-nav-profile-icon');
     var navPhoto = document.getElementById('bag-nav-profile-photo');
     var saved = null;
@@ -823,6 +1031,14 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Active promo codes (from campaigns/marketing). In production, fetch from API.
+    var ACTIVE_PROMOS = [
+        { code: 'SAVE20', label: '20% Off', type: 'percent', value: 20, campaign: 'Summer Sale' },
+        { code: 'WELCOME10', label: '10% Off', type: 'percent', value: 10, campaign: 'New User Welcome' },
+        { code: 'FLAT15', label: '$15 Off', type: 'fixed', value: 15, campaign: 'Flash Weekend' }
+    ];
+    var appliedPromoData = null; // { promo, discountAmount }
+
     const chatDrawer = document.getElementById('chat-drawer');
     const chatOverlay = document.getElementById('chat-overlay');
     const chatInput = document.getElementById('message-input');
@@ -839,7 +1055,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addFriendContent = document.getElementById('add-friend-content');
     const chatContent = document.getElementById('chat-content');
     const contactSearch = document.getElementById('contact-search');
-    const dragHandle = document.getElementById('drag-handle');
+    const dragHandleZone = document.getElementById('drag-handle-zone') || document.getElementById('drag-handle');
     const mediaPicker = (() => {
         const inp = document.createElement('input');
         inp.type = 'file';
@@ -899,7 +1115,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chatOverlay.classList.add('hidden');
         chatOverlay.setAttribute('aria-hidden', 'true');
         chatInputBar.classList.remove('hidden');
-        chatDrawer.style.height = '80vh';
+        chatDrawer.style.height = '50vh';
         currentHeight = 80;
         isDrawerExpanded = false;
         if (isAddFriendMode) {
@@ -918,7 +1134,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
 
-        // If the bottom bar button was used and the drawer is closed → expand first, then open picker in the SAME tick
+        // If the bottom bar button was used and the drawer is closed â†’ expand first, then open picker in the SAME tick
         if (!fromDrawer && !isDrawerExpanded) {
             expandDrawer();
             // allow CSS transition to begin but keep user gesture chain
@@ -1030,7 +1246,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessagesContainer.appendChild(loadingBubble);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // Simulated upload/processing → replace with final media bubble
+        // Simulated upload/processing â†’ replace with final media bubble
         setTimeout(() => {
             loadingBubble.remove();
             const mediaBubble = createMediaBubble(file);
@@ -1129,7 +1345,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             aiMessage.innerHTML = `
                 <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                    <img class="shai-avatar-img w-full h-full object-cover" src="/assets/shai-avatar-placeholder.png" alt="ShAI avatar" data-avatar-from-db />
+                    <img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db />
                 </div>
                 <div class="bg-gray-50 text-gray-900 rounded-2xl rounded-tl-md p-3 max-w-[80%] shadow-sm break-words">
                     <p class="text-sm dm-sans">${responseText}</p>
@@ -1236,14 +1452,15 @@ document.addEventListener('DOMContentLoaded', function() {
         currentHeight = (rect.height / window.innerHeight) * 100;
     };
 
-    if (dragHandle) {
-        dragHandle.setAttribute('aria-label', 'Resize chat');
-        dragHandle.setAttribute('role', 'separator');
-        dragHandle.addEventListener('mousedown', startDrag);
-        dragHandle.addEventListener('touchstart', startDrag, { passive: false });
+    if (dragHandleZone) {
+        var dh = document.getElementById('drag-handle');
+        if (dh) { dh.setAttribute('aria-label', 'Resize chat'); dh.setAttribute('role', 'separator'); }
+        dragHandleZone.addEventListener('mousedown', startDrag);
+        dragHandleZone.addEventListener('touchstart', startDrag, { passive: true });
     }
     document.addEventListener('mousemove', doDrag);
     document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchcancel', stopDrag);
     document.addEventListener('touchmove', doDrag, { passive: false });
     document.addEventListener('touchend', stopDrag);
     
@@ -1363,7 +1580,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 tempBubble.className = 'flex justify-end mb-2';
                 tempBubble.innerHTML = `
                     <div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]">
-                        <span class="mr-2">🎙️</span>
+                        <span class="mr-2">ðŸŽ™ï¸</span>
                         <span class="text-xs">Recording... swipe left to cancel</span>
                     </div>
                 `;
@@ -1486,7 +1703,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
-                <span>Slide left to cancel • ${minutes}:${seconds.toString().padStart(2, '0')}</span>
+                <span>Slide left to cancel â€¢ ${minutes}:${seconds.toString().padStart(2, '0')}</span>
             `;
         }
     }
@@ -1525,6 +1742,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add playback functionality
         setupVoiceMessagePlayback(voiceMessage.querySelector('.voice-message-bubble'));
+        
+        // ShAI replies to voice messages
+        setTimeout(function() {
+            const aiMessage = document.createElement('div');
+            aiMessage.className = 'flex items-start space-x-3 mb-4';
+            aiMessage.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI avatar" data-avatar-from-db /></div><div class="bg-gray-50 text-gray-900 rounded-2xl rounded-tl-md p-3 max-w-[80%] shadow-sm break-words"><p class="text-sm dm-sans">Got your voice message! I\'m on it â€” let me find the best options for you.</p></div>';
+            chatContainer.appendChild(aiMessage);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 800);
     }
 
     // Setup voice message playback functionality
@@ -1779,10 +2005,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 chatMessages.scrollTop = chatMessages.scrollHeight;
                 showChatView();
             } else if (!isGoshopme && this.textContent === 'Invite') {
-                // Share invite
+                // Share invite - URL points to app for download/join
                 const shareData = {
                     title: 'Join me on GoShopMe',
-                    text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me",
+                    text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me",
                     url: 'https://app.goshopme.ai'
                 };
                 if (navigator.share) {
@@ -1799,43 +2025,56 @@ document.addEventListener('DOMContentLoaded', function() {
         setupVoiceMessagePlayback(bubble);
     });
 
-    // Promo code and checkout flow handlers
+    // Promo code and checkout flow handlers (dynamic from ACTIVE_PROMOS)
     const promoToggle = document.getElementById('promo-toggle');
     const promoInputSection = document.getElementById('promo-input-section');
-    const promoCode = document.getElementById('promo-code');
+    const promoCodeInput = document.getElementById('promo-code');
     const applyPromo = document.getElementById('apply-promo');
     const appliedPromo = document.getElementById('applied-promo');
-    const totalAmount = document.getElementById('total-amount');
 
     promoToggle.addEventListener('click', function() {
+        if (appliedPromoData) {
+            appliedPromoData = null;
+            appliedPromo.classList.add('hidden');
+            promoInputSection.classList.add('hidden');
+            promoToggle.textContent = 'Add';
+            promoCodeInput.value = '';
+            updateCartTotal();
+            return;
+        }
         if (promoInputSection.classList.contains('hidden')) {
             promoInputSection.classList.remove('hidden');
             promoToggle.textContent = 'Cancel';
         } else {
             promoInputSection.classList.add('hidden');
             promoToggle.textContent = 'Add';
-            promoCode.value = '';
+            promoCodeInput.value = '';
         }
     });
 
-    applyPromo.addEventListener('click', function() {
-        if (promoCode.value.trim().toUpperCase() === 'SAVE20') {
+    function tryApplyPromo() {
+        var code = (promoCodeInput.value || '').trim().toUpperCase();
+        if (!code) return;
+        var promo = ACTIVE_PROMOS.find(function(p) { return p.code === code; });
+        if (promo) {
+            appliedPromoData = { promo: promo, discountAmount: 0 };
             promoInputSection.classList.add('hidden');
             appliedPromo.classList.remove('hidden');
-            totalAmount.textContent = '$365.20';
             promoToggle.textContent = 'Remove';
-            promoToggle.onclick = function() {
-                appliedPromo.classList.add('hidden');
-                totalAmount.textContent = '$448.20';
-                promoToggle.textContent = 'Add';
-                promoToggle.onclick = null;
-                promoToggle.addEventListener('click', arguments.callee.caller);
-            };
-        } else if (promoCode.value) {
-            promoCode.classList.add('ring-2', 'ring-red-500');
-            setTimeout(() => promoCode.classList.remove('ring-2', 'ring-red-500'), 2000);
+            promoCodeInput.value = '';
+            promoCodeInput.classList.remove('ring-2', 'ring-red-500');
+            updateCartTotal();
+        } else {
+            promoCodeInput.classList.add('ring-2', 'ring-red-500');
+            setTimeout(function() { promoCodeInput.classList.remove('ring-2', 'ring-red-500'); }, 2000);
         }
-    });
+    }
+    applyPromo.addEventListener('click', tryApplyPromo);
+    if (promoCodeInput) {
+        promoCodeInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); tryApplyPromo(); }
+        });
+    }
 
     // Checkout flow handlers (delegation so dynamic bag preview buttons work after re-render)
     if (chatMessages) {
@@ -1843,20 +2082,383 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target.id === 'checkout-yes-btn' || e.target.closest('#checkout-yes-btn')) {
                 var deliveryFlow = document.getElementById('delivery-flow');
                 if (deliveryFlow) {
+                    var data = getCheckoutData();
+                    var labelEl = document.getElementById('delivery-address-label');
+                    var addrEl = document.getElementById('delivery-address-value');
+                    if (labelEl) labelEl.textContent = data.address.label || 'Home';
+                    if (addrEl) addrEl.innerHTML = (data.address.line1 || '') + (data.address.line2 ? '<br>' + data.address.line2 : '') + '<br>' + (data.address.city || '') + ', ' + (data.address.region || '') + ' ' + (data.address.zip || '');
                     deliveryFlow.classList.remove('hidden');
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 }
+            }
+            if (e.target.id === 'not-yet-btn' || e.target.closest('#not-yet-btn')) {
+                var shaiBubble = document.createElement('div');
+                shaiBubble.className = 'flex items-start space-x-3 mt-4 animate-slide-in-left';
+                shaiBubble.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="shai-avatar-img w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/assets/shai-avatar.png" alt="ShAI"></div>' +
+                    '<div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 shadow-sm"><p class="text-sm text-gray-900 dm-sans">Is there anything else you\'d like to add or change?</p></div></div>';
+                var root = document.getElementById('chat-bag-preview-root');
+                if (root) root.appendChild(shaiBubble);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             }
         });
     }
 
     document.getElementById('use-address-btn').addEventListener('click', function() {
-        document.getElementById('payment-flow').classList.remove('hidden');
+        var paymentFlow = document.getElementById('payment-flow');
+        var data = getCheckoutData();
+        var deliverTo = document.getElementById('payment-deliver-to');
+        var chargeMsg = document.getElementById('payment-charge-msg');
+        var last4El = document.getElementById('payment-card-last4');
+        var expiryEl = document.getElementById('payment-card-expiry');
+        if (deliverTo) deliverTo.querySelector('p').textContent = "Perfect, we'll deliver to: " + data.address.full;
+        if (chargeMsg) chargeMsg.querySelector('p').textContent = "You'll be charged $" + data.total.toFixed(2) + " using your saved card ending in â€¢â€¢â€¢â€¢" + data.card.last4 + ".";
+        if (last4El) last4El.textContent = 'â€¢â€¢â€¢â€¢ ' + data.card.last4;
+        if (expiryEl) expiryEl.textContent = 'Expires ' + data.card.expiry;
+        paymentFlow.classList.remove('hidden');
         chatMessages.scrollTop = chatMessages.scrollHeight;
     });
 
+    document.getElementById('edit-address-btn').addEventListener('click', function() {
+        var modal = document.getElementById('shipping-address-modal');
+        var data = getCheckoutData();
+        document.getElementById('modal-address-label').value = data.address.label || 'Home';
+        document.getElementById('modal-address-line1').value = data.address.line1 || '';
+        document.getElementById('modal-address-line2').value = data.address.line2 || '';
+        document.getElementById('modal-address-city').value = data.address.city || '';
+        document.getElementById('modal-address-zip').value = data.address.zip || '';
+        document.getElementById('modal-address-region').value = data.address.region || '';
+        document.getElementById('modal-selected-country').textContent = data.address.country || 'Select Country';
+        ['modal-address-line1','modal-address-city','modal-address-zip','modal-address-region'].forEach(function(id) {
+            var el = document.getElementById(id);
+            var err = document.getElementById(id + '-error');
+            if (el) el.classList.remove('input-error');
+            if (err) { err.textContent = ''; err.classList.add('hidden'); }
+        });
+        var countryBtn = document.getElementById('modal-country-dropdown');
+        var countryErr = document.getElementById('modal-address-country-error');
+        if (countryBtn) countryBtn.classList.remove('input-error');
+        if (countryErr) { countryErr.textContent = ''; countryErr.classList.add('hidden'); }
+        if (modal) modal.classList.remove('hidden');
+    });
+
+    document.getElementById('close-address-modal').addEventListener('click', function() {
+        document.getElementById('shipping-address-modal').classList.add('hidden');
+    });
+    document.getElementById('cancel-address-modal').addEventListener('click', function() {
+        document.getElementById('shipping-address-modal').classList.add('hidden');
+    });
+    document.getElementById('shipping-address-modal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.add('hidden');
+    });
+    var modalCountries = ['Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan', 'Bahrain', 'Bangladesh', 'Belarus', 'Belgium', 'Bosnia and Herzegovina', 'Brazil', 'Bulgaria', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Egypt', 'Estonia', 'Finland', 'France', 'Georgia', 'Germany', 'Greece', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Japan', 'Kazakhstan', 'Kuwait', 'Latvia', 'Lithuania', 'Luxembourg', 'Malaysia', 'Mexico', 'Moldova', 'Netherlands', 'New Zealand', 'Nigeria', 'North Macedonia', 'Norway', 'Pakistan', 'Philippines', 'Poland', 'Portugal', 'Qatar', 'Romania', 'Russia', 'Saudi Arabia', 'Serbia', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa', 'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Thailand', 'Turkey', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Vietnam'];
+    function modalSelectCountry(value) {
+        document.getElementById('modal-selected-country').textContent = value;
+        document.getElementById('modal-country-overlay').classList.add('hidden');
+        document.getElementById('modal-country-search').value = '';
+        showModalFieldError('modal-country-dropdown', 'modal-address-country-error', '');
+    }
+    document.getElementById('modal-country-dropdown').addEventListener('click', function() {
+        document.getElementById('modal-country-overlay').classList.remove('hidden');
+        var list = document.getElementById('modal-country-list');
+        list.innerHTML = modalCountries.map(function(c) { return '<div class="py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 dm-sans" data-country="'+c.replace(/"/g,'&quot;')+'"><span class="text-sm text-gray-800">'+c+'</span></div>'; }).join('');
+        list.querySelectorAll('[data-country]').forEach(function(el) {
+            el.addEventListener('click', function() { modalSelectCountry(el.getAttribute('data-country')); });
+        });
+        document.getElementById('modal-country-search').focus();
+    });
+    document.getElementById('modal-close-country-overlay').addEventListener('click', function() {
+        document.getElementById('modal-country-overlay').classList.add('hidden');
+    });
+    document.getElementById('modal-country-search').addEventListener('input', function(e) {
+        var q = e.target.value.toLowerCase();
+        var f = modalCountries.filter(function(c) { return c.toLowerCase().indexOf(q) >= 0; });
+        var list = document.getElementById('modal-country-list');
+        list.innerHTML = f.map(function(c) { return '<div class="py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 dm-sans" data-country="'+c.replace(/"/g,'&quot;')+'"><span class="text-sm text-gray-800">'+c+'</span></div>'; }).join('');
+        list.querySelectorAll('[data-country]').forEach(function(el) {
+            el.addEventListener('click', function() { modalSelectCountry(el.getAttribute('data-country')); });
+        });
+    });
+    function showModalFieldError(inputId, errorId, msg) {
+        var el = document.getElementById(inputId);
+        var err = document.getElementById(errorId);
+        if (msg) {
+            if (el) el.classList.add('input-error');
+            if (err) { err.textContent = msg; err.classList.remove('hidden'); }
+        } else {
+            if (el) el.classList.remove('input-error');
+            if (err) { err.textContent = ''; err.classList.add('hidden'); }
+        }
+    }
+    function validateAddressModal() {
+        var line1 = document.getElementById('modal-address-line1').value.trim();
+        var city = document.getElementById('modal-address-city').value.trim();
+        var zip = document.getElementById('modal-address-zip').value.trim();
+        var region = document.getElementById('modal-address-region').value.trim();
+        var country = document.getElementById('modal-selected-country').textContent.trim();
+        var hasError = false;
+        if (!line1) { showModalFieldError('modal-address-line1', 'modal-address-line1-error', 'Address line 1 is required'); hasError = true; } else { showModalFieldError('modal-address-line1', 'modal-address-line1-error', ''); }
+        if (!city) { showModalFieldError('modal-address-city', 'modal-address-city-error', 'City is required'); hasError = true; } else { showModalFieldError('modal-address-city', 'modal-address-city-error', ''); }
+        if (!zip) { showModalFieldError('modal-address-zip', 'modal-address-zip-error', 'ZIP is required'); hasError = true; } else { showModalFieldError('modal-address-zip', 'modal-address-zip-error', ''); }
+        if (!region) { showModalFieldError('modal-address-region', 'modal-address-region-error', 'State / Province is required'); hasError = true; } else { showModalFieldError('modal-address-region', 'modal-address-region-error', ''); }
+        if (!country || country === 'Select Country') { showModalFieldError('modal-country-dropdown', 'modal-address-country-error', 'Country is required'); hasError = true; } else { showModalFieldError('modal-country-dropdown', 'modal-address-country-error', ''); }
+        if (hasError) {
+            var firstErr = document.querySelector('#address-modal-form .input-error');
+            if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return !hasError;
+    }
+    ['modal-address-line1','modal-address-city','modal-address-zip','modal-address-region'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('input', function(){ showModalFieldError(id, id+'-error', ''); });
+    });
+    document.getElementById('address-modal-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (!validateAddressModal()) return;
+        var addr = {
+            label: document.getElementById('modal-address-label').value.trim() || 'Home',
+            line1: document.getElementById('modal-address-line1').value.trim(),
+            line2: document.getElementById('modal-address-line2').value.trim(),
+            city: document.getElementById('modal-address-city').value.trim(),
+            zip: document.getElementById('modal-address-zip').value.trim(),
+            region: document.getElementById('modal-address-region').value.trim(),
+            country: document.getElementById('modal-selected-country').textContent.trim()
+        };
+        addr.full = addr.line1 + (addr.line2 ? ', ' + addr.line2 : '') + ', ' + addr.city + ', ' + addr.region + ' ' + addr.zip + ', ' + addr.country;
+        try { localStorage.setItem('__checkoutAddress', JSON.stringify(addr)); } catch (x) {}
+        document.getElementById('delivery-address-label').textContent = addr.label;
+        document.getElementById('delivery-address-value').innerHTML = addr.line1 + (addr.line2 ? '<br>' + addr.line2 : '') + '<br>' + addr.city + ', ' + addr.region + ' ' + addr.zip;
+        document.getElementById('shipping-address-modal').classList.add('hidden');
+    });
+
+    var PAYMENT_METHODS_KEY = '__userPaymentMethods';
+    var defaultPaymentMethods = [
+        { id: 'pm1', brand: 'Visa', last4: '4242', expiry: '09/27', isDefault: true },
+        { id: 'pm2', brand: 'Mastercard', last4: '8888', expiry: '12/26', isDefault: false }
+    ];
+    function getPaymentMethods() {
+        try {
+            var raw = localStorage.getItem(PAYMENT_METHODS_KEY);
+            if (raw) {
+                var arr = JSON.parse(raw);
+                if (Array.isArray(arr) && arr.length > 0) return arr;
+            }
+        } catch (e) {}
+        return JSON.parse(JSON.stringify(defaultPaymentMethods));
+    }
+    function savePaymentMethods(list) {
+        try { localStorage.setItem(PAYMENT_METHODS_KEY, JSON.stringify(list)); } catch (e) {}
+    }
+    function renderPaymentModalCards() {
+        var list = getPaymentMethods();
+        var currentCard = null;
+        try {
+            var c = localStorage.getItem('__checkoutCard');
+            if (c) currentCard = JSON.parse(c);
+        } catch (e) {}
+        var container = document.getElementById('payment-modal-cards');
+        if (!container) return;
+        container.innerHTML = list.map(function(card) {
+            var isSelected = currentCard && currentCard.last4 === card.last4;
+            var iconClass = card.brand === 'Visa' ? 'text-[#939BFB]' : 'text-orange-500';
+            var iconPath = card.brand === 'Visa' ? '<path fill="currentColor" d="M470.1 231.3s7.6 37.2 9.3 45H446c3.3-8.9 16-43.5 16-43.5-.2.3 3.3-9.1 5.3-14.9l2.8 13.4zM576 80v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48h480c26.5 0 48 21.5 48 48zM152.5 331.2L215.7 176h-42.5l-39.3 106-4.3-21.5-14-71.4c-2.3-9.9-9.4-12.7-18.2-13.1H32.7l-.7 3.1c15.8 4 29.9 9.8 42.2 17.1l35.8 135h42.5zm94.4.2L272.1 176h-40.2l-25.1 155.4h40.1zm139.9-50.8c.2-17.7-10.6-31.2-33.7-42.3-14.1-7.1-22.7-11.9-22.7-19.2.2-6.6 7.3-13.4 23.1-13.4 13.1-.3 22.7 2.8 29.9 5.9l3.6 1.7 5.5-33.6c-7.9-3.1-20.5-6.6-36-6.6-39.7 0-67.6 21.2-67.8 51.4-.3 22.3 20 34.7 35.2 42.2 15.5 7.6 20.8 12.6 20.8 19.3-.2 10.4-12.6 15.2-24.1 15.2-16 0-24.6-2.5-37.7-8.3l-5.3-2.5-5.6 34.9c9.4 4.3 26.8 8.1 44.8 8.3 42.2.1 69.7-20.8 70-53zM528 331.4L495.6 176h-31.1c-9.6 0-16.9 2.8-21 12.9l-59.7 142.5H426s6.9-19.2 8.4-23.3H486c1.2 5.5 4.8 23.3 4.8 23.3H528z"/>' : '<path fill="currentColor" d="M304 160a160 160 0 1 0 0 320 160 160 0 1 0 0-320zM128 320a128 128 0 1 1 256 0 128 128 0 1 1 -256 0zM576 320a160 160 0 1 0 -320 0 160 160 0 1 0 320 0zM480 320a96 96 0 1 1 -192 0 96 96 0 1 1 192 0z"/>';
+            return '<div class="payment-card-option border rounded-xl p-3 cursor-pointer flex items-center gap-3 ' + (isSelected ? 'border-[#939BFB] bg-[#939BFB]/5' : 'border-gray-200 hover:border-gray-300') + '" data-last4="' + card.last4 + '" data-brand="' + (card.brand||'Card') + '" data-expiry="' + (card.expiry||'') + '">' +
+                '<input type="radio" name="payment-modal-card" ' + (isSelected ? 'checked' : '') + ' class="w-4 h-4 text-[#939BFB]">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-8 h-6 ' + iconClass + ' shrink-0">' + iconPath + '</svg>' +
+                '<div class="flex-1 min-w-0"><p class="font-medium text-sm text-gray-900 dm-sans">' + (card.brand||'Card') + ' â€¢â€¢â€¢â€¢ ' + card.last4 + '</p><p class="text-xs text-gray-500 dm-sans">Expires ' + (card.expiry||'') + '</p></div>' +
+                '</div>';
+        }).join('');
+        var options = container.querySelectorAll('.payment-card-option');
+        var hasSelection = container.querySelector('input[name="payment-modal-card"]:checked');
+        if (!hasSelection && options.length > 0) {
+            options[0].querySelector('input').checked = true;
+            options[0].classList.remove('border-gray-200');
+            options[0].classList.add('border-[#939BFB]','bg-[#939BFB]/5');
+        }
+        options.forEach(function(el) {
+            el.addEventListener('click', function() {
+                container.querySelectorAll('.payment-card-option').forEach(function(c) { c.classList.remove('border-[#939BFB]','bg-[#939BFB]/5'); c.classList.add('border-gray-200'); });
+                container.querySelectorAll('input[name="payment-modal-card"]').forEach(function(r) { r.checked = false; });
+                el.classList.remove('border-gray-200'); el.classList.add('border-[#939BFB]','bg-[#939BFB]/5');
+                el.querySelector('input').checked = true;
+            });
+        });
+    }
+    function useSelectedPaymentCard() {
+        var selected = document.querySelector('#payment-modal-cards input[name="payment-modal-card"]:checked');
+        if (!selected) return;
+        var card = selected.closest('.payment-card-option');
+        if (!card) return;
+        var data = { brand: card.dataset.brand || 'Card', last4: card.dataset.last4 || '****', expiry: card.dataset.expiry || '' };
+        try { localStorage.setItem('__checkoutCard', JSON.stringify(data)); } catch (e) {}
+        var last4El = document.getElementById('payment-card-last4');
+        var expiryEl = document.getElementById('payment-card-expiry');
+        var chargeMsg = document.getElementById('payment-charge-msg');
+        if (last4El) last4El.textContent = 'â€¢â€¢â€¢â€¢ ' + data.last4;
+        if (expiryEl) expiryEl.textContent = 'Expires ' + data.expiry;
+        if (chargeMsg) chargeMsg.querySelector('p').textContent = "You'll be charged $" + (getCheckoutData().total.toFixed(2)) + " using your saved card ending in â€¢â€¢â€¢â€¢" + data.last4 + ".";
+        document.getElementById('payment-method-modal').classList.add('hidden');
+    }
+    document.getElementById('change-card-btn').addEventListener('click', function() {
+        renderPaymentModalCards();
+        document.getElementById('payment-modal-list-view').classList.remove('hidden');
+        document.getElementById('payment-modal-add-view').classList.add('hidden');
+        document.getElementById('payment-method-modal').classList.remove('hidden');
+    });
+    document.getElementById('close-payment-modal').addEventListener('click', function() {
+        document.getElementById('payment-method-modal').classList.add('hidden');
+    });
+    document.getElementById('payment-method-modal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.add('hidden');
+    });
+    document.getElementById('payment-modal-use-btn').addEventListener('click', useSelectedPaymentCard);
+    document.getElementById('payment-modal-add-btn').addEventListener('click', function() {
+        document.getElementById('payment-modal-list-view').classList.add('hidden');
+        document.getElementById('payment-modal-add-view').classList.remove('hidden');
+        document.getElementById('pm-cardholder').value = '';
+        document.getElementById('pm-cardnumber').value = '';
+        document.getElementById('pm-expiry').value = '';
+        document.getElementById('pm-cvv').value = '';
+        ['pm-cardholder','pm-cardnumber','pm-expiry','pm-cvv'].forEach(function(id) { pmShowFieldError(id, id+'-error', ''); });
+        document.getElementById('pm-cardholder').classList.remove('border-red-500');
+        document.getElementById('pm-cardnumber').classList.remove('border-red-500');
+        document.getElementById('pm-expiry').classList.remove('border-red-500');
+        document.getElementById('pm-cvv').classList.remove('border-red-500');
+    });
+    document.getElementById('payment-modal-add-back').addEventListener('click', function() {
+        document.getElementById('payment-modal-add-view').classList.add('hidden');
+        document.getElementById('payment-modal-list-view').classList.remove('hidden');
+        renderPaymentModalCards();
+    });
+    function pmValidateCVC(val) {
+        if (!/^\d{3}$/.test(val)) return { valid: false, msg: 'CVC must be exactly 3 digits' };
+        return { valid: true };
+    }
+    function pmValidateExpiry(val) {
+        var m = val.match(/^(\d{2})\/(\d{2})$/);
+        if (!m) return { valid: false, msg: 'Use format MM/YY' };
+        var month = parseInt(m[1], 10);
+        var year = parseInt(m[2], 10);
+        if (month < 1 || month > 12) return { valid: false, msg: 'Month must be 01â€“12' };
+        var fullYear = 2000 + year;
+        var lastDay = new Date(fullYear, month, 0);
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        lastDay.setHours(23, 59, 59, 999);
+        if (lastDay < today) return { valid: false, msg: 'Card has expired' };
+        return { valid: true };
+    }
+    function pmShowFieldError(inputId, errorId, msg) {
+        var el = document.getElementById(inputId);
+        var err = document.getElementById(errorId);
+        if (msg) {
+            if (el) { el.classList.add('border-red-500'); el.classList.remove('border-gray-200'); }
+            if (err) { err.textContent = msg; err.classList.remove('hidden'); }
+        } else {
+            if (el) { el.classList.remove('border-red-500'); el.classList.add('border-gray-200'); }
+            if (err) { err.textContent = ''; err.classList.add('hidden'); }
+        }
+    }
+    document.getElementById('payment-modal-add-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var cardholder = document.getElementById('pm-cardholder').value.trim();
+        var cardNum = document.getElementById('pm-cardnumber').value.replace(/\D/g, '');
+        var expiry = document.getElementById('pm-expiry').value.trim();
+        var cvv = document.getElementById('pm-cvv').value.trim();
+        var hasError = false;
+        pmShowFieldError('pm-cardholder', 'pm-cardholder-error', '');
+        pmShowFieldError('pm-cardnumber', 'pm-cardnumber-error', '');
+        pmShowFieldError('pm-expiry', 'pm-expiry-error', '');
+        pmShowFieldError('pm-cvv', 'pm-cvv-error', '');
+        document.getElementById('pm-cardholder').classList.remove('border-red-500');
+        document.getElementById('pm-cardnumber').classList.remove('border-red-500');
+        document.getElementById('pm-expiry').classList.remove('border-red-500');
+        document.getElementById('pm-cvv').classList.remove('border-red-500');
+        if (!cardholder) {
+            pmShowFieldError('pm-cardholder', 'pm-cardholder-error', 'Cardholder name is required');
+            hasError = true;
+        }
+        if (cardNum.length < 15 || cardNum.length > 19) {
+            pmShowFieldError('pm-cardnumber', 'pm-cardnumber-error', 'Card number must be 15â€“19 digits');
+            hasError = true;
+        }
+        var cvcRes = pmValidateCVC(cvv);
+        if (!cvcRes.valid) {
+            pmShowFieldError('pm-cvv', 'pm-cvv-error', cvcRes.msg);
+            hasError = true;
+        }
+        var expiryRes = pmValidateExpiry(expiry);
+        if (!expiryRes.valid) {
+            pmShowFieldError('pm-expiry', 'pm-expiry-error', expiryRes.msg);
+            hasError = true;
+        }
+        if (hasError) {
+            var firstErr = document.querySelector('#payment-modal-add-form .border-red-500');
+            if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+        var last4 = cardNum.slice(-4);
+        var brand = 'Card';
+        var first = cardNum.charAt(0);
+        var first2 = cardNum.slice(0, 2);
+        var first4 = cardNum.slice(0, 4);
+        if (first2 === '34' || first2 === '37') brand = 'Amex';
+        else if (first === '4') brand = 'Visa';
+        else if (first === '5' || first === '2') brand = 'Mastercard';
+        else if (first === '6') brand = 'Discover';
+        var newCard = { id: 'pm_' + Date.now(), brand: brand, last4: last4, expiry: expiry, isDefault: false };
+        var list = getPaymentMethods();
+        list.push(newCard);
+        savePaymentMethods(list);
+        try { localStorage.setItem('__checkoutCard', JSON.stringify({ brand: brand, last4: last4, expiry: expiry })); } catch (x) {}
+        var last4El = document.getElementById('payment-card-last4');
+        var expiryEl = document.getElementById('payment-card-expiry');
+        var chargeMsg = document.getElementById('payment-charge-msg');
+        if (last4El) last4El.textContent = 'â€¢â€¢â€¢â€¢ ' + last4;
+        if (expiryEl) expiryEl.textContent = 'Expires ' + expiry;
+        if (chargeMsg) chargeMsg.querySelector('p').textContent = "You'll be charged $" + (getCheckoutData().total.toFixed(2)) + " using your saved card ending in â€¢â€¢â€¢â€¢" + last4 + ".";
+        document.getElementById('payment-modal-add-view').classList.add('hidden');
+        document.getElementById('payment-modal-list-view').classList.remove('hidden');
+        renderPaymentModalCards();
+        document.getElementById('payment-method-modal').classList.add('hidden');
+    });
+    document.getElementById('pm-cardnumber').addEventListener('input', function() {
+        var v = this.value.replace(/\D/g, '').slice(0, 19);
+        this.value = v.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+        pmShowFieldError('pm-cardnumber', 'pm-cardnumber-error', '');
+    });
+    document.getElementById('pm-expiry').addEventListener('input', function() {
+        var v = this.value.replace(/\D/g, '').slice(0, 4);
+        if (v.length > 2) this.value = v.slice(0, 2) + '/' + v.slice(2);
+        else this.value = v;
+        pmShowFieldError('pm-expiry', 'pm-expiry-error', '');
+    });
+    document.getElementById('pm-cvv').addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '').slice(0, 3);
+        pmShowFieldError('pm-cvv', 'pm-cvv-error', '');
+    });
+    document.getElementById('pm-cardholder').addEventListener('input', function() {
+        pmShowFieldError('pm-cardholder', 'pm-cardholder-error', '');
+    });
+
     document.getElementById('confirm-payment-btn').addEventListener('click', function() {
-        document.getElementById('summary-flow').classList.remove('hidden');
+        var summaryFlow = document.getElementById('summary-flow');
+        var data = getCheckoutData();
+        var productsEl = document.getElementById('summary-products');
+        var taxEl = document.getElementById('summary-tax');
+        var totalEl = document.getElementById('summary-total');
+        var shipTo = document.getElementById('summary-shipping-to');
+        var payment = document.getElementById('summary-payment');
+        if (productsEl) productsEl.innerHTML = '<span class="text-gray-600 dm-sans">Products (' + data.itemCount + ' items)</span><span class="text-gray-900 dm-sans">$' + data.subtotal.toFixed(2) + '</span>';
+        if (taxEl) taxEl.innerHTML = '<span class="text-gray-600 dm-sans">Tax</span><span class="text-gray-900 dm-sans">$' + data.tax.toFixed(2) + '</span>';
+        if (totalEl) totalEl.textContent = '$' + data.total.toFixed(2);
+        if (shipTo) shipTo.textContent = 'Shipping to: ' + data.address.full;
+        if (payment) payment.textContent = 'Payment: â€¢â€¢â€¢â€¢' + data.card.last4;
+        summaryFlow.classList.remove('hidden');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    document.getElementById('cancel-order-btn').addEventListener('click', function() {
+        document.getElementById('summary-flow').classList.add('hidden');
         chatMessages.scrollTop = chatMessages.scrollHeight;
     });
 
@@ -1890,12 +2492,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Add share functionality
+    // Add share functionality â€“ link to product page (dynamic, not hardcoded)
     function shareItem(itemName, itemBrand, itemPrice) {
+        const base = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+        const id = (itemName || '').toLowerCase().replace(/\s+/g, '-');
+        const shareUrl = base + 'Product_details_page.html?id=' + encodeURIComponent(id) + (itemName ? '&name=' + encodeURIComponent(itemName) : '') + (itemBrand ? '&brand=' + encodeURIComponent(itemBrand) : '');
         const shareData = {
-            title: `${itemName} by ${itemBrand}`,
-            text: `Check out this ${itemName} by ${itemBrand} for $${itemPrice} on GoShopMe!`,
-            url: 'https://app.goshopme.ai/item/' + encodeURIComponent(itemName.toLowerCase().replace(/\s+/g, '-'))
+            title: `${itemName || 'Product'} by ${itemBrand || 'GoShopMe'}`,
+            text: `Check out this ${itemName || 'item'}${itemBrand ? ' by ' + itemBrand : ''}${itemPrice ? ' for $' + itemPrice : ''} on GoShopMe!`,
+            url: shareUrl
         };
         
         if (navigator.share) {
@@ -1951,11 +2556,66 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
 
-    // Update cart total after item removal
+    // Change quantity for a bag item (+1 or -1). At qty 1, minus removes the item.
+    function changeQuantity(itemId, delta) {
+        const bagItem = document.getElementById(itemId);
+        if (!bagItem) return;
+        const qtySpan = bagItem.querySelector('.item-qty-display');
+        const priceEl = bagItem.querySelector('.item-price-display');
+        const unitPrice = parseFloat(bagItem.getAttribute('data-unit-price') || '0') || 0;
+        let qty = parseInt(qtySpan ? qtySpan.textContent : '1', 10) || 1;
+        qty = Math.max(0, qty + delta);
+        if (qty === 0) {
+            deleteItem(itemId);
+            return;
+        }
+        if (qtySpan) qtySpan.textContent = String(qty);
+        if (priceEl) priceEl.textContent = '$' + (unitPrice * qty).toFixed(0);
+        updateCartTotal();
+        if (typeof syncCartCountFromDOM === 'function') syncCartCountFromDOM();
+        if (typeof updateCartBadge === 'function') updateCartBadge();
+        if (typeof window.renderChatBagPreview === 'function') window.renderChatBagPreview();
+    }
+
+    // Update order summary from all bag items (includes promo discount when applied)
     function updateCartTotal() {
-        const remainingItems = document.querySelectorAll('[id^="bag-item-"]');
-        // Update totals based on remaining items
-        // This would typically connect to your cart state management
+        let subtotal = 0;
+        let totalItems = 0;
+        document.querySelectorAll('[id^="bag-item-"]').forEach(function(item) {
+            const qtySpan = item.querySelector('.item-qty-display');
+            const priceEl = item.querySelector('.item-price-display');
+            const qty = (qtySpan ? parseInt(qtySpan.textContent || '1', 10) : 1) || 1;
+            const lineTotal = parseFloat((priceEl ? priceEl.textContent : '').replace(/[^0-9.]/g, '')) || 0;
+            totalItems += qty;
+            subtotal += lineTotal;
+        });
+        const taxRate = 0.08;
+        var discount = 0;
+        if (appliedPromoData && appliedPromoData.promo) {
+            var p = appliedPromoData.promo;
+            if (p.type === 'percent') discount = Math.round(subtotal * p.value / 100 * 100) / 100;
+            else if (p.type === 'fixed') discount = Math.min(p.value, subtotal);
+            appliedPromoData.discountAmount = discount;
+        }
+        const afterDiscount = Math.max(0, subtotal - discount);
+        const tax = Math.round(afterDiscount * taxRate * 100) / 100;
+        const total = afterDiscount + tax;
+        const countEl = document.getElementById('order-items-count');
+        const subtotalEl = document.getElementById('order-subtotal-amount');
+        const taxEl = document.getElementById('order-tax-amount');
+        const totalEl = document.getElementById('total-amount');
+        const discountRow = document.getElementById('order-discount-row');
+        const discountAmtEl = document.getElementById('order-discount-amount');
+        const appliedLabel = document.getElementById('applied-promo-label');
+        const appliedAmt = document.getElementById('applied-promo-amount');
+        if (countEl) countEl.textContent = String(totalItems);
+        if (subtotalEl) subtotalEl.textContent = '$' + subtotal.toFixed(2);
+        if (taxEl) taxEl.textContent = '$' + tax.toFixed(2);
+        if (totalEl) totalEl.textContent = '$' + total.toFixed(2);
+        if (discountRow) discountRow.classList.toggle('hidden', discount <= 0);
+        if (discountAmtEl) discountAmtEl.textContent = discount > 0 ? '-$' + discount.toFixed(2) : '';
+        if (appliedPromoData && appliedPromoData.promo && appliedLabel) appliedLabel.textContent = appliedPromoData.promo.code + ' Applied';
+        if (appliedPromoData && appliedPromoData.discountAmount !== undefined && appliedAmt) appliedAmt.textContent = '-$' + appliedPromoData.discountAmount.toFixed(2);
     }
 
     // Add event listeners for wishlist buttons
@@ -1967,15 +2627,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add event listeners for share buttons
-    document.querySelectorAll('.share-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const bagItem = this.closest('[id^="bag-item-"]');
-            const itemName = bagItem.querySelector('h3').textContent;
-            const itemBrand = bagItem.querySelector('.text-xs.text-gray-500').textContent;
-            const itemPrice = bagItem.querySelector('.font-bold').textContent.replace('$', '');
-            shareItem(itemName, itemBrand, itemPrice);
-        });
+    // Share buttons â€“ event delegation: read name, brand, price from bag item (dynamic)
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.share-btn');
+        if (!btn) return;
+        const bagItem = btn.closest('[id^="bag-item-"]');
+        if (!bagItem) return;
+        const h3 = bagItem.querySelector('h3');
+        const brandEl = bagItem.querySelector('p.text-xs.text-gray-500.mb-1') || bagItem.querySelector('p.text-xs.text-gray-500');
+        const priceEl = bagItem.querySelector('.font-bold');
+        const itemName = h3 ? h3.textContent : '';
+        const itemBrand = brandEl ? brandEl.textContent.trim().split(/\n/)[0] : '';
+        const itemPrice = priceEl ? priceEl.textContent.replace(/[^\d.]/g, '') : '';
+        shareItem(itemName, itemBrand, itemPrice);
     });
 
     // Add event listeners for delete buttons
@@ -1989,12 +2653,89 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add to Bag buttons: increment cart and update badge
-    document.querySelectorAll('.add-to-bag-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            if (typeof window.addToCart === 'function') window.addToCart();
-            showToast('Added to bag!');
+    // Quantity +/- buttons: event delegation so handlers work reliably
+    const bagSection = document.getElementById('shopping-bag-items');
+    if (bagSection) {
+        bagSection.addEventListener('click', function(e) {
+            const plus = e.target.closest('.item-qty-plus');
+            const minus = e.target.closest('.item-qty-minus');
+            if (!plus && !minus) return;
+            e.preventDefault();
+            e.stopPropagation();
+            const bagItem = (plus || minus).closest('[id^="bag-item-"]');
+            if (!bagItem || !bagItem.id) return;
+            changeQuantity(bagItem.id, plus ? 1 : -1);
         });
+    }
+
+    // Add product to bag: creates new bag item and updates totals
+    function addProductToBag(product) {
+        var existing = document.querySelectorAll('[id^="bag-item-"]');
+        var maxId = 0;
+        existing.forEach(function(el) {
+            var m = (el.id || '').match(/bag-item-(\d+)/);
+            if (m) maxId = Math.max(maxId, parseInt(m[1], 10));
+        });
+        var nextId = 'bag-item-' + (maxId + 1);
+        var pid = (product.id || '').replace(/"/g, '&quot;');
+        var pname = (product.name || '').replace(/"/g, '&quot;');
+        var pbrand = (product.brand || '').replace(/"/g, '&quot;');
+        var price = product.unitPrice || 0;
+        var imgSrc = product.imgSrc || '';
+        var details = product.details || '';
+        var detailsHtml = details ? '<p class="text-xs text-gray-500 mt-1">' + details.replace(/</g, '&lt;') + '</p>' : '';
+        var html = '<div id="' + nextId + '" class="bg-white rounded-xl border border-gray-100 p-4 mb-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow" data-product-id="' + pid + '" data-product-name="' + pname + '" data-product-brand="' + pbrand + '" data-unit-price="' + price + '" onclick="(function(e){if(e.target.closest(\'button\'))return;window.location.href=\'Product_details_page.html?id=\'+encodeURIComponent(\'' + pid + '\')+\'&name=\'+encodeURIComponent(\'' + pname + '\')+\'&brand=\'+encodeURIComponent(\'' + pbrand + '\')+\'&from=cart\';})(event)">' +
+            '<div class="flex space-x-4">' +
+            '<div class="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden"><img class="w-full h-full object-cover" src="' + imgSrc.replace(/"/g, '&quot;') + '" alt=""></div>' +
+            '<div class="flex-1">' +
+            '<div class="flex justify-between items-start mb-2">' +
+            '<div><p class="text-xs text-gray-500 mb-1">' + (product.brand || '').replace(/</g, '&lt;') + '</p>' +
+            '<h3 class="font-semibold text-gray-900 text-sm">' + (product.name || '').replace(/</g, '&lt;') + '</h3>' + detailsHtml + '</div>' +
+            '<div class="flex space-x-2">' +
+            '<button class="w-8 h-8 flex items-center justify-center wishlist-btn" onclick="event.stopPropagation();if(window.toggleWishlist)window.toggleWishlist(this,\'' + nextId + '\')"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path></svg></button>' +
+            '<button class="w-8 h-8 flex items-center justify-center share-btn" data-share-item aria-label="Share item"><svg class="w-4 h-4 text-gray-400 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"></path></svg></button>' +
+            '<button class="w-8 h-8 flex items-center justify-center delete-btn" onclick="event.stopPropagation();deleteItem(\'' + nextId + '\')"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg></button>' +
+            '</div></div>' +
+            '<div class="flex justify-between items-center">' +
+            '<div class="flex items-center space-x-3"><div class="flex items-center border border-gray-200 rounded-lg">' +
+            '<button type="button" class="item-qty-minus w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-l-lg transition-colors" aria-label="Decrease quantity"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"></path></svg></button>' +
+            '<span class="item-qty-display px-3 text-sm font-medium min-w-[1.5rem] text-center">1</span>' +
+            '<button type="button" class="item-qty-plus w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-r-lg transition-colors" aria-label="Increase quantity"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg></button>' +
+            '</div></div>' +
+            '<p class="item-price-display font-bold text-gray-900">$' + price + '</p></div></div></div></div>';
+        var orderSummary = document.getElementById('order-summary');
+        if (orderSummary && orderSummary.parentNode) {
+            var frag = document.createElement('div');
+            frag.innerHTML = html;
+            var newNode = frag.firstChild;
+            orderSummary.parentNode.insertBefore(newNode, orderSummary);
+            updateCartTotal();
+            if (typeof syncCartCountFromDOM === 'function') syncCartCountFromDOM();
+            if (typeof updateCartBadge === 'function') updateCartBadge();
+            if (typeof window.renderChatBagPreview === 'function') window.renderChatBagPreview();
+        }
+    }
+
+    // Add to Bag buttons: add product from tile to bag
+    document.addEventListener('click', function(e) {
+        var btn = e.target.closest('.add-to-bag-btn');
+        if (!btn) return;
+        e.preventDefault();
+        e.stopPropagation();
+        var tile = btn.closest('.product-tile');
+        if (!tile) return;
+        var priceEl = tile.querySelector('.font-bold');
+        var priceText = priceEl ? (priceEl.textContent || '').replace(/[^0-9.]/g, '') : '';
+        var product = {
+            id: tile.getAttribute('data-product-id') || '',
+            name: tile.getAttribute('data-product-name') || '',
+            brand: tile.getAttribute('data-product-brand') || '',
+            unitPrice: parseFloat(tile.getAttribute('data-unit-price') || priceText || '0') || 0,
+            imgSrc: (tile.querySelector('img') || {}).src || '',
+            details: ''
+        };
+        addProductToBag(product);
+        showToast('Added to bag!');
     });
 
     // Chat drawer re-expansion patch (match Home: closed = translate-y-full)
@@ -2011,7 +2752,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 window._expandShoppingBagDrawer();
             } else {
                 chatDrawer.classList.remove('translate-y-full');
-                chatDrawer.style.height = '80vh';
+                chatDrawer.style.height = '50vh';
                 chatOverlay.classList.remove('hidden');
                 chatOverlay.setAttribute('aria-hidden', 'false');
                 chatInputBar.classList.add('hidden');
@@ -2040,14 +2781,73 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     })();
+    // Expose handlers for inline use (e.g. from other pages)
+    window.toggleWishlist = toggleWishlist;
+    window.shareItem = shareItem;
+    window.deleteItem = deleteItem;
+    window.changeQuantity = changeQuantity;
 });
-
-// Make sure all functions are properly defined
-window.toggleWishlist = toggleWishlist;
-window.shareItem = shareItem;
-window.deleteItem = deleteItem;
 </script>
 
 </body>
 </html>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
