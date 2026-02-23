@@ -33,9 +33,9 @@
         }
 
         const jsonPaths = [
+            'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/html_designs/data/home.json',
             'data/home.json',
-            './data/home.json',
-            window.location.pathname.replace(/\/[^/]*$/, '/') + 'data/home.json'
+            './data/home.json'
         ];
         for (const path of jsonPaths) {
             try {

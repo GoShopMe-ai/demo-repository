@@ -30,7 +30,11 @@
             }
         }
 
-        const paths = ['data/picks.json', './data/picks.json', window.location.pathname.replace(/\/[^/]*$/, '/') + 'data/picks.json'];
+        const paths = [
+            'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/html_designs/data/picks.json',
+            'data/picks.json',
+            './data/picks.json'
+        ];
         for (const path of paths) {
             try {
                 const res = await fetch(path);

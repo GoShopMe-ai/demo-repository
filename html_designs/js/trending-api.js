@@ -14,11 +14,6 @@
     const BASE_URL = window.GOSHOPME_API_BASE_URL || '/api';
     const ENDPOINT = '/trending/feed';
 
-    /**
-     * Fetch the full Trending Now feed.
-     * Tries: 1) API (if configured), 2) data/trending.json, 3) returns null for inline fallback
-     * @returns {Promise<object|null>} Trending feed or null
-     */
     async function fetchTrendingFeed() {
         const hasCustomApi = window.GOSHOPME_API_BASE_URL && window.GOSHOPME_API_BASE_URL !== '/api';
 
@@ -37,11 +32,10 @@
             }
         }
 
-        // Fallback: local JSON
         const jsonPaths = [
+            'https://raw.githubusercontent.com/nora-todorova/GoShopMe/main/html_designs/data/trending.json',
             'data/trending.json',
-            './data/trending.json',
-            window.location.pathname.replace(/\/[^/]*$/, '/') + 'data/trending.json'
+            './data/trending.json'
         ];
         for (const path of jsonPaths) {
             try {
