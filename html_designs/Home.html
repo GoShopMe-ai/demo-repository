@@ -16,21 +16,39 @@
     <style>
         /* ---- MOBILE FULL-WIDTH OVERRIDE ---- */
         @media screen and (max-width: 768px) {
-          #app-shell, #main-content, #bottom-nav, #header {
+          #app-shell, #main-content, #bottom-nav, #header,
+          #chat-drawer, #chat-input-bar {
             max-width: 100vw !important;
             width: 100% !important;
             margin-left: 0 !important;
             margin-right: 0 !important;
             box-shadow: none !important;
           }
-          #header, #bottom-nav {
+          #header, #bottom-nav, #chat-drawer, #chat-input-bar {
             left: 0 !important;
             right: 0 !important;
             transform: none !important;
           }
-          #bottom-nav > div { padding-top: 10px !important; padding-bottom: 2px !important; }
+          /* Re-apply Y slide when drawer is hidden (translate-y-full class present) */
+          #chat-drawer.translate-y-full {
+            transform: translateY(100%) !important;
+          }
+          /* Nav buttons: push UP away from the gesture bar */
+          #bottom-nav > div {
+            padding-top: 6px !important;
+            padding-bottom: 14px !important;
+          }
         }
         /* ------------------------------------ */
+        /* Chat drawer: prevent scroll leaking to main page */
+        #chat-drawer {
+          overscroll-behavior: contain;
+          -webkit-overflow-scrolling: touch;
+        }
+        #chat-messages {
+          overscroll-behavior: contain;
+          -webkit-overflow-scrolling: touch;
+        }
         ::-webkit-scrollbar { display: none; }
        * { 
     font-family: 'DM Sans', 
@@ -1088,6 +1106,9 @@ document.addEventListener("DOMContentLoaded", function () {
         isDrawerExpanded = true;
         currentHeight = 80;
         chatDrawer.style.height = '50vh';
+        // Lock main page scroll while drawer is open
+        document.body.style.overflow = 'hidden';
+        document.body.style.touchAction = 'none';
     }
 
     function collapseDrawer() {
@@ -1101,6 +1122,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isAddFriendMode) {
             hideAddFriendFlow();
         }
+        // Restore main page scroll
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
     }
 
     if (chatOverlay) {

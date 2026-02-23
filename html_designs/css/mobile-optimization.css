@@ -1,4 +1,4 @@
-﻿/**
+/**
  * GoShopMe Mobile Optimization - Shared across ALL screens
  *
  * Mobile (<=768px)  -> full-width, edge-to-edge, no gutters
@@ -147,21 +147,24 @@ body {
     margin-right: 0 !important;
   }
 
-  /* --- 3g. Bottom nav: safe area + shift buttons UP ---
-   * On Android gesture navigation the system gesture bar sits at
-   * the very bottom. We pad the nav with the safe area inset, then
-   * give the button row more top padding so the icons sit visually
-   * centred in the visible part of the bar, not crammed down.
+  /* --- 3g. Bottom nav: push buttons UP away from the gesture bar ---
+   * More bottom padding on the inner row pushes the icons upward
+   * within the bar on Android gesture-nav phones (Pixel, Samsung etc.)
    */
-  #bottom-nav,
-  nav[id="bottom-nav"] {
-    padding-bottom: env(safe-area-inset-bottom, 8px) !important;
-  }
-
   #bottom-nav > div,
   nav#bottom-nav > div {
-    padding-top: 10px !important;
-    padding-bottom: 2px !important;
+    padding-top: 6px !important;
+    padding-bottom: 14px !important;
+  }
+
+  /* Chat drawer and input bar: full-width, no centering offset */
+  #chat-drawer,
+  #chat-input-bar {
+    left: 0 !important;
+    right: 0 !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    overscroll-behavior: contain;
   }
 
 } /* end @media mobile */
