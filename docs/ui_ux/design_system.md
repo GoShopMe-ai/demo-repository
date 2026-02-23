@@ -31,8 +31,13 @@
 
 ### Status Colors
 - **Success**: Green tones (for notifications, confirmations)
-- **Error/Recording**: `#EF4444` (red-500) - used for voice recording state
-- **Warning**: Yellow tones (if needed)
+- **Error/Recording**: `#EF4444` (red-500)
+  - Used for: Form validation errors, invalid input states (`.input-error`, `.error-msg`), voice recording state
+  - **Do not use for delete/remove actions**
+- **Delete/Destructive**: `#F96226` (shine-accent)
+  - Used for: Delete confirmations, remove buttons, destructive actions (e.g. delete address)
+  - **Distinct from Error** — delete is an intentional user action, not a validation failure
+- **Warning**: Yellow/amber tones (if needed)
 
 ## 2. Typography
 
@@ -96,18 +101,45 @@ font-family: 'Poppins',
 
 ### Icon Buttons
 
-**Default Icon Button**:
+**Header Icon Buttons** (back, bell, shopping bag) — see **Section 5. Header** for full spec. Use plain icons (no circular background), `.header-icon-btn` class, hover lift effect.
+
+**Default Icon Button** (for non-header contexts, e.g. overlays):
 - Size: `w-10 h-10` (40px × 40px)
-- Background: `bg-gray-50` (rounded-full)
+- Background: `bg-gray-50` (rounded-full) — optional; header icons use plain style
 - Icon size: `w-5 h-5` (20px × 20px)
 - Stroke width: `1.5`
-- Hover: Icon color changes to `#939BFB`
-- States: `hover:opacity-70 transition-opacity`
+- Hover: Icon color changes to `#939BFB` or `hover:opacity-70 transition-opacity`
 
 **Icon Button (White)**:
 - Background: `bg-white/90` (90% opacity)
 - Backdrop blur: `backdrop-blur-sm`
 - Used in: Product image overlays (wishlist, share)
+
+**Collection/Product Image Overlay Icons** (heart, share, chat) — match Wishlist:
+- **No circular background** — plain icon buttons over the image
+- Icon size: `w-4 h-4` (16px) for chat; heart/share may use `w-4 h-4` or `w-[18px] h-[18px]` depending on screen
+- Icon color: `text-white` (overlay on images)
+- Stroke: `stroke-width="1.5"`
+- Hover: `hover:opacity-80 transition-opacity`
+- Placement: `absolute top-3 right-3 flex flex-col space-y-2` (vertical stack) or `top-2 right-2 space-y-1` (Wishlist)
+- Heart: outline default; filled `#939BFB` when wishlisted (`.heart-filled`, `fill="#939BFB" stroke="#939BFB"`)
+- Share: paper plane with `share-icon-tilted` (rotate -35deg)
+- **Chat**: Heroicons chat-bubble-left-right (two bubbles, conversation style). Use **everywhere** product/collection cards appear: Home, Creator Picks, Creator Collections, Creator Single Collection, Trending Now, Wishlist.
+  - Button: `p-1 flex items-center justify-center hover:opacity-80 transition-opacity chat-trigger`
+  - SVG: `w-4 h-4 text-white product-overlay-icon`, `fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"`
+  - Path: `M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155`
+  - **Chat trigger behavior**: When tapped, opens the ShAI chat drawer and adds a contextual message with product/collection thumbnails. Thumbnails: up to 4 images, `w-12 h-12 rounded-lg object-cover border border-gray-200`. Product tiles: use `data-product-image` or `data-product-id`; collection tiles: use `data-collection` with `itemThumbnails` or `coverImage`. Heart and Share must call `toggleWishlist(button, productId)` and `shareProduct(name, price, url, productId, brand)` respectively.
+
+**Product tile overlay behavior** (Heart, Share, Chat — consistent across all screens):
+- **Heart (wishlist)**: Class `wishlist-btn`. Calls `window.toggleWishlist(button, productId)`. Outline when not wishlisted; `.heart-filled` with `fill="#939BFB" stroke="#939BFB"` when wishlisted.
+- **Share**: Class `share-product-btn`. Calls `window.shareProduct(productName, price, productUrl, productId, brand)`. Uses `share-icon-tilted` class on the SVG.
+- **Chat**: Class `chat-trigger`. Opens ShAI drawer, adds contextual message with ShAI avatar and product/collection thumbnails (up to 4, `w-12 h-12 rounded-lg object-cover border border-gray-200`). Product tiles: `data-item` (name), `data-product-image` (URL). Collection tiles: `data-collection` (name), thumbnails from `itemThumbnails` or `coverImage`.
+
+**Chat + thumbnail implementation pattern** (apply on all screens with product tiles and chat drawer):
+- Use `addContextualMessage(message, thumbUrls)` where `thumbUrls` is an array of image URLs (max 4).
+- Thumbnail HTML: `flex gap-1.5 mt-2 flex-wrap` container; images: `w-12 h-12 rounded-lg object-cover border border-gray-200`.
+- Product image source: `trigger.getAttribute('data-product-image')` or `item.querySelector('[data-product-image]')?.src` or `item.querySelector('img')?.src`.
+- Reference screens: Trending_Now.html, Wishlist.html, Picks.html (collections), Creator's Single_Collection.html.
 
 ### Text Buttons
 
@@ -132,6 +164,16 @@ font-family: 'Poppins',
 - Text: `text-gray-600` or `text-black`
 - Padding: `px-3 py-1`
 - Hover: `hover:opacity-70`
+
+**Destructive Button** (delete, remove actions):
+- Background: `bg-[#F96226]` (shine-accent)
+- Text: `text-white`
+- Padding: `py-2 px-3`
+- Border radius: `rounded-full`
+- Font: `text-sm font-medium`
+- Hover: `hover:opacity-90 transition-opacity`
+- Icon: Use `text-[#F96226]` with `bg-orange-100` for the icon circle
+- **Never use red (#EF4444)** — reserved for error states only
 
 ### Button States
 - **Default**: Standard styling
@@ -184,29 +226,158 @@ font-family: 'Poppins',
 - **Padding**: `p-4`
 
 ### Layout
-- **Left**: Back button (circular, gray-50 background)
+- **Left**: Back button (when applicable)
 - **Center**: Page title (H1, Poppins, semibold, gray-900)
 - **Right**: Icon buttons (notifications, cart) with badges
 
-### Header Elements
+### Header Icon Buttons (Back, Bell, Shopping Bag)
 
-**Back Button**:
-- Size: `w-10 h-10`
-- Background: `bg-gray-50`
-- Icon: Left arrow, 20px
+**Design** — plain icons, no circular background:
+- Size: `w-10 h-10` (40px × 40px touch target)
+- Icon size: `w-5 h-5` (20px × 20px)
+- Stroke width: `1.5`
+- Color: `text-gray-600`
+- Hover: `hover:text-gray-800`
+- **No grey circle** — do not use `rounded-full bg-gray-50`
+
+**Hover behavior** (mouse):
+- Slight upward movement: `transform: translateY(-2px)` on hover
+- Transition: `transition: transform 0.2s ease, color 0.2s ease`
+- Apply via class: `.header-icon-btn`
+
+**CSS**:
+```css
+.header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
+.header-icon-btn:hover { transform: translateY(-2px); }
+```
+
+**Back Button** (see **Section 5b. Back Button – Global Behavior**):
+- **Must return user to previous screen** – use `history.back()` when possible
+- Use class `goshopme-back-btn` with `data-fallback="URL"` when using shared component
+- Icon: Left arrow (Heroicons), 20px
+- `aria-label`: e.g. "Back", "Back to profile"
+
+**Bell (Notifications)** (see **Section 5a. Header Icons & Badges – Global Component**):
+- Link: `Notifications_Screen.html?from=<screen-id>`
+- `aria-label`: "Notifications"
+
+**Shopping Bag (Cart)** (see **Section 5a**):
+- Link: `Shopping_bag.html?from=<screen-id>`
+- `aria-label`: "Shopping bag"
+
+### Section 5a. Header Icons & Badges – Global Component
+
+The **bell (notifications)** and **shopping bag (cart)** with badges are global elements. Use the shared component to ensure consistent behavior across all screens.
+
+**1. Include the script** (in `<head>` or before `</body>`):
+
+```html
+<script src="js/header-icons-badges.js"></script>
+```
+
+**2. Option A – Inject into placeholder** (recommended for new screens):
+
+```html
+<div id="header-icons-slot" class="flex items-center gap-0"></div>
+```
+
+The script injects bell + bag icons. Links automatically include `?from=<current-screen>`.
+
+**3. Option B – Use your own HTML** (legacy screens):
+
+Provide elements with IDs: `#notif-btn`, `#cart-btn`, `#notif-indicator`, `#notif-count`, `#cart-indicator`, `#cart-count`. The script syncs badge counts from localStorage.
+
+**API**:
+- `window.GoShopMeHeaderIcons.updateCartBadge(count)` – set cart badge
+- `window.GoShopMeHeaderIcons.updateNotifBadge(count)` – set notification badge
+- `window.GoShopMeHeaderIcons.getCartCount()` / `getNotifCount()`
+- `window.GoShopMeHeaderIcons.addToCart()` / `addToNotifications()` – increment
+
+**localStorage keys**: `goshopme_cart_count`, `goshopme_notif_count`
+
+### Section 5b. Back Button – Global Behavior
+
+The header back button **must return the user to the previous screen**. Do not hardcode `href` to a specific page (e.g. profile) except as fallback.
+
+**1. Include the script**:
+
+```html
+<script src="js/back-button.js"></script>
+```
+
+**2. Mark back buttons**:
+
+```html
+<a href="#" class="goshopme-back-btn" data-fallback="User_Profile_Free_Plan.html" aria-label="Back">
+  <svg>...</svg>
+</a>
+```
+
+- `data-fallback`: URL when `history.back()` is unavailable (e.g. opened in new tab)
+- Uses `history.back()` when history length > 1
+
+**Manual alternative** (if not using shared script):
+
+```javascript
+if (history.length > 1) history.back(); else location.href = 'fallback.html';
+```
+
+### Header Badges
+
+**Notification Badge**:
+- Position: `absolute -top-0.5 -right-0.5` on the bell icon container
+- Size: `min-w-[18px] min-h-[18px] px-1`
+- Background: `bg-[#F96226]` (shine-accent)
 - Border radius: `rounded-full`
+- Text: `text-[10px] text-white font-medium leading-none`
+- Visibility: Hidden when count is 0; use `hidden` / `flex` toggling
+- Storage: `localStorage` key `goshopme_notif_count`
+
+**Cart Badge**:
+- Position: `absolute -top-0.5 -right-0.5` on the bag icon container
+- Size: `min-w-[18px] min-h-[18px] px-1`
+- Background: `bg-[#939BFB]` (shine-primary)
+- Border radius: `rounded-full`
+- Text: `text-[10px] text-white font-medium leading-none`
+- Visibility: Hidden when count is 0
+- Storage: `localStorage` key `goshopme_cart_count`
 
 **Title**:
 - Font: `text-lg font-semibold text-gray-900 poppins`
 
-**Action Icons**:
-- Container: `flex items-center space-x-3`
-- Each icon: `w-10 h-10 rounded-full bg-gray-50`
-- Badge position: `absolute -top-0.5 -right-0.5`
-- Badge size: `w-3 h-3 rounded-full`
-- Badge colors: Notification `#F96226`, Cart `#939BFB`
-
 ## 6. Bottom Navigation
+
+**See Section 6a for the global component.** Use the shared `bottom-nav.js` on all app screens.
+
+### Section 6a. Bottom Navigation – Global Component
+
+The bottom navigation bar is a global element. Use the shared component.
+
+**1. Include the script**:
+
+```html
+<script src="js/bottom-nav.js"></script>
+```
+
+**2. Initialize on `DOMContentLoaded`** (or set `window.__bottomNavInit` before load):
+
+```javascript
+GoShopMeBottomNav.init({
+    insertBefore: 'bottom-nav-placeholder',  // or null to append to body
+    currentPage: 'home',   // 'home'|'picks'|'wishlist'|'profile' – sets .active
+    profileHref: 'User_Profile_Free_Plan.html'  // optional override
+});
+```
+
+**Or pre-set** (before DOMContentLoaded):
+
+```javascript
+window.__bottomNavInit = { insertBefore: null, currentPage: 'home' };
+```
+
+**Profile link**: Defaults to `User_Profile_Free_Plan.html` or `User_Profile_Paid_Plan.html` based on `localStorage.__userPlan`. Override via `profileHref` or `window.__profilePageUrl`.
+
+**Profile photo**: Read from `localStorage.profilePhoto`. After updating, call `GoShopMeBottomNav.refreshProfilePhoto()` if the nav is already rendered.
 
 ### Structure
 - **Position**: Fixed bottom
@@ -232,10 +403,19 @@ font-family: 'Poppins',
 - **Transition**: `transition: color 0.2s ease-in-out`
 
 ### Navigation Items (4 items)
-1. Home (house icon)
-2. Picks (star icon)
-3. Wishlist (heart icon)
-4. Profile (user avatar image, 24px)
+1. **Home** (house icon)
+2. **Picks** (star icon) — label must be "Picks" (not "Collections"); links to Creator Picks / Collections screen
+3. **Wishlist** (heart icon)
+4. **Profile** (user avatar image, 24px)
+
+**Important**: The second nav item label is always "Picks" per approved design. Do not use "Collections" in the bottom nav.
+
+### Profile Picture (Bottom Nav)
+- **No photo uploaded**: Show profile icon (SVG user icon, `w-6 h-6`, `text-shine-primary`)
+- **Photo uploaded**: Show user's picture (`w-6 h-6 rounded-full object-cover`)
+- **Storage**: Use `localStorage.getItem('profilePhoto')` / `localStorage.setItem('profilePhoto', dataUrl)` for the data URL
+- **On load**: Read from localStorage; show icon or img accordingly
+- **On update**: Call `window.setProfilePhoto(url)` to persist and update the nav; use `setProfilePhoto(null)` to clear
 
 ## 7. Chat Drawer
 
@@ -259,25 +439,33 @@ font-family: 'Poppins',
 
 ### Chat Header
 - **Layout**: `flex items-center p-4 pb-2`
-- **Avatar**: `w-8 h-8 rounded-full`
+- **Avatar**: `w-8 h-8 rounded-full object-cover` — **ShAI avatar image** (hardcoded for now):
+  - **Asset path**: `assets/shai-avatar.png` (project root: `C:\Users\norag\GoShopMe\assets\shai-avatar.png`)
+  - **HTML usage**: Use `src="../assets/shai-avatar.png"` for files in `html_designs/` (relative path from html_designs to assets folder)
+  - **Fallback**: `#shai-avatar-placeholder` with "AI" text when image fails to load (`onerror` handler)
+  - **Data attribute**: `data-shai-avatar` on all ShAI avatar `<img>` elements for bulk updates via `window.setShAIAvatar(url)` when DB provides URL later
+  - **Default init**: Call `window.setShAIAvatar('assets/shai-avatar.png')` or equivalent on DOMContentLoaded so all `[data-shai-avatar]` elements get the image
+  - Apply to all screens with the chat drawer and chat
 - **Title**: `font-semibold text-black text-sm`
 - **Subtitle**: `text-xs text-gray-500`
-- **Back Button**: `w-[18px] h-[18px]`, hidden by default
+- **Back Button**: `w-[18px] h-[18px]`, hidden by default (shown only in add-friend flow)
+- **No drawer-toggle/arrow button**: Drawer collapses via overlay tap or **drag handle down** (see Chat Drawer Dragging)
 
 ### Chat Messages Container
 - **Container**: `flex-1 overflow-y-auto`
 - **Padding**: `p-4 pb-0`
-- **Scroll Behavior**: Auto-scroll to bottom, smooth
+- **Scroll Behavior**: Auto-scroll to bottom when new messages arrive (scroll the `#chat-messages` container, not inner `.p-4`)
 
 ### Message Bubbles
 
 **Incoming (ShAI)**:
 - Background: `bg-gray-50`
 - Text: `text-black`
-- Border radius: `rounded-2xl rounded-tl-md`
+- Border radius: `rounded-2xl rounded-tl-md` (use `rounded-tl-md`, not `rounded-tl-sm`)
 - Padding: `p-3`
 - Max width: `max-w-[80%]`
 - Font: `text-sm`
+- **Text wrapping**: Inner `<p>` must include `break-words whitespace-pre-wrap` for long messages and newlines
 
 **Outgoing (User)**:
 - Background: `bg-[#939BFB]`
@@ -287,6 +475,7 @@ font-family: 'Poppins',
 - Max width: `max-w-[80%]`
 - Font: `text-sm`
 - Alignment: `justify-end`
+- **Text wrapping**: Inner `<p>` must include `break-words whitespace-pre-wrap` so long messages wrap correctly and newlines are preserved
 
 **Product Bubble**:
 - Background: `bg-white`
@@ -315,17 +504,34 @@ font-family: 'Poppins',
 - Padding: `p-4`
 
 **Input Field**:
+- Use `<textarea>` (not `<input type="text">`) for multi-line expansion
 - Container: `bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm`
-- Input: `flex-1 bg-transparent outline-none`
+- Input: `flex-1 bg-transparent outline-none resize-none`
 - Placeholder: `placeholder-gray-500`
 - Font: DM Sans
 - Min height: `min-h-[24px]`
-- Auto-grow: Up to 6 rows max
+- Max height: `max-h-[144px]` (~6 rows)
+- **Auto-grow**: When text exceeds field width, expand to multiple rows; max 6 rows; `overflow-y: auto` when capped
+- Apply to all screens where the chat drawer persists (Home, Creator Collections, Orders, Product details, Wishlist, Shopping bag, etc.)
 
 **Input Icons**:
 - Size: `w-[18px] h-[18px]`
 - Color: `text-black`
 - Spacing: `gap-2`
+
+**Camera Button** (cam-btn, cam-btn-drawer):
+- Tap opens native file picker via `<input type="file" accept="image/*,video/*">`
+- User selects image or video from device; selection is shown in chat as image/video bubble
+- ShAI responds after upload (e.g. "Perfect! I can see your image. Let me analyze it...")
+
+**Microphone Button** (mic-btn, mic-btn-drawer):
+- **Hold to record**: `mousedown`/`touchstart` → start recording; `mouseup`/`touchend` → stop
+- **Cancel**: `mouseleave` (mouse) or swipe left >30px (touch)
+- **Visual feedback while recording**: `scale-110`, `ring-2 ring-[#939BFB] ring-offset-2` on mic button
+- **Recording bubble (visible)**: Show temporary bubble "Recording... swipe left to cancel" immediately when recording starts; `bg-[#939BFB]`, white text, `font-medium`, optional `animate-pulse`; **scroll chat to bottom** so the bubble is visible
+- **Recording bubble**: waveform bars, play button, duration; `bg-[#939BFB]`, `rounded-full`
+- Uses `MediaRecorder`, `getUserMedia`, `Blob`, `URL.createObjectURL`
+- Same behavior on Home screen and chat drawer
 
 **Send Button**:
 - Color: `text-[#939BFB]`
@@ -344,6 +550,121 @@ font-family: 'Poppins',
 - Position: Fixed, full screen
 - Z-index: `z-40`
 - Hidden by default, shows when drawer is open
+
+### Implementation (Shared Chat Drawer Component)
+
+A **shared JavaScript component** provides the chat drawer for all pages, matching the Home screen. Use it instead of duplicating chat HTML/JS per page.
+
+**1. Include the script** (before your page script, typically before `</body>`):
+
+```html
+<script src="js/chat-drawer.js"></script>
+```
+
+**2. Initialize on `DOMContentLoaded`** (use `insertBefore` so the chat UI sits above the bottom nav):
+
+```javascript
+if (typeof window.GoShopMeChatDrawer !== 'undefined') {
+    window.GoShopMeChatDrawer.init({
+        openByDefault: false,    // true to open drawer on load
+        insertBefore: 'bottom-navigation'   // ID of element to insert before (usually bottom nav)
+    });
+}
+```
+
+**3. Use the API for chat triggers** (e.g. `.chat-trigger` on product cards, creator profile):
+
+```javascript
+// Open drawer and add contextual message
+window.GoShopMeChatDrawer.expandDrawer();
+window.GoShopMeChatDrawer.addContextualMessage('Tell me more about the "' + productName + '"...', [productImageUrl]);
+
+// Or use addShAIMessage (alias)
+window.GoShopMeChatDrawer.addShAIMessage(message, thumbUrls);
+```
+
+**4. ShAI avatar**: Set `window.__shaiAvatarUrl` or call `window.setShAIAvatar(url)` before init so all `[data-shai-avatar]` elements use the correct image.
+
+**Shared component elements** (full inventory, per Home.html):
+
+| Element ID | Description |
+|------------|-------------|
+| `#chat-overlay` | Full-screen overlay; tap to close drawer |
+| `#chat-drawer` | Main drawer container (messages + input) |
+| `#drag-handle-zone` | Touch target for drag (min 44px height, mobile-optimized) |
+| `#drag-handle` | Visible pill (w-10 h-1) inside zone |
+| `#chat-header` | Header with back, avatar, title, subtitle |
+| `#back-btn` | Back (shown in Add Friend view) |
+| `#chat-content` | Main chat view (messages + input) |
+| `#chat-messages` | Scrollable message list |
+| `#smart-prompts` | Quick-action chips |
+| `#message-input` | Textarea in drawer (auto-expands to 6 rows) |
+| `#cam-btn-drawer` | Camera (image/video upload) in drawer |
+| `#add-friend-btn` | Add Friend in drawer |
+| `#mic-btn` | Microphone (hold to record) in drawer |
+| `#send-btn` | Send in drawer (hidden when empty) |
+| `#add-friend-content` | Add Friend view (hidden by default) |
+| `#contact-search` | Search contacts input |
+| `#contacts-container` | Contact list (Add/Invite buttons) |
+| `#chat-input-bar` | Collapsed bar (fixed above bottom nav) |
+| `#chat-input-bar-field` | Textarea in collapsed bar |
+| `#cam-btn` | Camera in collapsed bar |
+| `#add-friend-btn-bar` | Add Friend in collapsed bar |
+| `#mic-btn-bar` | Microphone in collapsed bar |
+| `#send-btn-bar` | Send in collapsed bar |
+
+**Features included** (matching Home): Camera (image + video upload), Add Friend flow (contact list, search, Add/Invite), Voice recording (hold mic, swipe left to cancel), Auto-expand textarea (max 6 rows), Smart prompts, Overlay tap to close.
+
+**Optional**: `window.loadAddFriendContacts(data)` — pass `{ name, phone, goshopme, avatar? }[]` to replace default contacts.
+
+### Chat Drawer Dragging (Mobile Optimization)
+
+- **Touch target**: The drag handle uses a `#drag-handle-zone` wrapper with `min-h-[44px]` (Apple HIG) so the whole area is tappable on mobile.
+- **Touch handling**: `touch-action: none` and `user-select: none` on the zone prevent scroll/selection during drag; `-webkit-tap-highlight-color: transparent` removes tap flash.
+- **Events**: `touchstart` on zone (passive), `touchmove` with `preventDefault()` (passive: false), `touchend` and `touchcancel` to end drag.
+- **Transitions**: Height transitions are disabled during drag (`transition: none`) for responsive feedback.
+- **Close threshold**: When released below 25vh, drawer collapses fully; otherwise snaps to 35–90vh.
+- **Scroll**: Drawer uses `-webkit-overflow-scrolling: touch` and `overscroll-behavior: contain` for smooth mobile scrolling.
+
+**Reference pages**: `Home.html`, `Trending_Now.html`.
+
+## 7a. Creator Collections Page (Dynamic)
+
+### Data Source
+- Creator profile and collections are loaded from the database. Call `window.loadCreatorProfile(data)` with API response.
+
+### Creator Profile Data Shape
+```javascript
+{
+  id: string,
+  name: string,
+  avatar?: string,           // URL; if missing, show initials
+  tagline?: string,
+  followers?: string|number, // e.g. "47.2k" or 47200
+  isFollowing?: boolean,
+  social?: {                 // Optional; keys: instagram, tiktok, youtube, pinterest, twitter
+    instagram?: string,      // Handle or full URL
+    tiktok?: string,
+    youtube?: string,
+    pinterest?: string,
+    twitter?: string
+  },
+  collections: Array<{
+    id: string,
+    name: string,
+    coverImage: string,
+    description?: string,
+    itemCount: number,
+    priceRange?: string,
+    saves?: string,
+    badge?: "New Collection" | "Trending" | null,
+    itemThumbnails?: string[]
+  }>
+}
+```
+
+### Preload Data
+- Set `window.__creatorProfileData` before `DOMContentLoaded` to use your API data; otherwise sample data is used.
 
 ## 8. Input Fields
 
@@ -367,6 +688,15 @@ font-family: 'Poppins',
 - Container: `relative`
 - Icon position: Absolute left `left-3 top-1/2 -translate-y-1/2`
 - Icon color: `text-gray-400`
+
+### Form Validation & Error Messaging
+- **Error state**: Errored field gets red border `#EF4444` via class `.input-error`
+- **CSS**:
+  - `.input-error { border-color: #EF4444 !important; }`
+  - `.input-error:focus { --tw-ring-color: #EF4444 !important; }`
+  - `.error-msg { color: #EF4444; font-size: 12px; margin-top: 4px; }`
+- **Message**: Display contextual message below the field (e.g., "First name is required", "Please enter a valid email address")
+- **Clear**: Remove `.input-error` from field and clear/hide message when user corrects input
 
 ## 9. Badges & Indicators
 
@@ -914,38 +1244,63 @@ input:focus-visible {
 - Selected: `border-2 border-[#939BFB] bg-[#939BFB] text-white`
 - Unselected: `border border-gray-200 text-gray-900`
 
-### Contact List Items
-- Background: `bg-gray-50`
-- Padding: `p-2`
-- Border radius: `rounded-xl`
-- Avatar: `w-8 h-8 rounded-full`
-- Action button: `bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs`
+### Contact List Items (Add Friend Flow)
+- **Layout**: `flex items-center gap-2 p-2 bg-gray-50 rounded-xl`
+- **Background**: `bg-gray-50`
+- **Padding**: `p-2`
+- **Border radius**: `rounded-xl`
+- **Avatar**: `w-8 h-8 rounded-full` — dynamic display per contact:
+  - **GoShopMe user with uploaded picture**: Show avatar image (`<img src="..." class="w-full h-full object-cover">`)
+  - **GoShopMe user without picture**: Show initials in `bg-gray-200` circle (`text-gray-600 font-medium text-xs`)
+  - **Non-GoShopMe user**: Show initials in `bg-gray-200` circle until they become GoShopMe users
+- **Initials**: First letter of first name + first letter of last name (e.g. "JD" for John Doe); single word → first 2 chars
+- **Action button**: GoShopMe user → `bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium` ("Add"); non-GoShopMe → `bg-white text-[#939BFB] border border-[#939BFB] px-2 py-1 rounded-full text-xs font-medium` ("Invite")
+- **Search**: Input with search icon (Heroicons), `bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 pl-10 text-sm`
+- **Data shape**: `{ name, phone, goshopme: boolean, avatar?: string }` — call `window.loadAddFriendContacts(data)` or set `window.__addFriendContacts` before load
+- **Consistency**: Same design on Home, Creator Collections, Creator Single Collection, Creator Picks, Orders, Shopping bag, etc.
 
 ## 20. Special Behaviors
 
 ### Chat Drawer Dragging
 - Draggable via drag handle
-- Height range: 0vh to 90vh
-- Close threshold: < 30vh triggers full close
-- Smooth transitions
+- Height range: 10vh to 90vh during drag
+- **Drag to close**: When user drags down and releases with height < 25vh, drawer collapses to 100% closed (`translate-y-full`)
+- Close threshold: < 25vh triggers full close on release
+- If released above threshold: snap to 35–90vh range
+- User can close the drawer by: (1) tap on overlay, (2) **drag handle down past threshold** — both methods fully close the drawer
+- **Mobile optimization** (see Section 7): `#drag-handle-zone` with min 44px touch target, `touch-action: none`, `touchcancel` handler, transitions disabled during drag for responsiveness
 
-### Auto-growing Textarea
+### Auto-growing Textarea (Chat Input)
+- Use `<textarea>` (not `<input type="text">`) for chat input
 - Starts at 1 row
-- Grows with content
-- Max 6 rows
-- Line height: 20px
+- Grows with content; when text exceeds field width, expands to multiple rows
+- Max 6 rows (~144px)
+- Line height: 20px (or computed line-height)
+- Apply to all screens where the chat drawer persists
 
-### Voice Recording
-- Hold to record (mousedown/touchstart)
-- Release to stop (mouseup/touchend)
-- Swipe left to cancel
-- Visual feedback: Red background, scale, ring
+### Text Message Behavior (Chat Input)
+- **Enter key**: Sends message when pressed without Shift
+- **Shift+Enter**: Inserts newline (textarea default)
+- Apply to both collapsed input bar and drawer input on Home, Creator Picks, Creator Collections, etc.
 
-### Image/Video Upload
-- File input trigger
-- Supports image/* and video/*
-- Preview in chat bubble
-- ShAI response after upload
+### Auto-scroll on New Message
+- When any new message is added (user, ShAI, image, video, voice, recording bubble, etc.), scroll `#chat-messages` to bottom: `chatMessages.scrollTop = chatMessages.scrollHeight`
+- Ensures the latest content (including "Recording... swipe left to cancel") is visible
+
+### Voice Recording (Microphone Button)
+- **Hold to record**: `mousedown`/`touchstart` → start; `mouseup`/`touchend` → stop
+- **Cancel**: `mouseleave` (mouse) or swipe left >30px (touch)
+- **Visual feedback**: `scale-110`, `ring-2 ring-[#939BFB] ring-offset-2` on mic button
+- **Temporary bubble**: "Recording... swipe left to cancel" (bg-[#939BFB])
+- **Recording bubble**: waveform, play button, duration; `bg-[#939BFB]`, `rounded-full`
+- Uses `MediaRecorder`, `getUserMedia`, `Blob`, `URL.createObjectURL`
+- **ShAI reply**: After a voice message is sent, ShAI must reply within ~800ms with a contextual message (e.g. "Got your voice message! I'm on it — let me find the best options for you."). Use `addShAIMessage`, `addShaiReply`, `addContextualMessage`, or equivalent.
+- Behavior consistent across Home screen and chat drawer
+
+### Image/Video Upload (Camera Button)
+- **Tap**: Opens native file picker via `<input type="file" accept="image/*,video/*">`
+- User selects image or video from device (pictures, videos, folders via native app)
+- Selected file shown in chat as image/video bubble; ShAI responds after upload
 
 ## 21. Grid Systems
 
@@ -959,6 +1314,15 @@ input:focus-visible {
 - Vertical stack with `space-y-2`
 
 ## 22. Image Handling
+
+### ShAI Avatar (Chat Assistant)
+- **Asset**: `assets/shai-avatar.png` — hardcoded path for ShAI (shopping assistant) avatar
+- **Location**: Project root `assets/` folder
+- **Sizes**: Header `w-8 h-8`; message bubbles `w-8 h-8` or `w-10 h-10`
+- **Classes**: `rounded-full object-cover flex-shrink-0`
+- **Attribute**: `data-shai-avatar` for dynamic updates
+- **Fallback**: "AI" text in gray circle when image fails
+- **Screens**: Home, Trending Now, Picks, Wishlist, Product details, Shopping bag, Orders, Notifications, Creator Collections, Creator Single Collection, ShopbyCategory, Return Details, Orders Empty State, Shopping bag empty state, Group chat
 
 ### Avatar Images
 - Size: `w-8 h-8` or `w-10 h-10`
@@ -1382,6 +1746,21 @@ Here's the complete CSS file that can be copied directly into your project:
     animation-delay: calc(var(--i) * 0.08s);
 }
 ```
+
+## 27a. Global Components – Script Checklist
+
+When creating or amending screens, include these scripts as needed:
+
+| Component | Script | When to use |
+|-----------|--------|-------------|
+| Header bell + bag + badges | `js/header-icons-badges.js` | All screens with header (use `#header-icons-slot` or own HTML with IDs) |
+| Bottom navigation | `js/bottom-nav.js` | All main app screens (Home, Picks, Wishlist, Profile, Orders, etc.) |
+| Back button (history.back) | `js/back-button.js` | Screens with header back button |
+| Chat drawer | `js/chat-drawer.js` | Screens with ShAI chat |
+| Chat drawer mobile drag | `css/chat-drawer-drag.css` | Screens with chat drawer |
+| Global components CSS | `css/global-components.css` | Screens using header icons, bottom nav, badges |
+
+**Back button**: Use `class="goshopme-back-btn"` and `data-fallback="URL"` — never hardcode `href` to a specific page; use `history.back()`.
 
 ## 28. HTML Head Setup
 
