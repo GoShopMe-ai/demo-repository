@@ -49,6 +49,12 @@
           overscroll-behavior: contain;
           -webkit-overflow-scrolling: touch;
         }
+        /* Drag handle: tell the browser upfront not to scroll here */
+        #drag-handle-zone, .chat-drawer-drag-zone {
+          touch-action: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
         ::-webkit-scrollbar { display: none; }
        * { 
     font-family: 'DM Sans', 
@@ -1106,9 +1112,8 @@ document.addEventListener("DOMContentLoaded", function () {
         isDrawerExpanded = true;
         currentHeight = 80;
         chatDrawer.style.height = '50vh';
-        // Lock main page scroll while drawer is open
+        // Lock main page scroll while drawer is open (overflow only — touchAction interferes with drag)
         document.body.style.overflow = 'hidden';
-        document.body.style.touchAction = 'none';
     }
 
     function collapseDrawer() {
@@ -1124,7 +1129,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         // Restore main page scroll
         document.body.style.overflow = '';
-        document.body.style.touchAction = '';
     }
 
     if (chatOverlay) {
@@ -1134,51 +1138,74 @@ document.addEventListener("DOMContentLoaded", function () {
     // Open drawer by default
     expandDrawer();
 
-    // === Dragging Drawer (Pointer Events — works for both touch & mouse) ===
+    // === Dragging Drawer ===
+    // Uses native touch events directly on the drag zone — most reliable on Android Chrome.
+    // Pointer Events API was avoided because setPointerCapture freezes when body.overflow=hidden.
     const CLOSE_THRESHOLD = 30;
+    let dragStartY = 0;
+    let dragStartH = 0;
 
-    if (dragHandleZone) {
-        // touch-action:none lets us capture pointermove without passive restrictions
-        dragHandleZone.style.touchAction = "none";
-        dragHandleZone.style.userSelect  = "none";
-        dragHandleZone.style.cursor      = "grab";
-        // Make the grab zone taller so it is easy to hit on mobile
-        dragHandleZone.style.paddingTop    = "12px";
-        dragHandleZone.style.paddingBottom = "12px";
-
-        dragHandleZone.addEventListener("pointerdown", e => {
-            isDragging = true;
-            startY = e.clientY;
-            dragHandleZone.setPointerCapture(e.pointerId);
-            // Disable drawer height transition while dragging for smoothness
-            chatDrawer.style.transition = "none";
-        });
-
-        dragHandleZone.addEventListener("pointermove", e => {
-            if (!isDragging) return;
-            const deltaY = startY - e.clientY;
-            startY = e.clientY;
-            currentHeight = Math.min(90, Math.max(10, currentHeight + (deltaY / window.innerHeight) * 100));
-            chatDrawer.style.height = currentHeight + "vh";
-        });
-
-        dragHandleZone.addEventListener("pointerup", handleDragEnd);
-        dragHandleZone.addEventListener("pointercancel", handleDragEnd);
-    }
-
-    function handleDragEnd() {
+    function onDragEnd() {
         if (!isDragging) return;
         isDragging = false;
-        // Re-enable transition for snap animation
-        chatDrawer.style.transition = "";
-        const rect = chatDrawer.getBoundingClientRect();
-        const h = (rect.height / window.innerHeight) * 100;
+        chatDrawer.style.transition = "";          // re-enable snap animation
+        const h = (chatDrawer.getBoundingClientRect().height / window.innerHeight) * 100;
         if (h < CLOSE_THRESHOLD) {
             collapseDrawer();
         } else {
             currentHeight = Math.max(35, Math.min(90, h));
             chatDrawer.style.height = currentHeight + "vh";
         }
+    }
+
+    if (dragHandleZone) {
+        dragHandleZone.style.userSelect = "none";
+        dragHandleZone.style.cursor     = "grab";
+        dragHandleZone.style.paddingTop    = "14px";
+        dragHandleZone.style.paddingBottom = "14px";
+
+        // --- Touch (mobile) ---
+        dragHandleZone.addEventListener("touchstart", e => {
+            isDragging   = true;
+            dragStartY   = e.touches[0].clientY;
+            dragStartH   = chatDrawer.getBoundingClientRect().height;
+            chatDrawer.style.transition = "none";
+        }, { passive: true });
+
+        dragHandleZone.addEventListener("touchmove", e => {
+            if (!isDragging) return;
+            e.preventDefault();                    // stop page scroll during drag
+            const dy   = e.touches[0].clientY - dragStartY;
+            const newH = Math.max(80, Math.min(window.innerHeight * 0.92, dragStartH - dy));
+            chatDrawer.style.height = newH + "px";
+            currentHeight = (newH / window.innerHeight) * 100;
+        }, { passive: false });
+
+        dragHandleZone.addEventListener("touchend",    onDragEnd, { passive: true });
+        dragHandleZone.addEventListener("touchcancel", onDragEnd, { passive: true });
+
+        // --- Mouse (desktop testing) ---
+        dragHandleZone.addEventListener("mousedown", e => {
+            isDragging  = true;
+            dragStartY  = e.clientY;
+            dragStartH  = chatDrawer.getBoundingClientRect().height;
+            chatDrawer.style.transition = "none";
+
+            function onMouseMove(ev) {
+                if (!isDragging) return;
+                const dy   = ev.clientY - dragStartY;
+                const newH = Math.max(80, Math.min(window.innerHeight * 0.92, dragStartH - dy));
+                chatDrawer.style.height = newH + "px";
+                currentHeight = (newH / window.innerHeight) * 100;
+            }
+            function onMouseUp() {
+                document.removeEventListener("mousemove", onMouseMove);
+                document.removeEventListener("mouseup",  onMouseUp);
+                onDragEnd();
+            }
+            document.addEventListener("mousemove", onMouseMove);
+            document.addEventListener("mouseup",  onMouseUp);
+        });
     }
 
     const addFriendContent = document.getElementById("add-friend-content");
