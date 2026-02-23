@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -108,7 +108,7 @@
     <header id="app-header" class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
         <div class="flex items-center justify-between px-4 py-3">
             <div class="flex items-center space-x-3">
-                <a href="Creator`s Picks.html" class="p-1 rounded-full hover:bg-gray-100 transition-colors" aria-label="Back to Picks">
+                <a href="Picks.html" class="p-1 rounded-full hover:bg-gray-100 transition-colors" aria-label="Back to Picks">
                     <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
                     </svg>
@@ -152,8 +152,8 @@
                             <span id="creator-avatar-initials" class="text-gray-500 text-lg font-medium">?</span>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h2 id="creator-name" class="text-lg font-fahkwang font-bold text-black truncate">â€”</h2>
-                            <p id="creator-tagline" class="text-sm text-gray-600 mb-1 truncate">â€”</p>
+                            <h2 id="creator-name" class="text-lg font-fahkwang font-bold text-black truncate">—</h2>
+                            <p id="creator-tagline" class="text-sm text-gray-600 mb-1 truncate">—</p>
                             <div class="flex items-center space-x-4 flex-wrap gap-y-1">
                                 <span id="creator-followers" class="text-xs text-gray-500">0 followers</span>
                                 <div id="creator-social-links" class="flex items-center space-x-2">
@@ -291,7 +291,7 @@
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
                 <span class="text-xs">Home</span>
             </a>
-            <a href="Creator`s Picks.html" class="bottom-nav-btn active">
+            <a href="Picks.html" class="bottom-nav-btn active">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
                 <span class="text-xs">Picks</span>
             </a>
@@ -423,7 +423,7 @@
 
             if (pageTitle) pageTitle.textContent = creator.name + ' Collections';
             if (creatorName) creatorName.textContent = creator.name;
-            if (creatorTagline) creatorTagline.textContent = creator.tagline || 'â€”';
+            if (creatorTagline) creatorTagline.textContent = creator.tagline || '—';
             if (creatorFollowers) {
                 const n = typeof creator.followers === 'number' ? creator.followers : parseFloat(String(creator.followers).replace(/[kKmM]/g, '')) || 0;
                 creatorFollowers.textContent = n >= 1000 ? (n / 1000).toFixed(1) + 'k followers' : n + ' followers';
@@ -474,7 +474,7 @@
                     } else {
                         coverHtml = '<img class="w-full h-48 object-cover" src="' + coverUrl.replace(/"/g, '&quot;') + '" alt="' + (c.name || '') + ' collection"/>';
                     }
-                    return '<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer" onclick="openCollectionDetail(\'' + (c.name || '').replace(/'/g, "\\'") + '\')"><div class="relative">' + coverHtml + '<div class="absolute top-3 right-3 flex space-x-2"><button type="button" class="wishlist-btn hover:opacity-70 transition-opacity" data-collection="' + slug + '" onclick="event.stopPropagation(); toggleCollectionWishlist(this)"><svg class="w-[18px] h-[18px] text-white' + (isWishlisted ? ' heart-filled' : '') + '" fill="' + (isWishlisted ? '#939BFB' : 'none') + '" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button><button type="button" class="hover:opacity-70 transition-opacity" onclick="event.stopPropagation(); shareCollection(\'' + (c.name || '').replace(/'/g, "\\'") + '\')"><svg class="w-[18px] h-[18px] text-white share-icon-tilted" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg></button><button type="button" class="chat-trigger hover:opacity-70 transition-opacity" data-collection="' + (c.name || '').replace(/"/g, '&quot;') + '"><svg class="w-[18px] h-[18px] text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.671 1.09-.085 2.17-.207 3.238-.364 1.584-.233 2.707-1.627 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg></button></div>' + badgeHtml + '</div><div class="p-4"><h4 class="text-lg font-fahkwang font-bold text-black mb-2">' + (c.name || '') + '</h4><p class="text-sm text-gray-600 mb-3">' + (c.itemCount || 0) + ' items' + (c.description ? ' â€¢ ' + c.description : '') + '</p><div class="flex items-center justify-between"><div class="flex items-center space-x-3"><div class="flex -space-x-2">' + thumbHtml + '</div><span class="text-sm text-gray-500">' + (c.saves || '0 saves') + '</span></div><span class="text-sm font-medium text-primary">' + (c.priceRange || '') + '</span></div></div></div>';
+                    return '<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer" onclick="openCollectionDetail(\'' + (c.name || '').replace(/'/g, "\\'") + '\')"><div class="relative">' + coverHtml + '<div class="absolute top-3 right-3 flex space-x-2"><button type="button" class="wishlist-btn hover:opacity-70 transition-opacity" data-collection="' + slug + '" onclick="event.stopPropagation(); toggleCollectionWishlist(this)"><svg class="w-[18px] h-[18px] text-white' + (isWishlisted ? ' heart-filled' : '') + '" fill="' + (isWishlisted ? '#939BFB' : 'none') + '" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button><button type="button" class="hover:opacity-70 transition-opacity" onclick="event.stopPropagation(); shareCollection(\'' + (c.name || '').replace(/'/g, "\\'") + '\')"><svg class="w-[18px] h-[18px] text-white share-icon-tilted" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg></button><button type="button" class="chat-trigger hover:opacity-70 transition-opacity" data-collection="' + (c.name || '').replace(/"/g, '&quot;') + '"><svg class="w-[18px] h-[18px] text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.671 1.09-.085 2.17-.207 3.238-.364 1.584-.233 2.707-1.627 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg></button></div>' + badgeHtml + '</div><div class="p-4"><h4 class="text-lg font-fahkwang font-bold text-black mb-2">' + (c.name || '') + '</h4><p class="text-sm text-gray-600 mb-3">' + (c.itemCount || 0) + ' items' + (c.description ? ' • ' + c.description : '') + '</p><div class="flex items-center justify-between"><div class="flex items-center space-x-3"><div class="flex -space-x-2">' + thumbHtml + '</div><span class="text-sm text-gray-500">' + (c.saves || '0 saves') + '</span></div><span class="text-sm font-medium text-primary">' + (c.priceRange || '') + '</span></div></div></div>';
                 }).join('') : '<div class="text-center py-12 text-gray-500 text-sm">No collections yet</div>';
             }
             window.__creatorCollections = collections;
@@ -773,7 +773,7 @@
                         const tb = document.createElement('div');
                         tb.id = 'temp-recording';
                         tb.className = 'flex justify-end mb-2';
-                        tb.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%] shadow-sm animate-pulse"><span class="mr-2" aria-hidden="true">ðŸŽ™ï¸</span><span class="text-xs font-medium">Recording... swipe left to cancel</span></div>';
+                        tb.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%] shadow-sm animate-pulse"><span class="mr-2" aria-hidden="true">🎙️</span><span class="text-xs font-medium">Recording... swipe left to cancel</span></div>';
                         cnt.appendChild(tb);
                         scrollChatToBottom();
                     }
@@ -875,7 +875,7 @@
                     }
                     hideAddFriendFlow();
                 } else if (e.target.textContent === 'Invite') {
-                    const d = { title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me", url: 'https://app.goshopme.ai' };
+                    const d = { title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me", url: 'https://app.goshopme.ai' };
                     if (navigator.share) navigator.share(d).catch(() => {}); else if (navigator.clipboard) navigator.clipboard.writeText(d.text + ' ' + d.url);
                     hideAddFriendFlow();
                     const cnt = chatMessages.querySelector('.p-4');
