@@ -933,6 +933,10 @@ document.addEventListener('DOMContentLoaded', loadHomeData);
       ta.value = '';
       autoResize();
       updateButtons();
+      // Trigger ShAI contextual reply for text messages
+      setTimeout(function() {
+        if (typeof window.__shaiReplyToText === 'function') window.__shaiReplyToText();
+      }, 1000);
     };
 
     // Events
@@ -1105,7 +1109,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 sendMessage(inputEl, mic, add, send);
             }
         });
-        send.addEventListener("click", () => sendMessage(inputEl, mic, add, send));
+        // sendNow (from upgradeToAutoGrowTextarea) already handles click; skip duplicate
     });
 
     // === Drawer Expand/Collapse (authoritative, default 80%) ===
@@ -1332,8 +1336,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    sendBtn.addEventListener("click", () => sendMessageLegacy(chatInput, micBtn, addFriendBtn, sendBtn));
-    sendBtnDrawer.addEventListener("click", () => sendMessageLegacy(chatInputDrawer, micBtnDrawer, addFriendBtnDrawer, sendBtnDrawer));
+    // Legacy duplicate handlers removed — sendNow handles both inputs via upgradeToAutoGrowTextarea
 
     chatInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
@@ -1606,6 +1609,12 @@ function removeTempRecordingBubble() {
         setTimeout(() => addShAIMessage("Got your voice message! I'm on it — let me find the best options for you."), 800);
     }
 }
+    // Expose ShAI helpers globally so sendNow (which runs before DOMContentLoaded) can call them
+    window.addShAIMessage = addShAIMessage;
+    window.__shaiReplyToText = function() {
+        addShAIMessage("Perfect! Let me help you find exactly what you're looking for. I'll show you some great options that match your style.");
+    };
+
     window.toggleVoicePlayback = function(button, audioUrl) {
         const container = button.closest('.voice-message-bubble');
         const audio = container.querySelector('audio');
