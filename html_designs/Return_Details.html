@@ -598,7 +598,7 @@ function toggleTimeline() {
   function loadShaiAvatarFromDb() {
     if (window.__shaiAvatarUrl) { setShaiAvatarFromDb(window.__shaiAvatarUrl); return; }
     if (window.location.protocol === 'file:') {
-      try { var cached = localStorage.getItem('shaiAvatar'); if (cached) setShaiAvatarFromDb(cached); else setShaiAvatarFromDb('..../assets/shai-avatar.png'); } catch (e) { setShaiAvatarFromDb('..../assets/shai-avatar.png'); }
+      try { var cached = localStorage.getItem('shaiAvatar'); if (cached) setShaiAvatarFromDb(cached); else setShaiAvatarFromDb('https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png'); } catch (e) { setShaiAvatarFromDb('https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png'); }
       return;
     }
     var endpoint = window.__shaiAvatarEndpoint || '/api/avatar/shai';
