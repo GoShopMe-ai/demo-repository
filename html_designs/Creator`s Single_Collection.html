@@ -33,7 +33,40 @@
         }
     </script>
     <style>
-        ::-webkit-scrollbar { display: none; }
+        
+/* ---- MOBILE FULL-WIDTH OVERRIDE (match Home) ---- */
+@media screen and (max-width: 768px) {
+  #app-shell, #main-content, #auth-screen, #welcome_screen, #quiz-screen, #onboarding-screen,
+  #bottom-nav, #bottom-navigation, #header, #app-header,
+  #chat-drawer, #chat-input-bar, #shai-chat-drawer, #return-chat-drawer, #return-chat-input-bar, #chat-input-collapsed,
+  #shai-chat-drawer-wrapper, #chat-drawer-wrapper,
+  body > div, body > main {
+    max-width: 100vw !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-shadow: none !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+  }
+  [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]) {
+    left: 0 !important;
+    right: 0 !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+  #chat-drawer.translate-y-full, #shai-chat-drawer.translate-y-full, #return-chat-drawer.translate-y-full {
+    transform: translateY(100%) !important;
+  }
+  #bottom-nav > div, #bottom-navigation > div, nav#bottom-nav > div, nav#bottom-navigation > div {
+    padding-top: 2px !important;
+    padding-bottom: 24px !important;
+  }
+}
+
+::-webkit-scrollbar { display: none; }
         * { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         .poppins { font-family: 'Poppins', sans-serif; }
@@ -789,7 +822,7 @@
                     contextMessage.className = 'flex items-start space-x-3 mb-4';
                     const collectionName = window.__currentCollectionName || '';
                     const collectionPart = collectionName ? ' from the "' + collectionName + '" collection' : '';
-                    contextMessage.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" data-shai-avatar></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs"><p class="text-sm text-black">Looking at: ' + productName + ' by ' + brandName + ' â€“ ' + price + collectionPart + '. Want it in another size or color? I can also show you similar styles!</p></div>';
+                    contextMessage.innerHTML = '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" data-shai-avatar></div><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-xs"><p class="text-sm text-black">Looking at: ' + productName + ' by ' + brandName + ' "“ ' + price + collectionPart + '. Want it in another size or color? I can also show you similar styles!</p></div>';
                     cnt.appendChild(contextMessage);
                     scrollChatToBottom();
                 }
