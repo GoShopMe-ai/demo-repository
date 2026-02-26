@@ -1,5 +1,5 @@
 /**
- * shai-chat.js â€” Self-contained ShAI Chat System
+ * shai-chat.js - Self-contained ShAI Chat System
  * Drop <script src="js/shai-chat.js"></script> into any GoShopMe screen.
  * The script injects the overlay, drawer, and collapsed input bar,
  * then wires up all interactions: text, image/video, voice recording,
@@ -10,12 +10,12 @@
 
   const SHAI_AVATAR = 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
 
-  /* â”€â”€ Skip if a full drawer already exists on this page â”€â”€ */
+  /* ------ Skip if a full drawer already exists on this page ------ */
   if (document.getElementById('chat-drawer')) return;
 
-  /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  /* ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
      1. INJECT HTML
-     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+     --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
   function inject() {
     /* Remove any partial input bar already present */
     const old = document.querySelector('[id$="chat-input-bar"], #chat-input-collapsed');
@@ -27,11 +27,11 @@
 
 <!-- ShAI drawer -->
 <div id="chat-drawer"
-     class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px]
+     class="fixed left-1/2 -translate-x-1/2 w-full max-w-[390px]
             bg-white rounded-t-3xl shadow-2xl z-50 h-[50vh]
             transform translate-y-full transition-transform duration-300
             flex flex-col border-t border-gray-100"
-     style="max-height:calc(100dvh - 144px)">
+     style="max-height:calc(100dvh - 144px);bottom:80px">
 
   <!-- Drag handle -->
   <div id="drag-handle-zone"
@@ -120,8 +120,9 @@
 
 <!-- Collapsed input bar -->
 <div id="chat-input-bar"
-     class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px]
-            bg-white border-t border-gray-100 p-4 z-30">
+     class="fixed left-1/2 -translate-x-1/2 w-full max-w-[390px]
+            bg-white border-t border-gray-100 p-4 z-30"
+     style="bottom:80px">
   <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
     <button id="shai-cam-bar" class="hover:opacity-70 transition-opacity" aria-label="Image/video">
       <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
@@ -154,16 +155,16 @@
     if (!document.getElementById('shai-dock-rule')) {
       var ds = document.createElement('style');
       ds.id = 'shai-dock-rule';
-      ds.textContent = '#chat-drawer,#chat-input-bar{bottom:var(--shai-nav-h,64px)!important}';
+      ds.textContent = '#chat-drawer,#chat-input-bar{bottom:var(--shai-nav-h,88px)!important}';
       document.head.appendChild(ds);
     }
 
     document.body.insertAdjacentHTML('beforeend', html);
   }
 
-  /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  /* ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
      2. INIT LOGIC (runs after HTML is injected)
-     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+     --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
   function init() {
     const drawer      = document.getElementById('chat-drawer');
     const overlay     = document.getElementById('chat-overlay');
@@ -188,7 +189,7 @@
     let isOpen = false, isDragging = false, dragStartY = 0, dragStartH = 0;
     let isRecording = false, mediaRecorder, audioChunks = [], mediaStream, micDenied = false, startX;
 
-    /* â”€â”€ Drawer open / close â”€â”€ */
+    /* ------ Drawer open / close ------ */
     function openDrawer() {
       drawer.classList.remove('translate-y-full');
       overlay.classList.remove('hidden');
@@ -211,13 +212,13 @@
       if (!e.target.closest('button')) openDrawer();
     });
 
-    /* â”€â”€ Auto-grow textarea helper â”€â”€ */
+    /* ------ Auto-grow textarea helper ------ */
     function autoGrow(ta) {
       ta.style.height = 'auto';
       ta.style.height = Math.min(ta.scrollHeight, 144) + 'px';
     }
 
-    /* â”€â”€ Button visibility based on input content â”€â”€ */
+    /* ------ Button visibility based on input content ------ */
     function updateButtons(input, send, mic, add) {
       const has = input.value.trim().length > 0;
       send.classList.toggle('hidden', !has);
@@ -239,12 +240,12 @@
       send.addEventListener('click', function () { sendText(ta, send, mic, add, i === 1); });
     });
 
-    /* â”€â”€ Scroll to bottom â”€â”€ */
+    /* ------ Scroll to bottom ------ */
     function scrollBottom() {
       if (messages) requestAnimationFrame(function () { messages.scrollTop = messages.scrollHeight; });
     }
 
-    /* â”€â”€ Add ShAI reply bubble â”€â”€ */
+    /* ------ Add ShAI reply bubble ------ */
     function shaiReply(text) {
       if (!msgContainer) return;
       const div = document.createElement('div');
@@ -255,7 +256,7 @@
       scrollBottom();
     }
 
-    /* â”€â”€ Send text message â”€â”€ */
+    /* ------ Send text message ------ */
     function sendText(ta, send, mic, add, openAfter) {
       const text = ta.value.trim();
       if (!text) return;
@@ -271,7 +272,7 @@
       setTimeout(function () { shaiReply("Perfect! Let me help you find exactly what you're looking for."); }, 1000);
     }
 
-    /* â”€â”€ Smart prompt chips â”€â”€ */
+    /* ------ Smart prompt chips ------ */
     document.querySelectorAll('.shai-prompt').forEach(function (btn) {
       btn.addEventListener('click', function () {
         openDrawer();
@@ -286,7 +287,7 @@
       });
     });
 
-    /* â”€â”€ Camera / file picker â”€â”€ */
+    /* ------ Camera / file picker ------ */
     function pickFile(openFirst) {
       if (openFirst) openDrawer();
       const input = document.createElement('input');
@@ -313,7 +314,7 @@
     camDrawer.addEventListener('click', function () { pickFile(false); });
     camBar.addEventListener('click', function () { pickFile(true); });
 
-    /* â”€â”€ Voice recording â”€â”€ */
+    /* ------ Voice recording ------ */
     function setupMic(btn) {
       btn.addEventListener('mousedown', startRec);
       btn.addEventListener('touchstart', startRec, { passive: false });
@@ -414,7 +415,7 @@
       }
     };
 
-    /* â”€â”€ Drag to resize â”€â”€ */
+    /* ------ Drag to resize ------ */
     dragZone.addEventListener('touchstart', function (e) {
       isDragging = true; dragStartY = e.touches[0].clientY;
       dragStartH = drawer.getBoundingClientRect().height;
@@ -449,7 +450,7 @@
       document.addEventListener('mouseup', mu);
     });
 
-    /* â”€â”€ Toast helper â”€â”€ */
+    /* ------ Toast helper ------ */
     function showToast(msg) {
       var t = document.createElement('div');
       t.style.cssText = 'position:fixed;bottom:120px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;z-index:9999;max-width:80vw;text-align:center';
@@ -458,7 +459,7 @@
       setTimeout(function () { t.remove(); }, 3500);
     }
 
-    /* â”€â”€ Inject wave animation keyframes â”€â”€ */
+    /* ------ Inject wave animation keyframes ------ */
 
     /* -- Add-friend panel -- */
     var friendPanel = document.getElementById('shai-friend-panel');
@@ -591,7 +592,7 @@
     }
   }
 
-  /* â”€â”€ Run on DOM ready â”€â”€ */
+  /* ------ Run on DOM ready ------ */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () { inject(); init(); });
   } else {

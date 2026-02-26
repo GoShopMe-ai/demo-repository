@@ -1,4 +1,4 @@
-/**
+﻿/**
  * GoShopMe Shared Chat Drawer Component
  * Based on Home.html implementation. Use on any page that needs the ShAI chat drawer.
  * 
@@ -196,7 +196,7 @@
         var userAvatar = '';
         try { userAvatar = localStorage.getItem('profilePhoto') || ''; } catch (e) {}
         var avatarHtml = '<div class="flex -space-x-2 mr-3">';
-        avatarHtml += '<img src="' + (userAvatar || 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg') + '" alt="You" class="w-8 h-8 rounded-full border-2 border-white object-cover" onerror="this.src=\'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg\'">';
+        avatarHtml += '<img src="' + (userAvatar || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-5.jpg') + '" alt="You" class="w-8 h-8 rounded-full border-2 border-white object-cover" onerror="this.src=\'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-5.jpg\'">';
         participants.forEach(function(p) {
             var av = (p.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent((p.name || 'U').split(' ')[0]) + '&background=939BFB&color=fff').replace(/"/g, '&quot;');
             avatarHtml += '<img src="' + av + '" alt="' + (p.name || '').replace(/"/g, '&quot;') + '" class="w-8 h-8 rounded-full border-2 border-white object-cover">';
@@ -333,9 +333,9 @@
 
         if (typeof window.__addFriendContacts === 'undefined') {
             window.__addFriendContacts = [
-                { name: 'Alex Johnson', phone: '+1 (555) 123-4567', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg' },
+                { name: 'Alex Johnson', phone: '+1 (555) 123-4567', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-2.jpg' },
                 { name: 'Maria Rodriguez', phone: '+1 (555) 987-6543', goshopme: false },
-                { name: 'David Kim', phone: '+1 (555) 456-7890', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg' },
+                { name: 'David Kim', phone: '+1 (555) 456-7890', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-3.jpg' },
                 { name: 'Sarah Thompson', phone: '+1 (555) 234-5678', goshopme: false }
             ];
         }

@@ -1,7 +1,7 @@
 {
   "hero": {
     "mediaType": "image",
-    "imageUrl": "https://storage.googleapis.com/uxpilot-auth.appspot.com/679e3cd9c0-57bff49eadf03dd76c2d.png",
+    "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/679e3cd9c0-57bff49eadf03dd76c2d.png",
     "videoUrl": null,
     "posterUrl": null,
     "title": "Explore by Category",
@@ -13,8 +13,8 @@
     { "id": "bags", "name": "Bags", "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/bags.jpg", "alt": "Bags", "badge": null },
     { "id": "workwear", "name": "Workwear", "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Workwear.jpg", "alt": "Workwear", "badge": null },
     { "id": "swimwear", "name": "Swimwear", "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/swimwear%201.jpg", "alt": "Swimwear", "badge": null },
-    { "id": "beauty", "name": "Beauty", "imageUrl": "https://storage.googleapis.com/uxpilot-auth.appspot.com/fe64037ddd-2c7840117cc2911d537b.png", "alt": "Beauty", "badge": null },
+    { "id": "beauty", "name": "Beauty", "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/fe64037ddd-2c7840117cc2911d537b.png", "alt": "Beauty", "badge": null },
     { "id": "wellness", "name": "Wellness", "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Wellness.jpg", "alt": "Wellness", "badge": null },
-    { "id": "sale", "name": "Sale", "imageUrl": "https://storage.googleapis.com/uxpilot-auth.appspot.com/179cee2d51-68640f3705cf734d5d3e.png", "alt": "Sale", "badge": "Up to 50% off" }
+    { "id": "sale", "name": "Sale", "imageUrl": "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/179cee2d51-68640f3705cf734d5d3e.png", "alt": "Sale", "badge": "Up to 50% off" }
   ]
 }

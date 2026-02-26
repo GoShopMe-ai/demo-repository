@@ -123,8 +123,8 @@ body {
     width: 100% !important;
   }
 
-  /* Tailwind centering trick: left-1/2 + -translate-x-1/2 */
-  [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]) {
+  /* Tailwind centering trick: left-1/2 + -translate-x-1/2 (exclude chat drawers/bars - they need transform for slide) */
+  [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]):not(#chat-drawer):not(#chat-input-bar):not(#chat-overlay):not(#orders-chat-drawer):not(#orders-chat-input-bar):not(#return-chat-drawer):not(#return-chat-input-bar):not(#notif-chat-drawer):not(#notif-chat-input-bar) {
     left:      0 !important;
     right:     0 !important;
     max-width: 100vw !important;
@@ -159,26 +159,33 @@ body {
     padding-bottom: 24px !important;
   }
 
-  /* Chat drawer and input bar: full-width, no centering offset */
+  /* Chat drawer and input bar: full-width, docked to bottom nav (no gap) */
   #chat-drawer,
   #chat-input-bar,
   #chat-input-collapsed,
   #shai-chat-drawer,
   #return-chat-drawer,
   #return-chat-input-bar,
+  #orders-chat-drawer,
+  #orders-chat-input-bar,
+  #notif-chat-drawer,
+  #notif-chat-input-bar,
   #shai-chat-drawer-wrapper,
   #chat-drawer-wrapper {
     left: 0 !important;
     right: 0 !important;
     max-width: 100vw !important;
     width: 100% !important;
+    bottom: var(--shai-nav-h, 64px) !important;
     overscroll-behavior: contain;
   }
 
   /* Re-apply Y slide when drawer is hidden (translate-y-full) */
   #chat-drawer.translate-y-full,
   #shai-chat-drawer.translate-y-full,
-  #return-chat-drawer.translate-y-full {
+  #return-chat-drawer.translate-y-full,
+  #orders-chat-drawer.translate-y-full,
+  #notif-chat-drawer.translate-y-full {
     transform: translateY(100%) !important;
   }
 
@@ -186,6 +193,7 @@ body {
   #chat-drawer,
   #shai-chat-drawer,
   #return-chat-drawer,
+  #orders-chat-drawer,
   [id$="-drawer"] {
     max-height: calc(100dvh - 144px) !important;
   }
@@ -195,9 +203,23 @@ body {
 /* =============================================================
    3b. CHAT DRAWER SCROLL & TOUCH (all viewports)
    ============================================================= */
+/* Dock to bottom nav: no gap between drawer/input bar and nav */
+#chat-drawer,
+#chat-input-bar,
+#shai-chat-drawer,
+#return-chat-drawer,
+#return-chat-input-bar,
+#orders-chat-drawer,
+#orders-chat-input-bar,
+#notif-chat-drawer,
+#notif-chat-input-bar {
+  bottom: var(--shai-nav-h, 64px) !important;
+}
+
 #chat-drawer,
 #shai-chat-drawer,
 #return-chat-drawer,
+#orders-chat-drawer,
 [id$="-drawer"] {
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;

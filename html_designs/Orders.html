@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="stylesheet" href="css/mobile-optimization.css">
-    <title>Orders â€“ GoShopMe</title>
+    <title>Orders "“ GoShopMe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -27,7 +27,46 @@
     <link rel="stylesheet" href="css/chat-drawer-drag.css">
     <script src="js/back-button.js"></script>
     <style>
-        ::-webkit-scrollbar { display: none; }
+        
+/* ---- MOBILE FULL-WIDTH OVERRIDE (match Home) - chat drawers excluded from transform so they work ---- */
+@media screen and (max-width: 768px) {
+  #app-shell, #main-content, #auth-screen, #welcome_screen, #quiz-screen, #onboarding-screen,
+  #bottom-nav, #bottom-navigation, #header, #app-header,
+  #chat-drawer, #chat-input-bar, #shai-chat-drawer, #return-chat-drawer, #return-chat-input-bar, #chat-input-collapsed,
+  #shai-chat-drawer-wrapper, #chat-drawer-wrapper,
+  body > main {
+    max-width: 100vw !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-shadow: none !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+  }
+  body > div:not(#chat-overlay):not(#chat-drawer):not(#chat-input-bar), body > main {
+    max-width: 100vw !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-shadow: none !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+  }
+  [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]) {
+    left: 0 !important;
+    right: 0 !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+  #chat-drawer.translate-y-full, #shai-chat-drawer.translate-y-full, #return-chat-drawer.translate-y-full {
+    transform: translateY(100%) !important;
+  }
+}
+
+::-webkit-scrollbar { display: none; }
         * { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
@@ -45,7 +84,6 @@
         .voice-message-bubble { min-width: 140px; max-width: 260px; width: fit-content; display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 16px; }
         @keyframes wavePulse { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
         .wave-bar.playing { animation: wavePulse 1.1s ease-in-out infinite; }
-        #orders-drag-handle-area { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; min-height: 44px; }
         .return-checkbox { appearance: none; -webkit-appearance: none; width: 1rem; height: 1rem; border: 2px solid #d1d5db; border-radius: 0.25rem; background: white; cursor: pointer; flex-shrink: 0; }
         .return-checkbox:checked { background-color: #939BFB; border-color: #939BFB; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E"); background-size: 75% 75%; background-position: center; background-repeat: no-repeat; }
         .header-icon-btn { transition: transform 0.2s ease, color 0.2s ease; }
@@ -56,16 +94,16 @@
 <div class="w-full max-w-[390px] mx-auto min-h-screen bg-white shadow-2xl relative">
 <script>
 (function(){var BADGE_KEYS={notif:'goshopme_notif_count',cart:'goshopme_cart_count'};var cartCountValue=0,notifCountValue=0;function getBadgeElements(){return{cartIndicator:document.getElementById('cart-indicator'),cartCount:document.getElementById('cart-count'),notifIndicator:document.getElementById('notif-indicator'),notifCount:document.getElementById('notif-count')};}function updateCartBadge(){var el=getBadgeElements();if(!el.cartIndicator||!el.cartCount)return;var show=cartCountValue>0;el.cartIndicator.classList.toggle('hidden',!show);el.cartIndicator.classList.toggle('flex',show);el.cartCount.textContent=show?(cartCountValue>99?'99+':cartCountValue):'';try{localStorage.setItem(BADGE_KEYS.cart,String(cartCountValue));localStorage.setItem('__cartCount',String(cartCountValue));}catch(e){}}function updateNotifBadge(){var el=getBadgeElements();if(!el.notifIndicator||!el.notifCount)return;var show=notifCountValue>0;el.notifIndicator.classList.toggle('hidden',!show);el.notifIndicator.classList.toggle('flex',show);el.notifCount.textContent=show?(notifCountValue>99?'99+':notifCountValue):'';try{localStorage.setItem(BADGE_KEYS.notif,String(notifCountValue));localStorage.setItem('notifCount',String(notifCountValue));}catch(e){}}window.updateCartBadge=updateCartBadge;window.updateNotifBadge=updateNotifBadge;window.testBadges=function(notif,cart){notifCountValue=Math.max(0,notif!=null?notif:5);cartCountValue=Math.max(0,cart!=null?cart:3);updateNotifBadge();updateCartBadge();};window.resetBadges=function(){cartCountValue=0;notifCountValue=0;try{localStorage.setItem(BADGE_KEYS.notif,'0');localStorage.setItem(BADGE_KEYS.cart,'0');localStorage.setItem('__cartCount','0');localStorage.setItem('notifCount','0');}catch(e){}updateCartBadge();updateNotifBadge();};document.addEventListener('DOMContentLoaded',function(){try{notifCountValue=parseInt(localStorage.getItem(BADGE_KEYS.notif)||localStorage.getItem('notifCount')||'0',10);cartCountValue=parseInt(localStorage.getItem(BADGE_KEYS.cart)||localStorage.getItem('__cartCount')||'0',10);}catch(e){}updateCartBadge();updateNotifBadge();});})();
-// Dynamic orders content â€“ call window.setOrdersData(orders) or set window.__ORDERS_DATA__
+// Dynamic orders content "“ call window.setOrdersData(orders) or set window.__ORDERS_DATA__
 // Data source: __ORDERS_DATA__ (set before load) > localStorage __orders > default [] (empty state)
 // To show orders: setOrdersData(orders) or set window.__ORDERS_DATA__ = orders before load
 (function() {
     var STORAGE_KEY = '__orders';
     window.SAMPLE_ORDERS = [
-        { id: '#S04589', date: 'July 12, 2025', total: '$289.50', status: 'delivered', statusLabel: 'Delivered', payment: 'Visa â€¢â€¢â€¢â€¢ 4242', trackingNumber: '1Z999AA1234567890', subtotal: '$265.00', shipping: '$12.50', taxes: '$12.00', billedTo: 'Maria Lopez', shippingAddress: '123 Rue Saint-HonorÃ©', shippingCity: 'Paris, France 75001', items: [{ image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/e3f92e89da-91c7ebe70b64c417c52b.png', title: 'Summer Floral Dress', meta: 'Size M â€¢ Qty 1', price: '$265.00', alt: 'Summer Floral Dress' }] },
-        { id: '#S04578', date: 'July 8, 2025', total: '$156.75', status: 'in_transit', statusLabel: 'In Transit', payment: 'Apple Pay', subtotal: '$145.00', shipping: '$7.75', taxes: '$4.00', billedTo: 'Maria Lopez', shippingAddress: '123 Rue Saint-HonorÃ©', shippingCity: 'Paris, France 75001', items: [{ image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/fe90b9b439-e7fb2c439c531b8e3eb3.png', title: 'Classic White Sneakers', meta: 'Size 8 â€¢ Qty 1', price: '$156.75', alt: 'Classic White Sneakers' }] },
-        { id: '#S04561', date: 'June 28, 2025', total: '$420.00', status: 'processing', statusLabel: 'Processing', payment: 'Mastercard â€¢â€¢â€¢â€¢ 8901', subtotal: '$385.00', shipping: '$20.00', taxes: '$15.00', billedTo: 'John Doe', shippingAddress: '456 Oak Avenue', shippingCity: 'Los Angeles, CA 90001', items: [{ image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/735d94a031-5cb1d1a892fb7ee5d735.png', title: 'Designer Leather Bag', meta: 'Black â€¢ Qty 1', price: '$280.00', alt: 'Designer Leather Bag' }, { image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/1e0bed3f51-bdf0bc7e52d30c4b8bda.png', title: 'Silk Pattern Scarf', meta: 'Blue â€¢ Qty 1', price: '$105.00', alt: 'Silk Pattern Scarf' }] },
-        { id: '#S04545', date: 'June 15, 2025', total: '$89.99', status: 'returned', statusLabel: 'Returned', returnedDate: 'June 22, 2025', refundStatus: 'Processed', subtotal: '$79.99', shipping: '$5.99', taxes: '$4.01', billedTo: 'Jane Smith', shippingAddress: '789 Elm Rd', shippingCity: 'Chicago, IL 60601', items: [{ image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/8edc82e22f-908ef8c4557e6b889643.png', title: 'Basic Cotton T-Shirt', meta: 'Size L â€¢ Qty 2', price: '$39.99', quantity: 2, alt: 'Basic Cotton T-Shirt' }] }
+        { id: '#S04589', date: 'July 12, 2025', total: '$289.50', status: 'delivered', statusLabel: 'Delivered', payment: 'Visa •••• 4242', trackingNumber: '1Z999AA1234567890', subtotal: '$265.00', shipping: '$12.50', taxes: '$12.00', billedTo: 'Maria Lopez', shippingAddress: '123 Rue Saint-Honoré', shippingCity: 'Paris, France 75001', items: [{ image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/e3f92e89da-91c7ebe70b64c417c52b.png', title: 'Summer Floral Dress', meta: 'Size M • Qty 1', price: '$265.00', alt: 'Summer Floral Dress' }] },
+        { id: '#S04578', date: 'July 8, 2025', total: '$156.75', status: 'in_transit', statusLabel: 'In Transit', payment: 'Apple Pay', subtotal: '$145.00', shipping: '$7.75', taxes: '$4.00', billedTo: 'Maria Lopez', shippingAddress: '123 Rue Saint-Honoré', shippingCity: 'Paris, France 75001', items: [{ image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/fe90b9b439-e7fb2c439c531b8e3eb3.png', title: 'Classic White Sneakers', meta: 'Size 8 • Qty 1', price: '$156.75', alt: 'Classic White Sneakers' }] },
+        { id: '#S04561', date: 'June 28, 2025', total: '$420.00', status: 'processing', statusLabel: 'Processing', payment: 'Mastercard •••• 8901', subtotal: '$385.00', shipping: '$20.00', taxes: '$15.00', billedTo: 'John Doe', shippingAddress: '456 Oak Avenue', shippingCity: 'Los Angeles, CA 90001', items: [{ image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/735d94a031-5cb1d1a892fb7ee5d735.png', title: 'Designer Leather Bag', meta: 'Black • Qty 1', price: '$280.00', alt: 'Designer Leather Bag' }, { image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/1e0bed3f51-bdf0bc7e52d30c4b8bda.png', title: 'Silk Pattern Scarf', meta: 'Blue • Qty 1', price: '$105.00', alt: 'Silk Pattern Scarf' }] },
+        { id: '#S04545', date: 'June 15, 2025', total: '$89.99', status: 'returned', statusLabel: 'Returned', returnedDate: 'June 22, 2025', refundStatus: 'Processed', subtotal: '$79.99', shipping: '$5.99', taxes: '$4.01', billedTo: 'Jane Smith', shippingAddress: '789 Elm Rd', shippingCity: 'Chicago, IL 60601', items: [{ image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/8edc82e22f-908ef8c4557e6b889643.png', title: 'Basic Cotton T-Shirt', meta: 'Size L • Qty 2', price: '$39.99', quantity: 2, alt: 'Basic Cotton T-Shirt' }] }
     ];
 
     function getOrders() {
@@ -109,25 +147,6 @@
         if (ordersContent) ordersContent.classList.toggle('hidden', isEmpty);
         if (emptyState) emptyState.classList.toggle('hidden', !isEmpty);
         if (headerSection) headerSection.classList.toggle('hidden', isEmpty);
-        var chatDrawer = document.getElementById('orders-chat-drawer');
-        var chatOverlay = document.getElementById('orders-chat-overlay');
-        var chatInputBar = document.getElementById('orders-chat-input-bar');
-        if (chatDrawer) chatDrawer.classList.remove('hidden');
-        if (chatOverlay) chatOverlay.classList.remove('hidden');
-        if (chatInputBar) chatInputBar.classList.remove('hidden');
-        if (isEmpty) {
-            if (chatDrawer) chatDrawer.classList.remove('translate-y-full');
-            if (chatOverlay) chatOverlay.classList.remove('hidden');
-            if (chatInputBar) chatInputBar.classList.add('hidden');
-        } else {
-            if (chatDrawer) chatDrawer.classList.add('translate-y-full');
-            if (chatOverlay) chatOverlay.classList.add('hidden');
-            if (chatInputBar) chatInputBar.classList.remove('hidden');
-        }
-        var welcomeMsg = document.getElementById('orders-chat-welcome-msg');
-        if (welcomeMsg) welcomeMsg.textContent = isEmpty
-            ? "You have no orders yet. I'm here to help you find your perfect look! How can I assist you today?"
-            : "Hi! I'm here to help with your orders or your next favorite find. How can I assist you today?";
 
         if (isEmpty) {
             list.innerHTML = '';
@@ -260,13 +279,13 @@
 </div>
 
 <!-- Main Content -->
-<main id="main-content" class="pt-20 px-4 pb-40 bg-white min-h-screen flex flex-col">
+<main id="main-content" class="pt-4 px-4 pb-40 bg-white min-h-screen flex flex-col">
     <!-- Header Section -->
     <section id="header-section" class="py-4 bg-white mb-4">
         <p class="dm-sans text-gray-600 text-sm">Track your orders, view details, and request returns.</p>
     </section>
 
-    <!-- Empty State (shown when no orders) â€“ bag icon + text like original -->
+    <!-- Empty State (shown when no orders) "“ bag icon + text like original -->
     <section id="orders-empty-state" class="flex-1 flex flex-col items-center justify-center px-6 py-8 pb-[40vh] hidden animate-slide-in">
         <div class="mb-8 relative">
             <div class="w-32 h-32 bg-[#E8EAFF] rounded-full flex items-center justify-center mb-4 relative">
@@ -281,7 +300,7 @@
             </div>
         </div>
         <div class="text-center mb-8">
-            <h2 id="orders-empty-title" class="text-2xl poppins font-semibold text-gray-900 mb-4">You haven't placed any orders yet â€” but your perfect look is just a chat away!</h2>
+            <h2 id="orders-empty-title" class="text-2xl poppins font-semibold text-gray-900 mb-4">You haven't placed any orders yet "” but your perfect look is just a chat away!</h2>
             <p id="orders-empty-subtitle" class="text-gray-600 dm-sans text-base leading-relaxed px-4">Let ShAI, your personal AI shopper, help you discover your next favorite outfit.</p>
         </div>
     </section>
@@ -304,17 +323,17 @@
             
             <div class="border-t pt-3">
                 <div class="flex items-center gap-3 mb-3">
-                    <img class="w-12 h-12 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e3f92e89da-91c7ebe70b64c417c52b.png" alt="stylish summer dress colorful fashion product">
+                    <img class="w-12 h-12 rounded-lg object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/e3f92e89da-91c7ebe70b64c417c52b.png" alt="stylish summer dress colorful fashion product">
                     <div class="flex-1">
                         <p class="font-medium text-sm">Summer Floral Dress</p>
-                        <p class="text-xs text-gray-600">Size M â€¢ Qty 1</p>
+                        <p class="text-xs text-gray-600">Size M • Qty 1</p>
                     </div>
                 </div>
                 
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span class="text-gray-600">Payment:</span>
-                        <span>Visa â€¢â€¢â€¢â€¢ 4242</span>
+                        <span>Visa •••• 4242</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">Tracking:</span>
@@ -344,10 +363,10 @@
             
             <div class="border-t pt-3">
                 <div class="flex items-center gap-3 mb-3">
-                    <img class="w-12 h-12 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/fe90b9b439-e7fb2c439c531b8e3eb3.png" alt="elegant white sneakers modern fashion shoes">
+                    <img class="w-12 h-12 rounded-lg object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/fe90b9b439-e7fb2c439c531b8e3eb3.png" alt="elegant white sneakers modern fashion shoes">
                     <div class="flex-1">
                         <p class="font-medium text-sm">Classic White Sneakers</p>
-                        <p class="text-xs text-gray-600">Size 8 â€¢ Qty 1</p>
+                        <p class="text-xs text-gray-600">Size 8 • Qty 1</p>
                     </div>
                 </div>
                 
@@ -385,17 +404,17 @@
             <div class="border-t pt-3">
                 <div class="space-y-3">
                     <div class="flex items-center gap-3">
-                        <img class="w-12 h-12 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/735d94a031-5cb1d1a892fb7ee5d735.png" alt="designer handbag luxury fashion accessory">
+                        <img class="w-12 h-12 rounded-lg object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/735d94a031-5cb1d1a892fb7ee5d735.png" alt="designer handbag luxury fashion accessory">
                         <div class="flex-1">
                             <p class="font-medium text-sm">Designer Leather Bag</p>
-                            <p class="text-xs text-gray-600">Black â€¢ Qty 1</p>
+                            <p class="text-xs text-gray-600">Black • Qty 1</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <img class="w-12 h-12 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/1e0bed3f51-bdf0bc7e52d30c4b8bda.png" alt="silk scarf elegant fashion accessory">
+                        <img class="w-12 h-12 rounded-lg object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/1e0bed3f51-bdf0bc7e52d30c4b8bda.png" alt="silk scarf elegant fashion accessory">
                         <div class="flex-1">
                             <p class="font-medium text-sm">Silk Pattern Scarf</p>
-                            <p class="text-xs text-gray-600">Blue â€¢ Qty 1</p>
+                            <p class="text-xs text-gray-600">Blue • Qty 1</p>
                         </div>
                     </div>
                 </div>
@@ -403,7 +422,7 @@
                 <div class="space-y-2 text-sm mt-3">
                     <div class="flex justify-between">
                         <span class="text-gray-600">Payment:</span>
-                        <span>Mastercard â€¢â€¢â€¢â€¢ 8901</span>
+                        <span>Mastercard •••• 8901</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">Est. Delivery:</span>
@@ -433,10 +452,10 @@
             
             <div class="border-t pt-3">
                 <div class="flex items-center gap-3 mb-3">
-                    <img class="w-12 h-12 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8edc82e22f-908ef8c4557e6b889643.png" alt="casual t-shirt basic fashion clothing">
+                    <img class="w-12 h-12 rounded-lg object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/8edc82e22f-908ef8c4557e6b889643.png" alt="casual t-shirt basic fashion clothing">
                     <div class="flex-1">
                         <p class="font-medium text-sm">Basic Cotton T-Shirt</p>
-                        <p class="text-xs text-gray-600">Size L â€¢ Qty 2</p>
+                        <p class="text-xs text-gray-600">Size L • Qty 2</p>
                     </div>
                 </div>
                 
@@ -461,100 +480,60 @@
     </div>
 </main>
 
-<!-- Chat overlay â€“ tap to close drawer (empty state only) -->
-<div id="orders-chat-overlay" class="fixed inset-0 bg-black/40 z-40 hidden" aria-hidden="true"></div>
-
-<!-- Chat drawer (for empty state) â€“ docked above bottom nav, expanded by default, tap overlay to close. Starts hidden+collapsed to avoid load flash -->
-<div id="orders-chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 flex flex-col border-t border-gray-100 transition-all duration-300 transform translate-y-full hidden" style="height: 50vh;">
-    <div class="flex justify-center items-center py-4 flex-shrink-0 cursor-grab active:cursor-grabbing select-none" id="orders-drag-handle-area">
-        <div id="orders-drag-handle" class="w-10 h-1.5 bg-gray-300 rounded-full pointer-events-none"></div>
+<!-- Chat - exact same as Home -->
+<div id="chat-overlay" class="fixed inset-0 bg-black/40 z-40 hidden"></div>
+<div id="chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[50vh] transform translate-y-full transition-transform duration-300 flex flex-col border-t border-gray-100">
+    <div id="drag-handle-zone" class="chat-drawer-drag-zone flex justify-center pt-2 flex-shrink-0"><div id="drag-handle" class="w-10 h-1 bg-gray-300 rounded-full pointer-events-none"></div></div>
+    <div id="chat-header" class="flex items-center p-4 pb-2 flex-shrink-0">
+        <button id="back-btn" class="mr-3 hidden hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg></button>
+        <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0"><img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar /></div>
+        <div class="flex-1"><p class="font-semibold text-black text-sm" id="header-title">ShAI</p><p class="text-xs text-gray-500" id="header-subtitle">Your shopping assistant</p></div>
     </div>
-    <div class="flex items-center p-4 pb-2 flex-shrink-0">
-        <button id="orders-back-btn" class="mr-3 hidden hover:opacity-70 transition-opacity">
-            <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
-        </button>
-        <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0 bg-gray-100 flex items-center justify-center relative">
-            <img class="orders-shai-avatar w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" onerror="this.style.display='none';var s=this.parentElement.querySelector('.orders-shai-placeholder');if(s)s.classList.remove('hidden')">
-            <span class="orders-shai-placeholder hidden absolute inset-0 flex items-center justify-center text-gray-400 text-xs font-medium">AI</span>
-        </div>
-        <div class="flex-1">
-            <p class="font-semibold text-black text-sm" id="orders-header-title">ShAI</p>
-            <p class="text-xs text-gray-500" id="orders-header-subtitle">Your shopping assistant</p>
-        </div>
-    </div>
-    <div id="orders-chat-content" class="flex-1 flex flex-col min-h-0">
-        <div id="orders-chat-messages" class="flex-1 overflow-y-auto min-h-0">
-            <div class="p-4 pb-6">
+    <div id="chat-content" class="flex-1 flex flex-col min-h-0">
+        <div id="chat-messages" class="flex-1 overflow-y-auto">
+            <div class="p-4 pb-0">
                 <div class="flex items-start space-x-3 mb-4">
-                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center relative">
-                        <img class="orders-shai-avatar w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI" onerror="this.style.display='none';var s=this.parentElement.querySelector('.orders-shai-placeholder');if(s)s.classList.remove('hidden')">
-                        <span class="orders-shai-placeholder hidden absolute inset-0 flex items-center justify-center text-gray-400 text-xs font-medium">AI</span>
-                    </div>
+                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar /></div>
                     <div class="flex-1">
-                        <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3 min-w-0">
-                            <p id="orders-chat-welcome-msg" class="text-sm text-black break-words whitespace-pre-wrap">You have no orders yet. I'm here to help you find your perfect look! How can I assist you today?</p>
-                        </div>
-                        <div id="orders-smart-prompts" class="flex flex-wrap gap-2 pb-2">
-                            <button class="orders-smart-prompt bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium hover:bg-[#939BFB] hover:text-white transition-colors">I need a formal outfit</button>
-                            <button class="orders-smart-prompt bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium hover:bg-[#939BFB] hover:text-white transition-colors">Find me seasonal outfits</button>
-                            <button class="orders-smart-prompt bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium hover:bg-[#939BFB] hover:text-white transition-colors">What's trending right now?</button>
-                            <button class="orders-smart-prompt bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium hover:bg-[#939BFB] hover:text-white transition-colors">Elevate my workwear</button>
-                        </div>
+                        <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3"><p class="text-sm text-black">Hi there! I'm ShAI, your personal shopping assistant. How can I help you find the perfect items today?</p></div>
+                        <div id="smart-prompts" class="flex-shrink-0"><div class="flex flex-wrap gap-2 pb-2">
+                            <button class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 hover:bg-[#939BFB] hover:text-white transition-colors">I need a formal outfit</button>
+                            <button class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 hover:bg-[#939BFB] hover:text-white transition-colors">Find me seasonal outfits</button>
+                            <button class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 hover:bg-[#939BFB] hover:text-white transition-colors">What's trending right now?</button>
+                            <button class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 hover:bg-[#939BFB] hover:text-white transition-colors">Elevate my workwear</button>
+                        </div></div>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="orders-chat-input-drawer" class="bg-white border-t border-gray-100 p-4 flex-shrink-0 min-w-0 overflow-hidden">
-            <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm min-w-0 w-full overflow-hidden">
-                <button id="orders-cam-btn" class="icon-button hover:opacity-70 transition-opacity">
-                    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/></svg>
-                </button>
-                <textarea id="orders-chat-input" placeholder="Message ShAI..." rows="1" class="flex-1 min-w-0 max-w-full bg-transparent outline-none text-black placeholder-gray-500 dm-sans min-h-[24px] max-h-[120px] py-1 text-sm resize-none overflow-y-auto" style="overflow-y: hidden;"></textarea>
-                <button id="orders-add-friend-btn" class="icon-button hover:opacity-70 transition-opacity">
-                    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/></svg>
-                </button>
-                <button id="orders-mic-btn" class="icon-button hover:opacity-70 transition-opacity">
-                    <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg>
-                </button>
-                <button id="orders-send-btn" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity">
-                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
-                </button>
+        <div id="chat-input-drawer" class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
+            <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+                <button id="cam-btn-drawer" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/></svg></button>
+                <input type="text" id="chat-input-drawer-field" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans min-h-[24px]">
+                <button id="add-friend-btn-drawer" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/></svg></button>
+                <button id="mic-btn-drawer" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg></button>
+                <button id="send-btn-drawer" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg></button>
             </div>
         </div>
     </div>
-    <div id="orders-add-friend-content" class="flex-1 flex flex-col min-h-0 hidden">
-        <div class="flex-1 overflow-y-auto p-4">
-            <div class="mb-4">
-                <div class="relative">
-                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-                    <input type="text" id="orders-contact-search" placeholder="Search contacts..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 pl-10 text-sm">
-                </div>
-            </div>
-            <div id="orders-contacts-container" class="space-y-2"><!-- Contacts rendered dynamically from __addFriendContacts / localStorage.__contacts --></div>
+    <div id="add-friend-content" class="flex-1 flex flex-col min-h-0 hidden">
+        <div id="contact-list" class="flex-1 overflow-y-auto p-4">
+            <div class="mb-4"><div class="relative"><svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg><input type="text" id="contact-search" placeholder="Search contacts..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 pl-10 text-sm"></div></div>
+            <div id="contacts-container" class="space-y-2"></div>
         </div>
     </div>
 </div>
-
-<!-- Chat input bar (collapsed state) â€“ same buttons as expanded; tap input/area to expand -->
-<div id="orders-chat-input-bar" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 p-4 z-30 hidden min-w-0 overflow-hidden">
-    <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm min-w-0 w-full overflow-hidden">
-        <button id="orders-cam-btn-collapsed" class="icon-button hover:opacity-70 transition-opacity">
-            <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/></svg>
-        </button>
-        <input type="text" id="orders-chat-input-collapsed" placeholder="Message ShAI..." class="flex-1 min-w-0 max-w-full bg-transparent outline-none text-black placeholder-gray-500 dm-sans min-h-[24px] text-sm cursor-pointer" readonly>
-        <button id="orders-add-friend-btn-collapsed" class="icon-button hover:opacity-70 transition-opacity">
-            <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/></svg>
-        </button>
-        <button id="orders-mic-btn-collapsed" class="icon-button hover:opacity-70 transition-opacity">
-            <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg>
-        </button>
-        <button id="orders-send-btn-collapsed" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity">
-            <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
-        </button>
+<div id="chat-input-bar" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 p-4 z-30">
+    <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+        <button id="cam-btn" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/></svg></button>
+        <input type="text" id="message-input" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans min-h-[24px]">
+        <button id="add-friend-btn" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/></svg></button>
+        <button id="mic-btn" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg></button>
+        <button id="send-btn" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg></button>
     </div>
 </div>
 
-<!-- Bottom Navigation â€“ same structure as Home for proper docking -->
+<!-- Bottom Navigation "“ same structure as Home for proper docking -->
 <nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 z-50">
     <div class="flex items-center justify-around py-3 px-4">
         <a href="Home.html" class="bottom-nav-btn">
@@ -612,30 +591,12 @@
 })();
 </script>
 
+<script src="js/chat-dock-nav.js"></script>
+<script src="js/home-chat.js"></script>
 <script>
-// Empty state: full chat drawer. Rules for Orders and future chat screens:
-// - Mic: request getUserMedia only when !mediaStream || !mediaStream.active (not on every click)
-// - Overlay: tap to collapse drawer; show chat-input-bar when collapsed; tap to expand
-// - ShAI avatar: use orders-shai-avatar class + orders-shai-placeholder fallback; window.setShaiAvatarFromDb(url)
-// - Add friend: dynamic contacts (data-name, data-phone, data-goshopme); search filter; Add/Invite actions
-// - Text/voice: user bubbles bg-[#939BFB] rounded-tr-md; ShAI bubbles bg-gray-50 rounded-tl-md; voice: play-btn + waveform
-// - Camera: file input image/*,video/*; same bubble designs as other pages
-(function() {
-    window.__shaiAvatarUrl = 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
-    window.setShaiAvatarFromDb = window.setShAIAvatar = function(url) {
-        if (!url) return;
-        window.__shaiAvatarUrl = url;
-        document.querySelectorAll('.orders-shai-avatar').forEach(function(img) { img.src = url; img.style.display = ''; });
-        document.querySelectorAll('.orders-shai-placeholder').forEach(function(s) { s.classList.add('hidden'); });
-    };
-    window.testShAIAvatar = function(url) {
-        const testUrl = url || 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg';
-        window.setShAIAvatar(testUrl);
-        console.log('testShAIAvatar:', testUrl);
-    };
-
-    document.addEventListener('DOMContentLoaded', function() {
-        function getFirstName() {
+// Orders empty state: personalize title with user's first name
+document.addEventListener('DOMContentLoaded', function() {
+    function getFirstName() {
             try {
                 var name = localStorage.getItem('userName') || localStorage.getItem('user-name') || '';
                 if (name && typeof name === 'string') {
@@ -647,489 +608,12 @@
         }
         var title = document.getElementById('orders-empty-title');
         var first = getFirstName();
-        if (title && first) title.textContent = first + ", you haven't placed any orders yet â€” but your perfect look is just a chat away!";
-
-        var drawer = document.getElementById('orders-chat-drawer');
-        var overlay = document.getElementById('orders-chat-overlay');
-        var inputBar = document.getElementById('orders-chat-input-bar');
-        if (!drawer) return;
-
-        function expandDrawer() {
-            drawer.classList.remove('translate-y-full');
-            if (overlay) overlay.classList.remove('hidden');
-            if (inputBar) inputBar.classList.add('hidden');
-        }
-        function collapseDrawer() {
-            drawer.classList.add('translate-y-full');
-            if (overlay) overlay.classList.add('hidden');
-            if (inputBar) inputBar.classList.remove('hidden');
-            var addFriendContent = document.getElementById('orders-add-friend-content');
-            var chatContent = document.getElementById('orders-chat-content');
-            var backBtn = document.getElementById('orders-back-btn');
-            var headerTitle = document.getElementById('orders-header-title');
-            var headerSubtitle = document.getElementById('orders-header-subtitle');
-            var contactSearch = document.getElementById('orders-contact-search');
-            if (addFriendContent && !addFriendContent.classList.contains('hidden')) {
-                if (chatContent) chatContent.classList.remove('hidden');
-                if (addFriendContent) addFriendContent.classList.add('hidden');
-                if (backBtn) backBtn.classList.add('hidden');
-                if (headerTitle) headerTitle.textContent = 'ShAI';
-                if (headerSubtitle) headerSubtitle.textContent = 'Your shopping assistant';
-                if (contactSearch) { contactSearch.value = ''; contactSearch.dispatchEvent(new Event('input')); }
-            }
-        }
-        if (overlay) overlay.addEventListener('click', collapseDrawer);
-        ['orders-chat-input-collapsed', 'orders-cam-btn-collapsed', 'orders-add-friend-btn-collapsed', 'orders-mic-btn-collapsed', 'orders-send-btn-collapsed'].forEach(function(id) {
-            var el = document.getElementById(id);
-            if (el) el.addEventListener('click', function(e) { e.preventDefault(); expandDrawer(); });
-        });
-        var chatMessages = document.getElementById('orders-chat-messages');
-        var chatInput = document.getElementById('orders-chat-input');
-        var micBtn = document.getElementById('orders-mic-btn');
-        var sendBtn = document.getElementById('orders-send-btn');
-        var addFriendBtn = document.getElementById('orders-add-friend-btn');
-        var camBtn = document.getElementById('orders-cam-btn');
-        var chatContent = document.getElementById('orders-chat-content');
-        var addFriendContent = document.getElementById('orders-add-friend-content');
-        var backBtn = document.getElementById('orders-back-btn');
-        var headerTitle = document.getElementById('orders-header-title');
-        var headerSubtitle = document.getElementById('orders-header-subtitle');
-        var contactSearch = document.getElementById('orders-contact-search');
-        var contactsContainer = document.getElementById('orders-contacts-container');
-        function getShaiImg() { return window.__shaiAvatarUrl || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png'; }
-
-        function getContainer() { return chatMessages && chatMessages.querySelector('.p-4'); }
-
-        function scrollToBottom() {
-            if (!chatMessages) return;
-            requestAnimationFrame(function() { requestAnimationFrame(function() { chatMessages.scrollTop = chatMessages.scrollHeight; }); });
-        }
-
-        function sendMessage() {
-            var text = chatInput && chatInput.value ? chatInput.value.trim() : '';
-            if (!text) return;
-            var container = getContainer();
-            if (container) {
-                var userMsg = document.createElement('div');
-                userMsg.className = 'flex justify-end mb-4';
-                userMsg.innerHTML = '<div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%] min-w-0"><p class="text-sm break-words whitespace-pre-wrap">' + (text || '').replace(/</g, '&lt;') + '</p></div>';
-                container.appendChild(userMsg);
-            }
-            if (chatInput) { chatInput.value = ''; autoResizeInput(); }
-            if (micBtn) micBtn.classList.remove('hidden');
-            if (addFriendBtn) addFriendBtn.classList.remove('hidden');
-            if (sendBtn) sendBtn.classList.add('hidden');
-            scrollToBottom();
-        }
-
-        function autoResizeInput() {
-            if (!chatInput) return;
-            chatInput.style.height = 'auto';
-            var h = Math.max(24, Math.min(chatInput.scrollHeight, 120));
-            chatInput.style.height = h + 'px';
-            chatInput.style.overflowY = chatInput.scrollHeight > 120 ? 'auto' : 'hidden';
-        }
-        function updateInputState() {
-            if (!chatInput) return;
-            var hasText = chatInput.value.trim().length > 0;
-            if (micBtn) micBtn.classList.toggle('hidden', hasText);
-            if (addFriendBtn) addFriendBtn.classList.toggle('hidden', hasText);
-            if (sendBtn) sendBtn.classList.toggle('hidden', !hasText);
-        }
-
-        if (chatInput) {
-            chatInput.addEventListener('input', function() { autoResizeInput(); updateInputState(); });
-            chatInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-            });
-        }
-        if (sendBtn) sendBtn.addEventListener('click', sendMessage);
-
-        function toggleVoicePlayback(button) {
-            var container = button.closest('.voice-message-bubble');
-            if (!container) return;
-            var audio = container.querySelector('audio');
-            var playIcon = button.querySelector('svg');
-            var waveBars = container.querySelectorAll('.wave-bar');
-            var durationText = container.querySelector('.duration-text');
-            if (!audio || !playIcon) return;
-            function fmt(t) { var m = Math.floor(t / 60), s = Math.ceil(t % 60); return m + ':' + (s < 10 ? '0' : '') + s; }
-            function stopAnim() {
-                playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-                waveBars.forEach(function(bar) { bar.style.animation = 'none'; bar.classList.remove('playing'); });
-                if (audio._ordersTimeupdate) { audio.removeEventListener('timeupdate', audio._ordersTimeupdate); audio._ordersTimeupdate = null; }
-            }
-            if (audio.paused) {
-                audio.play();
-                playIcon.innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
-                waveBars.forEach(function(bar, i) { bar.style.animation = 'wavePulse 1.1s ease-in-out infinite'; bar.style.animationDelay = (i * 0.08) + 's'; bar.classList.add('playing'); });
-                var onTime = function() { if (durationText) durationText.textContent = fmt(Math.ceil(audio.duration - audio.currentTime)); };
-                audio._ordersTimeupdate = onTime;
-                audio.addEventListener('timeupdate', onTime);
-                audio.addEventListener('ended', function() { stopAnim(); if (durationText) durationText.textContent = fmt(Math.ceil(audio.duration)); }, { once: true });
-            } else {
-                audio.pause();
-                stopAnim();
-                if (durationText) durationText.textContent = fmt(Math.ceil(audio.duration - audio.currentTime));
-            }
-        }
-        chatMessages && chatMessages.addEventListener('click', function(e) {
-            var playBtn = e.target.closest('.voice-message-bubble .play-btn');
-            if (playBtn) { e.preventDefault(); toggleVoicePlayback(playBtn); }
-        });
-
-        function getShaiAvatarUrl() {
-            var img = document.querySelector('.orders-shai-avatar');
-            return (img && img.src && img.style.display !== 'none') ? img.src : getShaiImg();
-        }
-        function addShAIMessage(msg) {
-            var container = getContainer();
-            if (container) {
-                var avatarUrl = getShaiAvatarUrl();
-                var el = document.createElement('div');
-                el.className = 'flex items-start space-x-3 mb-4';
-                el.innerHTML = '<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center relative"><img class="orders-shai-avatar w-full h-full object-cover" src="' + (avatarUrl || getShaiImg()).replace(/"/g, '&quot;') + '" alt="ShAI" onerror="this.style.display=\'none\';var s=this.parentElement.querySelector(\'.orders-shai-placeholder\');if(s)s.classList.remove(\'hidden\')"><span class="orders-shai-placeholder hidden absolute inset-0 flex items-center justify-center text-gray-400 text-xs font-medium">AI</span></div><div class="flex-1 min-w-0"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3"><p class="text-sm text-black break-words whitespace-pre-wrap">' + (msg || '').replace(/</g, '&lt;') + '</p></div></div>';
-                container.appendChild(el);
-                scrollToBottom();
-            }
-        }
-
-        function showToast(msg) {
-            var t = document.createElement('div');
-            t.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-2 rounded-full text-sm z-[60]';
-            t.textContent = msg;
-            document.body.appendChild(t);
-            setTimeout(function() { t.remove(); }, 3000);
-        }
-
-        document.querySelectorAll('.orders-smart-prompt').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var t = this.textContent.trim();
-                if (!t) return;
-                var container = getContainer();
-                if (container) {
-                    var userMsg = document.createElement('div');
-                    userMsg.className = 'flex justify-end mb-4';
-                    userMsg.innerHTML = '<div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%] min-w-0"><p class="text-sm break-words whitespace-pre-wrap">' + t.replace(/</g, '&lt;') + '</p></div>';
-                    container.appendChild(userMsg);
-                    scrollToBottom();
-                    setTimeout(function() { addShAIMessage("I'd be happy to help you with that! Let me find some perfect options for you."); }, 1000);
-                }
-            });
-        });
-
-        if (camBtn) camBtn.addEventListener('click', function() {
-            var input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*,video/*';
-            input.onchange = function(e) {
-                var file = e.target.files && e.target.files[0];
-                if (file) {
-                    var url = URL.createObjectURL(file);
-                    var container = getContainer();
-                    if (container) {
-                        var bubble = document.createElement('div');
-                        bubble.className = 'flex justify-end mb-4';
-                        if (file.type.startsWith('image/')) {
-                            bubble.innerHTML = '<div class="rounded-2xl border border-[#939BFB] max-w-[60%] overflow-hidden shadow-sm"><img src="' + url + '" class="w-full h-auto" alt="Uploaded"/></div>';
-                        } else {
-                            bubble.innerHTML = '<div class="rounded-2xl border border-[#939BFB] max-w-[60%] overflow-hidden shadow-sm"><video src="' + url + '" controls class="w-full h-auto"></video></div>';
-                        }
-                        container.appendChild(bubble);
-                        scrollToBottom();
-                        setTimeout(function() { addShAIMessage(file.type.startsWith('video/') ? "Great! I can analyze your video." : "Perfect! I can see your image. Let me find similar products."); }, 1500);
-                    }
-                }
-                input.value = '';
-            };
-            input.click();
-        });
-
-        var isRecording = false, mediaRecorder, audioChunks = [], startX, micAccessDenied = false, mediaStream = null;
-
-        function removeTempBubble() {
-            var t = document.getElementById('orders-temp-recording');
-            if (t) t.remove();
-        }
-
-        function startRecording(e) {
-            e.preventDefault();
-            removeTempBubble();
-            if (micAccessDenied) { showToast("Microphone access denied. Enable it in your browser settings."); return; }
-            startX = e.touches ? e.touches[0].clientX : e.clientX;
-            var self = this;
-            function doStart(stream) {
-                mediaStream = stream;
-                mediaRecorder = new MediaRecorder(stream);
-                isRecording = true;
-                audioChunks = [];
-                mediaRecorder.ondataavailable = function(ev) { if (ev.data.size > 0) audioChunks.push(ev.data); };
-                mediaRecorder.start();
-                self.classList.add('scale-110', 'ring-2', 'ring-[#939BFB]', 'ring-offset-2');
-                var container = getContainer();
-                if (container) {
-                    var tb = document.createElement('div');
-                    tb.id = 'orders-temp-recording';
-                    tb.className = 'flex justify-end mb-2';
-                    tb.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]"><svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg><span class="text-xs">Recording... swipe left to cancel</span></div>';
-                    container.appendChild(tb);
-                    scrollToBottom();
-                }
-            }
-            try {
-                if (!mediaStream || !mediaStream.active) {
-                    navigator.mediaDevices.getUserMedia({ audio: true }).then(doStart).catch(function(err) {
-                        removeTempBubble();
-                        if (err && (err.name === 'NotAllowedError' || err.name === 'SecurityError')) { micAccessDenied = true; showToast("Microphone access denied."); }
-                        else { showToast("Could not access microphone. Please try again."); }
-                    });
-                    return;
-                }
-                doStart(mediaStream);
-            } catch (err) { removeTempBubble(); showToast("Could not access microphone."); }
-        }
-
-        function stopRecording(e) {
-            e.preventDefault();
-            if (!isRecording) return;
-            isRecording = false;
-            this.classList.remove('scale-110', 'ring-2', 'ring-[#939BFB]', 'ring-offset-2');
-            removeTempBubble();
-            if (mediaRecorder) {
-                mediaRecorder.stop();
-                mediaRecorder.onstop = function() {
-                    var blob = new Blob(audioChunks, { type: 'audio/webm' });
-                    var url = URL.createObjectURL(blob);
-                    var container = getContainer();
-                    if (container) {
-                        var bubble = document.createElement('div');
-                        bubble.className = 'flex justify-end mb-2';
-                        bubble.innerHTML = '<div role="group" class="voice-message-bubble bg-[#939BFB] text-white rounded-full px-3 py-2 flex items-center gap-2 h-11 shadow-sm"><button class="play-btn flex-shrink-0 w-6 h-6 border border-white rounded-full flex items-center justify-center hover:bg-white/20 transition-all duration-150"><svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><div class="waveform flex-1 flex items-center justify-center gap-0.5 h-4 max-w-[120px]"><div class="wave-bar w-0.5 bg-white/90 rounded-full" style="height:8px;--i:0"></div><div class="wave-bar w-0.5 bg-white/90 rounded-full" style="height:12px;--i:1"></div><div class="wave-bar w-0.5 bg-white/90 rounded-full" style="height:6px;--i:2"></div><div class="wave-bar w-0.5 bg-white/90 rounded-full" style="height:16px;--i:3"></div><div class="wave-bar w-0.5 bg-white/90 rounded-full" style="height:10px;--i:4"></div><div class="wave-bar w-0.5 bg-white/90 rounded-full" style="height:14px;--i:5"></div><div class="wave-bar w-0.5 bg-white/90 rounded-full" style="height:8px;--i:6"></div><div class="wave-bar w-0.5 bg-white/90 rounded-full" style="height:12px;--i:7"></div><div class="wave-bar w-0.5 bg-white/90 rounded-full" style="height:6px;--i:8"></div><div class="wave-bar w-0.5 bg-white/90 rounded-full" style="height:10px;--i:9"></div></div><span class="duration-text text-white/90 text-xs font-medium flex-shrink-0">0:00</span><audio src="' + url + '" preload="metadata" class="hidden"></audio></div>';
-                        container.appendChild(bubble);
-                        var audioEl = bubble.querySelector('audio');
-                        var durationEl = bubble.querySelector('.duration-text');
-                        if (audioEl && durationEl) audioEl.addEventListener('loadedmetadata', function() {
-                            var d = Math.ceil(audioEl.duration), m = Math.floor(d / 60), s = d % 60;
-                            durationEl.textContent = m + ':' + (s < 10 ? '0' : '') + s;
-                        });
-                        scrollToBottom();
-                        setTimeout(function() { addShAIMessage("Got your voice message! Let me find the best options for you."); }, 1000);
-                    }
-                };
-            }
-        }
-
-        function cancelRecording(e) {
-            if (!isRecording) return;
-            isRecording = false;
-            this.classList.remove('scale-110', 'ring-2', 'ring-[#939BFB]', 'ring-offset-2');
-            removeTempBubble();
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
-        }
-
-        function handleSwipeCancel(e) {
-            if (!isRecording || !e.touches || !e.touches.length) return;
-            if (startX - e.touches[0].clientX > 30) cancelRecording.call(this, e);
-        }
-
-        if (micBtn) {
-            micBtn.addEventListener('mousedown', startRecording);
-            micBtn.addEventListener('touchstart', startRecording);
-            micBtn.addEventListener('mouseup', stopRecording);
-            micBtn.addEventListener('mouseleave', cancelRecording);
-            micBtn.addEventListener('touchend', stopRecording);
-            micBtn.addEventListener('touchcancel', cancelRecording);
-            micBtn.addEventListener('touchmove', handleSwipeCancel);
-        }
-
-        // Add Friend contacts: dynamic (like Picks). Source: __addFriendContacts > localStorage.__contacts > default.
-        window.__addFriendContacts = window.__addFriendContacts || (function() {
-            try {
-                var s = localStorage.getItem('__contacts');
-                if (s) { var p = JSON.parse(s); if (Array.isArray(p)) return p; }
-            } catch (e) {}
-            return [
-                { name: 'Alex Johnson', phone: '+1 (555) 123-4567', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg' },
-                { name: 'Maria Rodriguez', phone: '+1 (555) 987-6543', goshopme: false },
-                { name: 'David Kim', phone: '+1 (555) 456-7890', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg' },
-                { name: 'Sarah Thompson', phone: '+1 (555) 234-5678', goshopme: false }
-            ];
-        })();
-        function getInitials(n) {
-            var parts = (n || '').trim().split(/\s+/);
-            if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
-            return (parts[0] ? parts[0].slice(0, 2) : '??').toUpperCase();
-        }
-        function renderAddFriendContacts() {
-            if (!contactsContainer) return;
-            var list = Array.isArray(window.__addFriendContacts) ? window.__addFriendContacts : [];
-            contactsContainer.innerHTML = list.map(function(c) {
-                var initials = getInitials(c.name);
-                var hasAvatar = c.goshopme && c.avatar;
-                var avatarHtml = hasAvatar
-                    ? '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img src="' + (c.avatar || '').replace(/"/g, '&quot;') + '" alt="' + (c.name || '').replace(/"/g, '&quot;') + '" class="w-full h-full object-cover"></div>'
-                    : '<div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-600 font-medium text-xs">' + initials + '</span></div>';
-                var btnHtml = c.goshopme
-                    ? '<button class="orders-contact-action bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>'
-                    : '<button class="orders-contact-action bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>';
-                return '<div class="orders-contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="' + (c.name || '').replace(/"/g, '&quot;') + '" data-phone="' + (c.phone || '').replace(/"/g, '&quot;') + '" data-goshopme="' + (c.goshopme ? 'true' : 'false') + '">' + avatarHtml + '<div class="flex-1"><p class="font-medium text-sm text-black">' + (c.name || '').replace(/</g, '&lt;') + '</p><p class="text-xs text-gray-500">' + (c.phone || '').replace(/</g, '&lt;') + '</p></div>' + btnHtml + '</div>';
-            }).join('');
-        }
-        window.setContactsData = function(contacts) {
-            contacts = Array.isArray(contacts) ? contacts : [];
-            window.__addFriendContacts = contacts;
-            try { localStorage.setItem('__contacts', JSON.stringify(contacts)); } catch (e) {}
-            renderAddFriendContacts();
-        };
-        window.loadAddFriendContacts = function(data) { window.setContactsData(data); };
-        renderAddFriendContacts();
-
-        function filterContacts(term) {
-            var items = contactsContainer ? contactsContainer.querySelectorAll('.orders-contact-item') : [];
-            var t = (term || '').toLowerCase();
-            items.forEach(function(el) {
-                var match = ((el.getAttribute('data-name') || '') + (el.getAttribute('data-phone') || '')).toLowerCase().indexOf(t) !== -1;
-                el.style.display = match ? 'flex' : 'none';
-            });
-        }
-
-        function showAddFriendFlow() {
-            if (chatContent) chatContent.classList.add('hidden');
-            if (addFriendContent) addFriendContent.classList.remove('hidden');
-            if (backBtn) backBtn.classList.remove('hidden');
-            if (headerTitle) headerTitle.textContent = 'Add Friend';
-            if (headerSubtitle) headerSubtitle.textContent = 'Choose contacts to add';
-            renderAddFriendContacts();
-            if (contactSearch) { contactSearch.value = ''; filterContacts(''); }
-        }
-
-        function hideAddFriendFlow() {
-            if (chatContent) chatContent.classList.remove('hidden');
-            if (addFriendContent) addFriendContent.classList.add('hidden');
-            if (backBtn) backBtn.classList.add('hidden');
-            if (headerTitle) headerTitle.textContent = 'ShAI';
-            if (headerSubtitle) headerSubtitle.textContent = 'Your shopping assistant';
-            if (contactSearch) { contactSearch.value = ''; filterContacts(''); }
-        }
-
-        if (addFriendBtn) addFriendBtn.addEventListener('click', function(e) { e.preventDefault(); showAddFriendFlow(); });
-        if (backBtn) backBtn.addEventListener('click', hideAddFriendFlow);
-
-        if (contactSearch && contactsContainer) contactSearch.addEventListener('input', function() { filterContacts(this.value); });
-
-        if (contactsContainer) contactsContainer.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('orders-contact-action')) return;
-            var item = e.target.closest('.orders-contact-item');
-            if (!item) return;
-            var name = (item.querySelector('p') || {}).textContent || '';
-            var isGoshopme = item.getAttribute('data-goshopme') === 'true';
-            if (e.target.textContent === 'Add' && isGoshopme) {
-                var container = getContainer();
-                if (container) {
-                    var notif = document.createElement('div');
-                    notif.className = 'flex justify-center mb-4';
-                    notif.innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">' + (name.split(' ')[0] || '') + ' has been added to chat</div>';
-                    container.appendChild(notif);
-                    scrollToBottom();
-                }
-                hideAddFriendFlow();
-            } else if (e.target.textContent === 'Invite') {
-                var shareData = { title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless â€” join me", url: 'https://app.goshopme.ai' };
-                if (navigator.share) navigator.share(shareData).catch(function() {
-                    if (navigator.clipboard) navigator.clipboard.writeText(shareData.text + ' ' + shareData.url).then(function() { showToast('Invitation link copied!'); });
-                }); else if (navigator.clipboard) navigator.clipboard.writeText(shareData.text + ' ' + shareData.url).then(function() { showToast('Invitation link copied!'); });
-            }
-        });
-
-        autoResizeInput();
-        updateInputState();
-
-        var handleArea = document.getElementById('orders-drag-handle-area');
-        var dragState = { active: false, startY: 0, startHeightVh: 0, touchId: null, rafId: null };
-        var SNAP_HEIGHTS = [25, 45, 90];
-        function getDrawerHeightVh() {
-            var r = drawer.getBoundingClientRect();
-            return (r.height / window.innerHeight) * 100;
-        }
-        function getTouchY(e) {
-            if (e.touches && e.touches.length) {
-                var t = dragState.touchId != null ? Array.from(e.touches).find(function(touch) { return touch.identifier === dragState.touchId; }) : e.touches[0];
-                return t ? t.clientY : 0;
-            }
-            return e.clientY;
-        }
-        function applyHeight(newVh) {
-            var clamped = Math.min(90, Math.max(25, newVh));
-            drawer.style.height = clamped + 'vh';
-            return clamped;
-        }
-        function snapToNearest(currentVh) {
-            var best = SNAP_HEIGHTS[0], minDist = Math.abs(currentVh - best);
-            SNAP_HEIGHTS.forEach(function(h) {
-                var d = Math.abs(currentVh - h);
-                if (d < minDist) { minDist = d; best = h; }
-            });
-            drawer.style.transition = 'height 0.2s ease-out';
-            drawer.style.height = best + 'vh';
-            setTimeout(function() { drawer.style.transition = ''; }, 200);
-        }
-        function endDrag() {
-            if (dragState.rafId) cancelAnimationFrame(dragState.rafId);
-            dragState.active = false;
-            dragState.touchId = null;
-        }
-        function onDragMove(clientY) {
-            if (!dragState.active) return;
-            var deltaY = dragState.startY - clientY;
-            var newVh = dragState.startHeightVh + (deltaY / window.innerHeight) * 100;
-            if (dragState.rafId) cancelAnimationFrame(dragState.rafId);
-            dragState.rafId = requestAnimationFrame(function() {
-                applyHeight(newVh);
-                dragState.rafId = null;
-            });
-        }
-        if (handleArea) {
-            handleArea.addEventListener('mousedown', function(e) {
-                e.preventDefault();
-                dragState.active = true;
-                dragState.touchId = null;
-                dragState.startY = e.clientY;
-                dragState.startHeightVh = getDrawerHeightVh();
-            });
-            handleArea.addEventListener('touchstart', function(e) {
-                if (e.touches.length === 1) {
-                    dragState.active = true;
-                    dragState.touchId = e.touches[0].identifier;
-                    dragState.startY = e.touches[0].clientY;
-                    dragState.startHeightVh = getDrawerHeightVh();
-                }
-            }, { passive: true });
-        }
-        document.addEventListener('mouseup', function() {
-            if (dragState.active) snapToNearest(getDrawerHeightVh());
-            endDrag();
-        });
-        document.addEventListener('touchend', function(e) {
-            if (dragState.active && (!e.changedTouches || Array.from(e.changedTouches).some(function(t) { return t.identifier === dragState.touchId; }))) {
-                snapToNearest(getDrawerHeightVh());
-            }
-            endDrag();
-        });
-        document.addEventListener('touchcancel', endDrag);
-        document.addEventListener('mousemove', function(e) {
-            onDragMove(e.clientY);
-        });
-        document.addEventListener('touchmove', function(e) {
-            if (!dragState.active) return;
-            var clientY = getTouchY(e);
-            if (clientY) {
-                e.preventDefault();
-                onDragMove(clientY);
-            }
-        }, { passive: false });
+        if (title && first) title.textContent = first + ", you haven't placed any orders yet "” but your perfect look is just a chat away!";
     });
-})();
+});
 </script>
+
+
 
 <!-- Order Tracking Page (Initially Hidden) -->
 <div id="order-tracking-page" class="fixed inset-0 z-40 hidden bg-black/30 overflow-y-auto">
@@ -1161,7 +645,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="pt-20 pb-32 px-5">
+    <main class="pt-16 pb-32 px-5">
         <!-- Header Section -->
         <section class="py-4 bg-white mb-4">
             <h1 class="text-xl poppins font-semibold text-gray-900 mb-2">Order Tracking for #S04578</h1>
@@ -1184,13 +668,13 @@
                 </div>
                 <div class="mb-4">
                     <p class="text-sm text-gray-600 mb-1">Delivery Address</p>
-                    <p class="font-medium">Maria Lopez<br>123 Rue Saint-HonorÃ©<br>Paris, France</p>
+                    <p class="font-medium">Maria Lopez<br>123 Rue Saint-Honoré<br>Paris, France</p>
                 </div>
                 <div class="flex items-center gap-3 pt-3 border-t">
-                    <img class="w-12 h-12 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/fe90b9b439-e7fb2c439c531b8e3eb3.png" alt="Classic White Sneakers">
+                    <img class="w-12 h-12 rounded-lg object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/fe90b9b439-e7fb2c439c531b8e3eb3.png" alt="Classic White Sneakers">
                     <div>
                         <p class="font-medium text-sm">Classic White Sneakers</p>
-                        <p class="text-xs text-gray-600">Size 8 â€¢ Qty 1</p>
+                        <p class="text-xs text-gray-600">Size 8 • Qty 1</p>
                     </div>
                 </div>
             </div>
@@ -1209,7 +693,7 @@
                         </div>
                         <div class="flex-1">
                             <p class="font-medium text-sm text-gray-900">Order Placed</p>
-                            <p class="text-xs text-gray-600">July 8, 2025 â€“ We've received your order.</p>
+                            <p class="text-xs text-gray-600">July 8, 2025 "“ We've received your order.</p>
                         </div>
                     </div>
 
@@ -1221,7 +705,7 @@
                         </div>
                         <div class="flex-1">
                             <p class="font-medium text-sm text-gray-900">Processing</p>
-                            <p class="text-xs text-gray-600">July 9, 2025 â€“ Preparing your items.</p>
+                            <p class="text-xs text-gray-600">July 9, 2025 "“ Preparing your items.</p>
                         </div>
                     </div>
 
@@ -1233,7 +717,7 @@
                         </div>
                         <div class="flex-1">
                             <p class="font-medium text-sm text-blue-600">Shipped</p>
-                            <p class="text-xs text-gray-600">July 10, 2025 â€“ In transit via DHL.</p>
+                            <p class="text-xs text-gray-600">July 10, 2025 "“ In transit via DHL.</p>
                         </div>
                     </div>
 
@@ -1419,10 +903,10 @@
                     <div class="space-y-2">
                         <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                             <input type="checkbox" class="return-checkbox">
-                            <img class="w-10 h-10 rounded-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e3f92e89da-91c7ebe70b64c417c52b.png" alt="Summer Floral Dress">
+                            <img class="w-10 h-10 rounded-lg object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/e3f92e89da-91c7ebe70b64c417c52b.png" alt="Summer Floral Dress">
                             <div class="flex-1">
                                 <p class="font-medium text-sm">Summer Floral Dress</p>
-                                <p class="text-xs text-gray-600">Size M â€¢ $289.50</p>
+                                <p class="text-xs text-gray-600">Size M • $289.50</p>
                             </div>
                         </label>
                     </div>
@@ -1502,9 +986,9 @@ function enrichOrderForReceipt(o) {
     var r = { id: o.id, date: o.date, total: o.total, status: o.status, statusLabel: o.statusLabel, payment: o.payment, items: o.items || [] };
     r.receiptNumber = o.receiptNumber || (r.id ? 'RCT-' + String(r.id).replace(/^#/,'').replace(/\s/g,'') + '-' + (o.date || '').replace(/\s/g,'').replace(/,/g,'') : 'RCT-0001');
     r.subtotal = o.subtotal != null ? o.subtotal : o.total;
-    r.shipping = o.shipping != null ? o.shipping : 'â€”';
-    r.taxes = o.taxes != null ? o.taxes : 'â€”';
-    r.billedTo = o.billedTo || 'â€”';
+    r.shipping = o.shipping != null ? o.shipping : '—';
+    r.taxes = o.taxes != null ? o.taxes : '—';
+    r.billedTo = o.billedTo || o.billed_to || '—';
     r.shippingAddress = o.shippingAddress || '';
     r.shippingCity = o.shippingCity || '';
     r.items = (r.items || []).map(function(it) {

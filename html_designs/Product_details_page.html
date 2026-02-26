@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -27,7 +27,40 @@ tailwind.config = {
    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/chat-drawer-drag.css">
     <style>
-        ::-webkit-scrollbar { display: none;}
+        
+/* ---- MOBILE FULL-WIDTH OVERRIDE (match Home) ---- */
+@media screen and (max-width: 768px) {
+  #app-shell, #main-content, #auth-screen, #welcome_screen, #quiz-screen, #onboarding-screen,
+  #bottom-nav, #bottom-navigation, #header, #app-header,
+  #chat-drawer, #chat-input-bar, #shai-chat-drawer, #return-chat-drawer, #return-chat-input-bar, #chat-input-collapsed,
+  #shai-chat-drawer-wrapper, #chat-drawer-wrapper,
+  body > div, body > main {
+    max-width: 100vw !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-shadow: none !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+  }
+  [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]) {
+    left: 0 !important;
+    right: 0 !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+  #chat-drawer.translate-y-full, #shai-chat-drawer.translate-y-full, #return-chat-drawer.translate-y-full {
+    transform: translateY(100%) !important;
+  }
+  #bottom-nav > div, #bottom-navigation > div, nav#bottom-nav > div, nav#bottom-navigation > div {
+    padding-top: 2px !important;
+    padding-bottom: 24px !important;
+  }
+}
+
+::-webkit-scrollbar { display: none;}
         * { 
     font-family: 'DM Sans', 
                  'Karla',
@@ -437,7 +470,7 @@ tailwind.config = {
             <div id="contacts-container" class="space-y-2">
                 <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Alex Johnson" data-phone="+1 (555) 123-4567" data-goshopme="true">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Contact" class="w-full h-full object-cover">
+                        <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-2.jpg" alt="Contact" class="w-full h-full object-cover">
                     </div>
                     <div class="flex-1">
                         <p class="font-medium text-sm text-black">Alex Johnson</p>
@@ -459,7 +492,7 @@ tailwind.config = {
                 
                 <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="David Kim" data-phone="+1 (555) 456-7890" data-goshopme="true">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" alt="Contact" class="w-full h-full object-cover">
+                        <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-3.jpg" alt="Contact" class="w-full h-full object-cover">
                     </div>
                     <div class="flex-1">
                         <p class="font-medium text-sm text-black">David Kim</p>
@@ -481,7 +514,7 @@ tailwind.config = {
 
                 <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Emma Wilson" data-phone="+1 (555) 345-6789" data-goshopme="true">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="Contact" class="w-full h-full object-cover">
+                        <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-5.jpg" alt="Contact" class="w-full h-full object-cover">
                     </div>
                     <div class="flex-1">
                         <p class="font-medium text-sm text-black">Emma Wilson</p>
@@ -503,7 +536,7 @@ tailwind.config = {
 
                 <div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="Jennifer Lee" data-phone="+1 (555) 789-0123" data-goshopme="true">
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="Contact" class="w-full h-full object-cover">
+                        <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-6.jpg" alt="Contact" class="w-full h-full object-cover">
                     </div>
                     <div class="flex-1">
                         <p class="font-medium text-sm text-black">Jennifer Lee</p>
@@ -911,14 +944,14 @@ document.addEventListener("DOMContentLoaded", async function() {
             price: navPrice || 89,
             currency: 'USD',
             merchant: 'Zara',
-            images: navImage ? [navImage] : ['https://storage.googleapis.com/uxpilot-auth.appspot.com/a1fa951de5-1df3707f3a394528a723.png'],
+            images: navImage ? [navImage] : ['https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/a1fa951de5-1df3707f3a394528a723.png'],
             description: 'Elegant flowy silk midi dress. Perfect for spring days and special occasions. Features a flattering A-line silhouette with a delicate floral print.',
             material_and_care: '100% silk. Dry clean only. Do not bleach.',
             shipping_and_returns: 'Free shipping on orders over $50. 30-day returns.',
             sizingChart: { US: ['XS', 'S', 'M', 'L', 'XL'], EU: ['34', '36', '38', '40', '42'], UK: ['6', '8', '10', '12', '14'] },
             similar: [
-                { id: 'floral-midi-dress', name: 'Floral Midi Dress', brand: 'Reformation', price: 248, image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/ed54ed626a-c0cdcdbb57dc6381c4fd.png' },
-                { id: 'silk-slip-dress', name: 'Silk Slip Dress', brand: 'Reformation', price: 248, image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/1d822aec75-b3cb13c31948045b34c1.png' }
+                { id: 'floral-midi-dress', name: 'Floral Midi Dress', brand: 'Reformation', price: 248, image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/ed54ed626a-c0cdcdbb57dc6381c4fd.png' },
+                { id: 'silk-slip-dress', name: 'Silk Slip Dress', brand: 'Reformation', price: 248, image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/1d822aec75-b3cb13c31948045b34c1.png' }
             ],
             reviews: []
         } : {
@@ -1086,7 +1119,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll('[data-shai-avatar]').forEach(function(img) { img.src = window.__shaiAvatarUrl; });
     };
     window.testShAIAvatar = function(url) {
-        const testUrl = url || 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg';
+        const testUrl = url || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-2.jpg';
         window.setShAIAvatar(testUrl);
         console.log('testShAIAvatar:', testUrl);
     };
@@ -1220,6 +1253,7 @@ document.addEventListener("DOMContentLoaded", function () {
             hideAddFriendFlow();
         }
     }
+    window.expandDrawer = expandDrawer;
 
     if (chatOverlay) {
         chatOverlay.addEventListener("click", collapseDrawer);
@@ -1690,7 +1724,7 @@ document.addEventListener("touchmove", e => {
                 messages.forEach(msg => msg.remove());
                 
                 if (chatId === 'power-blazer-chat') {
-                    addProductBubbleToChat('Theory Power Blazer', '$295', 'https://storage.googleapis.com/uxpilot-auth.appspot.com/a07f271826-cee3c765a05f3b2170c5.png');
+                    addProductBubbleToChat('Theory Power Blazer', '$295', 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/a07f271826-cee3c765a05f3b2170c5.png');
                     setTimeout(() => {
                         addShAIMessage("I see you're interested in the Theory Power Blazer. What size are you usually?");
                     }, 500);
@@ -1701,7 +1735,7 @@ document.addEventListener("touchmove", e => {
                         addShAIMessage("The Theory Power Blazer runs slightly large. I'd recommend a Small for you. It has a structured fit that's perfect for professional settings.");
                     }, 1500);
                 } else if (chatId === 'midi-dress-chat') {
-                    addProductBubbleToChat('Reformation Midi Dress', '$178', 'https://storage.googleapis.com/uxpilot-auth.appspot.com/ed54ed626a-c0cdcdbb57dc6381c4fd.png');
+                    addProductBubbleToChat('Reformation Midi Dress', '$178', 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/ed54ed626a-c0cdcdbb57dc6381c4fd.png');
                     setTimeout(() => {
                         addShAIMessage("This Reformation Midi Dress is gorgeous! Are you looking for it in a different color?");
                     }, 500);
@@ -1712,7 +1746,7 @@ document.addEventListener("touchmove", e => {
                         addShAIMessage("I found similar styles in both black and navy! Let me show you some options that have the same silhouette.");
                     }, 1500);
                 } else if (chatId === 'chain-necklace-chat') {
-                    addProductBubbleToChat('Mejuri Chain Necklace', '$128', 'https://storage.googleapis.com/uxpilot-auth.appspot.com/27896e6e43-779d8991cbb35505b4d8.png');
+                    addProductBubbleToChat('Mejuri Chain Necklace', '$128', 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/27896e6e43-779d8991cbb35505b4d8.png');
                     setTimeout(() => {
                         addShAIMessage("This Mejuri chain necklace is a great choice! Are you looking to layer it or wear it alone?");
                     }, 500);
@@ -2063,7 +2097,7 @@ document.addEventListener("touchmove", e => {
 document.addEventListener("click", function(e) {
 
     // SHARE BUTTON – uses current product from loadProductData or DOM/URL
-    if (e.target.closest('button')?.querySelector('svg.transform.-rotate-45 path[d*="M6 12L3.269"]')) {
+    if (e.target.closest('#share-btn')) {
         e.preventDefault();
         const productData = getCurrentProductData();
         handleShareClick(productData);
@@ -2139,10 +2173,10 @@ document.addEventListener("click", function(e) {
             const priceEl = document.getElementById('product-price')?.textContent;
             return name ? { name: name, images: img?.src ? [img.src] : [], price: priceEl || '' } : null;
         }());
-        if (p && typeof expandDrawer === 'function' && typeof addShAIMessage === 'function') {
-            expandDrawer();
+        if (p && typeof window.expandDrawer === 'function' && typeof window.addShAIMessage === 'function') {
+            window.expandDrawer();
             const imgUrl = (p.images && p.images[0]) || document.getElementById('product-main-image')?.src || '';
-            addShAIMessage('Tell me more about the "' + (p.name || '').replace(/"/g, '&quot;') + '" - would you like styling suggestions or alternatives?', imgUrl ? [imgUrl] : []);
+            window.addShAIMessage('Tell me more about the "' + (p.name || '').replace(/"/g, '&quot;') + '" - would you like styling suggestions or alternatives?', imgUrl ? [imgUrl] : []);
         }
     }
 });

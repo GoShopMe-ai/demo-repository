@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="stylesheet" href="css/mobile-optimization.css">
-    <title>Order Tracking â€“ GoShopMe</title>
+    <title>Order Tracking "“ GoShopMe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -24,6 +24,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/chat-drawer-drag.css">
+
     <style>
         ::-webkit-scrollbar { display: none; }
         * { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
@@ -38,6 +40,8 @@
         #cart-indicator, #notif-indicator { min-width: 18px; min-height: 18px; padding: 0 5px; display: flex; align-items: center; justify-content: center; }
         #cart-indicator.hidden, #notif-indicator.hidden { display: none !important; }
         #cart-indicator.badge-numeric, #notif-indicator.badge-numeric { min-width: 18px; padding: 0 5px; }
+        @keyframes wavePulse { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
+        .voice-message-bubble { min-width: 140px; max-width: 260px; width: fit-content; display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 16px; }
     </style>
 </head>
 <body class="bg-[#F6F6F6] dm-sans">
@@ -70,7 +74,7 @@
         </div>
       </div>
     </div><!-- Main Content -->
-    <main id="main-content" class="pt-20 px-4 pb-40 overflow-y-auto">
+    <main id="main-content" class="pt-4 px-4 pb-40 overflow-y-auto">
       <!-- Header Section -->
       <section id="header-section" class="px-5 py-4 bg-white mb-4">
         <h2 class="text-lg poppins font-semibold text-gray-900 mb-2">
@@ -97,15 +101,15 @@
             <p class="text-sm text-gray-600 mb-1">Delivery Address</p>
             <p id="ot-address" class="font-medium text-sm whitespace-pre-line">
               Maria Lopez
-              123 Rue Saint-HonorÃ©
+              123 Rue Saint-Honoré
               Paris, France
             </p>
           </div>
           <div class="flex items-center gap-3 pt-3 border-t">
-            <img id="ot-item-image" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/fe90b9b439-e7fb2c439c531b8e3eb3.png" alt="Classic White Sneakers" class="w-12 h-12 rounded-lg object-cover">
+            <img id="ot-item-image" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/fe90b9b439-e7fb2c439c531b8e3eb3.png" alt="Classic White Sneakers" class="w-12 h-12 rounded-lg object-cover">
             <div class="flex-1">
               <p id="ot-item-title" class="font-medium text-sm">Classic White Sneakers</p>
-              <p id="ot-item-meta" class="text-xs text-gray-600">Size 8 â€¢ Qty 1</p>
+              <p id="ot-item-meta" class="text-xs text-gray-600">Size 8 • Qty 1</p>
             </div>
           </div>
         </div>
@@ -127,7 +131,7 @@
               </div>
               <div class="flex-1">
                 <p class="font-medium text-sm text-gray-900">Order Placed</p>
-                <p class="text-xs text-gray-600">July 8, 2025 â€“ We've received
+                <p class="text-xs text-gray-600">July 8, 2025 "“ We've received
                   your order.</p>
               </div>
             </div><!-- Processing -->
@@ -138,7 +142,7 @@
               </div>
               <div class="flex-1">
                 <p class="font-medium text-sm text-gray-900">Processing</p>
-                <p class="text-xs text-gray-600">July 9, 2025 â€“ Preparing your
+                <p class="text-xs text-gray-600">July 9, 2025 "“ Preparing your
                   items.</p>
               </div>
             </div><!-- Shipped -->
@@ -150,7 +154,7 @@
               </div>
               <div class="flex-1">
                 <p class="font-medium text-sm text-blue-600">Shipped</p>
-                <p class="text-xs text-gray-600">July 10, 2025 â€“ In transit via
+                <p class="text-xs text-gray-600">July 10, 2025 "“ In transit via
                   DHL.</p>
               </div>
             </div><!-- Out for Delivery -->
@@ -207,7 +211,62 @@
         </div>
       </section><!-- Support Section -->
       <section id="support-section" class="mx-4 mb-4"></section>
-    </main><!-- Bottom Navigation -->
+    </main>
+
+    <!-- Chat - exact same as Home -->
+    <div id="chat-overlay" class="fixed inset-0 bg-black/40 z-40 hidden"></div>
+    <div id="chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[50vh] transform translate-y-full transition-transform duration-300 flex flex-col border-t border-gray-100">
+        <div id="drag-handle-zone" class="chat-drawer-drag-zone flex justify-center pt-2 flex-shrink-0"><div id="drag-handle" class="w-10 h-1 bg-gray-300 rounded-full pointer-events-none"></div></div>
+        <div id="chat-header" class="flex items-center p-4 pb-2 flex-shrink-0">
+            <button id="back-btn" class="mr-3 hidden hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg></button>
+            <div class="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0"><img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar /></div>
+            <div class="flex-1"><p class="font-semibold text-black text-sm" id="header-title">ShAI</p><p class="text-xs text-gray-500" id="header-subtitle">Your shopping assistant</p></div>
+        </div>
+        <div id="chat-content" class="flex-1 flex flex-col min-h-0">
+            <div id="chat-messages" class="flex-1 overflow-y-auto">
+                <div class="p-4 pb-0">
+                    <div class="flex items-start space-x-3 mb-4">
+                        <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png" alt="ShAI avatar" data-shai-avatar /></div>
+                        <div class="flex-1">
+                            <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3"><p class="text-sm text-black">Hi there! I'm ShAI, your personal shopping assistant. How can I help you find the perfect items today?</p></div>
+                            <div id="smart-prompts" class="flex-shrink-0"><div class="flex flex-wrap gap-2 pb-2">
+                                <button class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 hover:bg-[#939BFB] hover:text-white transition-colors">I need a formal outfit</button>
+                                <button class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 hover:bg-[#939BFB] hover:text-white transition-colors">Find me seasonal outfits</button>
+                                <button class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 hover:bg-[#939BFB] hover:text-white transition-colors">What's trending right now?</button>
+                                <button class="bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 hover:bg-[#939BFB] hover:text-white transition-colors">Elevate my workwear</button>
+                            </div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="chat-input-drawer" class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
+                <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+                    <button id="cam-btn-drawer" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/></svg></button>
+                    <input type="text" id="chat-input-drawer-field" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans min-h-[24px]">
+                    <button id="add-friend-btn-drawer" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/></svg></button>
+                    <button id="mic-btn-drawer" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg></button>
+                    <button id="send-btn-drawer" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg></button>
+                </div>
+            </div>
+        </div>
+        <div id="add-friend-content" class="flex-1 flex flex-col min-h-0 hidden">
+            <div id="contact-list" class="flex-1 overflow-y-auto p-4">
+                <div class="mb-4"><div class="relative"><svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg><input type="text" id="contact-search" placeholder="Search contacts..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 pl-10 text-sm"></div></div>
+                <div id="contacts-container" class="space-y-2"></div>
+            </div>
+        </div>
+    </div>
+    <div id="chat-input-bar" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 p-4 z-30">
+        <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+            <button id="cam-btn" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/></svg></button>
+            <input type="text" id="message-input" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans min-h-[24px]">
+            <button id="add-friend-btn" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/></svg></button>
+            <button id="mic-btn" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg></button>
+            <button id="send-btn" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg></button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
     <nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] border-t border-gray-100 bg-white px-4 py-3 z-50">
       <div class="flex items-center justify-around">
           <a href="Home.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px]">
@@ -243,7 +302,7 @@
 (function(){var BADGE_KEYS={notif:'goshopme_notif_count',cart:'goshopme_cart_count'};var cartCountValue=0,notifCountValue=0;function getBadgeElements(){return{cartIndicator:document.getElementById('cart-indicator'),cartCount:document.getElementById('cart-count'),notifIndicator:document.getElementById('notif-indicator'),notifCount:document.getElementById('notif-count')};}function updateCartBadge(){var el=getBadgeElements();if(!el.cartIndicator||!el.cartCount)return;var show=cartCountValue>0;el.cartIndicator.classList.toggle('hidden',!show);el.cartIndicator.classList.toggle('flex',show);el.cartCount.textContent=show?(cartCountValue>99?'99+':cartCountValue):'';try{localStorage.setItem(BADGE_KEYS.cart,String(cartCountValue));localStorage.setItem('__cartCount',String(cartCountValue));}catch(e){}}function updateNotifBadge(){var el=getBadgeElements();if(!el.notifIndicator||!el.notifCount)return;var show=notifCountValue>0;el.notifIndicator.classList.toggle('hidden',!show);el.notifIndicator.classList.toggle('flex',show);el.notifCount.textContent=show?(notifCountValue>99?'99+':notifCountValue):'';try{localStorage.setItem(BADGE_KEYS.notif,String(notifCountValue));localStorage.setItem('notifCount',String(notifCountValue));}catch(e){}}window.updateCartBadge=updateCartBadge;window.updateNotifBadge=updateNotifBadge;window.testBadges=function(notif,cart){notifCountValue=Math.max(0,notif!=null?notif:5);cartCountValue=Math.max(0,cart!=null?cart:3);updateNotifBadge();updateCartBadge();};window.resetBadges=function(){cartCountValue=0;notifCountValue=0;try{localStorage.setItem(BADGE_KEYS.notif,'0');localStorage.setItem(BADGE_KEYS.cart,'0');localStorage.setItem('__cartCount','0');localStorage.setItem('notifCount','0');}catch(e){}updateCartBadge();updateNotifBadge();};document.addEventListener('DOMContentLoaded',function(){try{notifCountValue=parseInt(localStorage.getItem(BADGE_KEYS.notif)||localStorage.getItem('notifCount')||'0',10);cartCountValue=parseInt(localStorage.getItem(BADGE_KEYS.cart)||localStorage.getItem('__cartCount')||'0',10);}catch(e){}updateCartBadge();updateNotifBadge();});})();
     </script>
     <script>
-    // Dynamic order tracking content â€“ call window.setOrderTrackingData(order)
+    // Dynamic order tracking content "“ call window.setOrderTrackingData(order)
     (function() {
         function getStatusClasses(statusCode) {
             var code = (statusCode || '').toLowerCase();
@@ -455,6 +514,7 @@
       });
     </script>
 </div>
-<script src="js/shai-chat.js"></script>
+<script src="js/chat-dock-nav.js"></script>
+<script src="js/home-chat.js"></script>
 </body>
 </html>

@@ -127,7 +127,11 @@
         updateNotifBadge();
     }
 
-    document.addEventListener('DOMContentLoaded', init);
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 
     window.GoShopMeHeaderIcons = {
         updateCartBadge: function(count) {

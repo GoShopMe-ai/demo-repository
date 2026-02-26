@@ -6,7 +6,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Receipt PDF â€“ GoShopMe</title>
+    <title>Receipt PDF "“ GoShopMe</title>
     <link rel="stylesheet" href="css/mobile-optimization.css">
 <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -25,8 +25,44 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Karla:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/chat-drawer-drag.css">
+
+    
     <style>
-        ::-webkit-scrollbar { display: none; }
+        
+/* ---- MOBILE FULL-WIDTH OVERRIDE (match Home) ---- */
+@media screen and (max-width: 768px) {
+  #app-shell, #main-content, #auth-screen, #welcome_screen, #quiz-screen, #onboarding-screen,
+  #bottom-nav, #bottom-navigation, #header, #app-header,
+  #chat-drawer, #chat-input-bar, #shai-chat-drawer, #return-chat-drawer, #return-chat-input-bar, #chat-input-collapsed,
+  #shai-chat-drawer-wrapper, #chat-drawer-wrapper,
+  body > div, body > main {
+    max-width: 100vw !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-shadow: none !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+  }
+  [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]) {
+    left: 0 !important;
+    right: 0 !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+  #chat-drawer.translate-y-full, #shai-chat-drawer.translate-y-full, #return-chat-drawer.translate-y-full {
+    transform: translateY(100%) !important;
+  }
+  #bottom-nav > div, #bottom-navigation > div, nav#bottom-nav > div, nav#bottom-navigation > div {
+    padding-top: 2px !important;
+    padding-bottom: 24px !important;
+  }
+}
+
+::-webkit-scrollbar { display: none; }
         body { -ms-overflow-style: none; scrollbar-width: none; margin: 0; }
         * { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
@@ -114,7 +150,7 @@
       <div id="transaction-info" class="px-6 py-3 border-b border-gray-100">
         <div class="grid grid-cols-2 gap-4 text-sm">
           <div><p class="text-gray-600 dm-sans">Date:</p><p id="pdf-date" class="font-medium dm-sans">July 15, 2025</p></div>
-          <div><p class="text-gray-600 dm-sans">Payment:</p><p id="pdf-payment" class="font-medium dm-sans">Visa â€¢â€¢â€¢â€¢ 4242</p></div>
+          <div><p class="text-gray-600 dm-sans">Payment:</p><p id="pdf-payment" class="font-medium dm-sans">Visa •••• 4242</p></div>
           <div><p class="text-gray-600 dm-sans">Status:</p><p id="pdf-status" class="font-medium text-green-600 dm-sans">Paid</p></div>
           <div><p class="text-gray-600 dm-sans">Type:</p><p id="pdf-type" class="font-medium dm-sans">Purchase</p></div>
         </div>
@@ -123,7 +159,7 @@
         <h3 class="poppins text-sm font-semibold text-gray-900 mb-2">Bill To:</h3>
         <div class="text-sm dm-sans">
           <p id="pdf-billed-to" class="font-medium">Maria Lopez</p>
-          <p id="pdf-address" class="text-gray-600 mt-1">123 Rue Saint-HonorÃ©</p>
+          <p id="pdf-address" class="text-gray-600 mt-1">123 Rue Saint-Honoré</p>
           <p id="pdf-city" class="text-gray-600">Paris, France 75001</p>
         </div>
       </div><!-- Items Purchased -->
@@ -226,14 +262,14 @@
         var o = {};
         o.id = order.id || order.orderNumber || '';
         o.receiptNumber = order.receiptNumber || (o.id ? 'RCT-' + String(o.id).replace(/^#/,'').replace(/\s/g,'') + '-' + (order.date || '').replace(/\s/g,'') : 'RCT-0001');
-        o.date = order.date || 'â€”';
-        o.payment = order.payment || 'â€”';
+        o.date = order.date || '"”';
+        o.payment = order.payment || '"”';
         o.statusLabel = order.statusLabel || order.status || 'Paid';
-        o.subtotal = order.subtotal != null ? order.subtotal : order.total || 'â€”';
-        o.shipping = order.shipping != null ? order.shipping : 'â€”';
-        o.taxes = order.taxes != null ? order.taxes : 'â€”';
-        o.total = order.total || 'â€”';
-        o.billedTo = order.billedTo || 'â€”';
+        o.subtotal = order.subtotal != null ? order.subtotal : order.total || '"”';
+        o.shipping = order.shipping != null ? order.shipping : '"”';
+        o.taxes = order.taxes != null ? order.taxes : '"”';
+        o.total = order.total || '"”';
+        o.billedTo = order.billedTo || '"”';
         o.shippingAddress = order.shippingAddress || '';
         o.shippingCity = order.shippingCity || '';
         o.items = Array.isArray(order.items) ? order.items : [];
@@ -246,12 +282,12 @@
         function esc(s) { return (s == null) ? '' : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
         var id = order.id || '';
         var rn = order.receiptNumber || 'RCT-0001';
-        var st = order.subtotal || 'â€”', sh = order.shipping || 'â€”', tx = order.taxes || 'â€”';
-        var addr = [order.shippingAddress || '', order.shippingCity || ''].filter(Boolean).join(', ') || 'â€”';
+        var st = order.subtotal || '"”', sh = order.shipping || '"”', tx = order.taxes || '"”';
+        var addr = [order.shippingAddress || '', order.shippingCity || ''].filter(Boolean).join(', ') || '"”';
         var now = new Date().toLocaleDateString('en-US', { year:'numeric',month:'long',day:'numeric' }) + ' at ' + new Date().toLocaleTimeString('en-US', { hour:'numeric',minute:'2-digit' });
         var itemRows = order.items.map(function(i) {
           var p = i.price != null ? i.price : (order.items.length === 1 ? order.total : null);
-          if (p == null) p = 'â€”';
+          if (p == null) p = '"”';
           return '<tr><td style="padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:11px;vertical-align:top;text-align:center;">' +
             '<div style="font-weight:500;color:#111;">' + esc(i.title || 'Item') + '</div>' +
             '<div style="font-size:10px;color:#6b7280;">' + esc(i.meta || '') + '</div></td>' +
@@ -263,7 +299,7 @@
             '<p style="margin:4px 0 0;font-size:12px;color:#6b7280;">Your Personal Shopper</p></div>' +
           '<div style="text-align:center;padding:8px 16px;border-bottom:1px solid #f3f4f6;">' +
             '<h2 style="margin:0 0 4px;font-size:18px;font-weight:600;color:#111;">RECEIPT</h2>' +
-            '<p style="margin:0;font-size:12px;color:#6b7280;">Order ' + esc(id || 'â€”') + '</p>' +
+            '<p style="margin:0;font-size:12px;color:#6b7280;">Order ' + esc(id || '"”') + '</p>' +
             '<p style="margin:2px 0 0;font-size:11px;color:#9ca3af;">Receipt: ' + esc(rn) + '</p></div>' +
           '<div style="padding:6px 16px;border-bottom:1px solid #f3f4f6;text-align:center;">' +
             '<table style="width:100%;border-collapse:collapse;font-size:12px;margin:0 auto;"><tr>' +
@@ -297,7 +333,7 @@
         var order = null;
         try { order = JSON.parse(localStorage.getItem('__receiptOrder') || '{}'); } catch (e) {}
         if (!order || !order.items || order.items.length === 0) {
-          order = { id: '#S04589', date: 'July 15, 2025', total: '$289.50', statusLabel: 'Delivered', payment: 'Visa â€¢â€¢â€¢â€¢ 4242', receiptNumber: 'RCT-20250715-0001', subtotal: '$250.00', shipping: '$9.50', taxes: '$30.00', billedTo: 'Maria Lopez', shippingAddress: '123 Rue Saint-HonorÃ©', shippingCity: 'Paris, France 75001', items: [{ title: 'Summer Floral Dress', meta: 'Size M â€¢ Qty 1', price: '$250.00' }] };
+          order = { id: '#S04589', date: 'July 15, 2025', total: '$289.50', statusLabel: 'Delivered', payment: 'Visa •••• 4242', receiptNumber: 'RCT-20250715-0001', subtotal: '$250.00', shipping: '$9.50', taxes: '$30.00', billedTo: 'Maria Lopez', shippingAddress: '123 Rue Saint-Honoré', shippingCity: 'Paris, France 75001', items: [{ title: 'Summer Floral Dress', meta: 'Size M • Qty 1', price: '$250.00' }] };
         }
         var orderId = (order && (order.id || order.orderNumber)) ? String(order.id || order.orderNumber).replace(/^#/,'') : 'S04589';
         var html = buildReceiptPdfHtml(order);
@@ -376,27 +412,27 @@
         function esc(str) { return (str == null) ? '' : String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
         var id = order.id || '';
         var receiptNum = order.receiptNumber || (id ? 'RCT-' + String(id).replace(/^#/, '') : 'RCT-0001');
-        var subtotal = order.subtotal || order.total || 'â€”';
-        var shipping = order.shipping != null ? order.shipping : 'â€”';
-        var taxes = order.taxes != null ? order.taxes : 'â€”';
+        var subtotal = order.subtotal || order.total || '"”';
+        var shipping = order.shipping != null ? order.shipping : '"”';
+        var taxes = order.taxes != null ? order.taxes : '"”';
         var items = order.items || [];
         var addr = order.shippingAddress || '';
         var city = order.shippingCity || '';
 
         var set = function(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; };
-        set('pdf-order-number', 'Order ' + (id || 'â€”'));
+        set('pdf-order-number', 'Order ' + (id || '"”'));
         set('pdf-receipt-number', 'Receipt: ' + receiptNum);
-        set('pdf-date', order.date || 'â€”');
-        set('pdf-payment', order.payment || 'â€”');
+        set('pdf-date', order.date || '"”');
+        set('pdf-payment', order.payment || '"”');
         set('pdf-status', order.statusLabel || order.status || 'Paid');
         set('pdf-type', 'Purchase');
-        set('pdf-billed-to', order.billedTo || 'â€”');
-        set('pdf-address', addr || 'â€”');
-        set('pdf-city', city || 'â€”');
+        set('pdf-billed-to', order.billedTo || '"”');
+        set('pdf-address', addr || '"”');
+        set('pdf-city', city || '"”');
         set('pdf-subtotal', subtotal);
         set('pdf-shipping', shipping);
         set('pdf-taxes', taxes);
-        set('pdf-total', order.total || 'â€”');
+        set('pdf-total', order.total || '"”');
 
         var container = document.getElementById('pdf-items-container');
         if (container) {
@@ -405,7 +441,7 @@
             var img = item.image || '';
             var title = esc(item.title || '');
             var meta = esc(item.meta || '');
-            var price = item.price || itemPrice || 'â€”';
+            var price = item.price || itemPrice || '"”';
             return '<div class="flex items-center gap-3 py-3 border-b border-gray-100">' +
               '<div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">' +
               (img ? '<img class="w-full h-full object-cover" src="' + esc(img) + '" alt="' + title + '">' :
