@@ -81,6 +81,34 @@
         #chat-overlay {
             z-index: 35 !important;
         }
+        /* Input bar & drawer: compact button layout (match Home) */
+        #chat-input-bar > div,
+        #chat-drawer .border-t.border-gray-100 > div {
+            min-height: 44px !important;
+            align-items: center !important;
+            padding: 8px 12px !important;
+        }
+        #chat-input-bar button,
+        #chat-drawer .border-t.border-gray-100 button {
+            flex-shrink: 0 !important;
+            width: 36px !important;
+            height: 36px !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        #chat-input-bar #shai-input-bar,
+        #chat-drawer #shai-input-drawer,
+        #chat-input-bar textarea,
+        #chat-drawer .border-t.border-gray-100 textarea {
+            flex: 1 1 0% !important;
+            min-width: 0 !important;
+        }
+        #chat-input-bar #shai-send-bar.hidden,
+        #chat-drawer #shai-send-drawer.hidden {
+            display: none !important;
+        }
 
         @media screen and (max-width: 768px) {
             #chat-drawer, #chat-input-bar {
