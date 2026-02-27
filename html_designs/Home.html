@@ -941,7 +941,23 @@ async function loadHomeData() {
     });
     loadCreatorCollections(data.creatorCollections || []);
     if (data.categories && data.categories.length) window.renderCategories(data.categories);
-    if (data.recentActivity && data.recentActivity.length) window.renderRecentActivity(data.recentActivity);
+    var ra = data.recentActivity || [];
+    var rh = window.__recentChatHistory || {};
+    ra.forEach(function(item) {
+        var id = item.chatId || '';
+        if (!id || rh[id]) return;
+        rh[id] = {
+            messages: item.messages || [
+                { role: 'user', text: 'I need help with the ' + (item.title || '') + ' — ' + (item.subtitle || '') },
+                { role: 'ai', text: 'Of course! I\'d love to help. ' + (item.subtitle === 'Size advice' ? 'What\'s your usual size? I can recommend the best fit.' : item.subtitle === 'Color options' ? 'We have several colors. Which do you prefer?' : 'Let me share some tips.') },
+                { role: 'user', text: 'Thanks!' },
+                { role: 'ai', text: 'Anytime! Ask if you need more.' }
+            ],
+            thumbnails: item.thumbnails || (item.image ? [item.image] : [])
+        };
+    });
+    window.__recentChatHistory = rh;
+    window.renderRecentActivity(ra);
 }
 document.addEventListener('DOMContentLoaded', loadHomeData);
 </script>
@@ -2097,9 +2113,50 @@ function removeTempRecordingBubble() {
             addShAIMessage(`Tell me more about the "${productName}" - would you like styling suggestions or alternatives?`, imageUrl ? [imageUrl] : []);
         }, 300);
     };
+
+    /** Chat history per chatId: { messages: [{role,text,thumbnails?}], thumbnails: [urls] } */
+    window.__recentChatHistory = window.__recentChatHistory || {};
+    window.openRecentChat = function(item) {
+        if (!item) return;
+        var chatId = typeof item === 'string' ? item : (item.chatId || '');
+        var history = window.__recentChatHistory[chatId] || {};
+        var messages = history.messages || [];
+        var thumbnails = history.thumbnails || (item.image ? [item.image] : []);
+        if (!isDrawerExpanded) expandDrawer();
+        var container = document.querySelector('#chat-messages .p-4');
+        if (!container) return;
+        var shaiAvatar = 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
+        container.innerHTML = '';
+        if (thumbnails.length) {
+            var thumbRow = document.createElement('div');
+            thumbRow.className = 'flex gap-2 overflow-x-auto pb-3 mb-3 border-b border-gray-100';
+            thumbRow.innerHTML = thumbnails.slice(0, 5).map(function(url) { return '<img src="' + (url || '').replace(/"/g, '&quot;') + '" alt="" class="w-16 h-16 rounded-lg object-cover flex-shrink-0">'; }).join('');
+            container.appendChild(thumbRow);
+        }
+        (messages.length ? messages : [{ role: 'ai', text: 'You were asking about ' + (item.title || 'this item') + '. ' + (item.subtitle || '') + ' — how can I help you continue?' }]).forEach(function(m) {
+            var div = document.createElement('div');
+            if (m.role === 'user') {
+                div.className = 'flex justify-end mb-4';
+                div.innerHTML = '<div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%]"><p class="text-sm">' + (m.text || '').replace(/</g, '&lt;') + '</p></div>';
+            } else {
+                div.className = 'flex items-start space-x-3 mb-4';
+                div.innerHTML = '<div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"><img class="w-full h-full object-cover" src="' + shaiAvatar + '" alt="ShAI"></div><div class="flex-1"><div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 max-w-[80%]"><p class="text-sm text-black">' + (m.text || '').replace(/</g, '&lt;') + '</p></div></div>';
+            }
+            container.appendChild(div);
+        });
+        var chatEl = document.getElementById('chat-messages');
+        if (chatEl) chatEl.scrollTop = chatEl.scrollHeight;
+    };
     
+    /** Map Home collection id -> full { collection, creator } for Creator Single Collection */
+    window.__homeCollectionPayloads = window.__homeCollectionPayloads || {};
     window.openCollectionDetail = function(collectionId) {
-        console.log('Opening collection detail for:', collectionId);
+        var payload = window.__homeCollectionPayloads[collectionId];
+        if (payload) {
+            try { sessionStorage.setItem('__singleCollectionData', JSON.stringify(payload)); } catch (e) {}
+        }
+        var name = (payload && payload.collection && payload.collection.name) ? payload.collection.name : (collectionId || '');
+        window.location.href = "Creator`s Single_Collection.html?collection=" + encodeURIComponent(name);
     };
     
     window.shareCollection = function(name) {
@@ -2169,6 +2226,21 @@ function removeTempRecordingBubble() {
 <div class="hidden"></div>
 
 <script>
+/** Map Home collection id -> { creatorId, collectionId } for full payload lookup */
+var HOME_COLLECTION_MAP = {
+    'minimalist-chic': { creatorId: 'emma-style', collectionId: 'paris-in-spring' },
+    'bold-bright': { creatorId: 'anna-rivera', collectionId: 'power-business' },
+    'neutral-power': { creatorId: 'styled-by-mira', collectionId: 'neutral-power' },
+    'urban-street': { creatorId: 'maya-johnson', collectionId: 'urban-street' }
+};
+/** Full creator+collection data for Creator Single Collection (subset of Creator Collections) */
+var HOME_CREATORS_DATA = {
+    'emma-style': { id: 'emma-style', name: 'Emma Style', avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-5.jpg', tagline: 'Elevated everyday style', followers: '47.2k', isFollowing: false, social: { instagram: 'emma.style', tiktok: 'emmastyle' }, collections: [{ id: 'paris-in-spring', name: 'Paris in Spring', coverImage: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/48b9dd5fe7-08300242161fff705be9.png', description: 'Effortless elegance for spring days', itemCount: 7, priceRange: '$240-580', saves: '2.1k saves', badge: 'New Collection', itemThumbnails: ['https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/a1fa951de5-1df3707f3a394528a723.png'], products: [{ id: 'p1', name: 'Floral Midi Dress', brand: 'Zara', image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/a1fa951de5-1df3707f3a394528a723.png', price: '$89', description: 'Flowy floral print dress', isWishlisted: false }, { id: 'p2', name: 'Straw Tote Bag', brand: '& Other Stories', image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/a5a5c3117b-e552b0101625253f2e63.png', price: '$65', description: 'Natural woven straw tote', isWishlisted: true }, { id: 'p3', name: 'Canvas Sneakers', brand: 'Veja', image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/5f3cd8d80d-86184dd368f92c3bd86a.png', price: '$145', description: 'Eco-friendly white canvas sneakers', isWishlisted: false }] }] },
+    'anna-rivera': { id: 'anna-rivera', name: 'Anna Rivera', avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-6.jpg', tagline: 'Minimalist cool', followers: '32.1k', isFollowing: false, social: {}, collections: [{ id: 'power-business', name: 'Power Business', coverImage: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/b13c2b21e8-e2e6c6512286c20cbd44.png', description: 'Professional power looks', itemCount: 8, priceRange: '$180-420', saves: '1.2k saves', products: [{ id: 'pb1', name: 'Tailored Blazer', brand: 'Theory', image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/7e094a771c-f075ee55c692dad6fbaa.png', price: '$425', description: 'Classic wool blazer', isWishlisted: false }, { id: 'pb2', name: 'Pencil Skirt', brand: 'Mango', image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/1c28bc4fa5-25ed7e84931d74632079.png', price: '$59', description: 'High-waisted midi skirt', isWishlisted: false }] }] },
+    'styled-by-mira': { id: 'styled-by-mira', name: 'StyledByMira', avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-1.jpg', tagline: 'Neutral elegance', followers: '38.5k', isFollowing: false, social: {}, collections: [{ id: 'neutral-power', name: 'Neutral Power', coverImage: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Neutrals.jpg', description: 'Timeless neutral pieces', itemCount: 10, priceRange: '$120-380', saves: '2.3k saves', products: [{ id: 'np1', name: 'Camel Coat', brand: 'Max Mara', image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/58b298509d-cf25dd6dfda4cd56355a.png', price: '$1,890', description: 'Timeless camel wool coat', isWishlisted: false }, { id: 'np2', name: 'Cashmere Sweater', brand: 'Brunello Cucinelli', image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/cashmere%20sweater.jpg', price: '$1,850', description: 'Ultra-soft cashmere', isWishlisted: false }] }] },
+    'maya-johnson': { id: 'maya-johnson', name: 'Maya Johnson', avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-1.jpg', tagline: 'Street style', followers: '41.2k', isFollowing: false, social: {}, collections: [{ id: 'urban-street', name: 'Urban Street Style', coverImage: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Urban%20style.jpg', description: 'Edgy streetwear essentials', itemCount: 11, priceRange: '$90-320', saves: '1.8k saves', products: [{ id: 'us1', name: 'Oversized Hoodie', brand: 'Off-White', image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/fb74c3e09c-e22d29f07626188ecf2d.png', price: '$420', description: 'Oversized cotton hoodie', isWishlisted: false }, { id: 'us2', name: 'Cargo Pants', brand: 'Carhartt', image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/75d7e8ebca-2a477c8708f67ea2e382.png', price: '$98', description: 'Utility cargo pants', isWishlisted: false }] }] }
+};
+
 async function loadCreatorCollections(collections) {
     const container = document.getElementById("creator-list");
     const template = document.getElementById("creator-card-template");
@@ -2177,6 +2249,19 @@ async function loadCreatorCollections(collections) {
     const list = Array.isArray(collections) ? collections : [];
     container.innerHTML = '';
     container.appendChild(template);
+    var payloads = window.__homeCollectionPayloads || {};
+
+    list.forEach(col => {
+        var map = HOME_COLLECTION_MAP[col.id];
+        var creatorData = map && HOME_CREATORS_DATA[map.creatorId];
+        var colData = creatorData && (creatorData.collections || []).find(function(c) { return (c.id || c.name) === map.collectionId; });
+        if (creatorData && colData) {
+            payloads[col.id] = { collection: colData, creator: { id: creatorData.id, name: creatorData.name, avatar: creatorData.avatar, tagline: creatorData.tagline, followers: creatorData.followers, isFollowing: creatorData.isFollowing, social: creatorData.social || {} } };
+        } else {
+            payloads[col.id] = { collection: { name: col.title, coverImage: col.coverUrl, coverVideo: col.coverType === 'video' ? col.coverUrl : '', coverType: col.coverType || 'image', description: '', products: [], itemCount: 0, priceRange: '', saves: '0 saves' }, creator: { name: col.creatorName || '', avatar: col.creatorAvatarUrl || '', tagline: '', followers: 0, isFollowing: false, social: {} } };
+        }
+    });
+    window.__homeCollectionPayloads = payloads;
 
     list.forEach(col => {
         const clone = template.content.cloneNode(true);
@@ -2380,7 +2465,7 @@ window.renderRecentActivity = function (historyItems = []) {
         row.className =
             "recent-chat-item flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors";
 
-        row.onclick = () => openRecentChat(item.chatId);
+        row.onclick = () => openRecentChat(item);
 
         row.innerHTML = `
             <div class="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
@@ -2399,14 +2484,6 @@ window.renderRecentActivity = function (historyItems = []) {
     });
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-    var fallback = window.__HOME_FALLBACK_DATA || {};
-    if (fallback.recentActivity && fallback.recentActivity.length) {
-        window.renderRecentActivity(fallback.recentActivity);
-    } else {
-        window.renderRecentActivity([]);
-    }
-});
 </script>
 <script>
 window.renderCategories = function (categories = []) {

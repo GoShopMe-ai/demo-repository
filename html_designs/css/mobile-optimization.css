@@ -192,6 +192,73 @@ body {
     overscroll-behavior: contain;
   }
 
+  /* Chat input bar: no transform (prevents shift to left when using left-1/2 -translate-x-1/2) */
+  #chat-input-bar,
+  #chat-input-collapsed {
+    position: fixed !important;
+    transform: none !important;
+    margin: 0 !important;
+    padding-left: max(16px, env(safe-area-inset-left, 0)) !important;
+    padding-right: max(16px, env(safe-area-inset-right, 0)) !important;
+  }
+
+  /* Chat drawer: no horizontal transform when visible */
+  #chat-drawer:not(.translate-y-full),
+  #shai-chat-drawer:not(.translate-y-full) {
+    transform: none !important;
+  }
+
+  /* Drawer input area: compact, stable button layout (match Home) */
+  #chat-input-drawer {
+    flex-shrink: 0 !important;
+    padding: 12px 16px !important;
+  }
+  #chat-input-drawer > div {
+    min-height: 44px !important;
+    align-items: center !important;
+    padding: 8px 12px !important;
+  }
+  #chat-input-drawer-field {
+    max-height: 32px !important;
+  }
+  #chat-input-bar > div {
+    min-height: 44px !important;
+    align-items: center !important;
+  }
+
+  /* Input bar buttons: 36x36, same layout as Home/Picks */
+  #chat-input-bar .icon-button,
+  #chat-input-drawer .icon-button {
+    flex-shrink: 0 !important;
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  #chat-input-bar .icon-button.hidden,
+  #chat-input-drawer .icon-button.hidden,
+  #chat-input-bar #send-btn.hidden,
+  #chat-input-drawer #send-btn-drawer.hidden {
+    display: none !important;
+  }
+  #chat-input-bar #send-btn:not(.hidden),
+  #chat-input-drawer #send-btn-drawer:not(.hidden) {
+    flex-shrink: 0 !important;
+    width: 36px !important;
+    height: 36px !important;
+    margin-left: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  #chat-input-bar #message-input,
+  #chat-input-drawer-field {
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
+  }
+
   /* Re-apply Y slide when drawer is hidden (translate-y-full) */
   #chat-drawer.translate-y-full,
   #shai-chat-drawer.translate-y-full,

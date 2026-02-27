@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -861,10 +861,12 @@
         var container = button.closest('.voice-message-bubble');
         var audio = container.querySelector('audio');
         var playIcon = button.querySelector('svg');
+        var durationText = container ? container.querySelector('.duration-text') : null;
         if (audio.paused) {
             audio.play();
             playIcon.innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
-            audio.onended = function() { playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; };
+            audio.ontimeupdate = function() { if (durationText) { var r = Math.ceil(audio.duration - audio.currentTime); durationText.textContent = Math.floor(r/60) + ':' + String(r%60).padStart(2,'0'); } };
+            audio.onended = function() { playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; if (durationText && !isNaN(audio.duration)) { var d = Math.ceil(audio.duration); durationText.textContent = Math.floor(d/60) + ':' + String(d%60).padStart(2,'0'); } };
         } else {
             audio.pause();
             playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';

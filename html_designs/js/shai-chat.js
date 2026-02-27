@@ -407,7 +407,7 @@
         btn.querySelector('svg').innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
         bars.forEach(function (b, i) { b.style.animation = 'shaiWave 1.1s ease-in-out infinite'; b.style.animationDelay = (i*0.08)+'s'; });
         audio.ontimeupdate = function () { var r=Math.ceil(audio.duration-audio.currentTime); dur.textContent=Math.floor(r/60)+':'+String(r%60).padStart(2,'0'); };
-        audio.onended = function () { btn.querySelector('svg').innerHTML='<path d="M8 5v14l11-7z"/>'; bars.forEach(function(b){b.style.animation='none';}); };
+        audio.onended = function () { btn.querySelector('svg').innerHTML='<path d="M8 5v14l11-7z"/>'; bars.forEach(function(b){b.style.animation='none';}); if (dur && !isNaN(audio.duration)) { var d = Math.ceil(audio.duration); dur.textContent = Math.floor(d/60) + ':' + String(d%60).padStart(2,'0'); } };
       } else {
         audio.pause();
         btn.querySelector('svg').innerHTML = '<path d="M8 5v14l11-7z"/>';

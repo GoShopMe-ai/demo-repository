@@ -522,17 +522,16 @@
             }
             if (contactSearch) contactSearch.addEventListener('input', function() { filterContacts(this.value); });
             
-            let isDrawerExpanded = true;
+            let isDrawerExpanded = false;
             let isInAddFriendFlow = false;
             let drawerHeight = 50;
             let isDragging = false;
             
-            // Creator Single Collection: drawer open by default at 50%
-            chatDrawer.classList.remove('translate-y-full');
-            chatOverlay.classList.remove('hidden');
-            chatInputBar.classList.add('hidden');
+            // Creator Single Collection: drawer closed by default (match Home) - input bar visible at bottom
+            chatDrawer.classList.add('translate-y-full');
+            chatOverlay.classList.add('hidden');
+            chatInputBar.classList.remove('hidden');
             chatDrawer.style.height = '50vh';
-            document.body.style.overflow = 'hidden';
 
             // Overlay click - collapse drawer (design system: no drawer-toggle button)
             chatOverlay.addEventListener('click', collapseDrawer);
@@ -815,7 +814,7 @@
                         btn.querySelector('svg').innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
                         bars.forEach(function(b, i) { b.style.animation = 'shaiWave 1.1s ease-in-out infinite'; b.style.animationDelay = (i*0.08)+'s'; });
                         if (dur) { audio.ontimeupdate = function() { var rem=Math.ceil(audio.duration-audio.currentTime); dur.textContent=Math.floor(rem/60)+':'+String(rem%60).padStart(2,'0'); }; }
-                        audio.onended = function() { btn.querySelector('svg').innerHTML='<path d="M8 5v14l11-7z"/>'; bars.forEach(function(b){b.style.animation='none';}); };
+                        audio.onended = function() { btn.querySelector('svg').innerHTML='<path d="M8 5v14l11-7z"/>'; bars.forEach(function(b){b.style.animation='none';}); if (dur && !isNaN(audio.duration)) { var d = Math.ceil(audio.duration); dur.textContent = Math.floor(d/60) + ':' + String(d%60).padStart(2,'0'); } };
                     } else {
                         audio.pause();
                         btn.querySelector('svg').innerHTML = '<path d="M8 5v14l11-7z"/>';
