@@ -442,15 +442,20 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
     });
 
     if (dragHandleZone && chatDrawer) {
+        var dragStartY = 0, dragStartH = 0;
         dragHandleZone.style.userSelect = "none";
         dragHandleZone.style.cursor = "grab";
         dragHandleZone.style.paddingTop = "14px";
         dragHandleZone.style.paddingBottom = "14px";
-        dragHandleZone.addEventListener("touchstart", function(e) { isDragging = true; var dragStartY = e.touches[0].clientY; var dragStartH = chatDrawer.getBoundingClientRect().height; chatDrawer.style.transition = "none"; }, { passive: true });
+        dragHandleZone.addEventListener("touchstart", function(e) {
+            isDragging = true;
+            dragStartY = e.touches[0].clientY;
+            dragStartH = chatDrawer.getBoundingClientRect().height;
+            chatDrawer.style.transition = "none";
+        }, { passive: true });
         dragHandleZone.addEventListener("touchmove", function(e) {
             if (!isDragging) return;
             e.preventDefault();
-            var dragStartY = e.touches[0].clientY; var dragStartH = chatDrawer.getBoundingClientRect().height;
             var dy = e.touches[0].clientY - dragStartY;
             var bottomOffset = parseFloat(getComputedStyle(chatDrawer).bottom) || 64;
             var maxH = window.innerHeight - bottomOffset - 80;

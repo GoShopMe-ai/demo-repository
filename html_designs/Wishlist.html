@@ -296,13 +296,13 @@
     </header>
 
     <!-- Main Content Container -->
-    <main id="main-content" class="pt-4 px-4 pb-40 relative">
+    <main id="main-content" class="pt-20 px-4 pb-40 relative">
         
         <!-- Background Content - Wishlist -->
         <div id="background-content" class="min-h-screen bg-white">
             
             <!-- Wishlist Gifting & Sharing Block -->
-            <section id="wishlist-sharing-block" class="pt-0 pb-6">
+            <section id="wishlist-sharing-block" class="pt-4 pb-6">
                 <div class="container-mobile">
                     <div class="relative bg-white border border-gray-100 rounded-2xl p-4 shadow-sm text-center overflow-hidden">
                         <!-- Background Hero Image -->
@@ -591,17 +591,20 @@
         const wishlistItems = new Set();
         window.toggleWishlist = function(button, productId) {
             const heartIcon = button.querySelector('svg');
+            const path = heartIcon?.querySelector('path');
             if (!heartIcon) return;
             if (wishlistItems.has(productId)) {
                 wishlistItems.delete(productId);
                 heartIcon.classList.remove('heart-filled');
                 heartIcon.setAttribute('fill', 'none');
                 heartIcon.setAttribute('stroke', 'currentColor');
+                if (path) { path.setAttribute('fill', 'none'); path.setAttribute('stroke', 'currentColor'); }
             } else {
                 wishlistItems.add(productId);
                 heartIcon.classList.add('heart-filled');
                 heartIcon.setAttribute('fill', '#939BFB');
                 heartIcon.setAttribute('stroke', '#939BFB');
+                if (path) { path.setAttribute('fill', '#939BFB'); path.setAttribute('stroke', '#939BFB'); }
             }
         };
 
