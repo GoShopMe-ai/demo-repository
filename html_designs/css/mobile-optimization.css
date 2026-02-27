@@ -99,6 +99,18 @@ body {
     transform: none !important;
   }
 
+  /* Header titles: keep centered (absolute left-50% + translateX(-50%)) */
+  #app-header #page-title,
+  #app-header #collection-page-title {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: auto !important;
+    max-width: calc(100vw - 140px) !important;
+    right: auto !important;
+    text-align: center !important;
+  }
+
   /* --- 3d. Fixed bottom nav bars --- */
   nav,
   #bottom-nav,

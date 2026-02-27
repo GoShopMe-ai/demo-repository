@@ -1,0 +1,135 @@
+/**
+ * Creator Single Collection - Chat drawer fixes
+ * Load this LAST to override Tailwind and other styles.
+ * Fixes: avatar stretch, vertical text, input bar buttons, header title centering.
+ */
+
+/* Header title - always centered */
+#app-header #collection-page-title {
+  position: absolute !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  max-width: calc(100% - 140px) !important;
+  right: auto !important;
+  text-align: center !important;
+}
+
+/* Drawer header - row layout */
+#shai-chat-drawer #drawer-header {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
+
+/* Avatar container - fixed 32x32, never stretch */
+#shai-chat-drawer #shai-avatar-container {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  overflow: hidden !important;
+  flex: none !important;
+}
+
+/* Avatar image - square, cover */
+#shai-chat-drawer #shai-avatar-container img {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+}
+
+/* Text block - horizontal, left-aligned */
+#shai-chat-drawer #drawer-header .flex-1 {
+  min-width: 0 !important;
+  flex: 1 1 0% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  text-align: left !important;
+  overflow: hidden !important;
+}
+
+#shai-chat-drawer #drawer-title,
+#shai-chat-drawer #drawer-subtitle {
+  writing-mode: horizontal-tb !important;
+  text-align: left !important;
+  white-space: normal !important;
+  display: block !important;
+}
+
+/* Chat message avatars */
+#shai-chat-drawer #chat-messages .flex.items-start .w-8.h-8 {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  flex-shrink: 0 !important;
+}
+
+#shai-chat-drawer img[data-shai-avatar] {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+/* Input bar - flex row, compact buttons */
+#shai-chat-drawer #chat-input-drawer-wrap > div,
+#chat-input-collapsed > div {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+#shai-chat-drawer #chat-input-drawer-wrap .icon-button,
+#chat-input-collapsed .icon-button {
+  flex-shrink: 0 !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#shai-chat-drawer #chat-input-drawer-wrap .icon-button.hidden,
+#chat-input-collapsed .icon-button.hidden,
+#shai-chat-drawer #send-button-drawer.hidden,
+#chat-input-collapsed #send-button-collapsed.hidden {
+  display: none !important;
+}
+
+#shai-chat-drawer #send-button-drawer:not(.hidden),
+#chat-input-collapsed #send-button-collapsed:not(.hidden) {
+  flex-shrink: 0 !important;
+  width: 36px !important;
+  height: 36px !important;
+  margin-left: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#shai-chat-drawer #chat-input-drawer,
+#chat-input-collapsed #chat-input-collapsed-field {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+}

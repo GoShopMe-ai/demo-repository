@@ -106,124 +106,11 @@
         .drag-handle:active { cursor: grabbing; }
         #shai-chat-drawer { max-height: calc(100dvh - 144px) !important; overscroll-behavior: contain; }
         #chat-messages { overscroll-behavior: contain; }
-        /* Drawer header: avatar square, text horizontal - ALL viewports */
-        #shai-chat-drawer #drawer-header {
-          display: flex !important;
-          flex-direction: row !important;
-          flex-wrap: nowrap !important;
-          align-items: center !important;
-        }
-        #shai-chat-drawer #shai-avatar-container {
-          width: 32px !important;
-          height: 32px !important;
-          min-width: 32px !important;
-          min-height: 32px !important;
-          max-width: 32px !important;
-          max-height: 32px !important;
-          flex-shrink: 0 !important;
-          overflow: hidden !important;
-          flex: none !important;
-        }
-        #shai-chat-drawer #shai-avatar-container img {
-          width: 32px !important;
-          height: 32px !important;
-          min-width: 32px !important;
-          min-height: 32px !important;
-          max-width: 32px !important;
-          max-height: 32px !important;
-          object-fit: cover !important;
-          object-position: center !important;
-          display: block !important;
-        }
-        #shai-chat-drawer #drawer-header .flex-1 {
-          min-width: 0 !important;
-          flex: 1 1 0% !important;
-          display: flex !important;
-          flex-direction: column !important;
-          justify-content: center !important;
-          align-items: flex-start !important;
-          writing-mode: horizontal-tb !important;
-          text-orientation: mixed !important;
-          text-align: left !important;
-          overflow: hidden !important;
-        }
-        #shai-chat-drawer #drawer-title,
-        #shai-chat-drawer #drawer-subtitle {
-          writing-mode: horizontal-tb !important;
-          text-align: left !important;
-          white-space: normal !important;
-          display: block !important;
-        }
-        /* All ShAI avatars in drawer - prevent stretch */
-        #shai-chat-drawer #chat-messages .flex.items-start .w-8.h-8 {
-          width: 32px !important;
-          height: 32px !important;
-          min-width: 32px !important;
-          min-height: 32px !important;
-          flex-shrink: 0 !important;
-        }
-        #shai-chat-drawer img[data-shai-avatar] {
-          width: 100% !important;
-          height: 100% !important;
-          object-fit: cover !important;
-          object-position: center !important;
-        }
-        /* Input bar: flex layout, compact buttons */
-        #shai-chat-drawer #chat-input-drawer-wrap > div,
-        #chat-input-collapsed > div {
-          display: flex !important;
-          flex-direction: row !important;
-          align-items: center !important;
-          gap: 8px !important;
-        }
-        #shai-chat-drawer #chat-input-drawer-wrap .icon-button,
-        #chat-input-collapsed .icon-button {
-          flex-shrink: 0 !important;
-          width: 36px !important;
-          height: 36px !important;
-          min-width: 36px !important;
-          min-height: 36px !important;
-          padding: 0 !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-        }
-        #shai-chat-drawer #chat-input-drawer-wrap .icon-button.hidden,
-        #chat-input-collapsed .icon-button.hidden,
-        #shai-chat-drawer #send-button-drawer.hidden,
-        #chat-input-collapsed #send-button-collapsed.hidden {
-          display: none !important;
-        }
-        #shai-chat-drawer #send-button-drawer:not(.hidden),
-        #chat-input-collapsed #send-button-collapsed:not(.hidden) {
-          flex-shrink: 0 !important;
-          width: 36px !important;
-          height: 36px !important;
-          margin-left: auto !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-        }
-        #shai-chat-drawer #chat-input-drawer,
-        #chat-input-collapsed #chat-input-collapsed-field {
-          flex: 1 1 0% !important;
-          min-width: 0 !important;
-        }
         @keyframes shaiWave {
             0%,100%{transform:scaleY(1)} 50%{transform:scaleY(1.8)}
         }
         .voice-message-bubble { min-width:140px; max-width:260px; }
         .wave-bar { transition: height 0.15s ease; }
-        /* Header title: always centered (all viewports) */
-        #app-header #collection-page-title {
-          position: absolute !important;
-          left: 50% !important;
-          transform: translateX(-50%) !important;
-          width: auto !important;
-          max-width: calc(100% - 140px) !important;
-          right: auto !important;
-          text-align: center !important;
-        }
     </style>
 </head>
 <body class="bg-[#F6F6F6] min-h-screen text-black overflow-x-hidden">
@@ -1187,6 +1074,8 @@
 
         });
     </script>
+    <!-- Load last to override Tailwind and fix drawer/header -->
+    <link rel="stylesheet" href="css/creator-single-collection-fixes.css">
 
 </body>
 </html>
