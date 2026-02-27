@@ -7,7 +7,10 @@
  * 80px = header height, 64px = bottom-16 offset.
  */
 #chat-drawer,
-#shai-chat-drawer {
+#shai-chat-drawer,
+#notif-chat-drawer,
+#orders-chat-drawer,
+#return-chat-drawer {
   max-height: calc(100dvh - 144px) !important;
 }
 .chat-drawer-drag-zone,
