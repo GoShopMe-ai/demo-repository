@@ -68,15 +68,15 @@
  .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif; }
  .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
  .share-icon-tilted { transform: rotate(-35deg); }
+ .icon-button { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
  .icon-button svg { width: 18px; height: 18px; stroke-width: 1.5; }
  .icon-button:hover svg { color: #939BFB; }
+ /* Chat input bar: textarea fills space, placeholder inside */
+ #chat-drawer textarea, #chat-input-bar textarea { flex: 1 1 0%; min-width: 0; }
  .bottom-nav-btn { display: flex; flex-direction: column; align-items: center; color: #6B7280; transition: color 0.2s ease-in-out; }
  .bottom-nav-btn:hover, .bottom-nav-btn.active { color: #939BFB; }
  .bottom-nav-btn:hover svg, .bottom-nav-btn:hover span, .bottom-nav-btn.active svg, .bottom-nav-btn.active span { color: inherit; }
  .bottom-nav-btn svg { width: 20px; height: 20px; stroke-width: 1.5; }
- /* Chat input: ensure text aligns left, input bar items vertically centered */
- #chat-drawer textarea, #chat-input-bar textarea { text-align: left !important; }
- #chat-drawer .rounded-2xl.border-gray-200, #chat-input-bar .rounded-2xl.border-gray-200 { align-items: center; }
  /* When typing: hide add-friend & mic, show send (match Home) */
  #chat-input-bar .icon-button.hidden, #chat-input-bar .chat-input-send-collapsed.hidden,
  #chat-drawer .icon-button.hidden, #chat-drawer .chat-input-send.hidden { display: none !important; }
@@ -232,27 +232,27 @@
   </div>
  </div>
 
- <!-- Chat Input Bar - Inside Drawer -->
+ <!-- Chat Input Bar - Inside Drawer (match Home: camera left, input center, add+mic+send right) -->
  <div class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
-  <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm w-full">
-  <button id="cam-btn-drawer" class="icon-button hover:opacity-70 transition-opacity flex-shrink-0 flex items-center justify-center" aria-label="Camera">
+  <div class="flex flex-nowrap items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm w-full min-w-0">
+  <button id="cam-btn-drawer" class="icon-button hover:opacity-70 transition-opacity flex-shrink-0" aria-label="Camera">
   <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
   <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
   </svg>
   </button>
-  <textarea placeholder="Message ShAI..." class="flex-1 min-w-0 bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none min-h-[24px] max-h-[144px] overflow-y-auto py-0" id="chat-input-drawer" rows="1"></textarea>
-  <button id="add-friend-button" class="icon-button hover:opacity-70 transition-opacity chat-input-action" aria-label="Add friend">
+  <textarea placeholder="Message ShAI..." class="flex-1 min-w-0 bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none min-h-[24px] max-h-[144px] overflow-y-auto border-0 p-0" id="chat-input-drawer" rows="1"></textarea>
+  <button id="add-friend-button" class="icon-button hover:opacity-70 transition-opacity chat-input-action flex-shrink-0" aria-label="Add friend">
   <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
   </svg>
   </button>
-  <button id="mic-button-drawer" class="icon-button hover:opacity-70 transition-opacity chat-input-action" aria-label="Microphone">
+  <button id="mic-button-drawer" class="icon-button hover:opacity-70 transition-opacity chat-input-action flex-shrink-0" aria-label="Microphone">
   <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
   </svg>
   </button>
-  <button id="send-button-drawer" class="text-shine-primary hidden hover:opacity-70 transition-opacity chat-input-send" aria-label="Send">
+  <button id="send-button-drawer" class="text-shine-primary hidden hover:opacity-70 transition-opacity chat-input-send flex-shrink-0" aria-label="Send">
   <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
   </svg>
@@ -264,25 +264,25 @@
 
  <!-- Chat Input Bar - Collapsed State (tap to expand drawer, match Home) -->
  <div id="chat-input-bar" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-30 p-4 bg-white border-t border-gray-100" style="bottom: var(--shai-nav-h, 64px)">
- <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm w-full">
-  <button id="cam-btn" class="icon-button hover:opacity-70 transition-opacity flex-shrink-0 flex items-center justify-center" aria-label="Camera">
+ <div class="flex flex-nowrap items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm w-full min-w-0">
+  <button id="cam-btn" class="icon-button hover:opacity-70 transition-opacity flex-shrink-0" aria-label="Camera">
   <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
   <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
   </svg>
   </button>
-  <textarea placeholder="Message ShAI..." class="flex-1 min-w-0 bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none min-h-[24px] max-h-[144px] overflow-y-auto py-0" id="chat-input-collapsed-field" rows="1"></textarea>
-  <button id="add-friend-button-collapsed" class="icon-button hover:opacity-70 transition-opacity chat-input-action-collapsed" aria-label="Add friend">
+  <textarea placeholder="Message ShAI..." class="flex-1 min-w-0 bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none min-h-[24px] max-h-[144px] overflow-y-auto border-0 p-0" id="chat-input-collapsed-field" rows="1"></textarea>
+  <button id="add-friend-button-collapsed" class="icon-button hover:opacity-70 transition-opacity chat-input-action-collapsed flex-shrink-0" aria-label="Add friend">
   <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
   </svg>
   </button>
-  <button id="mic-button-collapsed" class="icon-button hover:opacity-70 transition-opacity chat-input-action-collapsed" aria-label="Microphone">
+  <button id="mic-button-collapsed" class="icon-button hover:opacity-70 transition-opacity chat-input-action-collapsed flex-shrink-0" aria-label="Microphone">
   <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
   </svg>
   </button>
-  <button id="send-button-collapsed" class="text-shine-primary hidden hover:opacity-70 transition-opacity chat-input-send-collapsed" aria-label="Send">
+  <button id="send-button-collapsed" class="text-shine-primary hidden hover:opacity-70 transition-opacity chat-input-send-collapsed flex-shrink-0" aria-label="Send">
   <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
   </svg>
