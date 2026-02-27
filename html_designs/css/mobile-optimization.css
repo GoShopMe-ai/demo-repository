@@ -72,7 +72,7 @@ body {
     margin-right: 0 !important;
   }
 
-  body > div,
+  body > div:not(#chat-drawer):not(#chat-overlay):not(#chat-input-bar),
   body > main {
     max-width: 100vw !important;
     width: 100% !important;

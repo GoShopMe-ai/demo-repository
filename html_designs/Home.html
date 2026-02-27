@@ -38,13 +38,17 @@
             width: 100% !important;
             transform: none !important;
           }
-          /* Chat drawer: full width on mobile, sit above bottom nav (no overlap) */
+          /* Chat drawer: full width, above nav, no transform conflicts */
           #chat-drawer {
+            position: fixed !important;
             left: 0 !important;
             right: 0 !important;
             width: 100% !important;
-            max-width: 100vw !important;
-            bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            bottom: calc(var(--shai-nav-h, 72px) + env(safe-area-inset-bottom, 0px)) !important;
+            padding-left: env(safe-area-inset-left, 0) !important;
+            padding-right: env(safe-area-inset-right, 0) !important;
           }
           #chat-drawer:not(.translate-y-full) {
             transform: none !important;
@@ -52,27 +56,34 @@
           #chat-drawer.translate-y-full, #shai-chat-drawer.translate-y-full, #return-chat-drawer.translate-y-full {
             transform: translateY(100%) !important;
           }
-          /* Chat input bar: sit above bottom nav (no overlap) */
+          /* Chat input bar: full width, above nav, no left-shift */
           #chat-input-bar, #chat-input-collapsed {
+            position: fixed !important;
             left: 0 !important;
             right: 0 !important;
             width: 100% !important;
-            max-width: 100vw !important;
-            bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            transform: none !important;
+            bottom: calc(var(--shai-nav-h, 72px) + env(safe-area-inset-bottom, 0px)) !important;
+            padding-left: max(16px, env(safe-area-inset-left, 0)) !important;
+            padding-right: max(16px, env(safe-area-inset-right, 0)) !important;
           }
-          /* Drawer input area: compact height, stable button layout (mobile only) */
+          /* Drawer input area: compact, stable button layout */
           #chat-input-drawer {
             flex-shrink: 0 !important;
+            padding: 12px 16px !important;
           }
           #chat-input-drawer > div {
-            min-height: 48px !important;
+            min-height: 44px !important;
             align-items: center !important;
+            padding: 8px 12px !important;
           }
           #chat-input-drawer-field {
-            max-height: 48px !important;
+            max-height: 32px !important;
           }
           #chat-input-bar > div {
-            min-height: 48px !important;
+            min-height: 44px !important;
             align-items: center !important;
           }
           #bottom-nav > div, #bottom-navigation > div, nav#bottom-nav > div, nav#bottom-navigation > div {
