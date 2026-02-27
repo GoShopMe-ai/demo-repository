@@ -34,13 +34,10 @@
     </script>
     <style>
         
-/* ---- MOBILE FULL-WIDTH OVERRIDE (match Home) ---- */
+/* ---- MOBILE FULL-WIDTH OVERRIDE (match Home/Picks) ---- */
 @media screen and (max-width: 768px) {
-  #app-shell, #main-content, #auth-screen, #welcome_screen, #quiz-screen, #onboarding-screen,
-  #bottom-nav, #bottom-navigation, #header, #app-header,
-  #chat-drawer, #chat-input-bar, #shai-chat-drawer, #return-chat-drawer, #return-chat-input-bar, #chat-input-collapsed,
-  #shai-chat-drawer-wrapper, #chat-drawer-wrapper,
-  body > div, body > main {
+  body > div:not(#chat-overlay):not(#shai-chat-drawer):not(#chat-input-collapsed),
+  body > main {
     max-width: 100vw !important;
     width: 100% !important;
     margin-left: 0 !important;
@@ -50,15 +47,108 @@
     right: 0 !important;
     transform: none !important;
   }
-  [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]) {
+  [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]):not(#page-title):not(#collection-page-title):not(#shai-chat-drawer):not(#chat-overlay):not(#chat-input-collapsed) {
     left: 0 !important;
     right: 0 !important;
     max-width: 100vw !important;
     width: 100% !important;
     transform: none !important;
   }
-  #chat-drawer.translate-y-full, #shai-chat-drawer.translate-y-full, #return-chat-drawer.translate-y-full {
-    transform: translateY(100%) !important;
+  #app-header #page-title, #app-header #collection-page-title {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: auto !important;
+    max-width: calc(100vw - 140px) !important;
+    right: auto !important;
+    text-align: center;
+  }
+  #shai-chat-drawer {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    bottom: var(--shai-nav-h, 64px) !important;
+  }
+  #shai-chat-drawer:not(.translate-y-full) { transform: none !important; }
+  #shai-chat-drawer.translate-y-full { transform: translateY(100%) !important; }
+  #chat-input-collapsed {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    transform: none !important;
+    bottom: var(--shai-nav-h, 64px) !important;
+  }
+  /* Drawer header: avatar square, text horizontal (match Picks) */
+  #drawer-header {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+  }
+  #shai-avatar-container {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
+    flex-shrink: 0 !important;
+    overflow: hidden !important;
+    aspect-ratio: 1 !important;
+  }
+  #shai-avatar-container img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+  #drawer-header .flex-1 {
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    text-align: left !important;
+  }
+  #drawer-header #drawer-title,
+  #drawer-header #drawer-subtitle {
+    writing-mode: horizontal-tb !important;
+    text-align: left !important;
+    white-space: normal !important;
+  }
+  /* Input bar: hide add/mic when typing, send on right (match Picks) */
+  #chat-input-collapsed .icon-button,
+  #chat-input-drawer-wrap .icon-button {
+    flex-shrink: 0 !important;
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  #chat-input-collapsed .icon-button.hidden,
+  #chat-input-drawer-wrap .icon-button.hidden,
+  #chat-input-collapsed #send-button-collapsed.hidden,
+  #chat-input-drawer-wrap #send-button-drawer.hidden {
+    display: none !important;
+  }
+  #chat-input-collapsed #send-button-collapsed:not(.hidden),
+  #chat-input-drawer-wrap #send-button-drawer:not(.hidden) {
+    flex-shrink: 0 !important;
+    width: 36px !important;
+    height: 36px !important;
+    margin-left: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  #chat-input-collapsed #chat-input-collapsed-field,
+  #chat-input-drawer-wrap #chat-input-drawer {
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
   }
   #bottom-nav > div, #bottom-navigation > div, nav#bottom-nav > div, nav#bottom-navigation > div {
     padding-top: 2px !important;
@@ -85,22 +175,8 @@
         [id^="product-"] .heart-btn, [id^="product-"] .share-btn, [id^="product-"] .chat-trigger { cursor: pointer; }
         .drag-handle { background: #D1D5DB; width: 40px; height: 4px; border-radius: 9999px; margin: 8px auto; cursor: grab; }
         .drag-handle:active { cursor: grabbing; }
-        /* Mobile: drawer and input bar full-width and docked to nav */
-        @media screen and (max-width: 768px) {
-            #shai-chat-drawer, #chat-input-collapsed {
-                left: 0 !important;
-                right: 0 !important;
-                max-width: 100vw !important;
-                width: 100% !important;
-            }
-            #shai-chat-drawer { max-height: calc(100dvh - 144px) !important; overscroll-behavior: contain; }
-            #shai-chat-drawer.translate-y-full { transform: translateY(100%) !important; }
-            #bottom-navigation > div {
-                padding-top: 2px !important;
-                padding-bottom: 24px !important;
-            }
-            #chat-messages { overscroll-behavior: contain; }
-        }
+        #shai-chat-drawer { max-height: calc(100dvh - 144px) !important; overscroll-behavior: contain; }
+        #chat-messages { overscroll-behavior: contain; }
         @keyframes shaiWave {
             0%,100%{transform:scaleY(1)} 50%{transform:scaleY(1.8)}
         }
@@ -263,7 +339,7 @@
             </div>
 
             <!-- Chat Input Bar - Inside Drawer - design system: textarea, icon-button -->
-            <div class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
+            <div id="chat-input-drawer-wrap" class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
                 <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
                     <button id="cam-btn-drawer" class="icon-button hover:opacity-70 transition-opacity" aria-label="Add image or video">
                         <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -274,7 +350,7 @@
                     <textarea id="chat-input-drawer" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none min-h-[24px] max-h-[144px] overflow-y-auto" rows="1"></textarea>
                     <button id="add-friend-button-drawer" class="icon-button hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/></svg></button>
                     <button id="mic-button-drawer" class="icon-button hover:opacity-70 transition-opacity" aria-label="Record voice"><svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg></button>
-                    <button id="send-button-drawer" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity"><svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg></button>
+                    <button id="send-button-drawer" class="icon-button text-[#939BFB] hidden hover:opacity-70 transition-opacity" aria-label="Send"><svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg></button>
                 </div>
             </div>
         </div>
@@ -322,6 +398,7 @@
         </div>
     </nav>
 
+    <script src="js/chat-dock-nav.js"></script>
     <script>
     // Header badges - design system (match Creator Collections)
     var cartCountValue = 0, notifCountValue = 0;
