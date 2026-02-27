@@ -105,8 +105,9 @@
             flex: 1 1 0% !important;
             min-width: 0 !important;
         }
-        #chat-input-bar #shai-send-bar.hidden,
-        #chat-drawer #shai-send-drawer.hidden {
+        /* When typing: hide add-friend & mic, show send - .hidden must override display:flex */
+        #chat-input-bar button.hidden,
+        #chat-drawer .border-t.border-gray-100 button.hidden {
             display: none !important;
         }
 
