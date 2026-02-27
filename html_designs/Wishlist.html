@@ -165,10 +165,12 @@
             margin-bottom: 4px;
         }
         
-        /* Wishlist heart filled state */
-        .heart-filled {
+        /* Wishlist heart filled state - fully solid primary color */
+        .heart-filled,
+        .heart-filled path {
             fill: #939BFB !important;
             stroke: #939BFB !important;
+            stroke-width: 0 !important;
         }
         
         /* Voice recording state */
@@ -594,13 +596,21 @@
                 heartIcon.classList.remove('heart-filled');
                 heartIcon.setAttribute('fill', 'none');
                 heartIcon.setAttribute('stroke', 'currentColor');
-                if (path) { path.setAttribute('fill', 'none'); path.setAttribute('stroke', 'currentColor'); }
+                if (path) {
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('stroke', 'currentColor');
+                    path.setAttribute('stroke-width', '1.5');
+                }
             } else {
                 wishlistItems.add(productId);
                 heartIcon.classList.add('heart-filled');
                 heartIcon.setAttribute('fill', '#939BFB');
                 heartIcon.setAttribute('stroke', '#939BFB');
-                if (path) { path.setAttribute('fill', '#939BFB'); path.setAttribute('stroke', '#939BFB'); }
+                if (path) {
+                    path.setAttribute('fill', '#939BFB');
+                    path.setAttribute('stroke', '#939BFB');
+                    path.setAttribute('stroke-width', '0');
+                }
             }
         };
 
@@ -621,9 +631,10 @@
                     const path = svg.querySelector('path');
                     
                     // Set initial state - filled with primary color (items on wishlist page are wishlisted)
-                    svg.classList.add('heart-filled', 'text-[#939BFB]');
-                    path.setAttribute('fill', 'currentColor');
+                    svg.classList.add('heart-filled');
+                    path.setAttribute('fill', '#939BFB');
                     path.setAttribute('stroke', '#939BFB');
+                    path.setAttribute('stroke-width', '0');
                     
                     likeBtn.addEventListener('click', function(e) {
                         e.stopPropagation();
