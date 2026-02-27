@@ -19,7 +19,8 @@
           #app-shell, #main-content, #auth-screen, #welcome_screen, #quiz-screen, #onboarding-screen,
           #bottom-nav, #bottom-navigation, #header, #app-header,
           #shai-chat-drawer-wrapper, #chat-drawer-wrapper,
-          body > div, body > main {
+          body > div:not(#chat-drawer):not(#chat-overlay):not(#chat-input-bar),
+          body > main {
             max-width: 100vw !important;
             width: 100% !important;
             margin-left: 0 !important;
@@ -58,6 +59,21 @@
             width: 100% !important;
             max-width: 100vw !important;
             bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
+          }
+          /* Drawer input area: compact height, stable button layout (mobile only) */
+          #chat-input-drawer {
+            flex-shrink: 0 !important;
+          }
+          #chat-input-drawer > div {
+            min-height: 48px !important;
+            align-items: center !important;
+          }
+          #chat-input-drawer-field {
+            max-height: 48px !important;
+          }
+          #chat-input-bar > div {
+            min-height: 48px !important;
+            align-items: center !important;
           }
           #bottom-nav > div, #bottom-navigation > div, nav#bottom-nav > div, nav#bottom-navigation > div {
             padding-top: 2px !important;
