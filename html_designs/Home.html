@@ -86,6 +86,22 @@
             min-height: 44px !important;
             align-items: center !important;
           }
+          /* Input bar: buttons compact, textarea gets space */
+          #chat-input-bar .icon-button,
+          #chat-input-drawer .icon-button {
+            flex-shrink: 0 !important;
+            width: 36px !important;
+            height: 36px !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          #chat-input-bar #message-input,
+          #chat-input-drawer-field {
+            flex: 1 1 0% !important;
+            min-width: 0 !important;
+          }
           #bottom-nav > div, #bottom-navigation > div, nav#bottom-nav > div, nav#bottom-navigation > div {
             padding-top: 2px !important;
             padding-bottom: 24px !important;
