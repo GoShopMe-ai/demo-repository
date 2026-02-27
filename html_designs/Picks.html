@@ -83,6 +83,77 @@
             transform: none !important;
             bottom: var(--shai-nav-h, 64px) !important;
           }
+          /* Drawer header: avatar square, text horizontal */
+          #drawer-header {
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            align-items: center !important;
+          }
+          #shai-avatar-container {
+            width: 32px !important;
+            height: 32px !important;
+            min-width: 32px !important;
+            min-height: 32px !important;
+            max-width: 32px !important;
+            max-height: 32px !important;
+            flex-shrink: 0 !important;
+            overflow: hidden !important;
+            aspect-ratio: 1 !important;
+          }
+          #shai-avatar-container img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center !important;
+          }
+          #drawer-header .flex-1 {
+            min-width: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: flex-start !important;
+            writing-mode: horizontal-tb !important;
+            text-orientation: mixed !important;
+            text-align: left !important;
+          }
+          #drawer-header #header-title,
+          #drawer-header #header-subtitle {
+            writing-mode: horizontal-tb !important;
+            text-align: left !important;
+            white-space: normal !important;
+          }
+          /* Input bar: same as Home - hide add/mic when typing, send on right */
+          #chat-input-bar .icon-button,
+          #chat-input-drawer-wrap .icon-button {
+            flex-shrink: 0 !important;
+            width: 36px !important;
+            height: 36px !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          #chat-input-bar .icon-button.hidden,
+          #chat-input-drawer-wrap .icon-button.hidden,
+          #chat-input-bar #send-btn.hidden,
+          #chat-input-drawer-wrap #send-btn-drawer.hidden {
+            display: none !important;
+          }
+          #chat-input-bar #send-btn:not(.hidden),
+          #chat-input-drawer-wrap #send-btn-drawer:not(.hidden) {
+            flex-shrink: 0 !important;
+            width: 36px !important;
+            height: 36px !important;
+            margin-left: auto !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          #chat-input-bar #message-input,
+          #chat-input-drawer-wrap #chat-input-drawer {
+            flex: 1 1 0% !important;
+            min-width: 0 !important;
+          }
           #bottom-nav > div, #bottom-navigation > div, nav#bottom-nav > div, nav#bottom-navigation > div {
             padding-top: 2px !important;
             padding-bottom: 24px !important;
@@ -238,7 +309,7 @@
                         <button id="mic-btn-drawer" class="icon-button hover:opacity-70 transition-opacity" aria-label="Record voice">
                             <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg>
                         </button>
-                        <button id="send-btn-drawer" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity">
+                        <button id="send-btn-drawer" class="icon-button text-[#939BFB] hidden hover:opacity-70 transition-opacity" aria-label="Send">
                             <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
                         </button>
                     </div>
