@@ -97,6 +97,24 @@
             align-items: center !important;
             justify-content: center !important;
           }
+          /* When typing: hide add-friend & mic, show send - .hidden must override display:flex */
+          #chat-input-bar .icon-button.hidden,
+          #chat-input-drawer .icon-button.hidden,
+          #chat-input-bar #send-btn.hidden,
+          #chat-input-drawer #send-btn-drawer.hidden {
+            display: none !important;
+          }
+          /* Send button: align to far right when visible */
+          #chat-input-bar #send-btn:not(.hidden),
+          #chat-input-drawer #send-btn-drawer:not(.hidden) {
+            flex-shrink: 0 !important;
+            width: 36px !important;
+            height: 36px !important;
+            margin-left: auto !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
           #chat-input-bar #message-input,
           #chat-input-drawer-field {
             flex: 1 1 0% !important;
