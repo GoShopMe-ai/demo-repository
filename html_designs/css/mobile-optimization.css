@@ -204,7 +204,8 @@ body {
 
   /* Chat drawer: no horizontal transform when visible */
   #chat-drawer:not(.translate-y-full),
-  #shai-chat-drawer:not(.translate-y-full) {
+  #shai-chat-drawer:not(.translate-y-full),
+  #notif-chat-drawer:not(.translate-y-full) {
     transform: none !important;
   }
 
