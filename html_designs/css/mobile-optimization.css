@@ -72,7 +72,7 @@ body {
     margin-right: 0 !important;
   }
 
-  body > div:not(#chat-drawer):not(#chat-overlay):not(#chat-input-bar):not(#shai-chat-drawer):not(#chat-input-collapsed),
+  body > div:not(#chat-drawer):not(#chat-overlay):not(#chat-input-bar):not(#shai-chat-drawer):not(#chat-input-collapsed):not(#notif-chat-overlay):not(#notif-chat-drawer):not(#notif-chat-input-bar):not(#orders-chat-overlay):not(#orders-chat-drawer):not(#orders-chat-input-bar):not(#return-chat-overlay):not(#return-chat-drawer):not(#return-chat-input-bar),
   body > main {
     max-width: 100vw !important;
     width: 100% !important;
