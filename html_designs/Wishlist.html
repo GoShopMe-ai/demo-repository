@@ -296,40 +296,36 @@
     </header>
 
     <!-- Main Content Container -->
-    <main id="main-content" class="pt-20 px-4 pb-40 relative">
+    <main id="main-content" class="pt-14 pb-40 relative w-full max-w-[390px] mx-auto bg-white overflow-y-auto">
         
         <!-- Background Content - Wishlist -->
         <div id="background-content" class="min-h-screen bg-white">
             
-            <!-- Wishlist Gifting & Sharing Block -->
-            <section id="wishlist-sharing-block" class="pt-4 pb-6">
-                <div class="container-mobile">
-                    <div class="relative bg-white border border-gray-100 rounded-2xl p-4 shadow-sm text-center overflow-hidden">
-                        <!-- Background Hero Image -->
-                        <div class="absolute inset-0 rounded-2xl overflow-hidden">
-                            <img class="w-full h-full object-cover" src="" data-wishlist-hero-image alt="" />
-                            <div class="absolute inset-0 bg-black/50"></div>
-                        </div>
-                        
-                        <!-- Content -->
-                        <div class="relative z-10 flex flex-col items-center space-y-3">
-                            <div>
-                                <h3 class="text-lg poppins font-bold text-white mb-2">Turn your wishlist into a gift list</h3>
-                                <p class="text-sm text-white/90 mb-4">Send your wishlist to friends or family, and let them shop the items you truly love "” for birthdays, holidays or just because.</p>
-                                <button id="share-wishlist-btn" class="bg-[#939BFB] text-white px-4 py-2.5 rounded-full font-medium text-sm hover:bg-[#939BFB]/90 transition-colors flex items-center justify-center space-x-2 mx-auto">
-                                    <span>Share My Wishlist</span>
-                                    <svg class="w-4 h-4 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
+            <!-- Wishlist Hero: full width of main, flush with header -->
+            <section id="wishlist-sharing-block" class="w-full pt-0 pb-6 border-b border-gray-100">
+                <div class="relative w-full min-h-[140px] text-center overflow-hidden">
+                    <!-- Background Hero Image -->
+                    <div class="absolute inset-0 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="" data-wishlist-hero-image alt="" />
+                        <div class="absolute inset-0 bg-black/50"></div>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="relative z-10 flex flex-col items-center justify-center p-4 min-h-[140px]">
+                        <h3 class="text-lg poppins font-bold text-white mb-2">Turn your wishlist into a gift list</h3>
+                        <p class="text-sm text-white/90 mb-4">Send your wishlist to friends or family, and let them shop the items you truly love — for birthdays, holidays or just because.</p>
+                        <button id="share-wishlist-btn" class="bg-[#939BFB] text-white px-4 py-2.5 rounded-full font-medium text-sm hover:bg-[#939BFB]/90 transition-colors flex items-center justify-center space-x-2 mx-auto">
+                            <span>Share My Wishlist</span>
+                            <svg class="w-4 h-4 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </section>
 
             <!-- Wishlist Items Section -->
-            <section id="wishlist-items" class="pt-6 pb-8">
+            <section id="wishlist-items" class="pt-6 pb-8 px-4">
                 <div class="container-mobile">
                     <h2 class="text-lg poppins font-bold text-black mb-4">Your Items (<span data-wishlist-count>0</span>)</h2>
                     
@@ -703,7 +699,7 @@
             }, true);
         }
 
-        // Share product function "“ dynamic link to product page (not hardcoded)
+        // Share product function — dynamic link to product page (not hardcoded)
         window.shareProduct = function(productName, price, productUrl = null, productId = null, brand = null) {
             const base = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
             const id = productId || (productName || '').toLowerCase().replace(/\s+/g, '-');
@@ -735,7 +731,7 @@
         };
 
         // ===== DYNAMIC WISHLIST RENDER (presentation data from data/wishlist.json only) =====
-        // Mock items live in data/wishlist.json "” edit that file to change presentation content.
+        // Mock items live in data/wishlist.json — edit that file to change presentation content.
         const WISHLIST_FALLBACK = {
             hero: { imageUrl: "https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/Paris%20in%20Spring.jpg", alt: "Wishlist gift sharing hero" },
             items: []
@@ -813,7 +809,7 @@
                 heroImg.onerror = function() {
                     console.warn('Failed to load wishlist hero image:', imageUrl);
                 };
-                console.log(`âœ“ Updated wishlist hero image with: ${imageUrl}`);
+                console.log(`✓ Updated wishlist hero image with: ${imageUrl}`);
                 return true;
             } else {
                 console.warn('Hero image element not found');
@@ -832,7 +828,7 @@
                 };
                 count++;
             });
-            console.log(`âœ“ Updated ${count} ShAI avatar(s) with: ${avatarUrl}`);
+            console.log(`✓ Updated ${count} ShAI avatar(s) with: ${avatarUrl}`);
             return count;
         };
         window.testShAIAvatar = function(url) {
@@ -852,7 +848,7 @@
                 };
                 count++;
             });
-            console.log(`âœ“ Updated ${count} user avatar(s) with: ${avatarUrl}`);
+            console.log(`✓ Updated ${count} user avatar(s) with: ${avatarUrl}`);
             return count;
         };
 
