@@ -99,7 +99,7 @@
         /* ── Chat drawer (same as Home: translate-y-full = hidden) ── */
         #chat-drawer {
             position:fixed;
-            bottom:88px;                          /* above nav + safe area padding */
+            bottom:64px;                          /* flush with top of bottom nav */
             left:50%; transform:translateX(-50%);
             width:100%; max-width:390px;
             background:#fff;
@@ -114,15 +114,15 @@
         #chat-drawer.translate-y-full { transform:translateX(-50%) translateY(100%); }
         #chat-drawer:not(.translate-y-full) { transform:translateX(-50%) translateY(0); }
 
-        /* ── Mobile: full-width drawer, Y-only slide, sit above nav ── */
+        /* ── Mobile: full-width drawer, Y-only slide, flush with nav ── */
         @media (max-width: 768px) {
             #chat-drawer {
                 left:0 !important; right:0 !important;
                 max-width:100% !important;
-                bottom: 88px !important;
+                bottom: 64px !important;
             }
             #chat-input-bar {
-                bottom: 88px !important;
+                bottom: 64px !important;
             }
             #chat-drawer.translate-y-full {
                 transform:translateY(100%) !important;
@@ -140,10 +140,10 @@
         /* Chat messages area */
         #chat-messages { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
 
-        /* ── Collapsed input bar — above bottom nav (88px for nav + safe area) ── */
+        /* ── Collapsed input bar — flush with top of bottom nav ── */
         #chat-input-bar {
             position:fixed;
-            bottom:88px;                          /* above nav + safe area padding */
+            bottom:64px;                          /* flush with top of bottom nav */
             left:50%; transform:translateX(-50%);
             width:100%; max-width:390px;
             background:#fff;
