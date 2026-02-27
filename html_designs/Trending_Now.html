@@ -96,10 +96,10 @@
         .product-card { cursor:pointer; transition:transform .15s ease; -webkit-tap-highlight-color:rgba(147,155,251,.12); touch-action:manipulation; }
         .product-card:active { transform:scale(.97); }
 
-        /* ── Chat drawer (same as Home: translate-y-full = hidden) ── */
+        /* ── Chat drawer (same as Home: chat-dock-nav.js sets --shai-nav-h) ── */
         #chat-drawer {
             position:fixed;
-            bottom:64px;                          /* flush with top of bottom nav */
+            bottom: var(--shai-nav-h, 64px);
             left:50%; transform:translateX(-50%);
             width:100%; max-width:390px;
             background:#fff;
@@ -114,15 +114,19 @@
         #chat-drawer.translate-y-full { transform:translateX(-50%) translateY(100%); }
         #chat-drawer:not(.translate-y-full) { transform:translateX(-50%) translateY(0); }
 
-        /* ── Mobile: full-width drawer, Y-only slide, flush with nav ── */
+        /* ── Mobile: full-width drawer, Y-only slide (same as Home) ── */
         @media (max-width: 768px) {
             #chat-drawer {
                 left:0 !important; right:0 !important;
                 max-width:100% !important;
-                bottom: 64px !important;
+                bottom: var(--shai-nav-h, 64px) !important;
+                padding-left: env(safe-area-inset-left, 0) !important;
+                padding-right: env(safe-area-inset-right, 0) !important;
             }
             #chat-input-bar {
-                bottom: 64px !important;
+                bottom: var(--shai-nav-h, 64px) !important;
+                padding-left: max(16px, env(safe-area-inset-left, 0)) !important;
+                padding-right: max(16px, env(safe-area-inset-right, 0)) !important;
             }
             #chat-drawer.translate-y-full {
                 transform:translateY(100%) !important;
@@ -140,10 +144,10 @@
         /* Chat messages area */
         #chat-messages { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
 
-        /* ── Collapsed input bar — flush with top of bottom nav ── */
+        /* ── Collapsed input bar (chat-dock-nav.js sets --shai-nav-h) ── */
         #chat-input-bar {
             position:fixed;
-            bottom:64px;                          /* flush with top of bottom nav */
+            bottom: var(--shai-nav-h, 64px);
             left:50%; transform:translateX(-50%);
             width:100%; max-width:390px;
             background:#fff;
@@ -558,6 +562,7 @@
     </div>
 </nav>
 
+<script src="js/chat-dock-nav.js"></script>
 <script>
 (function () {
     'use strict';
