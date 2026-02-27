@@ -124,7 +124,7 @@ body {
   }
 
   /* Tailwind centering trick: left-1/2 + -translate-x-1/2 (exclude chat drawers/bars - they need transform for slide) */
-  [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]):not(#chat-drawer):not(#chat-input-bar):not(#chat-overlay):not(#orders-chat-drawer):not(#orders-chat-input-bar):not(#return-chat-drawer):not(#return-chat-input-bar):not(#notif-chat-drawer):not(#notif-chat-input-bar) {
+  [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]):not(#chat-drawer):not(#shai-chat-drawer):not(#chat-input-bar):not(#chat-overlay):not(#orders-chat-drawer):not(#orders-chat-input-bar):not(#return-chat-drawer):not(#return-chat-input-bar):not(#notif-chat-drawer):not(#notif-chat-input-bar) {
     left:      0 !important;
     right:     0 !important;
     max-width: 100vw !important;

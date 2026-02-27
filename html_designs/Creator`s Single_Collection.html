@@ -709,20 +709,20 @@
                 setupMic(micButtonDrawer);
                 setupMic(document.getElementById('mic-button-collapsed'));
 
-                async function startRec(e) {
+                function startRec(e) {
                     e.preventDefault();
                     if (!isDrawerExpanded) { expandDrawer(); return; }
                     if (micDenied) { alert('Microphone access denied. Please allow it in browser settings.'); return; }
                     startX = e.touches ? e.touches[0].clientX : e.clientX;
                     removeTempBubble();
-                    try {
-                        if (!mediaStream || !mediaStream.active)
-                            mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    var btn = this;
+                    function doRecord(stream) {
+                        mediaStream = stream;
                         mediaRecorder = new MediaRecorder(mediaStream);
                         isRecording = true; audioChunks = [];
                         mediaRecorder.ondataavailable = function(ev) { if (ev.data.size > 0) audioChunks.push(ev.data); };
                         mediaRecorder.start();
-                        this.classList.add('scale-110', 'ring-2', 'ring-[#939BFB]', 'ring-offset-2');
+                        btn.classList.add('scale-110', 'ring-2', 'ring-[#939BFB]', 'ring-offset-2');
                         var cnt = getMsgContainer();
                         if (cnt) {
                             var t = document.createElement('div');
@@ -730,10 +730,15 @@
                             t.innerHTML = '<div class="flex items-center bg-[#939BFB] text-white rounded-2xl px-3 py-2 max-w-[70%]"><svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg><span class="text-xs font-medium">Recording... swipe left to cancel</span></div>';
                             cnt.appendChild(t); scrollBottom();
                         }
-                    } catch(err) {
-                        removeTempBubble();
-                        if (err.name === 'NotAllowedError') { micDenied = true; alert('Microphone access denied.'); }
-                        else alert('Could not access microphone. ' + err.message);
+                    }
+                    if (mediaStream && mediaStream.active) {
+                        doRecord(mediaStream);
+                    } else {
+                        navigator.mediaDevices.getUserMedia({ audio: true }).then(doRecord).catch(function(err) {
+                            removeTempBubble();
+                            if (err.name === 'NotAllowedError') { micDenied = true; alert('Microphone access denied.'); }
+                            else alert('Could not access microphone. ' + (err.message || ''));
+                        });
                     }
                 }
 
