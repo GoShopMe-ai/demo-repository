@@ -245,7 +245,7 @@
   </div>
   </div>
 
-  <!-- Contact List (dynamic: goshopmeâ†’Add+avatar, non-goshopmeâ†’Invite+initials) -->
+  <!-- Contact List (dynamic: goshopme├óΓÇáΓÇÖAdd+avatar, non-goshopme├óΓÇáΓÇÖInvite+initials) -->
   <div id="contact-list" class="space-y-2">
   <!-- Rendered by renderAddFriendContacts() -->
   </div>
@@ -313,7 +313,7 @@
  </main>
 
  <script src="js/chat-dock-nav.js"></script>
- <script src="js/home-chat.js"></script>
+ <!-- home-chat.js omitted: this page has its own inline camera/mic handlers to avoid double registration -->
  <!-- Bottom Navigation (always visible, not part of drawer) -->
  <nav id="bottom-navigation" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 z-50">
  <div class="flex items-center justify-around py-2">
@@ -859,12 +859,16 @@
  });
 
  // Camera button - open file picker for images/videos
+ var cameraPickerOpen = false;
  function handleCameraAccess() {
+  if (cameraPickerOpen) return;
+  cameraPickerOpen = true;
   showChatView();
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*,video/*';
   input.onchange = function(e) {
+  cameraPickerOpen = false;
   const file = e.target.files && e.target.files[0];
   if (file) {
   const url = URL.createObjectURL(file);
@@ -884,6 +888,7 @@
   input.value = '';
   }
   };
+  setTimeout(function() { cameraPickerOpen = false; }, 2500);
   input.click();
  }
  const camBtnDrawer = document.getElementById('cam-btn-drawer');
@@ -1174,10 +1179,10 @@
  });
 
  const promptReplies = {
-  'Vacation Edit': "Love it! I'll curate the best vacation looks — breezy dresses, swimwear, and versatile pieces you can mix and match for your trip.",
-  'Date Night': "Perfect! I'll find you stunning date night outfits — elegant dresses, chic tops, and accessories that'll make you feel amazing.",
-  'Under $100': "Got it! I'll show you amazing finds under $100 — stylish pieces that won't break the bank.",
-  'Workwear Looks': "On it! I'll put together sharp workwear options — professional blazers, tailored pieces, and polished looks for the office."
+  'Vacation Edit': "Love it! I'll curate the best vacation looks ΓÇö breezy dresses, swimwear, and versatile pieces you can mix and match for your trip.",
+  'Date Night': "Perfect! I'll find you stunning date night outfits ΓÇö elegant dresses, chic tops, and accessories that'll make you feel amazing.",
+  'Under $100': "Got it! I'll show you amazing finds under $100 ΓÇö stylish pieces that won't break the bank.",
+  'Workwear Looks': "On it! I'll put together sharp workwear options ΓÇö professional blazers, tailored pieces, and polished looks for the office."
  };
  document.querySelectorAll('#smart-prompts button').forEach(button => {
   button.addEventListener('click', () => {

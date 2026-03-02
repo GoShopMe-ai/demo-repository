@@ -229,11 +229,15 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
 
     function showToast(msg) { var t = document.createElement('div'); t.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-2 rounded-full text-sm z-[9999]'; t.textContent = msg; document.body.appendChild(t); setTimeout(function() { t.remove(); }, 3000); }
 
+    var cameraPickerOpen = false;
     function handleCameraAccess() {
+        if (cameraPickerOpen) return;
+        cameraPickerOpen = true;
         var input = document.createElement("input");
         input.type = "file";
         input.accept = "image/*,video/*";
-        input.onchange = function(e) { var file = e.target.files && e.target.files[0]; if (file) handleFileSelection(file); input.value = ""; };
+        input.onchange = function(e) { cameraPickerOpen = false; var file = e.target.files && e.target.files[0]; if (file) handleFileSelection(file); input.value = ""; };
+        setTimeout(function() { cameraPickerOpen = false; }, 2500);
         input.click();
     }
     function handleFileSelection(file) {
