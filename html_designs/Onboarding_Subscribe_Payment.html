@@ -117,16 +117,16 @@
 
     <!-- Scrollable Content -->
     <div class="overflow-y-auto pb-8" style="height: calc(844px - 68px);">
-        <!-- Hero Section -->
+        <!-- Hero Section (plan + billing filled by JS from URL params) -->
         <div id="hero-section" class="px-6 py-8 text-center">
-            <h1 class="text-2xl font-fuhkwang font-semibold text-gray-900 mb-3">
-                Activate Premium Plan
+            <h1 id="hero-title" class="text-2xl font-fuhkwang font-semibold text-gray-900 mb-3">
+                Activate Elite Plan
             </h1>
-            <p class="text-gray-500 font-wix mb-3 text-base">
+            <p id="hero-price-desc" class="text-gray-500 font-wix mb-3 text-base">
                 19.99 EUR/month — Unlock unlimited AI searches, automated returns, and more.
             </p>
             <div class="inline-flex items-center bg-primary/10 px-4 py-2 rounded-full">
-                <span class="text-sm text-primary font-medium">Billed Monthly — Cancel Anytime</span>
+                <span id="hero-billing-badge" class="text-sm text-primary font-medium">Billed Monthly — Cancel Anytime</span>
             </div>
         </div>
 
@@ -444,7 +444,7 @@
         <!-- Action Buttons -->
         <div id="action-buttons" class="px-6 space-y-2 flex flex-col items-center">
             <button type="button" id="submit-payment" class="w-3/4 flex items-center justify-center space-x-2 py-2.5 px-3 rounded-full bg-primary text-white font-medium text-sm shadow-md shadow-primary/20 hover:bg-primary/90 transition-colors font-wix">
-                Start My Premium Plan
+                <span id="submit-button-label">Start My Elite Plan</span>
             </button>
             
             <button class="w-3/4 flex items-center justify-center space-x-2 py-2.5 px-3 rounded-full border border-[#B7C7FF] text-primary bg-white hover:bg-primary hover:text-white transition-colors" onclick="goBack()">
@@ -455,9 +455,9 @@
             </button>
         </div>
 
-        <!-- Legal Disclaimer -->
+        <!-- Legal Disclaimer (amount filled by JS) -->
         <div id="legal-disclaimer" class="px-6 py-6 text-center">
-            <p class="text-xs text-gray-400 leading-relaxed font-wix">
+            <p id="legal-disclaimer-text" class="text-xs text-gray-400 leading-relaxed font-wix">
                 By confirming, you agree to monthly billing at 19.99 EUR/month. You can cancel anytime in your settings.
             </p>
         </div>
@@ -468,6 +468,43 @@
 function goBack() {
     window.location.href = 'Onboarding_Choose_Plan.html';
 }
+
+// Plan + billing from URL (?plan=premium|essential&billing=monthly|yearly); default premium/monthly
+var PLAN_CONFIG = {
+    essential: {
+        monthly: { price: '$9.99', priceLabel: '$9.99/month', desc: 'Unlock unlimited AI chat, 30 images/mo, 15 videos/mo, return assistance (3 orders) and more.', billLabel: 'Billed Monthly — Cancel Anytime', legal: 'monthly billing at $9.99/month' },
+        yearly:  { price: '$89', priceLabel: '$89/year', desc: 'Unlock unlimited AI chat, 30 images/mo, 15 videos/mo, return assistance (3 orders) and more.', billLabel: 'Billed Yearly — Cancel Anytime', legal: 'yearly billing at $89/year' }
+    },
+    premium: {
+        monthly: { price: '$19.99', priceLabel: '$19.99/month', desc: 'Unlock unlimited AI searches, automated returns, exclusive deals and more.', billLabel: 'Billed Monthly — Cancel Anytime', legal: 'monthly billing at $19.99/month' },
+        yearly:  { price: '$199', priceLabel: '$199/year', desc: 'Unlock unlimited AI searches, automated returns, exclusive deals and more.', billLabel: 'Billed Yearly — Cancel Anytime', legal: 'yearly billing at $199/year' }
+    }
+};
+
+function applyPlanAndBilling() {
+    var params = new URLSearchParams(window.location.search || '');
+    var plan = (params.get('plan') || 'premium').toLowerCase();
+    var billing = (params.get('billing') || 'monthly').toLowerCase();
+    if (plan !== 'essential' && plan !== 'premium') plan = 'premium';
+    if (billing !== 'yearly' && billing !== 'monthly') billing = 'monthly';
+
+    var config = PLAN_CONFIG[plan] && PLAN_CONFIG[plan][billing] ? PLAN_CONFIG[plan][billing] : PLAN_CONFIG.premium.monthly;
+    var planTitle = plan === 'premium' ? 'Elite' : 'Essential';
+
+    var heroTitle = document.getElementById('hero-title');
+    var heroPriceDesc = document.getElementById('hero-price-desc');
+    var heroBillingBadge = document.getElementById('hero-billing-badge');
+    var submitLabel = document.getElementById('submit-button-label');
+    var legalText = document.getElementById('legal-disclaimer-text');
+
+    if (heroTitle) heroTitle.textContent = 'Activate ' + planTitle + ' Plan';
+    if (heroPriceDesc) heroPriceDesc.textContent = config.priceLabel + ' — ' + config.desc;
+    if (heroBillingBadge) heroBillingBadge.textContent = config.billLabel;
+    if (submitLabel) submitLabel.textContent = 'Start My ' + planTitle + ' Plan';
+    if (legalText) legalText.textContent = 'By confirming, you agree to ' + config.legal + '. You can cancel anytime in your settings.';
+}
+
+document.addEventListener('DOMContentLoaded', applyPlanAndBilling);
 
 // Validation helpers
 function luhnCheck(value) {
