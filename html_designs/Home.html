@@ -69,22 +69,41 @@
             padding-left: max(16px, env(safe-area-inset-left, 0)) !important;
             padding-right: max(16px, env(safe-area-inset-right, 0)) !important;
           }
-          /* Drawer input area: compact, stable button layout */
+          /* Drawer input area: FIXED height, stable button layout (match across pages) */
           #chat-input-drawer {
             flex-shrink: 0 !important;
             padding: 12px 16px !important;
           }
           #chat-input-drawer > div {
-            min-height: 44px !important;
+            display: flex !important;
+            flex-direction: row !important;
             align-items: center !important;
+            gap: 8px !important;
+            height: 52px !important;
+            min-height: 52px !important;
+            max-height: 52px !important;
             padding: 8px 12px !important;
+            box-sizing: border-box !important;
           }
           #chat-input-drawer-field {
+            flex: 1 1 0% !important;
+            min-width: 0 !important;
             max-height: 32px !important;
           }
+          #chat-input-bar {
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+          }
           #chat-input-bar > div {
-            min-height: 44px !important;
+            display: flex !important;
+            flex-direction: row !important;
             align-items: center !important;
+            gap: 8px !important;
+            height: 52px !important;
+            min-height: 52px !important;
+            max-height: 52px !important;
+            padding: 8px 12px !important;
+            box-sizing: border-box !important;
           }
           /* Input bar: buttons compact, textarea gets space */
           #chat-input-bar .icon-button,

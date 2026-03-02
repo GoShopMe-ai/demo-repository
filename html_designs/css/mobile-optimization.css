@@ -209,34 +209,55 @@ body {
     transform: none !important;
   }
 
-  /* Drawer input area: compact, stable button layout (match Home) */
+  /* Drawer input area: FIXED height, stable button layout (match across all pages) */
   #chat-input-drawer {
     flex-shrink: 0 !important;
     padding: 12px 16px !important;
   }
   #chat-input-drawer > div {
-    min-height: 44px !important;
+    display: flex !important;
+    flex-direction: row !important;
     align-items: center !important;
+    gap: 8px !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 52px !important;
     padding: 8px 12px !important;
+    box-sizing: border-box !important;
   }
   #chat-input-drawer-field {
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
     max-height: 32px !important;
   }
   #chat-input-bar > div {
-    min-height: 44px !important;
+    display: flex !important;
+    flex-direction: row !important;
     align-items: center !important;
+    gap: 8px !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 52px !important;
+    padding: 8px 12px !important;
+    box-sizing: border-box !important;
   }
 
-  /* Input bar buttons: 36x36, same layout as Home/Picks */
+  /* Input bar buttons: 36x36, vertically centered, same layout as Home/Picks */
   #chat-input-bar .icon-button,
-  #chat-input-drawer .icon-button {
+  #chat-input-drawer .icon-button,
+  #chat-input-bar > div .icon-button,
+  [id$="-chat-input-bar"] .icon-button,
+  [id$="-input-bar"] .icon-button {
     flex-shrink: 0 !important;
     width: 36px !important;
     height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
     padding: 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    align-self: center !important;
   }
   #chat-input-bar .icon-button.hidden,
   #chat-input-drawer .icon-button.hidden,
@@ -283,6 +304,23 @@ body {
 /* =============================================================
    3b. CHAT DRAWER SCROLL & TOUCH (all viewports)
    ============================================================= */
+/* Chat input bar: ensure flex row and icon buttons are vertically centered */
+#chat-input-bar > div,
+#chat-input-drawer > div,
+#chat-drawer .flex.items-center.gap-2 {
+  display: flex !important;
+  align-items: center !important;
+}
+#chat-input-bar .icon-button,
+#chat-input-drawer .icon-button,
+#chat-drawer .icon-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  align-self: center !important;
+}
+
 /* Dock to bottom nav: no gap between drawer/input bar and nav */
 #chat-drawer,
 #chat-input-bar,

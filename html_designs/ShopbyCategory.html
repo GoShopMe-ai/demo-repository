@@ -36,9 +36,8 @@
 @media screen and (max-width: 768px) {
   #app-shell, #main-content, #auth-screen, #welcome_screen, #quiz-screen, #onboarding-screen,
   #bottom-nav, #bottom-navigation, #header, #app-header,
-  #chat-drawer, #chat-input-bar, #shai-chat-drawer, #return-chat-drawer, #return-chat-input-bar, #chat-input-collapsed,
   #shai-chat-drawer-wrapper, #chat-drawer-wrapper,
-  body > div, body > main {
+  body > div:not(#chat-drawer):not(#chat-overlay):not(#chat-input-bar), body > main {
     max-width: 100vw !important;
     width: 100% !important;
     margin-left: 0 !important;
@@ -48,7 +47,7 @@
     right: 0 !important;
     transform: none !important;
   }
-  [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]) {
+  [class*="left-1/2"][class*="-translate-x-1/2"]:not([class*="rounded-full"]):not(#chat-drawer):not(#chat-overlay):not(#chat-input-bar) {
     left: 0 !important;
     right: 0 !important;
     max-width: 100vw !important;
@@ -68,20 +67,41 @@
  .dm-sans { font-family: 'DM Sans', 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif; }
  .poppins { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
  .share-icon-tilted { transform: rotate(-35deg); }
- .icon-button { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+ .icon-button { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; min-width: 36px; min-height: 36px; }
  .icon-button svg { width: 18px; height: 18px; stroke-width: 1.5; }
  .icon-button:hover svg { color: #939BFB; }
- /* Chat input bar: textarea fills space, placeholder inside */
- #chat-drawer textarea, #chat-input-bar textarea { flex: 1 1 0%; min-width: 0; }
+ /* Chat input bar: FIXED height + button positions (match Home exactly) */
+ #chat-input-drawer { flex-shrink: 0 !important; padding: 12px 16px !important; }
+ #chat-input-drawer > div {
+  display: flex !important; flex-direction: row !important; align-items: center !important; gap: 8px !important;
+  height: 52px !important; min-height: 52px !important; max-height: 52px !important;
+  padding: 8px 12px !important; box-sizing: border-box !important;
+ }
+ #chat-input-drawer-field { flex: 1 1 0% !important; min-width: 0 !important; max-height: 32px !important; }
+ #chat-input-bar { padding: 12px 16px !important; }
+ #chat-input-bar > div {
+  display: flex !important; flex-direction: row !important; align-items: center !important; gap: 8px !important;
+  height: 52px !important; min-height: 52px !important; max-height: 52px !important;
+  padding: 8px 12px !important; box-sizing: border-box !important;
+ }
+ #chat-input-bar #message-input { flex: 1 1 0% !important; min-width: 0 !important; max-height: 32px !important; }
+ #chat-input-bar .icon-button, #chat-input-drawer .icon-button {
+  flex-shrink: 0 !important; width: 36px !important; height: 36px !important; min-width: 36px !important; min-height: 36px !important;
+  padding: 0 !important; display: flex !important; align-items: center !important; justify-content: center !important;
+  order: unset !important;
+ }
  .bottom-nav-btn { display: flex; flex-direction: column; align-items: center; color: #6B7280; transition: color 0.2s ease-in-out; }
  .bottom-nav-btn:hover, .bottom-nav-btn.active { color: #939BFB; }
  .bottom-nav-btn:hover svg, .bottom-nav-btn:hover span, .bottom-nav-btn.active svg, .bottom-nav-btn.active span { color: inherit; }
  .bottom-nav-btn svg { width: 20px; height: 20px; stroke-width: 1.5; }
  /* When typing: hide add-friend & mic, show send (match Home) */
- #chat-input-bar .icon-button.hidden, #chat-input-bar .chat-input-send-collapsed.hidden,
- #chat-drawer .icon-button.hidden, #chat-drawer .chat-input-send.hidden { display: none !important; }
- #chat-input-bar .chat-input-send-collapsed:not(.hidden),
- #chat-drawer .chat-input-send:not(.hidden) { display: flex !important; }
+ #chat-input-bar .icon-button.hidden, #chat-input-bar #send-btn.hidden,
+ #chat-input-drawer .icon-button.hidden, #chat-input-drawer #send-btn-drawer.hidden { display: none !important; }
+ #chat-input-bar #send-btn:not(.hidden),
+ #chat-input-drawer #send-btn-drawer:not(.hidden) {
+  flex-shrink: 0 !important; width: 36px !important; height: 36px !important;
+  margin-left: auto !important; display: flex !important; align-items: center !important; justify-content: center !important;
+ }
  .voice-message-bubble { min-width: 140px; max-width: 260px; width: fit-content; }
  @keyframes wavePulse { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
  .wave-bar.playing { animation: wavePulse 1.1s ease-in-out infinite; animation-delay: calc(var(--i) * 0.08s); }
@@ -232,27 +252,27 @@
   </div>
  </div>
 
- <!-- Chat Input Bar - Inside Drawer (match Home: camera left, input center, add+mic+send right) -->
- <div class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
-  <div class="flex flex-nowrap items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm w-full min-w-0">
-  <button id="cam-btn-drawer" class="icon-button hover:opacity-70 transition-opacity flex-shrink-0" aria-label="Camera">
+ <!-- Chat Input Bar - Inside Drawer (exact copy from Home.html) -->
+ <div id="chat-input-drawer" class="bg-white border-t border-gray-100 p-4 flex-shrink-0">
+  <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+  <button id="cam-btn-drawer" class="icon-button hover:opacity-70 transition-opacity">
   <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
   <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
   </svg>
   </button>
-  <textarea placeholder="Message ShAI..." class="flex-1 min-w-0 bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none min-h-[24px] max-h-[144px] overflow-y-auto border-0 p-0" id="chat-input-drawer" rows="1"></textarea>
-  <button id="add-friend-button" class="icon-button hover:opacity-70 transition-opacity chat-input-action flex-shrink-0" aria-label="Add friend">
+  <input type="text" id="chat-input-drawer-field" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans min-h-[24px]">
+  <button id="add-friend-btn-drawer" class="icon-button hover:opacity-70 transition-opacity">
   <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
   </svg>
   </button>
-  <button id="mic-button-drawer" class="icon-button hover:opacity-70 transition-opacity chat-input-action flex-shrink-0" aria-label="Microphone">
+  <button id="mic-btn-drawer" class="icon-button hover:opacity-70 transition-opacity">
   <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
   </svg>
   </button>
-  <button id="send-button-drawer" class="text-shine-primary hidden hover:opacity-70 transition-opacity chat-input-send flex-shrink-0" aria-label="Send">
+  <button id="send-btn-drawer" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity">
   <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
   </svg>
@@ -262,27 +282,27 @@
  </div>
  </div>
 
- <!-- Chat Input Bar - Collapsed State (tap to expand drawer, match Home) -->
- <div id="chat-input-bar" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-30 p-4 bg-white border-t border-gray-100" style="bottom: var(--shai-nav-h, 64px)">
- <div class="flex flex-nowrap items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm w-full min-w-0">
-  <button id="cam-btn" class="icon-button hover:opacity-70 transition-opacity flex-shrink-0" aria-label="Camera">
+ <!-- Chat Input Bar - Collapsed State (exact copy from Home.html) -->
+ <div id="chat-input-bar" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 p-4 z-30" style="bottom: var(--shai-nav-h, 64px)">
+ <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
+  <button id="cam-btn" class="icon-button hover:opacity-70 transition-opacity">
   <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
   <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
   </svg>
   </button>
-  <textarea placeholder="Message ShAI..." class="flex-1 min-w-0 bg-transparent outline-none text-black placeholder-gray-500 dm-sans resize-none min-h-[24px] max-h-[144px] overflow-y-auto border-0 p-0" id="chat-input-collapsed-field" rows="1"></textarea>
-  <button id="add-friend-button-collapsed" class="icon-button hover:opacity-70 transition-opacity chat-input-action-collapsed flex-shrink-0" aria-label="Add friend">
+  <input type="text" id="message-input" placeholder="Message ShAI..." class="flex-1 bg-transparent outline-none text-black placeholder-gray-500 dm-sans min-h-[24px]">
+  <button id="add-friend-btn" class="icon-button hover:opacity-70 transition-opacity">
   <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
   </svg>
   </button>
-  <button id="mic-button-collapsed" class="icon-button hover:opacity-70 transition-opacity chat-input-action-collapsed flex-shrink-0" aria-label="Microphone">
+  <button id="mic-btn" class="icon-button hover:opacity-70 transition-opacity">
   <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
   </svg>
   </button>
-  <button id="send-button-collapsed" class="text-shine-primary hidden hover:opacity-70 transition-opacity chat-input-send-collapsed flex-shrink-0" aria-label="Send">
+  <button id="send-btn" class="text-[#939BFB] hidden hover:opacity-70 transition-opacity">
   <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
   </svg>
@@ -293,6 +313,7 @@
  </main>
 
  <script src="js/chat-dock-nav.js"></script>
+ <script src="js/home-chat.js"></script>
  <!-- Bottom Navigation (always visible, not part of drawer) -->
  <nav id="bottom-navigation" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 z-50">
  <div class="flex items-center justify-around py-2">
@@ -574,14 +595,14 @@
  const chatDrawer = document.getElementById('chat-drawer');
  const chatOverlay = document.getElementById('chat-overlay');
  const chatInputCollapsed = document.getElementById('chat-input-bar');
- const chatInputCollapsedField = document.getElementById('chat-input-collapsed-field');
- const chatInputDrawer = document.getElementById('chat-input-drawer');
- const sendButtonDrawer = document.getElementById('send-button-drawer');
- const micButtonDrawer = document.getElementById('mic-button-drawer');
- const sendButtonCollapsed = document.getElementById('send-button-collapsed');
- const micButtonCollapsed = document.getElementById('mic-button-collapsed');
- const addFriendButton = document.getElementById('add-friend-button');
- const addFriendButtonCollapsed = document.getElementById('add-friend-button-collapsed');
+ const chatInputCollapsedField = document.getElementById('message-input');
+ const chatInputDrawer = document.getElementById('chat-input-drawer-field');
+ const sendButtonDrawer = document.getElementById('send-btn-drawer');
+ const micButtonDrawer = document.getElementById('mic-btn-drawer');
+ const sendButtonCollapsed = document.getElementById('send-btn');
+ const micButtonCollapsed = document.getElementById('mic-btn');
+ const addFriendButton = document.getElementById('add-friend-btn-drawer');
+ const addFriendButtonCollapsed = document.getElementById('add-friend-btn');
  const addFriendView = document.getElementById('add-friend-view');
  const chatMessages = document.getElementById('chat-messages');
  const chatMessagesScroll = document.getElementById('chat-messages-scroll');
