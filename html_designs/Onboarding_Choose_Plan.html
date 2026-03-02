@@ -73,6 +73,10 @@
             background: radial-gradient(circle, #939BFB 35%, white 40%);
         }
         input[name="plan-option"]:focus { outline: none; }
+        .billing-pill { background: #e5e7eb; color: #6b7280; }
+        .billing-pill[aria-pressed="true"] { background: #939BFB; color: white; }
+        .compare-table { table-layout: fixed; }
+        .compare-table td, .compare-table th { word-break: break-word; overflow-wrap: break-word; }
     </style>
     <script>
         tailwind.config = {
@@ -121,11 +125,17 @@
         <div class="px-5 py-6 pb-24">
             <div id="hero-section" class="text-center mb-6">
                 <h2 class="text-xl font-fuhkwang font-bold text-gray-900 mb-2">
-                    Unlock More with ShineOut Premium
+                    Choose Your Plan
                 </h2>
                 <p class="text-sm text-gray-600 font-wix">
-                    Whether you're a casual shopper or a power user, we've got a plan for you.
+                    Free (Explorer), Essential, or Premium (Elite)—we've got a plan for you.
                 </p>
+            </div>
+
+            <!-- Billing toggle: Monthly / Yearly -->
+            <div id="billing-toggle" class="flex items-center justify-center gap-2 mb-5">
+                <button type="button" id="billing-monthly" class="billing-pill px-4 py-2 rounded-full text-sm font-medium transition-colors" aria-pressed="true">Monthly</button>
+                <button type="button" id="billing-yearly" class="billing-pill px-4 py-2 rounded-full text-sm font-medium transition-colors" aria-pressed="false">Yearly</button>
             </div>
 
             <div id="plan-cards" class="space-y-4 mb-6">
@@ -133,30 +143,25 @@
                 <div id="free-plan-card" class="bg-white rounded-2xl border border-gray-200 p-5 transition-all duration-200">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="text-lg font-fuhkwang font-semibold text-gray-900">Free Plan</h3>
-                            <p class="text-xl font-fuhkwang font-bold text-gray-700">0 EUR<span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <h3 class="text-lg font-fuhkwang font-semibold text-gray-900">Free (Explorer)</h3>
+                            <p class="text-xl font-fuhkwang font-bold text-gray-700">$0</p>
                         </div>
                         <input type="radio" name="plan-option" id="plan-free" value="free" class="flex-shrink-0">
                     </div>
-                    
-                    <div class="space-y-2.5">
-                        <div class="flex items-start space-x-2.5">
-                            <i class="fas fa-check text-green-500 mt-0.5 text-sm"></i>
-                            <span class="text-gray-700 text-sm">Up to 15 AI Searches per Month</span>
+                    <p class="text-gray-600 text-sm">ShAI chat, 40 AI chats/mo, 5 image uploads, find similar, budget alternatives & more.</p>
+                </div>
+                </label>
+
+                <label class="block cursor-pointer" for="plan-essential">
+                <div id="essential-plan-card" class="bg-white rounded-2xl border border-gray-200 p-5 transition-all duration-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-fuhkwang font-semibold text-gray-900">Essential</h3>
+                            <p class="text-xl font-fuhkwang font-bold text-gray-700" id="essential-price"><span class="price-monthly">$9.99<span class="text-sm font-normal text-gray-500">/month</span></span><span class="price-yearly hidden">$89<span class="text-sm font-normal text-gray-500">/year</span></span></p>
                         </div>
-                        <div class="flex items-start space-x-2.5">
-                            <i class="fas fa-check text-green-500 mt-0.5 text-sm"></i>
-                            <span class="text-gray-700 text-sm">Unlimited Purchases</span>
-                        </div>
-                        <div class="flex items-start space-x-2.5">
-                            <i class="fas fa-check text-green-500 mt-0.5 text-sm"></i>
-                            <span class="text-gray-700 text-sm">AI Return Assistance for 1 Item per Month</span>
-                        </div>
-                        <div class="flex items-start space-x-2.5">
-                            <i class="fas fa-check text-green-500 mt-0.5 text-sm"></i>
-                            <span class="text-gray-700 text-sm">Standard Speed AI Chat</span>
-                        </div>
+                        <input type="radio" name="plan-option" id="plan-essential" value="essential" class="flex-shrink-0">
                     </div>
+                    <p class="text-gray-600 text-sm">Unlimited AI chat, 30 images/mo, 15 videos/mo, return assistance (3 orders) & more.</p>
                 </div>
                 </label>
 
@@ -165,97 +170,53 @@
                     <div class="absolute -top-2.5 left-1/2 transform -translate-x-1/2">
                         <span class="bg-accent text-white px-3 py-1 rounded-full text-xs font-semibold">Most Popular</span>
                     </div>
-                    
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="text-lg font-fuhkwang font-semibold text-gray-900">Premium Plan</h3>
-                            <p class="text-xl font-fuhkwang font-bold text-primary">19.99 EUR<span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <h3 class="text-lg font-fuhkwang font-semibold text-gray-900">Premium (Elite)</h3>
+                            <p class="text-xl font-fuhkwang font-bold text-primary" id="premium-price"><span class="price-monthly">$19.99<span class="text-sm font-normal text-gray-500">/month</span></span><span class="price-yearly hidden">$199<span class="text-sm font-normal text-gray-500">/year</span></span></p>
                         </div>
                         <input type="radio" name="plan-option" id="plan-premium" value="premium" checked class="flex-shrink-0">
                     </div>
-                    
-                    <div class="space-y-2.5">
-                        <div class="flex items-start space-x-2.5">
-                            <i class="fas fa-check text-primary mt-0.5 text-sm"></i>
-                            <span class="text-gray-700 text-sm">Unlimited AI Searches (Text + Image)</span>
-                        </div>
-                        <div class="flex items-start space-x-2.5">
-                            <i class="fas fa-check text-primary mt-0.5 text-sm"></i>
-                            <span class="text-gray-700 text-sm">Unlimited Purchases</span>
-                        </div>
-                        <div class="flex items-start space-x-2.5">
-                            <i class="fas fa-check text-primary mt-0.5 text-sm"></i>
-                            <span class="text-gray-700 text-sm">Full Return Automation (No limits)</span>
-                        </div>
-                        <div class="flex items-start space-x-2.5">
-                            <i class="fas fa-check text-primary mt-0.5 text-sm"></i>
-                            <span class="text-gray-700 text-sm">AI Order Tracking & Notifications</span>
-                        </div>
-                        <div class="flex items-start space-x-2.5">
-                            <i class="fas fa-check text-primary mt-0.5 text-sm"></i>
-                            <span class="text-gray-700 text-sm">Wishlist Discount Alerts & Restock</span>
-                        </div>
-                        <div class="flex items-start space-x-2.5">
-                            <i class="fas fa-check text-primary mt-0.5 text-sm"></i>
-                            <span class="text-gray-700 text-sm">Early Access to Limited Collections</span>
-                        </div>
-                    </div>
+                    <p class="text-gray-600 text-sm">Unlimited everything, exclusive deals, monthly personalized look, early access.</p>
                 </div>
                 </label>
             </div>
 
             <div id="comparison-table" class="mb-6">
                 <button type="button" class="w-full flex items-center justify-between text-base font-fuhkwang font-semibold text-gray-900 mb-3 py-2" onclick="toggleComparison()">
-                    <span>Compare Plans</span>
+                    <span>Compare plans</span>
                     <i id="comparison-arrow" class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
                 </button>
-                <div id="comparison-content" class="bg-white rounded-2xl border border-gray-200 overflow-hidden transition-all duration-300" style="max-height: 0;">
-                    <div class="grid grid-cols-3 bg-gray-50 p-3.5 border-b border-gray-200">
-                        <div class="font-semibold text-gray-900 text-xs">Feature</div>
-                        <div class="font-semibold text-gray-900 text-center text-xs">Free</div>
-                        <div class="font-semibold text-gray-900 text-center text-xs">Premium</div>
-                    </div>
-                    
-                    <div class="grid grid-cols-3 p-3.5 border-b border-gray-100">
-                        <div class="text-gray-700 text-xs">AI Search Limit</div>
-                        <div class="text-center text-gray-600 text-xs">15/month</div>
-                        <div class="text-center text-primary font-medium text-xs">Unlimited</div>
-                    </div>
-                    
-                    <div class="grid grid-cols-3 p-3.5 border-b border-gray-100">
-                        <div class="text-gray-700 text-xs">AI Return Assistance</div>
-                        <div class="text-center text-gray-600 text-xs">1 item/mo</div>
-                        <div class="text-center text-primary font-medium text-xs">Unlimited</div>
-                    </div>
-                    
-                    <div class="grid grid-cols-3 p-3.5 border-b border-gray-100">
-                        <div class="text-gray-700 text-xs">Order Tracking</div>
-                        <div class="text-center text-gray-400">
-                            <i class="fas fa-xmark text-sm"></i>
-                        </div>
-                        <div class="text-center text-primary">
-                            <i class="fas fa-check text-sm"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-3 p-3.5 border-b border-gray-100">
-                        <div class="text-gray-700 text-xs">Discount Alerts</div>
-                        <div class="text-center text-gray-400">
-                            <i class="fas fa-xmark text-sm"></i>
-                        </div>
-                        <div class="text-center text-primary">
-                            <i class="fas fa-check text-sm"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-3 p-3.5">
-                        <div class="text-gray-700 text-xs">Early Access Collections</div>
-                        <div class="text-center text-gray-400">
-                            <i class="fas fa-xmark text-sm"></i>
-                        </div>
-                        <div class="text-center text-primary">
-                            <i class="fas fa-check text-sm"></i>
-                        </div>
+                <div id="comparison-content" class="bg-white rounded-2xl border border-gray-300 overflow-hidden transition-all duration-300" style="max-height: 0;">
+                    <div class="overflow-x-auto -mx-1">
+                    <table class="compare-table w-full border-collapse" style="border: 1px solid #000; font-size: 0.65rem;">
+                        <thead>
+                            <tr class="bg-white">
+                                <th class="border border-black p-1 text-left font-semibold text-gray-900 w-1/3">Feature</th>
+                                <th class="border border-black p-1 text-center font-semibold text-gray-900">Free</th>
+                                <th class="border border-black p-1 text-center font-semibold text-gray-900">Essential</th>
+                                <th class="border border-black p-1 text-center font-semibold text-gray-900">Premium</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                            <tr><td class="border border-black p-1 text-gray-700">Price</td><td class="border border-black p-1 text-center">$0</td><td class="border border-black p-1 text-center">$9.99/mo or $89/yr</td><td class="border border-black p-1 text-center">$19.99/mo or $199/yr</td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">ShAI Chat</td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">AI Chat Limit</td><td class="border border-black p-1 text-center">40/mo</td><td class="border border-black p-1 text-center">Unlimited</td><td class="border border-black p-1 text-center">Unlimited</td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Image Uploads</td><td class="border border-black p-1 text-center">5/mo</td><td class="border border-black p-1 text-center">30/mo</td><td class="border border-black p-1 text-center">Unlimited</td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Video Uploads</td><td class="border border-black p-1 text-center">—</td><td class="border border-black p-1 text-center">15/mo</td><td class="border border-black p-1 text-center">Unlimited</td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Rec. sets/request</td><td class="border border-black p-1 text-center">3</td><td class="border border-black p-1 text-center">5</td><td class="border border-black p-1 text-center">7</td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Find Similar</td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Budget Alternatives</td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Size Optimization</td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i> Adv.</td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Wishlist AI</td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Cart Optim.</td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Checkout</td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Return Assist.</td><td class="border border-black p-1 text-center">—</td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i> 3 ord.</td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Exclusive Deals</td><td class="border border-black p-1 text-center">—</td><td class="border border-black p-1 text-center">—</td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Personal Look</td><td class="border border-black p-1 text-center">—</td><td class="border border-black p-1 text-center">—</td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i> 1/mo</td></tr>
+                            <tr><td class="border border-black p-1 text-gray-700">Early Access</td><td class="border border-black p-1 text-center">—</td><td class="border border-black p-1 text-center">—</td><td class="border border-black p-1 text-center text-primary"><i class="fas fa-check"></i></td></tr>
+                        </tbody>
+                    </table>
                     </div>
                 </div>
             </div>
@@ -276,45 +237,58 @@
     </div>
 </div>
 
+<style>.comparison-check { color: #939BFB; }</style>
 <script>
     let selectedPlan = 'premium';
 
+    function highlightCard(card, on) {
+        if (!card) return;
+        if (on) {
+            card.classList.add('border-primary', 'border-2');
+            card.style.boxShadow = '0 0 20px rgba(147, 155, 251, 0.3)';
+            card.style.background = 'linear-gradient(135deg, rgba(147, 155, 251, 0.05) 0%, rgba(249, 98, 38, 0.02) 100%)';
+        } else {
+            card.classList.remove('border-primary', 'border-2');
+            card.classList.add('border-gray-200');
+            card.style.boxShadow = '';
+            card.style.background = '';
+        }
+    }
+
     function selectPlan(plan) {
         selectedPlan = plan;
-        
         const freeCard = document.getElementById('free-plan-card');
+        const essentialCard = document.getElementById('essential-plan-card');
         const premiumCard = document.getElementById('premium-plan-card');
-        const freeRadio = document.getElementById('plan-free');
-        const premiumRadio = document.getElementById('plan-premium');
-        
-        if (plan === 'free') {
-            freeCard.classList.add('border-primary', 'border-2');
-            freeCard.style.boxShadow = '0 0 20px rgba(147, 155, 251, 0.3)';
-            freeCard.style.background = 'linear-gradient(135deg, rgba(147, 155, 251, 0.05) 0%, rgba(249, 98, 38, 0.02) 100%)';
-            premiumCard.classList.remove('border-primary', 'border-2');
-            premiumCard.classList.add('border-gray-200');
-            premiumCard.style.boxShadow = '';
-            premiumCard.style.background = '';
-            if (freeRadio) freeRadio.checked = true;
-        } else {
-            freeCard.classList.remove('border-primary', 'border-2');
-            freeCard.classList.add('border-gray-200');
-            freeCard.style.boxShadow = '';
-            freeCard.style.background = '';
-            premiumCard.classList.add('border-primary', 'border-2');
-            premiumCard.classList.remove('border-gray-200');
-            premiumCard.style.boxShadow = '0 0 20px rgba(147, 155, 251, 0.3)';
-            premiumCard.style.background = 'linear-gradient(135deg, rgba(147, 155, 251, 0.05) 0%, rgba(249, 98, 38, 0.02) 100%)';
-            if (premiumRadio) premiumRadio.checked = true;
-        }
+        ['plan-free','plan-essential','plan-premium'].forEach(function(id) {
+            var r = document.getElementById(id);
+            if (r) r.checked = (r.value === plan);
+        });
+        highlightCard(freeCard, plan === 'free');
+        highlightCard(essentialCard, plan === 'essential');
+        highlightCard(premiumCard, plan === 'premium');
+    }
+
+    var billingInterval = 'monthly';
+
+    function setBilling(interval) {
+        billingInterval = interval;
+        var monthlyBtn = document.getElementById('billing-monthly');
+        var yearlyBtn = document.getElementById('billing-yearly');
+        if (monthlyBtn) { monthlyBtn.setAttribute('aria-pressed', interval === 'monthly' ? 'true' : 'false'); }
+        if (yearlyBtn) { yearlyBtn.setAttribute('aria-pressed', interval === 'yearly' ? 'true' : 'false'); }
+        document.querySelectorAll('.price-monthly').forEach(function(el) { el.classList.toggle('hidden', interval !== 'monthly'); });
+        document.querySelectorAll('.price-yearly').forEach(function(el) { el.classList.toggle('hidden', interval !== 'yearly'); });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('input[name="plan-option"]').forEach(function(radio) {
-            radio.addEventListener('change', function() {
-                selectPlan(this.value);
-            });
+            radio.addEventListener('change', function() { selectPlan(this.value); });
         });
+        var monthlyBtn = document.getElementById('billing-monthly');
+        var yearlyBtn = document.getElementById('billing-yearly');
+        if (monthlyBtn) monthlyBtn.addEventListener('click', function() { setBilling('monthly'); });
+        if (yearlyBtn) yearlyBtn.addEventListener('click', function() { setBilling('yearly'); });
     });
 
     function toggleComparison() {
@@ -333,7 +307,7 @@
 
     // API readiness: prefill from window.__PLAN_SELECTION_DATA__, get/set for API
     (function() {
-        window.getPlanSelectionData = function() { return { plan: selectedPlan }; };
+        window.getPlanSelectionData = function() { return { plan: selectedPlan, billing: billingInterval }; };
         window.setPlanSelectionData = function(data) { if (data && data.plan) selectPlan(data.plan); };
         document.addEventListener('DOMContentLoaded', function() {
             if (window.__PLAN_SELECTION_DATA__) window.setPlanSelectionData(window.__PLAN_SELECTION_DATA__);
@@ -342,12 +316,12 @@
         if (continueBtn) {
             continueBtn.addEventListener('click', function() {
                 if (typeof window.GoShopMeOnboardingAPI !== 'undefined' && window.GoShopMeOnboardingAPI.submitPlanSelection) {
-                    window.GoShopMeOnboardingAPI.submitPlanSelection({ plan: selectedPlan });
+                    window.GoShopMeOnboardingAPI.submitPlanSelection({ plan: selectedPlan, billing: billingInterval });
                 }
-                if (selectedPlan === 'premium') {
-                    window.location.href = 'Onboarding_Subscribe_Payment.html';
-                } else {
+                if (selectedPlan === 'free') {
                     window.location.href = 'QuizOrSkip_Screen.html';
+                } else {
+                    window.location.href = 'Onboarding_Subscribe_Payment.html?plan=' + selectedPlan + '&billing=' + billingInterval;
                 }
             });
         }
