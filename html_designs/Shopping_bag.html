@@ -243,7 +243,7 @@
         updateCartBadge();
         updateNotifBadge();
         // Contextual back: from param -> previous page
-        var fromMap = { 'home': 'Home.html', 'picks': "Picks.html", 'wishlist': 'Wishlist.html', 'orders': 'Orders.html', 'orders-empty': 'Orders_Screen_Empty_State.html', 'order-tracking': 'Order_Tracking.html', 'product': 'Product_details_page.html', 'collections': "Creator`s Collections_Page.html", 'collection': "Creator`s Single_Collection.html", 'notifications-settings': 'Notifications_Settings.html', 'notifications': 'Notifications_Screen.html', 'cart': 'Shopping_bag.html', 'cart-empty': 'Shopping_bag_empty_state.html', 'category': 'ShopbyCategory.html', 'subscription': 'Subscription_Management.html', 'trending': 'Trending_Now.html', 'profile-free': 'User_Profile_Free_Plan.html', 'profile-paid': 'User_Profile_Paid_Plan.html', 'privacy-settings': 'Privacy_Settings.html', 'return-details': 'Return_Details.html', 'receipt': 'Receipt_Details_Screen.html' };
+        var fromMap = { 'home': 'Home.html', 'picks': "Picks.html", 'wishlist': 'Wishlist.html', 'orders': 'Orders.html', 'orders-empty': 'Orders_Screen_Empty_State.html', 'order-tracking': 'Order_Tracking.html', 'product': 'Product_details_page.html', 'collections': "Creator`s Collections_Page.html", 'collection': "Creator`s Single_Collection.html", 'notifications-settings': 'Notifications_Settings.html', 'notifications': 'Notifications_Screen.html', 'cart': 'Shopping_bag.html', 'cart-empty': 'Shopping_bag_empty_state.html', 'category': 'ShopbyCategory.html', 'subscription': 'Subscription_Management.html', 'trending': 'Trending_Now.html', 'profile-free': 'User_Profile.html', 'profile-paid': 'User_Profile.html', 'privacy-settings': 'Privacy_Settings.html', 'return-details': 'Return_Details.html', 'receipt': 'Receipt_Details_Screen.html' };
         window.goBackShoppingBag = function(e) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
             var params = new URLSearchParams(window.location.search);
@@ -938,9 +938,9 @@
                 </button>
                 <p id="modal-address-country-error" class="error-msg hidden dm-sans"></p>
             </div>
-            <div class="flex gap-3 pt-2">
-                <button type="button" id="cancel-address-modal" class="flex-1 py-2.5 bg-gray-200 text-gray-800 rounded-full text-sm font-medium dm-sans hover:bg-gray-300">Cancel</button>
-                <button type="submit" class="flex-1 py-2.5 bg-[#939BFB] text-white rounded-full text-sm font-medium dm-sans hover:opacity-90">Save Address</button>
+            <div class="flex gap-3 pt-2 justify-center">
+                <button type="button" id="cancel-address-modal" class="flex-1 max-w-[100px] mx-auto py-2 px-3 bg-gray-200 text-gray-800 rounded-full text-xs font-medium dm-sans hover:bg-gray-300">Cancel</button>
+                <button type="submit" class="flex-1 max-w-[100px] mx-auto py-2 px-3 bg-[#939BFB] text-white rounded-full text-xs font-medium dm-sans hover:opacity-90">Save Address</button>
             </div>
         </form>
         <!-- Country overlay (inside modal) -->
@@ -965,13 +965,13 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
-        <div id="payment-modal-list-view" class="flex-1 overflow-y-auto p-4">
-            <div id="payment-modal-cards" class="space-y-3 mb-4"></div>
-            <button type="button" id="payment-modal-add-btn" class="w-full py-2.5 border-2 border-dashed border-gray-300 text-gray-600 rounded-xl text-sm font-medium dm-sans hover:border-[#939BFB] hover:text-[#939BFB] flex items-center justify-center gap-2 transition-colors">
+        <div id="payment-modal-list-view" class="flex-1 overflow-y-auto p-4 flex flex-col items-center">
+            <div id="payment-modal-cards" class="space-y-3 mb-4 w-full"></div>
+            <button type="button" id="payment-modal-add-btn" class="max-w-[200px] py-2 px-3 border-2 border-dashed border-gray-300 text-gray-600 rounded-xl text-xs font-medium dm-sans hover:border-[#939BFB] hover:text-[#939BFB] flex items-center justify-center gap-2 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                 Add New Payment Method
             </button>
-            <button type="button" id="payment-modal-use-btn" class="w-full mt-4 py-3 bg-[#939BFB] text-white rounded-full text-sm font-medium dm-sans hover:opacity-90">Use Selected Card</button>
+            <button type="button" id="payment-modal-use-btn" class="max-w-[160px] mt-4 py-2 px-3 bg-[#939BFB] text-white rounded-full text-xs font-medium dm-sans hover:opacity-90">Use Selected Card</button>
         </div>
         <div id="payment-modal-add-view" class="flex-1 overflow-y-auto p-4 hidden">
             <h4 class="text-base font-semibold text-gray-900 poppins mb-4">Add New Card</h4>
@@ -998,9 +998,9 @@
                         <p id="pm-cvv-error" class="error-msg hidden dm-sans"></p>
                     </div>
                 </div>
-                <div class="flex gap-3 pt-2">
-                    <button type="button" id="payment-modal-add-back" class="flex-1 py-2.5 bg-gray-200 text-gray-800 rounded-full text-sm font-medium dm-sans hover:bg-gray-300">Back</button>
-                    <button type="submit" class="flex-1 py-2.5 bg-[#939BFB] text-white rounded-full text-sm font-medium dm-sans hover:opacity-90">Save Card</button>
+                <div class="flex gap-3 pt-2 justify-center">
+                    <button type="button" id="payment-modal-add-back" class="flex-1 max-w-[90px] mx-auto py-2 px-3 bg-gray-200 text-gray-800 rounded-full text-xs font-medium dm-sans hover:bg-gray-300">Back</button>
+                    <button type="submit" class="flex-1 max-w-[90px] mx-auto py-2 px-3 bg-[#939BFB] text-white rounded-full text-xs font-medium dm-sans hover:opacity-90">Save Card</button>
                 </div>
             </form>
         </div>
@@ -1022,7 +1022,7 @@
             <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path></svg>
             <span class="text-xs">Wishlist</span>
         </a>
-        <a id="bag-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
+        <a id="bag-nav-profile-link" href="User_Profile.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
             <span id="bag-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
@@ -1038,7 +1038,7 @@
 // Dynamic profile avatar and link in bottom nav
 (function() {
     var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
-    var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+    var profileHref = 'User_Profile.html';
     var profileLink = document.getElementById('bag-nav-profile-link');
     if (profileLink) profileLink.href = profileHref;
     var navIcon = document.getElementById('bag-nav-profile-icon');

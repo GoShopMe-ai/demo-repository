@@ -10,7 +10,7 @@
  *      - insertBefore: ID of element to insert nav before (e.g. 'bottom-nav-placeholder').
  *        If null/omit, nav is appended to body.
  *      - currentPage: 'home'|'picks'|'wishlist'|'profile' - adds .active class
- *      - profileHref: Override profile link (default: User_Profile_Free_Plan.html or Paid based on __userPlan)
+ *      - profileHref: Override profile link (default: User_Profile.html)
  *
  * Required CSS (from design system):
  *   .bottom-nav-btn { display: flex; flex-direction: column; align-items: center; color: #6B7280; ... }
@@ -27,9 +27,9 @@
         if (override) return override;
         try {
             var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
-            return (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+            return 'User_Profile.html';
         } catch (e) {
-            return 'User_Profile_Free_Plan.html';
+            return 'User_Profile.html';
         }
     }
 

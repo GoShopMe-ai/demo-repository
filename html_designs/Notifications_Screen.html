@@ -262,7 +262,7 @@
                     </svg>
                     <span class="dm-sans text-xs">Wishlist</span>
                 </a>
-                <a id="notif-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn">
+                <a id="notif-nav-profile-link" href="User_Profile.html" class="bottom-nav-btn">
                     <span id="notif-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
                     </span>
@@ -277,7 +277,7 @@
     // Bottom nav profile: link = paid/free based on __userPlan; show profile icon/photo from localStorage
     (function() {
         var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
-        var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+        var profileHref = 'User_Profile.html';
         var profileLink = document.getElementById('notif-nav-profile-link');
         if (profileLink) profileLink.href = profileHref;
         var saved = null;
@@ -316,8 +316,8 @@
             'category': 'ShopbyCategory.html',
             'subscription': 'Subscription_Management.html',
             'trending': 'Trending_Now.html',
-            'profile-free': 'User_Profile_Free_Plan.html',
-            'profile-paid': 'User_Profile_Paid_Plan.html',
+            'profile-free': 'User_Profile.html',
+            'profile-paid': 'User_Profile.html',
             'privacy-settings': 'Privacy_Settings.html',
             'return-details': 'Return_Details.html',
             'receipt': 'Receipt_Details_Screen.html'

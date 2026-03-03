@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -111,7 +111,7 @@
 <div class="w-full max-w-[390px] mx-auto min-h-screen bg-white shadow-2xl relative">
     <div id="header" class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-50 bg-white border-b border-gray-100 p-4">
       <div class="relative flex items-center justify-between">
-        <a id="shipping-back-link" href="User_Profile_Free_Plan.html" class="header-icon-btn relative z-10 w-10 h-10 flex items-center justify-center text-gray-600 hover:text-gray-800 p-2" aria-label="Back to profile">
+        <a id="shipping-back-link" href="User_Profile.html" class="header-icon-btn relative z-10 w-10 h-10 flex items-center justify-center text-gray-600 hover:text-gray-800 p-2" aria-label="Back to profile">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-5 h-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
           </svg>
@@ -151,9 +151,9 @@
               <svg class="w-6 h-6 text-[#F96226]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg></div>
             <h3 class="poppins mb-2 text-base font-semibold text-gray-900">Delete Address</h3>
             <p class="mb-4 text-sm text-gray-600 dm-sans">Are you sure you want to delete this address? This action cannot be undone.</p>
-            <div class="flex gap-2">
-              <button id="cancel-delete" class="flex-1 rounded-full border border-[#B7C7FF] bg-white py-2 px-3 text-sm font-medium text-[#939BFB] dm-sans hover:bg-[#939BFB] hover:text-white hover:border-[#939BFB] transition-colors">Cancel</button>
-              <button id="confirm-delete" class="flex-1 rounded-full bg-[#F96226] py-2 px-3 text-sm font-medium text-white dm-sans hover:opacity-90 transition-opacity">Delete</button>
+            <div class="flex gap-2 justify-center">
+              <button id="cancel-delete" class="flex-1 max-w-[100px] mx-auto rounded-full border border-[#B7C7FF] bg-white py-1.5 px-2 text-xs font-medium text-[#939BFB] dm-sans hover:bg-[#939BFB] hover:text-white hover:border-[#939BFB] transition-colors">Cancel</button>
+              <button id="confirm-delete" class="flex-1 max-w-[100px] mx-auto rounded-full bg-[#F96226] py-1.5 px-2 text-xs font-medium text-white dm-sans hover:opacity-90 transition-opacity">Delete</button>
             </div>
           </div>
         </div>
@@ -166,7 +166,7 @@
             </div>
             <h3 class="poppins mb-2 text-base font-semibold text-gray-900">Cannot Delete Default Address</h3>
             <p class="mb-4 text-sm text-gray-600 dm-sans">You need to select another address as default before deleting this one.</p>
-            <button id="close-warning" class="w-full rounded-full bg-[#939BFB] py-2 px-4 text-sm font-medium text-white dm-sans hover:opacity-90 transition-opacity">Got It</button>
+            <button id="close-warning" class="block max-w-[120px] mx-auto py-1.5 px-3 rounded-full bg-[#939BFB] text-xs font-medium text-white dm-sans hover:opacity-90 transition-opacity">Got It</button>
           </div>
         </div>
       </div>
@@ -185,7 +185,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
                 <span class="text-xs">Wishlist</span>
             </a>
-            <a id="shipping-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn active flex flex-col items-center p-2">
+            <a id="shipping-nav-profile-link" href="User_Profile.html" class="bottom-nav-btn active flex flex-col items-center p-2">
                 <span id="shipping-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg></span>
                 <img id="shipping-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile">
                 <span class="text-xs">Profile</span>
@@ -277,7 +277,7 @@
     <script>
     (function() {
         var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
-        var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+        var profileHref = 'User_Profile.html';
         var profileLink = document.getElementById('shipping-nav-profile-link');
         if (profileLink) profileLink.href = profileHref;
         var saved = localStorage.getItem('profilePhoto');

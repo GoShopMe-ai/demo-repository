@@ -103,7 +103,7 @@
         <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white z-50 border-b border-gray-100">
             <div class="p-4">
                 <div class="relative flex items-center justify-between">
-                    <a href="#" id="subscription-back-btn" class="goshopme-back-btn header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800 flex-shrink-0" data-fallback="User_Profile_Free_Plan.html" aria-label="Back">
+                    <a href="User_Profile.html" id="subscription-back-btn" class="header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800 flex-shrink-0" aria-label="Back to profile">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
                         </svg>
@@ -144,9 +144,9 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <button id="switch-plan-btn" class="text-shine-primary underline poppins cursor-pointer text-sm hover:opacity-80 transition-opacity">
+                    <a id="switch-plan-btn" href="Change_Plan.html?from=subscription&current=premium" class="text-shine-primary underline poppins cursor-pointer text-sm hover:opacity-80 transition-opacity inline-block">
                         Change Plan
-                    </button>
+                    </a>
                 </div>
             </section>
 
@@ -210,11 +210,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-col items-center gap-2">
-                            <button id="continue-cancel-btn" class="w-full max-w-[220px] py-2 px-4 bg-shine-accent text-white rounded-full poppins font-medium text-xs hover:opacity-90 transition-opacity">
+                        <div class="flex flex-col items-center justify-center gap-2">
+                            <button id="continue-cancel-btn" class="w-full max-w-[160px] mx-auto py-2 px-3 bg-shine-accent text-white rounded-full poppins font-medium text-xs hover:opacity-90 transition-opacity">
                                 Continue to Free Plan
                             </button>
-                            <button id="keep-subscription-btn" class="w-full max-w-[220px] py-2 px-4 bg-shine-primary text-white rounded-full poppins font-medium text-xs hover:opacity-90 transition-opacity">
+                            <button id="keep-subscription-btn" class="w-full max-w-[160px] mx-auto py-2 px-3 bg-shine-primary text-white rounded-full poppins font-medium text-xs hover:opacity-90 transition-opacity">
                                 Keep My Subscription
                             </button>
                         </div>
@@ -285,7 +285,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
                     <span class="text-xs">Wishlist</span>
                 </a>
-                <a id="subscription-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
+                <a id="subscription-nav-profile-link" href="User_Profile.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
                     <span id="profile-nav-icon" class="flex items-center justify-center w-6 h-6 mb-1"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg></span>
                     <img id="profile-nav-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile">
                     <span class="text-xs">Profile</span>
@@ -311,10 +311,46 @@
 
     <script>
     (function() {
-        // Load subscription data from database (or window.__subscriptionData for dev)
+        // Plan display: Essential Plan / Elite Plan (dynamic from storage or API)
+        var PLAN_DISPLAY = {
+            essential: { monthly: { name: 'Essential Plan', price: '$9.99', interval: '/month' }, yearly: { name: 'Essential Plan', price: '$89', interval: '/year' } },
+            premium:   { monthly: { name: 'Elite Plan', price: '$19.99', interval: '/month' }, yearly: { name: 'Elite Plan', price: '$199', interval: '/year' } }
+        };
+        function getEffectiveSubscription(data) {
+            var sub = (data && data.subscription) ? data.subscription : {};
+            var plan = '';
+            var billing = '';
+            try {
+                plan = sessionStorage.getItem('__subscriptionPlan') || localStorage.getItem('__subscriptionPlan') || '';
+                billing = sessionStorage.getItem('__subscriptionBilling') || localStorage.getItem('__subscriptionBilling') || '';
+                plan = (plan || '').toLowerCase().trim();
+                billing = (billing || '').toLowerCase().trim();
+            } catch (e) {}
+            if (plan !== 'essential' && plan !== 'premium') {
+                plan = (sub.plan || '').toLowerCase().trim();
+                if (plan !== 'essential' && plan !== 'premium') {
+                    var pn = (sub.planName || '').toLowerCase();
+                    plan = pn.indexOf('essential') >= 0 ? 'essential' : 'premium';
+                }
+            }
+            if (billing !== 'monthly' && billing !== 'yearly') {
+                billing = (sub.billing || '').toLowerCase().trim();
+                if (billing !== 'monthly' && billing !== 'yearly') billing = 'monthly';
+            }
+            var display = PLAN_DISPLAY[plan] && PLAN_DISPLAY[plan][billing] ? PLAN_DISPLAY[plan][billing] : PLAN_DISPLAY.premium.monthly;
+            return {
+                plan: plan,
+                billing: billing,
+                planName: display.name,
+                price: display.price,
+                interval: display.interval,
+                status: sub.status || 'active',
+                nextBillingDate: sub.nextBillingDate,
+                paymentMethod: sub.paymentMethod
+            };
+        }
         function renderSubscription(data) {
-            if (!data || !data.subscription) return;
-            var sub = data.subscription;
+            var sub = getEffectiveSubscription(data);
             var planName = document.getElementById('plan-name');
             var planStatus = document.getElementById('plan-status-badge');
             var planPrice = document.getElementById('plan-price');
@@ -324,9 +360,12 @@
             var planDetails = document.getElementById('plan-details');
             var planCard = document.getElementById('current-plan-card');
 
-            if (planName) planName.textContent = sub.planName || 'Premium Plan';
-            if (planPrice) planPrice.textContent = sub.price || '$19.99';
-            if (planInterval) planInterval.textContent = sub.interval || '/month';
+            if (planName) planName.textContent = sub.planName;
+            if (planPrice) planPrice.textContent = sub.price;
+            if (planInterval) planInterval.textContent = sub.interval;
+
+            var switchPlanBtn = document.getElementById('switch-plan-btn');
+            if (switchPlanBtn) switchPlanBtn.setAttribute('href', 'Change_Plan.html?from=subscription&current=' + sub.plan);
 
             var status = (sub.status || 'active').toLowerCase();
             if (planStatus) {
@@ -339,6 +378,9 @@
                 if (planCard) planCard.classList.remove('from-shine-primary', 'to-shine-accent');
                 if (planCard) planCard.classList.add('bg-gray-100', 'text-gray-800');
             } else {
+                if (planDetails) planDetails.classList.remove('hidden');
+                if (planCard) planCard.classList.remove('bg-gray-100', 'text-gray-800');
+                if (planCard) planCard.classList.add('from-shine-primary', 'to-shine-accent');
                 if (billingDate) billingDate.textContent = sub.nextBillingDate || '—';
                 if (paymentMethod) paymentMethod.textContent = sub.paymentMethod || '—';
             }
@@ -368,18 +410,21 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
-            var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+            var profileHref = 'User_Profile.html';
             var backBtn = document.getElementById('subscription-back-btn');
             if (backBtn) backBtn.setAttribute('data-fallback', profileHref);
 
             if (typeof GoShopMeSubscriptionAPI !== 'undefined') {
                 GoShopMeSubscriptionAPI.fetchSubscriptionData().then(function(data) {
-                    subscriptionData = data;
-                    renderSubscription(data);
-                    renderBillingHistory(data.payments || []);
+                    subscriptionData = data || { subscription: {}, payments: [] };
+                    renderSubscription(subscriptionData);
+                    renderBillingHistory((subscriptionData.payments) || []);
                     var loadMore = document.getElementById('load-more-btn');
-                    if (loadMore) loadMore.classList.toggle('hidden', !(data.hasMore));
+                    if (loadMore) loadMore.classList.toggle('hidden', !(subscriptionData.hasMore));
                 });
+            } else {
+                subscriptionData = { subscription: {}, payments: [] };
+                renderSubscription(subscriptionData);
             }
         });
 
@@ -540,14 +585,7 @@
         var otherRadio = document.querySelector('input[value="other"]');
         var otherReason = document.getElementById('other-reason');
 
-        // Open modal
-        if (switchPlanBtn) {
-            switchPlanBtn.addEventListener('click', function() {
-                modal.classList.remove('hidden');
-                step1.classList.remove('hidden');
-                step2.classList.add('hidden');
-            });
-        }
+        // Change Plan link goes to Change_Plan.html (with current plan set in renderSubscription)
 
         // Continue to step 2
         if (continueCancelBtn) {
@@ -648,7 +686,7 @@
         // Profile nav: link + photo (dynamic from localStorage)
         (function() {
             var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
-            var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+            var profileHref = 'User_Profile.html';
             var link = document.getElementById('subscription-nav-profile-link');
             if (link) link.href = profileHref;
             var saved = null;

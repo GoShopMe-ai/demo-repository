@@ -7,7 +7,7 @@
  * Usage:
  *   1. Include: <script src="js/back-button.js"></script>
  *   2. For header back button, use one of:
- *      <a href="#" class="goshopme-back-btn" data-fallback="User_Profile_Free_Plan.html" aria-label="Back">...</a>
+ *      <a href="#" class="goshopme-back-btn" data-fallback="User_Profile.html" aria-label="Back">...</a>
  *      <button class="goshopme-back-btn" data-fallback="Home.html" aria-label="Back">...</button>
  *
  * data-fallback: URL to navigate to when history.back() is not available (e.g. opened in new tab)

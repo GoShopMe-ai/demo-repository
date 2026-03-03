@@ -309,7 +309,7 @@
           </svg>
           <span class="text-xs mt-1">Wishlist</span>
         </a>
-        <a id="return-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px]">
+        <a id="return-nav-profile-link" href="User_Profile.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px]">
           <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-1.jpg" alt="Profile" class="w-6 h-6 rounded-full object-cover mb-1">
           <span class="text-xs mt-1">Profile</span>
         </a>
@@ -323,7 +323,7 @@
     <script>
 (function() {
   var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
-  var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+  var profileHref = 'User_Profile.html';
   var link = document.getElementById('return-nav-profile-link');
   if (link) link.href = profileHref;
 })();

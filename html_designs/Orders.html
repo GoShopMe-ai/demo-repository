@@ -249,7 +249,7 @@
     <div class="px-5 py-4">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <a id="orders-back-link" href="#" class="goshopme-back-btn header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800" data-fallback="User_Profile_Free_Plan.html" aria-label="Back to profile">
+                <a id="orders-back-link" href="#" class="goshopme-back-btn header-icon-btn w-10 h-10 flex items-center justify-center p-2 text-gray-600 hover:text-gray-800" data-fallback="User_Profile.html" aria-label="Back to profile">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
                     </svg>
@@ -554,7 +554,7 @@
             </svg>
             <span class="dm-sans text-xs">Wishlist</span>
         </a>
-        <a id="orders-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn">
+        <a id="orders-nav-profile-link" href="User_Profile.html" class="bottom-nav-btn">
             <span id="orders-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1 text-shine-primary">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
             </span>
@@ -567,7 +567,7 @@
 // Bottom nav & back button profile: link = paid/free based on __userPlan, show profile photo if available
 (function() {
     var plan = (localStorage.getItem('__userPlan') || '').toLowerCase();
-    var profileHref = (plan === 'paid' || plan === 'true') ? 'User_Profile_Paid_Plan.html' : 'User_Profile_Free_Plan.html';
+    var profileHref = 'User_Profile.html';
     var backLink = document.getElementById('orders-back-link');
     if (backLink) backLink.href = profileHref;
     var profileLink = document.getElementById('orders-nav-profile-link');
@@ -838,7 +838,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
                 <span class="text-xs">Wishlist</span>
             </a>
-            <a id="orders-nav-profile-link" href="User_Profile_Free_Plan.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
+            <a id="orders-nav-profile-link" href="User_Profile.html" class="bottom-nav-btn flex flex-col items-center min-w-[60px] p-2 text-gray-400 hover:text-[#939BFB]">
                 <span id="orders-nav-profile-icon" class="flex items-center justify-center w-6 h-6 mb-1"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg></span>
                 <img id="orders-nav-profile-photo" class="w-6 h-6 rounded-full object-cover mb-1 hidden" src="" alt="Profile">
                 <span class="text-xs">Profile</span>
@@ -859,9 +859,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 <h2 class="text-lg poppins font-semibold mb-2">Cancel Order?</h2>
                 <p class="text-sm text-gray-600 dm-sans">Are you sure you want to cancel this order? This action cannot be undone.</p>
             </div>
-            <div class="flex gap-2">
-                <button type="button" onclick="closeCancelModal()" class="flex-1 py-2 px-3 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium dm-sans">No, Keep Order</button>
-                <button type="button" onclick="confirmCancel()" class="flex-1 py-2 px-3 bg-shine-accent text-white rounded-lg text-sm font-medium dm-sans">Yes, cancel</button>
+            <div class="flex gap-2 justify-center">
+                <button type="button" onclick="closeCancelModal()" class="flex-1 max-w-[110px] mx-auto py-1.5 px-2 border border-gray-300 text-gray-700 rounded-lg text-xs font-medium dm-sans">No, Keep Order</button>
+                <button type="button" onclick="confirmCancel()" class="flex-1 max-w-[110px] mx-auto py-1.5 px-2 bg-shine-accent text-white rounded-lg text-xs font-medium dm-sans">Yes, cancel</button>
             </div>
         </div>
     </div>
@@ -942,9 +942,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex gap-2">
-                    <button onclick="closeReturnModal()" class="flex-1 py-2 text-xs font-medium border border-gray-300 text-gray-700 rounded-lg">Cancel</button>
-                    <button onclick="submitReturn()" class="flex-1 py-2 text-xs font-medium bg-shine-primary text-white rounded-lg">Submit</button>
+                <div class="flex gap-2 justify-center">
+                    <button onclick="closeReturnModal()" class="flex-1 max-w-[90px] mx-auto py-1.5 px-2 text-xs font-medium border border-gray-300 text-gray-700 rounded-lg">Cancel</button>
+                    <button onclick="submitReturn()" class="flex-1 max-w-[90px] mx-auto py-1.5 px-2 text-xs font-medium bg-shine-primary text-white rounded-lg">Submit</button>
                 </div>
             </div>
         </div>
