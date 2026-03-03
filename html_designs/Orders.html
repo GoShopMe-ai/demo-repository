@@ -590,8 +590,32 @@
 })();
 </script>
 
+<script src="js/add-friend-contacts.js"></script>
 <script src="js/chat-dock-nav.js"></script>
 <script src="js/home-chat.js"></script>
+<script>
+(function() {
+  function onContactSearchInput(e) {
+    var input = e.target;
+    if (!input || input.id !== 'contact-search') return;
+    var panel = input.closest && input.closest('#add-friend-content');
+    var container = panel ? panel.querySelector('#contacts-container') : document.getElementById('contacts-container');
+    if (!container) return;
+    var term = (input.value || '').toLowerCase().trim();
+    var items = container.querySelectorAll('.contact-item');
+    for (var i = 0; i < items.length; i++) {
+      var el = items[i];
+      var name = (el.getAttribute('data-name') || '').toLowerCase();
+      var phone = (el.getAttribute('data-phone') || '').toLowerCase();
+      var combined = name + phone;
+      var show = term.length === 0 || name.indexOf(term) !== -1 || phone.indexOf(term) !== -1 || combined.indexOf(term) !== -1;
+      el.style.setProperty('display', show ? 'flex' : 'none', 'important');
+    }
+  }
+  document.addEventListener('input', onContactSearchInput, true);
+  document.addEventListener('keyup', onContactSearchInput, true);
+})();
+</script>
 <script>
 // Orders empty state: personalize title with user's first name
 document.addEventListener('DOMContentLoaded', function() {

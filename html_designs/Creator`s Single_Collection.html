@@ -328,7 +328,31 @@
 
     </div><!-- end app-shell -->
 
+    <script src="js/add-friend-contacts.js"></script>
     <script src="js/chat-dock-nav.js"></script>
+    <script>
+    (function() {
+      function onContactSearchInput(e) {
+        var input = e.target;
+        if (!input || input.id !== 'contact-search') return;
+        var panel = input.closest && input.closest('#add-friend-content');
+        var container = panel ? panel.querySelector('#contacts-container') : document.getElementById('contacts-container');
+        if (!container) return;
+        var term = (input.value || '').toLowerCase().trim();
+        var items = container.querySelectorAll('.contact-item');
+        for (var i = 0; i < items.length; i++) {
+          var el = items[i];
+          var name = (el.getAttribute('data-name') || '').toLowerCase();
+          var phone = (el.getAttribute('data-phone') || '').toLowerCase();
+          var combined = name + phone;
+          var show = term.length === 0 || name.indexOf(term) !== -1 || phone.indexOf(term) !== -1 || combined.indexOf(term) !== -1;
+          el.style.setProperty('display', show ? 'flex' : 'none', 'important');
+        }
+      }
+      document.addEventListener('input', onContactSearchInput, true);
+      document.addEventListener('keyup', onContactSearchInput, true);
+    })();
+    </script>
     <script>
     // Header badges - design system (match Creator Collections)
     var cartCountValue = 0, notifCountValue = 0;
@@ -512,14 +536,24 @@
                 renderAddFriendContacts(contactsContainer);
             };
             renderAddFriendContacts(contactsContainer);
-            function filterContacts(term) {
-                const items = contactsContainer ? contactsContainer.querySelectorAll('.contact-item') : [];
-                const t = (term || '').toLowerCase();
-                items.forEach(el => {
-                    const match = ((el.getAttribute('data-name') || '') + (el.getAttribute('data-phone') || '')).toLowerCase().includes(t);
-                    el.style.display = match ? 'flex' : 'none';
-                });
-            }
+            const filterContacts = (typeof window.__filterAddFriendContacts === 'function')
+                ? window.__filterAddFriendContacts
+                : function(term) {
+                    const container = document.getElementById('contacts-container');
+                    if (!container) return;
+                    const items = container.querySelectorAll('.contact-item');
+                    const digitsOnly = str => (str || '').replace(/\D/g, '');
+                    const t = (term || '').trim().toLowerCase();
+                    const tDigits = digitsOnly(term || '');
+                    items.forEach(el => {
+                        const name = (el.getAttribute('data-name') || '').toLowerCase();
+                        const phone = (el.getAttribute('data-phone') || '');
+                        const phoneDigits = digitsOnly(phone);
+                        const matchName = t.length > 0 && name.indexOf(t) !== -1;
+                        const matchPhone = t.length > 0 && (phone.toLowerCase().indexOf(t) !== -1 || (tDigits.length > 0 && phoneDigits.indexOf(tDigits) !== -1));
+                        el.style.display = (matchName || matchPhone || t.length === 0) ? 'flex' : 'none';
+                    });
+                };
             if (contactSearch) contactSearch.addEventListener('input', function() { filterContacts(this.value); });
             
             let isDrawerExpanded = false;

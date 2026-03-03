@@ -5,7 +5,6 @@
  */
 (function() {
 'use strict';
-if (!document.getElementById('chat-drawer')) return;
 
 function upgradeToAutoGrowTextarea(cfg) {
     var old = document.querySelector(cfg.selector);
@@ -56,8 +55,8 @@ upgradeToAutoGrowTextarea({ selector: '#message-input', mic: '#mic-btn', add: '#
 upgradeToAutoGrowTextarea({ selector: '#chat-input-drawer-field', mic: '#mic-btn-drawer', add: '#add-friend-btn-drawer', send: '#send-btn-drawer', onFocusGrow: true });
 
 document.addEventListener("DOMContentLoaded", function initHomeChat() {
-    if (!document.getElementById("chat-drawer")) return;
     var chatDrawer = document.getElementById("chat-drawer");
+    if (!chatDrawer) return;
     var chatOverlay = document.getElementById("chat-overlay");
     var chatMessages = document.getElementById("chat-messages");
     var chatInput = document.getElementById("message-input");
@@ -160,6 +159,7 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
         if (backBtn) backBtn.classList.remove('hidden');
         if (headerTitle) headerTitle.textContent = 'Add Friend';
         if (headerSubtitle) headerSubtitle.textContent = 'Choose contacts to add';
+        if (contactSearch) { contactSearch.value = ''; filterContacts(''); }
     }
     function hideAddFriendFlow() {
         isAddFriendMode = false;
@@ -170,13 +170,63 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
         if (headerSubtitle) headerSubtitle.textContent = 'Your shopping assistant';
         if (contactSearch) { contactSearch.value = ''; filterContacts(''); }
     }
-    function filterContacts(term) {
-        if (!contactsContainer) return;
-        var items = contactsContainer.querySelectorAll('.contact-item');
-        var t = (term || '').toLowerCase();
-        items.forEach(function(item) { var n = (item.getAttribute('data-name') || '').toLowerCase(); var p = (item.getAttribute('data-phone') || '').toLowerCase(); item.style.display = (n.indexOf(t) !== -1 || p.indexOf(t) !== -1) ? 'flex' : 'none'; });
+    var filterContacts = (typeof window.__filterAddFriendContacts === 'function')
+        ? window.__filterAddFriendContacts
+        : function(term) {
+            var container = document.getElementById('contacts-container');
+            if (!container) return;
+            var items = container.querySelectorAll('.contact-item');
+            var t = (term || '').trim().toLowerCase();
+            var digitsOnly = function(s) { return (s || '').replace(/\D/g, ''); };
+            var tDigits = digitsOnly(term || '');
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                var name = (item.getAttribute('data-name') || '').toLowerCase();
+                var phone = (item.getAttribute('data-phone') || '');
+                var phoneLower = phone.toLowerCase();
+                var phoneDigits = digitsOnly(phone);
+                var matchName = t.length > 0 && name.indexOf(t) !== -1;
+                var matchPhone = t.length > 0 && (phoneLower.indexOf(t) !== -1 || (tDigits.length > 0 && phoneDigits.indexOf(tDigits) !== -1));
+                item.style.display = (matchName || matchPhone || t.length === 0) ? 'flex' : 'none';
+            }
+        };
+    if (contactSearch) {
+        contactSearch.placeholder = 'Search by name or mobile number';
+        contactSearch.addEventListener('input', function() { filterContacts(this.value); });
+        contactSearch.addEventListener('keyup', function() { filterContacts(this.value); });
     }
-    if (contactSearch) contactSearch.addEventListener('input', function() { filterContacts(this.value); });
+    document.addEventListener('input', function contactSearchDelegated(e) {
+        if (e.target && e.target.id === 'contact-search') {
+            var term = (e.target.value || '').trim().toLowerCase();
+            var panel = e.target.closest && e.target.closest('#add-friend-content');
+            var container = panel ? panel.querySelector('#contacts-container') : document.getElementById('contacts-container');
+            if (container) {
+                var items = container.querySelectorAll('.contact-item');
+                for (var i = 0; i < items.length; i++) {
+                    var el = items[i];
+                    var combined = ((el.getAttribute('data-name') || '') + (el.getAttribute('data-phone') || '')).toLowerCase();
+                    var show = term.length === 0 || combined.indexOf(term) !== -1;
+                    el.style.setProperty('display', show ? 'flex' : 'none', 'important');
+                }
+            }
+        }
+    }, true);
+    document.addEventListener('keyup', function contactSearchKeyupDelegated(e) {
+        if (e.target && e.target.id === 'contact-search') {
+            var term = (e.target.value || '').trim().toLowerCase();
+            var panel = e.target.closest && e.target.closest('#add-friend-content');
+            var container = panel ? panel.querySelector('#contacts-container') : document.getElementById('contacts-container');
+            if (container) {
+                var items = container.querySelectorAll('.contact-item');
+                for (var i = 0; i < items.length; i++) {
+                    var el = items[i];
+                    var combined = ((el.getAttribute('data-name') || '') + (el.getAttribute('data-phone') || '')).toLowerCase();
+                    var show = term.length === 0 || combined.indexOf(term) !== -1;
+                    el.style.setProperty('display', show ? 'flex' : 'none', 'important');
+                }
+            }
+        }
+    }, true);
     if (backBtn) backBtn.addEventListener('click', hideAddFriendFlow);
     if (addFriendBtn) addFriendBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); if (!isDrawerExpanded) { expandDrawer(); setTimeout(showAddFriendFlow, 300); } else showAddFriendFlow(); });
     if (addFriendBtnDrawer) addFriendBtnDrawer.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); showAddFriendFlow(); });

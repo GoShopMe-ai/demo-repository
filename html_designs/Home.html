@@ -720,7 +720,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="mb-4">
                 <div class="relative">
                     <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-                    <input type="text" id="contact-search" placeholder="Search contacts..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 pl-10 text-sm">
+                    <input type="text" id="contact-search" placeholder="Search by name or mobile number" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 pl-10 text-sm" autocomplete="off">
                 </div>
             </div>
             
@@ -781,7 +781,31 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
 </nav>
 <script src="js/chat-dock-nav.js"></script>
+<script src="js/add-friend-contacts.js"></script>
 <script src="js/profile-photo-refresh.js"></script>
+<script>
+(function() {
+  function onContactSearchInput(e) {
+    var input = e.target;
+    if (!input || input.id !== 'contact-search') return;
+    var panel = input.closest && input.closest('#add-friend-content');
+    var container = panel ? panel.querySelector('#contacts-container') : document.getElementById('contacts-container');
+    if (!container) return;
+    var term = (input.value || '').toLowerCase().trim();
+    var items = container.querySelectorAll('.contact-item');
+    for (var i = 0; i < items.length; i++) {
+      var el = items[i];
+      var name = (el.getAttribute('data-name') || '').toLowerCase();
+      var phone = (el.getAttribute('data-phone') || '').toLowerCase();
+      var combined = name + phone;
+      var show = term.length === 0 || name.indexOf(term) !== -1 || phone.indexOf(term) !== -1 || combined.indexOf(term) !== -1;
+      el.style.setProperty('display', show ? 'flex' : 'none', 'important');
+    }
+  }
+  document.addEventListener('input', onContactSearchInput, true);
+  document.addEventListener('keyup', onContactSearchInput, true);
+})();
+</script>
 <script>
 // Bottom nav profile: Profile link = paid/free based on __userPlan; profile photo from profile-photo-refresh.js
 (function() {
@@ -2001,21 +2025,22 @@ function removeTempRecordingBubble() {
         }
     }
 
-    function filterContacts(searchTerm) {
-        const contactItems = contactsContainer.querySelectorAll('.contact-item');
-        const term = searchTerm.toLowerCase();
-        
-        contactItems.forEach(item => {
-            const name = item.getAttribute('data-name').toLowerCase();
-            const phone = item.getAttribute('data-phone').toLowerCase();
-            
-            if (name.includes(term) || phone.includes(term)) {
-                item.style.display = 'flex';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-    }
+    const filterContacts = (typeof window.__filterAddFriendContacts === 'function')
+        ? window.__filterAddFriendContacts
+        : function(searchTerm) {
+            const contactItems = contactsContainer.querySelectorAll('.contact-item');
+            const term = (searchTerm || '').trim().toLowerCase();
+            const digitsOnly = s => (s || '').replace(/\D/g, '');
+            const tDigits = digitsOnly(searchTerm || '');
+            contactItems.forEach(item => {
+                const name = (item.getAttribute('data-name') || '').toLowerCase();
+                const phone = (item.getAttribute('data-phone') || '');
+                const phoneDigits = digitsOnly(phone);
+                const matchName = term.length > 0 && name.indexOf(term) !== -1;
+                const matchPhone = term.length > 0 && (phone.indexOf(term) !== -1 || (tDigits.length > 0 && phoneDigits.indexOf(tDigits) !== -1));
+                item.style.display = (matchName || matchPhone || term.length === 0) ? 'flex' : 'none';
+            });
+        };
 
     if (chatOverlay) {
         chatOverlay.addEventListener('click', function() {
