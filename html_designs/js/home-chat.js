@@ -231,19 +231,36 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
     if (addFriendBtn) addFriendBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); if (!isDrawerExpanded) { expandDrawer(); setTimeout(showAddFriendFlow, 300); } else showAddFriendFlow(); });
     if (addFriendBtnDrawer) addFriendBtnDrawer.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); showAddFriendFlow(); });
 
+    function doInviteShare() {
+        var sharePayload = { title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me", url: 'https://app.goshopme.ai' };
+        if (typeof navigator !== 'undefined' && navigator.share) {
+            navigator.share(sharePayload).catch(function() {
+                if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(sharePayload.text + ' - ' + sharePayload.url);
+                else window.open(sharePayload.url, '_blank');
+            });
+        } else if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(sharePayload.text + ' - ' + sharePayload.url);
+        } else {
+            window.open(sharePayload.url, '_blank');
+        }
+    }
+
     document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('contact-action')) {
-            var item = e.target.closest('.contact-item');
-            if (!item) return;
-            var name = item.querySelector('p') ? item.querySelector('p').textContent : '';
-            var isGoshopme = item.getAttribute('data-goshopme') === 'true';
-            if (e.target.textContent === 'Add' && isGoshopme) {
-                var container = document.querySelector('#chat-messages .p-4');
-                if (container) { var n = document.createElement('div'); n.className = 'flex justify-center mb-4'; n.innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">' + (name.split(' ')[0] || '') + ' has been added to chat</div>'; container.appendChild(n); scrollToBottom(true); }
-                hideAddFriendFlow();
-            } else if (e.target.textContent === 'Invite' && navigator.share) {
-                navigator.share({ title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me", url: 'https://app.goshopme.ai' }).catch(function() {});
-            }
+        var btn = e.target && e.target.closest ? e.target.closest('.contact-action') : null;
+        if (!btn) return;
+        var item = btn.closest('.contact-item');
+        if (!item) return;
+        var nameEl = item.querySelector('p');
+        var name = nameEl ? nameEl.textContent : '';
+        var isGoshopme = item.getAttribute('data-goshopme') === 'true';
+        var isAdd = (btn.textContent || '').trim() === 'Add';
+        if (isAdd && isGoshopme) {
+            var container = document.querySelector('#chat-messages .p-4');
+            if (container) { var n = document.createElement('div'); n.className = 'flex justify-center mb-4'; n.innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">' + (name.split(' ')[0] || '') + ' has been added to chat</div>'; container.appendChild(n); scrollToBottom(true); }
+            hideAddFriendFlow();
+        } else {
+            // Invite (or demo: no live GoShopMe users — always send invite)
+            doInviteShare();
         }
     });
 

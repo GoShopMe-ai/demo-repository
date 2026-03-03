@@ -1,10 +1,9 @@
 /**
  * Add Friend flow: contact list + search filter.
- * Intended logic: user opens Add Friend → request contacts permission → list shows device contacts.
- * - GoShopMe user: image, name, mobile, "Add" (adds to chat with ShAI).
- * - Non–GoShopMe user: initials, name, mobile, "Invite" (sends link: Join me on GoShopMe https://app.goshopme.ai/).
- * Demo: uses sample data. Live app: populate window.__addFriendContacts from device contacts (native plugin) after permission.
- * Android Chrome only: Contact Picker API adds "Add from device" to merge device contacts into the list.
+ * Intended logic: user taps Add Friend → Add Friend screen → native app requests contacts permission → after grant, list shows device contacts.
+ * - GoShopMe user: "Add" (adds to chat with ShAI).
+ * - Non–GoShopMe user: "Invite" (share: Join me on GoShopMe https://app.goshopme.ai).
+ * Demo/design: uses DEFAULT_CONTACTS so the screen is usable in browser. Live app: populate window.__addFriendContacts from device contacts after permission (native wrapper).
  * Include before home-chat.js on pages with #contacts-container and #contact-search.
  */
 (function() {
@@ -19,15 +18,6 @@
         { name: 'Michael Brown', phone: '+1 (555) 678-9012', goshopme: false },
         { name: 'Jennifer Lee', phone: '+1 (555) 789-0123', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-6.jpg' }
     ];
-
-    function isAndroidChrome() {
-        var ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
-        return /Android/i.test(ua) && /Chrome\/[.0-9]* Mobile/i.test(ua);
-    }
-
-    function isContactPickerSupported() {
-        return typeof navigator !== 'undefined' && navigator.contacts && typeof navigator.contacts.select === 'function';
-    }
 
     function getInitials(name) {
         var p = (name || '').trim().split(/\s+/);
@@ -110,30 +100,6 @@
         return !!panel && panel.querySelector('input[id="contact-search"]') === el;
     }
 
-    function openContactPicker() {
-        if (!isAndroidChrome() || !isContactPickerSupported()) return;
-        navigator.contacts.select(['name', 'tel'], { multiple: true }).then(function(contacts) {
-            var list = Array.isArray(window.__addFriendContacts) ? window.__addFriendContacts.slice() : DEFAULT_CONTACTS.slice();
-            var seen = {};
-            list.forEach(function(c) { seen[digitsOnly(c.phone)] = true; });
-            for (var i = 0; i < contacts.length; i++) {
-                var c = contacts[i];
-                var name = (c.name && c.name[0]) ? c.name[0] : '';
-                var phone = (c.tel && c.tel[0]) ? c.tel[0] : '';
-                if (!phone) continue;
-                var key = digitsOnly(phone);
-                if (key && !seen[key]) { seen[key] = true; list.push({ name: name || 'Unknown', phone: phone, goshopme: false }); }
-            }
-            window.__addFriendContacts = list;
-            var container = document.getElementById('contacts-container');
-            if (container) {
-                renderAddFriendContacts(container);
-                var searchEl = document.getElementById('contact-search');
-                filterContacts(searchEl ? searchEl.value : '');
-            }
-        }).catch(function() {});
-    }
-
     window.__renderAddFriendContacts = renderAddFriendContacts;
     window.__filterAddFriendContacts = function(term) {
         var container = document.getElementById('contacts-container');
@@ -143,20 +109,6 @@
         filterContacts(term);
     };
     window.__runSearchFromInput = runSearchFromInput;
-
-    function injectContactPickerButton() {
-        if (!isAndroidChrome() || !isContactPickerSupported()) return;
-        var container = document.getElementById('contacts-container');
-        if (!container || !container.parentNode) return;
-        if (document.getElementById('add-from-device-btn')) return;
-        var btn = document.createElement('button');
-        btn.id = 'add-from-device-btn';
-        btn.type = 'button';
-        btn.className = 'w-full py-2 px-3 rounded-xl border border-[#939BFB] text-[#939BFB] text-sm font-medium mb-2';
-        btn.textContent = 'Add from device';
-        btn.addEventListener('click', function(e) { e.preventDefault(); openContactPicker(); });
-        container.parentNode.insertBefore(btn, container);
-    }
 
     function onSearchInputOrKeyup(e) {
         if (e.target && isAddFriendSearchInput(e.target)) runSearchFromInput(e.target);
@@ -178,9 +130,6 @@
             contactSearch.addEventListener('input', function() { runSearchFromInput(this); });
             contactSearch.addEventListener('keyup', function() { runSearchFromInput(this); });
             contactSearch.addEventListener('focus', function() { runSearchFromInput(this); });
-        }
-        if (isAndroidChrome() && isContactPickerSupported()) {
-            injectContactPickerButton();
         }
     }
 
