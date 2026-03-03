@@ -58,6 +58,10 @@
   #chat-drawer.translate-y-full, #shai-chat-drawer.translate-y-full {
     transform: translateY(100%) !important;
   }
+  /* Input bar above bottom nav on mobile (nav + safe area) */
+  #chat-input-bar {
+    bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
 }
 
 ::-webkit-scrollbar { display: none; }
