@@ -132,11 +132,45 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
     var contactSearch = document.getElementById("contact-search");
     var isAddFriendMode = false;
 
-    window.__addFriendContacts = window.__addFriendContacts || [
+    var DEMO_CONTACTS = [
         { name: 'Alex Johnson', phone: '+1 (555) 123-4567', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-2.jpg' },
         { name: 'Maria Rodriguez', phone: '+1 (555) 987-6543', goshopme: false },
         { name: 'David Kim', phone: '+1 (555) 456-7890', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-3.jpg' }
     ];
+    if (!Array.isArray(window.__addFriendContacts)) window.__addFriendContacts = DEMO_CONTACTS.slice();
+
+    function isAndroid() {
+        return typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+    }
+    function isContactPickerSupported() {
+        return typeof navigator !== 'undefined' && 'contacts' in navigator && typeof navigator.contacts.select === 'function';
+    }
+
+    function requestDeviceContactsThenShow(onDone) {
+        if (!isContactPickerSupported()) {
+            if (onDone) onDone(new Error('Contact Picker not supported'), []);
+            return;
+        }
+        navigator.contacts.select(['name', 'tel'], { multiple: true })
+            .then(function(contacts) {
+                var list = [];
+                for (var i = 0; i < contacts.length; i++) {
+                    var c = contacts[i];
+                    var name = (c.name && c.name.length) ? c.name[0] : '';
+                    var phone = (c.tel && c.tel.length) ? c.tel[0] : '';
+                    if (name || phone) list.push({ name: name || 'Unknown', phone: phone || '', goshopme: false });
+                }
+                if (onDone) onDone(null, list);
+            })
+            .catch(function(err) {
+                if (onDone) onDone(err || new Error('Cancelled'), []);
+            });
+    }
+
+    function setContactsContainerMessage(container, message) {
+        if (!container) return;
+        container.innerHTML = '<div class="text-center py-6 text-gray-500 text-sm">' + (message || '').replace(/</g, '&lt;') + '</div>';
+    }
 
     function getInitials(name) { var p = (name || '').trim().split(/\s+/); return p.length >= 2 ? (p[0][0] + p[1][0]).toUpperCase() : (p[0] ? p[0].slice(0, 2) : '??').toUpperCase(); }
     function renderAddFriendContacts(container) {
@@ -227,9 +261,50 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
             }
         }
     }, true);
+    function openAddFriendWithContactsRequest() {
+        var useDeviceContacts = isAndroid() && isContactPickerSupported();
+        if (useDeviceContacts) {
+            requestDeviceContactsThenShow(function(err, list) {
+                if (!isDrawerExpanded) {
+                    expandDrawer();
+                    setTimeout(function() {
+                        showAddFriendFlow();
+                        if (list && list.length) {
+                            window.__addFriendContacts = list;
+                            renderAddFriendContacts(contactsContainer);
+                            if (contactSearch) { contactSearch.value = ''; }
+                            filterContacts('');
+                        } else {
+                            setContactsContainerMessage(contactsContainer, 'No contacts selected. Tap Add Friend again to choose contacts.');
+                        }
+                    }, 300);
+                } else {
+                    showAddFriendFlow();
+                    if (list && list.length) {
+                        window.__addFriendContacts = list;
+                        renderAddFriendContacts(contactsContainer);
+                        if (contactSearch) { contactSearch.value = ''; }
+                        filterContacts('');
+                    } else {
+                        setContactsContainerMessage(contactsContainer, 'No contacts selected. Tap Add Friend again to choose contacts.');
+                    }
+                }
+            });
+        } else {
+            window.__addFriendContacts = DEMO_CONTACTS.slice();
+            renderAddFriendContacts(contactsContainer);
+            if (!isDrawerExpanded) {
+                expandDrawer();
+                setTimeout(function() { showAddFriendFlow(); }, 300);
+            } else {
+                showAddFriendFlow();
+            }
+        }
+    }
+
     if (backBtn) backBtn.addEventListener('click', hideAddFriendFlow);
-    if (addFriendBtn) addFriendBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); if (!isDrawerExpanded) { expandDrawer(); setTimeout(showAddFriendFlow, 300); } else showAddFriendFlow(); });
-    if (addFriendBtnDrawer) addFriendBtnDrawer.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); showAddFriendFlow(); });
+    if (addFriendBtn) addFriendBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); openAddFriendWithContactsRequest(); });
+    if (addFriendBtnDrawer) addFriendBtnDrawer.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); openAddFriendWithContactsRequest(); });
 
     function doInviteShare() {
         var sharePayload = { title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless — join me", url: 'https://app.goshopme.ai' };

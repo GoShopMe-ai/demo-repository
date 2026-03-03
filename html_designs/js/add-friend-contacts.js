@@ -26,7 +26,7 @@
 
     function renderAddFriendContacts(container) {
         if (!container) return;
-        var list = Array.isArray(window.__addFriendContacts) && window.__addFriendContacts.length ? window.__addFriendContacts : DEFAULT_CONTACTS;
+        var list = Array.isArray(window.__addFriendContacts) ? window.__addFriendContacts : [];
         container.innerHTML = list.map(function(c) {
             var initials = getInitials(c.name);
             var hasAvatar = c.goshopme && c.avatar;
@@ -120,9 +120,7 @@
     function init() {
         var contactsContainer = document.getElementById('contacts-container');
         if (!contactsContainer) return;
-        if (!window.__addFriendContacts || !window.__addFriendContacts.length) {
-            window.__addFriendContacts = DEFAULT_CONTACTS.slice();
-        }
+        if (!Array.isArray(window.__addFriendContacts)) window.__addFriendContacts = [];
         renderAddFriendContacts(contactsContainer);
         var contactSearch = document.getElementById('contact-search');
         if (contactSearch) {
