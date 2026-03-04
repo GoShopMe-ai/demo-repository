@@ -262,7 +262,8 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
         }
     }, true);
     function openAddFriendWithContactsRequest() {
-        var useDeviceContacts = isAndroid() && isContactPickerSupported();
+        // Demo: always use mock list on all platforms (Android Chrome, desktop, Safari, iOS, Mozilla, Edge). For Capacitor app, set to: isAndroid() && isContactPickerSupported() or use a contacts plugin for full list.
+        var useDeviceContacts = false;
         if (useDeviceContacts) {
             requestDeviceContactsThenShow(function(err, list) {
                 if (!isDrawerExpanded) {
