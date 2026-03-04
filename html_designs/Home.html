@@ -2002,12 +2002,27 @@ function removeTempRecordingBubble() {
 
     function showAddFriendFlow() {
         isAddFriendMode = true;
+        if (typeof window.__renderAddFriendDemoList === 'function') {
+            window.__renderAddFriendDemoList(contactsContainer || document.getElementById('contacts-container'));
+        } else if (contactsContainer) {
+            window.__addFriendContacts = window.__addFriendContacts && window.__addFriendContacts.length ? window.__addFriendContacts : [
+                { name: 'Alex Johnson', phone: '+1 (555) 123-4567', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-2.jpg' },
+                { name: 'Maria Rodriguez', phone: '+1 (555) 987-6543', goshopme: false },
+                { name: 'David Kim', phone: '+1 (555) 456-7890', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-3.jpg' },
+                { name: 'Sarah Thompson', phone: '+1 (555) 234-5678', goshopme: false },
+                { name: 'Emma Wilson', phone: '+1 (555) 345-6789', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-5.jpg' },
+                { name: 'Michael Brown', phone: '+1 (555) 678-9012', goshopme: false },
+                { name: 'Jennifer Lee', phone: '+1 (555) 789-0123', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-6.jpg' }
+            ];
+            if (typeof renderAddFriendContacts === 'function') renderAddFriendContacts(contactsContainer);
+        }
         chatContent.classList.add('hidden');
         addFriendContent.classList.remove('hidden');
         backBtn.classList.remove('hidden');
-        
         headerTitle.textContent = 'Add Friend';
         headerSubtitle.textContent = 'Choose contacts to add';
+        if (contactSearch) contactSearch.value = '';
+        if (typeof window.__filterAddFriendContacts === 'function') window.__filterAddFriendContacts('');
     }
 
     function hideAddFriendFlow() {

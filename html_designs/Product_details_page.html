@@ -1000,7 +1000,7 @@ window.testUserPreferredSize = function(unit, size) {
 };
 
 </script>
-
+<script src="js/add-friend-contacts.js"></script>
 <script>
 (() => { 
   function upgradeToAutoGrowTextarea(cfg) {
@@ -1883,11 +1883,15 @@ document.addEventListener("touchmove", e => {
     }
 
     function showAddFriendFlow() {
+        var container = document.getElementById('contacts-container');
+        if (container) {
+            if (typeof window.__renderAddFriendDemoList === 'function') window.__renderAddFriendDemoList(container);
+            else if (typeof window.__ensureAddFriendDemoList === 'function') window.__ensureAddFriendDemoList(container);
+        }
         isAddFriendMode = true;
         chatContent.classList.add('hidden');
         addFriendContent.classList.remove('hidden');
         backBtn.classList.remove('hidden');
-        
         headerTitle.textContent = 'Add Friend';
         headerSubtitle.textContent = 'Choose contacts to add';
     }

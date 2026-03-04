@@ -101,6 +101,7 @@
     }
 
     window.__renderAddFriendContacts = renderAddFriendContacts;
+    window.__addFriendDefaultContacts = DEFAULT_CONTACTS;
     window.__filterAddFriendContacts = function(term) {
         var container = document.getElementById('contacts-container');
         if (!container) return;
@@ -120,7 +121,7 @@
     function init() {
         var contactsContainer = document.getElementById('contacts-container');
         if (!contactsContainer) return;
-        if (!Array.isArray(window.__addFriendContacts)) window.__addFriendContacts = [];
+        window.__addFriendContacts = DEFAULT_CONTACTS.slice();
         renderAddFriendContacts(contactsContainer);
         var contactSearch = document.getElementById('contact-search');
         if (contactSearch) {
@@ -130,6 +131,16 @@
             contactSearch.addEventListener('focus', function() { runSearchFromInput(this); });
         }
     }
+    /** Call when opening Add Friend: ensures demo list is set and rendered. Pass container to target a specific element. */
+    window.__renderAddFriendDemoList = function(container) {
+        var el = container || document.getElementById('contacts-container');
+        if (!el) return;
+        window.__addFriendContacts = DEFAULT_CONTACTS.slice();
+        renderAddFriendContacts(el);
+    };
+    window.__ensureAddFriendDemoList = function(container) {
+        window.__renderAddFriendDemoList(container || null);
+    };
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);

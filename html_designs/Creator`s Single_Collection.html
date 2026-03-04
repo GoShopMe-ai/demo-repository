@@ -943,6 +943,9 @@
 
             function showAddFriendFlow() {
                 isInAddFriendFlow = true;
+                var container = document.getElementById('contacts-container');
+                if (typeof window.__renderAddFriendDemoList === 'function' && container) window.__renderAddFriendDemoList(container);
+                else if (typeof window.__ensureAddFriendDemoList === 'function') window.__ensureAddFriendDemoList(container);
                 if (chatContent) chatContent.classList.add('hidden');
                 addFriendContent.classList.remove('hidden');
                 backButton.classList.remove('hidden');

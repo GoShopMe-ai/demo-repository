@@ -766,6 +766,10 @@
 
             function showAddFriendFlow() {
                 currentView = 'add-friend';
+                var container = document.getElementById('contacts-container');
+                if (container && typeof window.__renderAddFriendDemoList === 'function') window.__renderAddFriendDemoList(container);
+                else if (typeof window.__ensureAddFriendDemoList === 'function') window.__ensureAddFriendDemoList(container);
+                else if (contactsContainer && typeof renderAddFriendContacts === 'function') renderAddFriendContacts(contactsContainer);
                 chatContent.classList.add('hidden');
                 addFriendContent.classList.remove('hidden');
                 backButton.classList.remove('hidden');

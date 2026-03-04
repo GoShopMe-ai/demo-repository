@@ -1053,6 +1053,7 @@
 })();
 </script>
 <script src="js/chat-dock-nav.js"></script>
+<script src="js/add-friend-contacts.js"></script>
 <!-- Fixed Chat Input Bar When Collapsed -->
 <div id="chat-input-bar" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t border-gray-100 p-4 z-30">
     <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
@@ -1107,6 +1108,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addFriendContent = document.getElementById('add-friend-content');
     const chatContent = document.getElementById('chat-content');
     const contactSearch = document.getElementById('contact-search');
+    const contactsContainer = document.getElementById('contacts-container');
     const dragHandleZone = document.getElementById('drag-handle-zone') || document.getElementById('drag-handle');
     const mediaPicker = (() => {
         const inp = document.createElement('input');
@@ -1611,6 +1613,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (chatInputDrawer) chatInputDrawer.addEventListener('input', () => updateInputButtons(chatInputDrawer, micBtnDrawer, addFriendBtnDrawer, sendBtnDrawer));
 
     function showAddFriendFlow() {
+        var container = document.getElementById('contacts-container');
+        if (container) {
+            if (typeof window.__renderAddFriendDemoList === 'function') window.__renderAddFriendDemoList(container);
+            else if (typeof window.__ensureAddFriendDemoList === 'function') window.__ensureAddFriendDemoList(container);
+        }
         chatContent.classList.add('hidden');
         addFriendContent.classList.remove('hidden');
         backBtn.classList.remove('hidden');

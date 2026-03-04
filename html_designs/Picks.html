@@ -611,6 +611,20 @@
             const headerSubtitle = document.getElementById('header-subtitle');
             function showAddFriendFlow() {
                 isAddFriendMode = true;
+                var container = document.getElementById('contacts-container');
+                if (container && typeof window.__renderAddFriendDemoList === 'function') window.__renderAddFriendDemoList(container);
+                else {
+                    if (!window.__addFriendContacts || window.__addFriendContacts.length === 0) {
+                        window.__addFriendContacts = [
+                            { name: 'Emma Wilson', phone: '+1 (555) 123-4567', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-2.jpg' },
+                            { name: 'Mike Johnson', phone: '+1 (555) 987-6543', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-3.jpg' },
+                            { name: 'Sarah Lee', phone: '+1 (555) 456-7890', goshopme: false },
+                            { name: 'David Martinez', phone: '+1 (555) 321-0987', goshopme: false },
+                            { name: 'Lisa Chen', phone: '+1 (555) 654-3210', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-4.jpg' }
+                        ];
+                    }
+                    if (contactsContainer && typeof renderAddFriendContacts === 'function') renderAddFriendContacts(contactsContainer);
+                }
                 if (chatContent) chatContent.classList.add('hidden');
                 if (addFriendFlow) addFriendFlow.classList.remove('hidden');
                 if (backButton) backButton.classList.remove('hidden');
