@@ -782,6 +782,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </nav>
 <script src="js/chat-dock-nav.js"></script>
 <script src="js/add-friend-contacts.js"></script>
+<script src="js/shai-flow.js"></script>
 <script src="js/profile-photo-refresh.js"></script>
 <script>
 (function() {
@@ -1209,7 +1210,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         scrollToBottom(true);
 
-        // Contextual ShAI reply to text message
+        const scrollChat = function() { scrollToBottom(true); };
+        if (window.ShaiFlow && typeof window.ShaiFlow.handleUserReply === 'function' && window.ShaiFlow.handleUserReply(text, chatMessagesContainer, addShAIMessage, scrollChat)) return;
         setTimeout(() => {
             addShAIMessage("Perfect! Let me help you find exactly what you're looking for. I'll show you some great options that match your style.");
         }, 1000);
@@ -1557,15 +1559,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 chatMessagesContainer.appendChild(bubble);
                 if (chatMessagesEl) requestAnimationFrame(function() { requestAnimationFrame(function() { chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight; }); });
                 
-                // Contextual ShAI reply to image/video
-                setTimeout(() => {
-                    const isVideo = file.type.startsWith("video/");
-                    if (isVideo) {
-                        addShAIMessage("Great! I can analyze your video. Let me find products that match what I see.");
-                    } else {
-                        addShAIMessage("Perfect! I can see your image. Let me analyze it and find similar products for you.");
-                    }
-                }, 1500);
+                const scrollChat = function() { if (chatMessagesEl) chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight; };
+                if (window.ShaiFlow && typeof window.ShaiFlow.runAfterUpload === 'function') {
+                    setTimeout(function() { window.ShaiFlow.runAfterUpload(chatMessagesContainer, addShAIMessage, scrollChat); }, 1500);
+                } else {
+                    setTimeout(() => {
+                        const isVideo = file.type.startsWith("video/");
+                        addShAIMessage(isVideo ? "Great! I can analyze your video. Let me find products that match what I see." : "Perfect! I can see your image. Let me analyze it and find similar products for you.");
+                        scrollChat();
+                    }, 1500);
+                }
             }
         }
     }

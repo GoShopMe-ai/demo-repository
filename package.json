@@ -1,0 +1,9 @@
+{
+  "name": "goshopme",
+  "version": "1.0.0",
+  "description": "GoShopMe - Shopping app",
+  "scripts": {
+    "serve": "npx serve . -p 3000",
+    "start": "npx serve . -p 3000"
+  }
+}

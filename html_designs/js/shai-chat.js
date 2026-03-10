@@ -1,9 +1,8 @@
 /**
  * shai-chat.js - Self-contained ShAI Chat System
  * Drop <script src="js/shai-chat.js"></script> into any GoShopMe screen.
- * The script injects the overlay, drawer, and collapsed input bar,
- * then wires up all interactions: text, image/video, voice recording,
- * drag-to-resize, add-friend, and ShAI contextual replies.
+ * For Scenarios 1-4 (outfit, budget, accessories, web, add-to-bag), include shai-flow.js before this script.
+ * If ShaiFlow is missing, this script will try to load js/shai-flow.js dynamically.
  */
 (function () {
   'use strict';
@@ -12,6 +11,24 @@
 
   /* ------ Skip if a full drawer already exists on this page ------ */
   if (document.getElementById('chat-drawer')) return;
+
+  /* ------ Ensure ShaiFlow is available (load shai-flow.js if missing) ------ */
+  function ensureShaiFlow(done) {
+    if (window.ShaiFlow && typeof window.ShaiFlow.runAfterUpload === 'function') {
+      if (typeof done === 'function') done();
+      return;
+    }
+    var base = (function () {
+      var s = document.currentScript && document.currentScript.src;
+      if (s) return s.replace(/\/[^/]*$/, '/');
+      return '';
+    })();
+    var script = document.createElement('script');
+    script.src = base + 'shai-flow.js';
+    script.onload = function () { if (typeof done === 'function') done(); };
+    script.onerror = function () { if (typeof done === 'function') done(); };
+    document.head.appendChild(script);
+  }
 
   /* ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
      1. INJECT HTML
@@ -269,6 +286,7 @@
       msgContainer.appendChild(div);
       ta.value = ''; autoGrow(ta); updateButtons(ta, send, mic, add);
       scrollBottom();
+      if (window.ShaiFlow && typeof window.ShaiFlow.handleUserReply === 'function' && window.ShaiFlow.handleUserReply(text, msgContainer, shaiReply, scrollBottom)) return;
       setTimeout(function () { shaiReply("Perfect! Let me help you find exactly what you're looking for."); }, 1000);
     }
 
@@ -277,12 +295,14 @@
       btn.addEventListener('click', function () {
         openDrawer();
         if (!msgContainer) return;
+        const text = btn.textContent.trim();
         const div = document.createElement('div');
         div.className = 'flex justify-end mb-4';
         div.innerHTML = '<div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%]"><p class="text-sm break-words whitespace-pre-wrap"></p></div>';
-        div.querySelector('p').textContent = btn.textContent.trim();
+        div.querySelector('p').textContent = text;
         msgContainer.appendChild(div);
         scrollBottom();
+        if (window.ShaiFlow && typeof window.ShaiFlow.handleUserReply === 'function' && window.ShaiFlow.handleUserReply(text, msgContainer, shaiReply, scrollBottom)) return;
         setTimeout(function () { shaiReply("Great choice! I'll find the best options for you right away."); }, 800);
       });
     });
@@ -301,13 +321,18 @@
         div.className = 'flex justify-end mb-4';
         if (file.type.startsWith('image/')) {
           div.innerHTML = '<div class="rounded-2xl border border-[#939BFB] max-w-[60%] overflow-hidden shadow-sm"><img src="' + url + '" class="w-full h-auto"></div>';
-          setTimeout(function () { shaiReply("I can see your image! Let me find similar products for you."); }, 1500);
         } else {
           div.innerHTML = '<div class="rounded-2xl border border-[#939BFB] max-w-[60%] overflow-hidden shadow-sm"><video src="' + url + '" controls class="w-full h-auto"></video></div>';
-          setTimeout(function () { shaiReply("Got your video! Let me analyze it and find matching products."); }, 1500);
         }
         msgContainer.appendChild(div);
         scrollBottom();
+        if (window.ShaiFlow && typeof window.ShaiFlow.runAfterUpload === 'function') {
+          setTimeout(function () { window.ShaiFlow.runAfterUpload(msgContainer, shaiReply, scrollBottom); }, 1500);
+        } else {
+          setTimeout(function () {
+            shaiReply(file.type.startsWith('image/') ? "I can see your image! Let me find similar products for you." : "Got your video! Let me analyze it and find matching products.");
+          }, 1500);
+        }
       };
       input.click();
     }
@@ -592,11 +617,15 @@
     }
   }
 
-  /* ------ Run on DOM ready ------ */
+  /* ------ Run on DOM ready (load ShaiFlow first if needed) ------ */
+  function boot() {
+    inject();
+    init();
+  }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { inject(); init(); });
+    document.addEventListener('DOMContentLoaded', function () { ensureShaiFlow(boot); });
   } else {
-    inject(); init();
+    ensureShaiFlow(boot);
   }
 
 })();
