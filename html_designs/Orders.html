@@ -937,8 +937,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <!-- Reason for Return -->
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Return <span class="text-red-500">*</span></label>
-                    <div id="return-reason-wrapper" class="rounded-lg border-2 border-gray-300 transition-colors">
-                        <select id="return-reason" class="w-full p-3 border-0 bg-white dm-sans rounded-lg focus:outline-none focus:ring-0" onchange="var w=document.getElementById('return-reason-wrapper');if(w){w.classList.remove('border-red-500');w.classList.add('border-gray-300')}">
+                    <div id="return-reason-wrapper" class="relative rounded-lg border-2 border-gray-300 transition-colors">
+                        <select id="return-reason" class="w-full appearance-none p-3 pr-10 border-0 bg-white dm-sans rounded-lg focus:outline-none focus:ring-0" onchange="var w=document.getElementById('return-reason-wrapper');if(w){w.classList.remove('border-red-500');w.classList.add('border-gray-300')}">
                             <option value="">Select a reason</option>
                             <option value="wrong-size">Wrong item/size received</option>
                             <option value="damaged">Damaged item</option>
@@ -948,6 +948,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <option value="better-price">Better price found elsewhere</option>
                             <option value="other">Other</option>
                         </select>
+                        <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                 </div>
 

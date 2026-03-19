@@ -579,13 +579,16 @@ addTypingIndicatorWithMessage(container, typingMsg, 50);
           '<span class="min-w-0"><span class="block text-xs font-medium text-gray-900">' + String(item.title || '').replace(/</g, '&lt;') + '</span><span class="block text-[11px] text-gray-500">' + String(item.meta || '').replace(/</g, '&lt;') + ' • ' + String(item.orderId || '').replace(/</g, '&lt;') + '</span></span>' +
           '</label></div>' +
           '<div class="mb-3"><p class="text-xs font-medium text-gray-700 mb-1">Select reason</p>' +
-          '<select id="' + flowId + '-reason" class="w-full rounded-lg border border-gray-300 bg-white px-2.5 py-2 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#939BFB]">' +
+          '<div class="relative">' +
+          '<select id="' + flowId + '-reason" class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-2.5 pr-8 py-2 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#939BFB]">' +
           '<option value="">Select a reason</option>' +
           '<option value="size">Wrong size</option>' +
           '<option value="style">Not my style</option>' +
           '<option value="damaged">Arrived damaged</option>' +
           '<option value="other">Other</option>' +
-          '</select></div>' +
+          '</select>' +
+          '<svg class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>' +
+          '</div></div>' +
           '<div class="flex justify-end"><button type="button" id="' + flowId + '-confirm" class="bg-[#939BFB] text-white px-3 py-1.5 rounded-full text-xs font-medium hover:opacity-90 transition-opacity">Confirm return</button></div>' +
           '<p id="' + flowId + '-status" class="hidden mt-2 text-[11px] text-green-700"></p>' +
           '</div></div>';
