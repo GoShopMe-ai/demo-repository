@@ -206,7 +206,8 @@
 
             html += '    <div class="flex flex-wrap gap-1.5 mt-3">';
             if (showReturn) {
-                html += '<button class="flex-1 min-w-[72px] py-1.5 px-2 border border-shine-primary text-shine-primary rounded-md text-xs font-medium" onclick="openReturnModal()">Return</button>';
+                var returnOrderIdSafe2 = (o.id || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                html += '<button class="flex-1 min-w-[72px] py-1.5 px-2 border border-shine-primary text-shine-primary rounded-md text-xs font-medium" onclick="openReturnModal(\'' + returnOrderIdSafe2 + '\', 0)">Return</button>';
             }
             if (showTrack) {
                 html += '<a href="Order_Tracking.html" class="flex-1 min-w-[72px] py-1.5 px-2 bg-shine-primary text-white rounded-md text-xs font-medium text-center">Track</a>';
@@ -341,7 +342,7 @@
                 </div>
                 
                 <div class="flex flex-wrap gap-1.5 mt-3">
-                    <button onclick="openReturnModal()" class="flex-1 min-w-[72px] py-1.5 px-2 border border-shine-primary text-shine-primary rounded-md text-xs font-medium">Return</button>
+                    <button onclick="openReturnModal('#S04589', 0)" class="flex-1 min-w-[72px] py-1.5 px-2 border border-shine-primary text-shine-primary rounded-md text-xs font-medium">Return</button>
                     <button onclick="openReceiptDetails('#S04589')" class="flex-1 min-w-[72px] py-1.5 px-2 bg-gray-100 text-gray-700 rounded-md text-xs font-medium">Receipt</button>
                 </div>
             </div>
@@ -1030,7 +1031,13 @@ function openReturnDetails(orderId) {
         window.location.href = 'Return_Details.html';
     }
 }
-function openReturnModal() {
+function openReturnModal(orderId, itemIndex) {
+    try {
+        window.__returnAssistContext = {
+            orderId: orderId || '',
+            itemIndex: typeof itemIndex === 'number' ? itemIndex : 0
+        };
+    } catch (e) {}
     if (typeof window.__expandChatDrawer === 'function') {
         window.__expandChatDrawer();
     }

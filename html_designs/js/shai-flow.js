@@ -221,7 +221,37 @@
         if (raw) orders = JSON.parse(raw);
       }
     } catch (e) {}
+    if (!Array.isArray(orders) || !orders.length) {
+      try {
+        if (Array.isArray(window.SAMPLE_ORDERS)) orders = window.SAMPLE_ORDERS;
+      } catch (e) {}
+    }
     orders = Array.isArray(orders) ? orders : [];
+
+    var context = null;
+    try { context = window.__returnAssistContext || null; } catch (e) {}
+    if (context && context.orderId) {
+      var contextOrder = null;
+      for (var c = 0; c < orders.length; c++) {
+        if (String((orders[c] || {}).id || '') === String(context.orderId)) {
+          contextOrder = orders[c];
+          break;
+        }
+      }
+      if (contextOrder) {
+        var contextItems = Array.isArray(contextOrder.items) ? contextOrder.items : [];
+        var idx = typeof context.itemIndex === 'number' ? context.itemIndex : 0;
+        var contextItem = contextItems[idx] || contextItems[0] || null;
+        if (contextItem) {
+          return {
+            orderId: contextOrder.id || '#S12345',
+            title: contextItem.title || contextItem.name || 'Selected item',
+            meta: contextItem.meta || 'Qty 1',
+            image: contextItem.image || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/fe90b9b439-e7fb2c439c531b8e3eb3.png'
+          };
+        }
+      }
+    }
 
     var selectedOrder = null;
     var selectedItem = null;
@@ -245,7 +275,7 @@
         orderId: '#S12345',
         title: 'Black Leather Ankle Boots',
         meta: 'Size 8 • Qty 1',
-        image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/12789358f6-df2d9f91e4dbb5a432f3.png'
+        image: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/fe90b9b439-e7fb2c439c531b8e3eb3.png'
       };
     }
 
@@ -253,7 +283,7 @@
       orderId: selectedOrder && selectedOrder.id ? selectedOrder.id : '#S12345',
       title: selectedItem.title || selectedItem.name || 'Selected item',
       meta: selectedItem.meta || 'Qty 1',
-      image: selectedItem.image || ''
+      image: selectedItem.image || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/fe90b9b439-e7fb2c439c531b8e3eb3.png'
     };
   }
 
