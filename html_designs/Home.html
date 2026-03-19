@@ -643,7 +643,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <div id="chat-overlay" class="fixed inset-0 bg-black/40 z-40 hidden"></div>
 
-<div id="chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[50vh] transform transition-transform duration-300 flex flex-col border-t border-gray-100">
+<div id="chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[50vh] transform transition-transform duration-300 flex flex-col border-t border-gray-100 translate-y-full">
     <div id="drag-handle-zone" class="chat-drawer-drag-zone flex justify-center pt-2 flex-shrink-0">
         <div id="drag-handle" class="w-10 h-1 bg-gray-300 rounded-full pointer-events-none"></div>
     </div>
@@ -1008,7 +1008,7 @@ document.addEventListener('DOMContentLoaded', loadHomeData);
 
 
 <script>
-(() => {
+document.addEventListener('DOMContentLoaded', function() {
   function upgradeToAutoGrowTextarea(cfg) {
     const old = document.querySelector(cfg.selector);
     if (!old) return;
@@ -1043,7 +1043,7 @@ document.addEventListener('DOMContentLoaded', loadHomeData);
       ta.style.height = Math.min(ta.scrollHeight, 6 * rowH()) + 'px'; // cap ~6 rows
     };
     const updateButtons = () => {
-      const hasText = ta.value.trim().length > 0;
+      const hasText = (ta.value || '').trim().length > 0;
       if (mic)  mic.classList.toggle('hidden',  hasText);
       if (add)  add.classList.toggle('hidden',  hasText);
       if (send) send.classList.toggle('hidden', !hasText);
@@ -1051,8 +1051,17 @@ document.addEventListener('DOMContentLoaded', loadHomeData);
     const sendNow = () => {
       const text = ta.value.trim();
       if (!text) return;
+      window.__lastSentText = text;
       const container = document.querySelector('#chat-messages .p-4');
+      const isExactBagPhrase = /exact\s*bag|find\s+(the\s+)?exact\s+bag/i.test(text);
       if (container) {
+        const beforeLast = container.lastElementChild;
+        const prevWasUserImage = beforeLast && beforeLast.classList && beforeLast.classList.contains('flex') && beforeLast.classList.contains('justify-end') && beforeLast.querySelector && beforeLast.querySelector('img') && !(beforeLast.querySelector && beforeLast.querySelector('.voice-message-bubble'));
+        if (isExactBagPhrase && !prevWasUserImage) {
+          window.__waitingForExactBagImage = true;
+        } else if (isExactBagPhrase && prevWasUserImage) {
+          window.__waitingForExactBagImage = false;
+        }
         const wrap = document.createElement('div');
         wrap.className = 'flex justify-end mb-4';
         wrap.innerHTML = `
@@ -1111,10 +1120,9 @@ document.addEventListener('DOMContentLoaded', loadHomeData);
     selector: '#chat-input-drawer-field',
     mic: '#mic-btn-drawer',
     add: '#add-friend-btn-drawer',
-    send: '#send-btn-drawer',
-    onFocusGrow: true
+    send: '#send-btn-drawer'
   });
-})();
+});
 </script>
 
 <script>
@@ -1404,7 +1412,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const btnHtml = c.goshopme
                 ? '<button class="contact-action bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>'
                 : '<button class="contact-action bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>';
-            return `<div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="${(c.name || '').replace(/"/g, '&quot;')}" data-phone="${(c.phone || '').replace(/"/g, '&quot;')}" data-goshopme="${c.goshopme ? 'true' : 'false'}">${avatarHtml}<div class="flex-1"><p class="font-medium text-sm text-black">${(c.name || '').replace(/</g, '&lt;')}</p><p class="text-xs text-gray-500">${(c.phone || '').replace(/</g, '&lt;')}</p></div>${btnHtml}</div>`;
+            return `<div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="${(c.name || '').replace(/"/g, '&quot;')}" data-phone="${(c.phone || '').replace(/"/g, '&quot;')}" data-goshopme="${c.goshopme ? 'true' : 'false'}" data-avatar="${(c.avatar || '').replace(/"/g, '&quot;')}">${avatarHtml}<div class="flex-1"><p class="font-medium text-sm text-black">${(c.name || '').replace(/</g, '&lt;')}</p><p class="text-xs text-gray-500">${(c.phone || '').replace(/</g, '&lt;')}</p></div>${btnHtml}</div>`;
         }).join('');
     }
     window.loadAddFriendContacts = function(data) {
@@ -1465,6 +1473,12 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!text) return;
         const chatMessagesContainer = document.querySelector('#chat-messages .p-4');
         if (chatMessagesContainer) {
+            // Scenario 4 trigger: text-first requires setting a flag so that the next bag image upload starts searching.
+            const isExactBagPhrase = /exact\s*bag|find\s+(the\s+)?exact\s+bag/i.test(text);
+            if (isExactBagPhrase) {
+                window.__lastSentText = text;
+                window.__waitingForExactBagImage = true;
+            }
             const userMsg = document.createElement('div');
             userMsg.className = 'flex justify-end mb-4';
             userMsg.innerHTML = `
@@ -1478,6 +1492,18 @@ document.addEventListener("DOMContentLoaded", function () {
             mic.classList.remove("hidden");
             addFriend.classList.remove("hidden");
             send.classList.add("hidden");
+
+            // Text-first: reply "Sure, send me..." and only then wait for the user to upload the bag image.
+            // (Search + recommendations happen on image upload via runExternalSearchScenario.)
+            setTimeout(function () {
+                if (window.ShaiFlow && typeof window.ShaiFlow.handleUserReply === 'function') {
+                    var handled = window.ShaiFlow.handleUserReply(text, chatMessagesContainer, addShAIMessage, function () {
+                        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+                    });
+                    if (handled) return;
+                }
+                addShAIMessage("Perfect! Let me help you find exactly what you're looking for. I'll show you some great options that match your style.");
+            }, 1000);
         }
     }
 
@@ -1560,12 +1586,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (chatMessagesEl) requestAnimationFrame(function() { requestAnimationFrame(function() { chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight; }); });
                 
                 const scrollChat = function() { if (chatMessagesEl) chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight; };
-                if (window.ShaiFlow && typeof window.ShaiFlow.runAfterUpload === 'function') {
-                    setTimeout(function() { window.ShaiFlow.runAfterUpload(chatMessagesContainer, addShAIMessage, scrollChat); }, 1500);
+                const isImage = file.type.startsWith("image/");
+                // Scenario 4: only after user asked for exact bag (flag set) and uploads bag image — then search + recommendations
+                const waitingForBag = window.__waitingForExactBagImage === true;
+                if (isImage && waitingForBag && window.ShaiFlow && typeof window.ShaiFlow.runExternalSearchScenario === 'function') {
+                    window.__waitingForExactBagImage = false;
+                    setTimeout(function() { window.ShaiFlow.runExternalSearchScenario(chatMessagesContainer, addShAIMessage, scrollChat); }, 800);
+                } else if (isImage && window.ShaiFlow && typeof window.ShaiFlow.runAfterUpload === 'function') {
+                    // Scenario 1 (Home only): photo upload + outfit reconstruction
+                    setTimeout(function() { window.ShaiFlow.runAfterUpload(chatMessagesContainer, addShAIMessage, scrollChat); }, 800);
                 } else {
-                    setTimeout(() => {
-                        const isVideo = file.type.startsWith("video/");
-                        addShAIMessage(isVideo ? "Great! I can analyze your video. Let me find products that match what I see." : "Perfect! I can see your image. Let me analyze it and find similar products for you.");
+                    setTimeout(function() {
+                        addShAIMessage(file.type.startsWith("video/") ? "Great! I can analyze your video. Let me find products that match what I see." : "Perfect! I can see your image. Let me analyze it and find similar products for you.");
                         scrollChat();
                     }, 1500);
                 }
@@ -1756,13 +1788,69 @@ function removeTempRecordingBubble() {
         });
         
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-        setTimeout(() => addShAIMessage("Got your voice message! I'm on it — let me find the best options for you."), 800);
+        var scrollChat = function() {
+            const el = document.getElementById('chat-messages');
+            if (el) requestAnimationFrame(function() { requestAnimationFrame(function() { el.scrollTop = el.scrollHeight; }); });
+        };
+        if (window.ShaiFlow && typeof window.ShaiFlow.runVoiceBudgetScenario === 'function') {
+            setTimeout(function() { window.ShaiFlow.runVoiceBudgetScenario(chatMessagesContainer, addShAIMessage, scrollChat); }, 800);
+        } else {
+            setTimeout(() => addShAIMessage("Got your voice message! I'm on it — let me find the best options for you."), 800);
+        }
     }
 }
     // Expose ShAI helpers globally so sendNow (which runs before DOMContentLoaded) can call them
     window.addShAIMessage = addShAIMessage;
     window.__shaiReplyToText = function() {
-        addShAIMessage("Perfect! Let me help you find exactly what you're looking for. I'll show you some great options that match your style.");
+        const container = document.querySelector('#chat-messages .p-4');
+        const lastSent = (window.__lastSentText || '').trim();
+        const isThanksMessage = /^(thanks|thank you|thanks!|thank you!|thx|thx!)$/i.test(lastSent);
+        const isScenario5AddToShoppingBag =
+            /add\b/i.test(lastSent) &&
+            /shopping\s*bag/i.test(lastSent) &&
+            /dress/i.test(lastSent) &&
+            /red\s*(bag|handbag|shoulder\s*bag|tote|leather\s*bag)/i.test(lastSent) &&
+            /(neutral\s*(shoes|shoe)|beige\s*(shoes|shoe|mules))/i.test(lastSent);
+        const isExactBagAsk = /exact\s*bag|find\s+(the\s+)?exact\s+bag/i.test(lastSent);
+        const lastBubble = container && container.lastElementChild;
+        const prevBubble = lastBubble && lastBubble.previousElementSibling;
+        // Only treat the previous bubble as a "user uploaded image" if it is the user's bubble.
+        // This prevents triggering Scenario 4 from ShAI's avatar img.
+        const prevIsUserImage = prevBubble
+            && prevBubble.classList
+            && prevBubble.classList.contains('flex')
+            && prevBubble.classList.contains('justify-end')
+            && prevBubble.querySelector
+            && prevBubble.querySelector('img')
+            && !prevBubble.querySelector('video');
+
+        if (isThanksMessage) {
+            addShAIMessage("Happy to help!");
+        } else if (isExactBagAsk) {
+            if (prevIsUserImage && container && window.ShaiFlow && typeof window.ShaiFlow.runExternalSearchScenario === 'function') {
+                // Image-first: user uploaded bag image, then asked exact bag → start search now.
+                window.__waitingForExactBagImage = false;
+                window.ShaiFlow.runExternalSearchScenario(container, addShAIMessage, function() {
+                    const el = document.getElementById('chat-messages');
+                    if (el) el.scrollTop = el.scrollHeight;
+                });
+            } else {
+                // Text-first: ask for the image and wait.
+                window.__waitingForExactBagImage = true;
+                addShAIMessage("Sure, send me the item that you are looking for.");
+            }
+        } else if (isScenario5AddToShoppingBag) {
+            if (container && window.ShaiFlow && typeof window.ShaiFlow.runAddToShoppingBagScenario === 'function') {
+                window.ShaiFlow.runAddToShoppingBagScenario(container, addShAIMessage, function () {
+                    const el = document.getElementById('chat-messages');
+                    if (el) el.scrollTop = el.scrollHeight;
+                });
+            } else {
+                addShAIMessage("Great choice! I've added the items to your shopping bag.");
+            }
+        } else {
+            addShAIMessage("Perfect! Let me help you find exactly what you're looking for. I'll show you some great options that match your style.");
+        }
     };
 
     window.toggleVoicePlayback = function(button, audioUrl) {
@@ -2079,13 +2167,22 @@ function removeTempRecordingBubble() {
                     notification.className = 'flex justify-center mb-4';
                     notification.innerHTML = `
                         <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">
-                            ${contactName.split(' ')[0]} has been added to chat
+                            ${contactName.split(' ')[0]} has been added to the chat
                         </div>
                     `;
                     chatMessagesContainer.appendChild(notification);
-                    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+                    const chatEl = document.getElementById('chat-messages');
+                    if (chatEl) chatEl.scrollTop = chatEl.scrollHeight;
                 }
                 hideAddFriendFlow();
+                if (window.ShaiFlow && typeof window.ShaiFlow.runAddFriendScenario === 'function') {
+                    const scrollChat = function() {
+                        const el = document.getElementById('chat-messages');
+                        if (el) requestAnimationFrame(function() { requestAnimationFrame(function() { el.scrollTop = el.scrollHeight; }); });
+                    };
+                    const friendAvatar = (contactItem.getAttribute('data-avatar') || '').trim();
+                    window.ShaiFlow.runAddFriendScenario(chatMessagesContainer, contactName, addShAIMessage, scrollChat, friendAvatar || undefined);
+                }
             } else if (e.target.textContent === 'Invite') {
                 const shareData = {
                     title: 'Join me on GoShopMe',

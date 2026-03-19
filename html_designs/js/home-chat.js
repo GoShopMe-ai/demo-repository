@@ -29,6 +29,7 @@ function upgradeToAutoGrowTextarea(cfg) {
     var sendNow = function() {
         var text = ta.value.trim();
         if (!text) return;
+        window.__lastSentText = text;
         var container = document.querySelector('#chat-messages .p-4');
         if (container) {
             var wrap = document.createElement('div');
@@ -48,11 +49,18 @@ function upgradeToAutoGrowTextarea(cfg) {
     if (send) send.addEventListener('click', sendNow);
     autoResize();
     updateButtons();
-    if (cfg.onFocusGrow) ta.addEventListener('focus', function() { var drawer = document.getElementById('chat-drawer'); if (drawer) drawer.style.height = '50vh'; });
 }
 
-upgradeToAutoGrowTextarea({ selector: '#message-input', mic: '#mic-btn', add: '#add-friend-btn', send: '#send-btn' });
-upgradeToAutoGrowTextarea({ selector: '#chat-input-drawer-field', mic: '#mic-btn-drawer', add: '#add-friend-btn-drawer', send: '#send-btn-drawer', onFocusGrow: true });
+function runInputUpgrades() {
+    upgradeToAutoGrowTextarea({ selector: '#message-input', mic: '#mic-btn', add: '#add-friend-btn', send: '#send-btn' });
+    upgradeToAutoGrowTextarea({ selector: '#chat-input-drawer-field', mic: '#mic-btn-drawer', add: '#add-friend-btn-drawer', send: '#send-btn-drawer' });
+    upgradeToAutoGrowTextarea({ selector: '#chat-input-bar-field', mic: '#mic-btn-bar', add: '#add-friend-btn-bar', send: '#send-btn-bar' });
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runInputUpgrades);
+} else {
+    runInputUpgrades();
+}
 
 document.addEventListener("DOMContentLoaded", function initHomeChat() {
     var chatDrawer = document.getElementById("chat-drawer");
@@ -98,7 +106,15 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
         window.__shaiAvatarUrl = url || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
         document.querySelectorAll('[data-shai-avatar]').forEach(function(img) { img.src = window.__shaiAvatarUrl; });
     };
-    window.__shaiReplyToText = function() { addShAIMessage("Perfect! Let me help you find exactly what you're looking for. I'll show you some great options that match your style."); };
+    window.__shaiReplyToText = function() {
+        var text = (window.__lastSentText || '').trim();
+        var container = document.querySelector('#chat-messages .p-4');
+        if (text && container && window.ShaiFlow && typeof window.ShaiFlow.handleUserReply === 'function') {
+            var handled = window.ShaiFlow.handleUserReply(text, container, addShAIMessage, scrollToBottom);
+            if (handled) return;
+        }
+        addShAIMessage("Perfect! Let me help you find exactly what you're looking for. I'll show you some great options that match your style.");
+    };
 
     function expandDrawer() {
         if (!chatDrawer) return;
@@ -120,8 +136,9 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
 
     window.__expandChatDrawer = expandDrawer;
     if (chatOverlay) chatOverlay.addEventListener("click", collapseDrawer);
-    if (chatInputBar) chatInputBar.addEventListener("click", function (e) { if (!e.target.closest("button")) expandDrawer(); });
-    if (chatInput) chatInput.addEventListener('focus', function() { if (!isDrawerExpanded) { expandDrawer(); setTimeout(function() { if (chatInputDrawer) chatInputDrawer.focus(); }, 300); } });
+    if (chatInputBar) chatInputBar.addEventListener("click", function (e) {
+        if (!e.target.closest("button")) expandDrawer();
+    });
 
     var addFriendContent = document.getElementById("add-friend-content");
     var chatContent = document.getElementById("chat-content");
@@ -181,7 +198,7 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
             var hasAvatar = c.goshopme && c.avatar;
             var avatarHtml = hasAvatar ? '<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"><img src="' + c.avatar + '" alt="" class="w-full h-full object-cover"></div>' : '<div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><span class="text-gray-600 font-medium text-xs">' + initials + '</span></div>';
             var btnHtml = c.goshopme ? '<button class="contact-action bg-[#939BFB] text-white px-2 py-1 rounded-full text-xs font-medium">Add</button>' : '<button class="contact-action bg-white text-[#939BFB] px-2 py-1 rounded-full text-xs font-medium border border-[#939BFB]">Invite</button>';
-            return '<div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="' + (c.name || '').replace(/"/g, '&quot;') + '" data-phone="' + (c.phone || '').replace(/"/g, '&quot;') + '" data-goshopme="' + (c.goshopme ? 'true' : 'false') + '">' + avatarHtml + '<div class="flex-1"><p class="font-medium text-sm text-black">' + (c.name || '').replace(/</g, '&lt;') + '</p><p class="text-xs text-gray-500">' + (c.phone || '').replace(/</g, '&lt;') + '</p></div>' + btnHtml + '</div>';
+            return '<div class="contact-item flex items-center gap-2 p-2 bg-gray-50 rounded-xl" data-name="' + (c.name || '').replace(/"/g, '&quot;') + '" data-phone="' + (c.phone || '').replace(/"/g, '&quot;') + '" data-goshopme="' + (c.goshopme ? 'true' : 'false') + '" data-avatar="' + ((c.avatar || '').replace(/"/g, '&quot;')) + '">' + avatarHtml + '<div class="flex-1"><p class="font-medium text-sm text-black">' + (c.name || '').replace(/</g, '&lt;') + '</p><p class="text-xs text-gray-500">' + (c.phone || '').replace(/</g, '&lt;') + '</p></div>' + btnHtml + '</div>';
         }).join('');
     }
     renderAddFriendContacts(contactsContainer);
@@ -332,8 +349,18 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
         var isAdd = (btn.textContent || '').trim() === 'Add';
         if (isAdd && isGoshopme) {
             var container = document.querySelector('#chat-messages .p-4');
-            if (container) { var n = document.createElement('div'); n.className = 'flex justify-center mb-4'; n.innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">' + (name.split(' ')[0] || '') + ' has been added to chat</div>'; container.appendChild(n); scrollToBottom(true); }
+            if (container) {
+                var n = document.createElement('div');
+                n.className = 'flex justify-center mb-4';
+                n.innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">' + (name.split(' ')[0] || '') + ' has been added to the chat</div>';
+                container.appendChild(n);
+                scrollToBottom(true);
+            }
             hideAddFriendFlow();
+            if (window.ShaiFlow && typeof window.ShaiFlow.runAddFriendScenario === 'function') {
+                var avatar = (item.getAttribute('data-avatar') || '').trim();
+                window.ShaiFlow.runAddFriendScenario(container, name, addShAIMessage, scrollToBottom, avatar || undefined);
+            }
         } else {
             // Invite (or demo: no live GoShopMe users — always send invite)
             doInviteShare();
@@ -545,7 +572,11 @@ document.addEventListener("DOMContentLoaded", function initHomeChat() {
             }
             if (playBtn) playBtn.addEventListener('click', function() { window.toggleVoicePlayback(this); });
             scrollToBottom(true);
-            setTimeout(function() { addShAIMessage("Got your voice message! I'm on it — let me find the best options for you."); }, 800);
+            if (window.ShaiFlow && typeof window.ShaiFlow.runVoiceBudgetScenario === 'function') {
+                setTimeout(function() { window.ShaiFlow.runVoiceBudgetScenario(container, addShAIMessage, scrollToBottom); }, 800);
+            } else {
+                setTimeout(function() { addShAIMessage("Got your voice message! I'm on it — let me find the best options for you."); }, 800);
+            }
         }
     }
     window.toggleVoicePlayback = function(button) {
