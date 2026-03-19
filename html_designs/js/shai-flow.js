@@ -205,6 +205,13 @@
     return /^(thanks|thank you|thanks!|thank you!|thx|thx!)$/i.test(text.trim());
   }
 
+  function isBudgetOutfitAsk(text) {
+    if (typeof text !== 'string') return false;
+    var t = text.trim();
+    return /too\s+expensive/i.test(t) &&
+      (/similar\s+items?\s+on\s+a\s+budget/i.test(t) || /on\s+a\s+budget/i.test(t) || /budget/i.test(t));
+  }
+
   function getReturnAssistItem() {
     var orders = [];
     try {
@@ -261,6 +268,11 @@
         return true;
       }
 
+      if (isBudgetOutfitAsk(message) && typeof window.ShaiFlow.runVoiceBudgetScenario === 'function') {
+        window.ShaiFlow.runVoiceBudgetScenario(container, addShAIMessage, scrollChat);
+        return true;
+      }
+
       // Scenario 5: Add to shopping bag (text-only intent)
       if (isAddToShoppingBagAsk(message)) {
         window.ShaiFlow.runAddToShoppingBagScenario(container, addShAIMessage, scrollChat);
@@ -306,7 +318,7 @@
         name: 'Leopard Print A-Line Dress',
         brand: 'Shein',
         unitPrice: 20.77,
-        imgSrc: 'https://cdn11.bigcommerce.com/s-mqq1i1xa2c/images/stencil/1280x1280/products/209712/5766729/20913_MIAL_1__37257.1732897199.jpg?c=1',
+        imgSrc: 'images/leopard-dress-hero.png',
         details: ''
       };
 
@@ -619,7 +631,7 @@ addTypingIndicatorWithMessage(container, typingMsg, 50);
         brand: 'Shein',
         price: '$20.77',
         priceNum: 20.77,
-        image: 'https://cdn11.bigcommerce.com/s-mqq1i1xa2c/images/stencil/1280x1280/products/209712/5766729/20913_MIAL_1__37257.1732897199.jpg?c=1'
+        image: 'images/leopard-dress-hero.png'
       };
       var budgetSupporting = [
         { id: 'budget-aldo-scintilla-sandals', name: 'SCINTILLA Sandals', brand: 'Aldo', price: '$110.00', priceNum: 110, image: 'https://www.aldoshoes.co.za/wp-content/uploads/scintilla_red_600-002-033_main_sq_nt_1000x1000.jpg' },
