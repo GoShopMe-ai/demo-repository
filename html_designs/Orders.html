@@ -938,7 +938,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Return <span class="text-red-500">*</span></label>
                     <div id="return-reason-wrapper" class="relative rounded-lg border-2 border-gray-300 transition-colors">
-                        <select id="return-reason" class="w-full appearance-none p-3 pr-10 border-0 bg-white dm-sans rounded-lg focus:outline-none focus:ring-0" onchange="var w=document.getElementById('return-reason-wrapper');if(w){w.classList.remove('border-red-500');w.classList.add('border-gray-300')}">
+                        <select id="return-reason" class="w-full appearance-none p-3 pr-10 border-0 bg-white dm-sans rounded-lg focus:outline-none focus:ring-0" style="background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%234b5563%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M19 9l-7 7-7-7%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 12px center;background-size:14px;" onchange="var w=document.getElementById('return-reason-wrapper');if(w){w.classList.remove('border-red-500');w.classList.add('border-gray-300')}">
                             <option value="">Select a reason</option>
                             <option value="wrong-size">Wrong item/size received</option>
                             <option value="damaged">Damaged item</option>

@@ -580,7 +580,7 @@ addTypingIndicatorWithMessage(container, typingMsg, 50);
           '</label></div>' +
           '<div class="mb-3"><p class="text-xs font-medium text-gray-700 mb-1">Select reason</p>' +
           '<div class="relative">' +
-          '<select id="' + flowId + '-reason" class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-2.5 pr-8 py-2 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#939BFB]">' +
+          '<select id="' + flowId + '-reason" class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-2.5 pr-8 py-2 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#939BFB]" style="background-image:url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%234b5563%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M19 9l-7 7-7-7%22/%3E%3C/svg%3E\');background-repeat:no-repeat;background-position:right 8px center;background-size:14px;">' +
           '<option value="">Select a reason</option>' +
           '<option value="size">Wrong size</option>' +
           '<option value="style">Not my style</option>' +
