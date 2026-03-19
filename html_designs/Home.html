@@ -1805,6 +1805,8 @@ function removeTempRecordingBubble() {
         const container = document.querySelector('#chat-messages .p-4');
         const lastSent = (window.__lastSentText || '').trim();
         const isThanksMessage = /^(thanks|thank you|thanks!|thank you!|thx|thx!)$/i.test(lastSent);
+        const isBudgetOutfitAsk = /too\s+expensive/i.test(lastSent) &&
+            (/similar\s+items?\s+on\s+a\s+budget/i.test(lastSent) || /on\s+a\s+budget/i.test(lastSent) || /budget/i.test(lastSent));
         const isScenario5AddToShoppingBag =
             /add\b/i.test(lastSent) &&
             /shopping\s*bag/i.test(lastSent) &&
@@ -1826,6 +1828,15 @@ function removeTempRecordingBubble() {
 
         if (isThanksMessage) {
             addShAIMessage("Happy to help!");
+        } else if (isBudgetOutfitAsk) {
+            if (container && window.ShaiFlow && typeof window.ShaiFlow.runVoiceBudgetScenario === 'function') {
+                window.ShaiFlow.runVoiceBudgetScenario(container, addShAIMessage, function () {
+                    const el = document.getElementById('chat-messages');
+                    if (el) el.scrollTop = el.scrollHeight;
+                });
+            } else {
+                addShAIMessage("Absolutely");
+            }
         } else if (isExactBagAsk) {
             if (prevIsUserImage && container && window.ShaiFlow && typeof window.ShaiFlow.runExternalSearchScenario === 'function') {
                 // Image-first: user uploaded bag image, then asked exact bag → start search now.
