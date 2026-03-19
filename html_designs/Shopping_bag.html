@@ -574,7 +574,7 @@
 <div id="chat-overlay" class="fixed inset-0 bg-black/40 z-40 hidden" aria-hidden="true"></div>
 
 <!-- Chat Drawer -->
-<div id="chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[50vh] transform transition-transform duration-300 flex flex-col border-t border-gray-100">
+<div id="chat-drawer" class="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white rounded-t-3xl shadow-2xl z-50 h-[50vh] transform transition-transform duration-300 flex flex-col border-t border-gray-100 translate-y-full">
     <div id="drag-handle-zone" class="chat-drawer-drag-zone flex justify-center pt-2 pb-3 flex-shrink-0" style="min-height: 44px;">
         <div id="drag-handle" class="w-10 h-1 bg-gray-300 rounded-full pointer-events-none"></div>
     </div>
@@ -798,7 +798,7 @@
             </div>
             
             <div id="contacts-container" class="space-y-3">
-                <div class="contact-item flex items-center space-x-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm" data-name="Alex Johnson" data-phone="+1 (555) 123-4567" data-goshopme="true">
+                <div class="contact-item flex items-center space-x-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm" data-name="Alex Johnson" data-phone="+1 (555) 123-4567" data-goshopme="true" data-avatar="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-2.jpg">
                     <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                         <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-2.jpg" alt="Contact" class="w-full h-full object-cover">
                     </div>
@@ -820,7 +820,7 @@
                     <button class="contact-action bg-white text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium border border-[#939BFB] dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Invite</button>
                 </div>
                 
-                <div class="contact-item flex items-center space-x-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm" data-name="David Kim" data-phone="+1 (555) 456-7890" data-goshopme="true">
+                <div class="contact-item flex items-center space-x-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm" data-name="David Kim" data-phone="+1 (555) 456-7890" data-goshopme="true" data-avatar="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-3.jpg">
                     <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                         <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-3.jpg" alt="Contact" class="w-full h-full object-cover">
                     </div>
@@ -842,7 +842,7 @@
                     <button class="contact-action bg-white text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium border border-[#939BFB] dm-sans hover:bg-[#939BFB] hover:text-white transition-colors">Invite</button>
                 </div>
 
-                <div class="contact-item flex items-center space-x-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm" data-name="Emma Wilson" data-phone="+1 (555) 345-6789" data-goshopme="true">
+                <div class="contact-item flex items-center space-x-3 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm" data-name="Emma Wilson" data-phone="+1 (555) 345-6789" data-goshopme="true" data-avatar="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-5.jpg">
                     <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                         <img src="https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-5.jpg" alt="Contact" class="w-full h-full object-cover">
                     </div>
@@ -1330,7 +1330,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 chatMessagesContainer.appendChild(mediaBubble);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
                 const scrollChat = function () { if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight; };
-                if (window.ShaiFlow && typeof window.ShaiFlow.runAfterUpload === 'function') {
+                const isImage = file.type.startsWith('image/');
+                const waitingForBag = window.__waitingForExactBagImage === true;
+                if (isImage && waitingForBag && window.ShaiFlow && typeof window.ShaiFlow.runExternalSearchScenario === 'function') {
+                    window.__waitingForExactBagImage = false;
+                    setTimeout(function () { window.ShaiFlow.runExternalSearchScenario(chatMessagesContainer, addShAIMessage, scrollChat); }, 800);
+                } else if (isImage && window.ShaiFlow && typeof window.ShaiFlow.runAfterUpload === 'function') {
                     setTimeout(function () {
                         window.ShaiFlow.runAfterUpload(chatMessagesContainer, addShAIMessage, scrollChat);
                     }, 1500);
@@ -1625,6 +1630,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (chatInput) chatInput.addEventListener('input', () => updateInputButtons(chatInput, micBtn, addFriendBtn, sendBtn));
     if (chatInputDrawer) chatInputDrawer.addEventListener('input', () => updateInputButtons(chatInputDrawer, micBtnDrawer, addFriendBtnDrawer, sendBtnDrawer));
+    if (chatInput) updateInputButtons(chatInput, micBtn, addFriendBtn, sendBtn);
+    if (chatInputDrawer) updateInputButtons(chatInputDrawer, micBtnDrawer, addFriendBtnDrawer, sendBtnDrawer);
 
     function showAddFriendFlow() {
         var container = document.getElementById('contacts-container');
@@ -1835,8 +1842,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add playback functionality
         setupVoiceMessagePlayback(voiceMessage.querySelector('.voice-message-bubble'));
         
-        // ShAI replies to voice messages (match Home)
-        setTimeout(() => addShAIMessage("Got your voice message! I'm on it — let me find the best options for you."), 800);
+        // ShAI replies to voice messages — Scenario 3: budget options flow
+        if (window.ShaiFlow && typeof window.ShaiFlow.runVoiceBudgetScenario === 'function') {
+            const scrollChat = () => { if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight; };
+            setTimeout(() => window.ShaiFlow.runVoiceBudgetScenario(chatContainer, addShAIMessage, scrollChat), 800);
+        } else {
+            setTimeout(() => addShAIMessage("Got your voice message! I'm on it — let me find the best options for you."), 800);
+        }
     }
 
     // Setup voice message playback functionality
@@ -2084,12 +2096,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 systemMessage.className = 'flex justify-center mb-4';
                 systemMessage.innerHTML = `
                     <div role="status" aria-live="polite" class="bg-green-100 text-green-800 rounded-full px-3 py-1.5 text-xs font-medium dm-sans max-w-[80%] text-center shadow-sm animate-fade-in">
-                        ${name.split(' ')[0]} has been added to chat
+                        ${name.split(' ')[0]} has been added to the chat
                     </div>
                 `;
                 chatContainer.appendChild(systemMessage);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
                 showChatView();
+                if (window.ShaiFlow && typeof window.ShaiFlow.runAddFriendScenario === 'function') {
+                    const scrollChat = function() { if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight; };
+                    const friendAvatar = (contactItem.getAttribute('data-avatar') || '').trim();
+                    window.ShaiFlow.runAddFriendScenario(chatContainer, name, addShAIMessage, scrollChat, friendAvatar || undefined);
+                }
             } else if (!isGoshopme && this.textContent === 'Invite') {
                 // Share invite - URL points to app for download/join
                 const shareData = {

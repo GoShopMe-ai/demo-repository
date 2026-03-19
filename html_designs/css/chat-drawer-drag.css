@@ -30,3 +30,12 @@
 [id$="-drag-handle-area"]:active {
   cursor: grabbing;
 }
+
+/* When user types: hide mic & add-friend, show send - ensure .hidden always hides */
+#chat-input-bar button.hidden,
+#chat-input-drawer button.hidden,
+#chat-drawer #chat-input-drawer button.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

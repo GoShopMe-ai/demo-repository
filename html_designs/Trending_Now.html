@@ -817,6 +817,8 @@
     if (bInput) bInput.addEventListener('input', syncBarInput);
     if (bInput) bInput.addEventListener('keydown', function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendBarMsg(); } });
     if (bSend)  bSend.addEventListener('click', sendBarMsg);
+    syncDrawerInput();
+    syncBarInput();
 
     /* ── System bubble helper ────────────────────────── */
     function renderSystemBubble(msg) {

@@ -1,0 +1,11 @@
+{
+  "description": "Product IDs by category for Shop by Category. Part1: shoes, dresses, bags (inferred). Part2: swimwear 59-67, workwear 68-80, beauty 81-86, wellness 87-90. Sale: all discounted catalog items (59-67 and any with originalPrice).",
+  "shoes": ["4", "6", "10", "13", "15", "20", "23", "27", "31", "38", "43", "58"],
+  "dresses": ["5", "8", "12", "14", "18", "46", "47", "49", "54", "55"],
+  "bags": ["3", "7", "9", "17", "19", "24", "28", "32", "37", "39", "44", "50", "52", "53"],
+  "swimwear": ["59", "60", "61", "62", "63", "64", "65", "66", "67"],
+  "workwear": ["68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80"],
+  "beauty": ["81", "82", "83", "84", "85", "86"],
+  "wellness": ["87", "88", "89", "90"],
+  "sale": ["63", "64", "65", "66", "67"]
+}

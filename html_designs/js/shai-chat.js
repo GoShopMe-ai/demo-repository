@@ -1,54 +1,43 @@
 /**
- * shai-chat.js - Self-contained ShAI Chat System
+ * shai-chat.js â€” Self-contained ShAI Chat System
  * Drop <script src="js/shai-chat.js"></script> into any GoShopMe screen.
- * For Scenarios 1-4 (outfit, budget, accessories, web, add-to-bag), include shai-flow.js before this script.
- * If ShaiFlow is missing, this script will try to load js/shai-flow.js dynamically.
+ * The script injects the overlay, drawer, and collapsed input bar,
+ * then wires up all interactions: text, image/video, voice recording,
+ * drag-to-resize, add-friend, and ShAI contextual replies.
  */
 (function () {
   'use strict';
 
   const SHAI_AVATAR = 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/shai-avatar.png';
 
-  /* ------ Skip if a full drawer already exists on this page ------ */
-  if (document.getElementById('chat-drawer')) return;
-
-  /* ------ Ensure ShaiFlow is available (load shai-flow.js if missing) ------ */
-  function ensureShaiFlow(done) {
-    if (window.ShaiFlow && typeof window.ShaiFlow.runAfterUpload === 'function') {
-      if (typeof done === 'function') done();
-      return;
-    }
-    var base = (function () {
-      var s = document.currentScript && document.currentScript.src;
-      if (s) return s.replace(/\/[^/]*$/, '/');
-      return '';
-    })();
-    var script = document.createElement('script');
-    script.src = base + 'shai-flow.js';
-    script.onload = function () { if (typeof done === 'function') done(); };
-    script.onerror = function () { if (typeof done === 'function') done(); };
-    document.head.appendChild(script);
+  /* â”€â”€ Skip if a full drawer already exists on this page â”€â”€ */
+  function removeExistingChat() {
+    var ids = ['chat-drawer', 'chat-overlay', 'chat-input-bar', 'shai-chat-drawer', 'shai-chat-drawer-wrapper', 'chat-drawer-wrapper'];
+    ids.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+    });
+    var bar = document.querySelector('#chat-input-collapsed, [id$="chat-input-bar"]');
+    if (bar && bar.parentNode) bar.parentNode.removeChild(bar);
   }
 
-  /* ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  /* -------------------------------------------------------
      1. INJECT HTML
-     --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+     ------------------------------------------------------- */
   function inject() {
-    /* Remove any partial input bar already present */
-    const old = document.querySelector('[id$="chat-input-bar"], #chat-input-collapsed');
-    if (old) old.remove();
+    removeExistingChat();
 
     const html = `
 <!-- ShAI overlay -->
-<div id="chat-overlay" class="fixed inset-0 bg-black/40 z-40 hidden"></div>
+<div id="chat-overlay" class="shai-injected fixed inset-0 bg-black/40 z-40 hidden"></div>
 
 <!-- ShAI drawer -->
 <div id="chat-drawer"
-     class="fixed left-1/2 -translate-x-1/2 w-full max-w-[390px]
-            bg-white rounded-t-3xl shadow-2xl z-50 h-[50vh]
+     class="shai-injected fixed left-1/2 -translate-x-1/2 w-full max-w-[390px]
+            bg-white rounded-t-3xl shadow-2xl h-[50vh]
             transform translate-y-full transition-transform duration-300
             flex flex-col border-t border-gray-100"
-     style="max-height:calc(100dvh - 144px);bottom:80px">
+     style="max-height:calc(100dvh - 144px)">
 
   <!-- Drag handle -->
   <div id="drag-handle-zone"
@@ -80,12 +69,7 @@
         </div>
         <div class="flex-1">
           <div class="bg-gray-50 rounded-2xl rounded-tl-md p-3 mb-3">
-            <p class="text-sm text-black">Hi there! I am ShAI, your personal shopping assistant. How can I help you today?</p>
-          </div>
-          <div class="flex flex-wrap gap-2 pb-2">
-            <button class="shai-prompt bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium hover:bg-[#939BFB] hover:text-white transition-colors">I need a formal outfit</button>
-            <button class="shai-prompt bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium hover:bg-[#939BFB] hover:text-white transition-colors">What's trending?</button>
-            <button class="shai-prompt bg-white border border-[#B7C7FF] text-[#939BFB] px-3 py-1.5 rounded-full text-xs font-medium hover:bg-[#939BFB] hover:text-white transition-colors">Complete my look</button>
+            <p class="text-sm text-black">Hi there! I'm ShAI, your personal shopping assistant. How can I help you find the perfect items today?</p>
           </div>
         </div>
       </div>
@@ -137,9 +121,8 @@
 
 <!-- Collapsed input bar -->
 <div id="chat-input-bar"
-     class="fixed left-1/2 -translate-x-1/2 w-full max-w-[390px]
-            bg-white border-t border-gray-100 p-4 z-30"
-     style="bottom:80px">
+     class="shai-injected fixed left-1/2 -translate-x-1/2 w-full max-w-[390px]
+            bg-white border-t border-gray-100 p-4 z-30">
   <div class="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm">
     <button id="shai-cam-bar" class="hover:opacity-70 transition-opacity" aria-label="Image/video">
       <svg class="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
@@ -168,20 +151,22 @@
   </div>
 </div>`;
 
-    /* Inject CSS custom-property rule so bottom updates atomically when JS sets --shai-nav-h */
+    /* Dock: chat drawer and input bar must sit above the bottom nav. Set variable immediately. */
     if (!document.getElementById('shai-dock-rule')) {
       var ds = document.createElement('style');
       ds.id = 'shai-dock-rule';
-      ds.textContent = '#chat-drawer,#chat-input-bar{bottom:var(--shai-nav-h,88px)!important}';
+      ds.textContent = '#chat-drawer,#chat-input-bar{bottom:var(--shai-nav-h,64px)!important;z-index:45}#chat-input-bar{z-index:35}';
       document.head.appendChild(ds);
+      document.documentElement.style.setProperty('--shai-nav-h', '64px');
     }
 
     document.body.insertAdjacentHTML('beforeend', html);
+    document.body.classList.add('shai-ready');
   }
 
-  /* ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  /* -------------------------------------------------------
      2. INIT LOGIC (runs after HTML is injected)
-     --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+     ------------------------------------------------------- */
   function init() {
     const drawer      = document.getElementById('chat-drawer');
     const overlay     = document.getElementById('chat-overlay');
@@ -203,16 +188,31 @@
 
     const dragZone    = document.getElementById('drag-handle-zone');
 
+    if (!drawer || !overlay || !inputBar) return;
+
     let isOpen = false, isDragging = false, dragStartY = 0, dragStartH = 0;
+    let lastDrawerHeight = 0;
     let isRecording = false, mediaRecorder, audioChunks = [], mediaStream, micDenied = false, startX;
 
-    /* ------ Drawer open / close ------ */
+    function getDrawerMaxHeight() {
+      var bottomOffset = parseFloat(getComputedStyle(drawer).bottom) || 64;
+      return Math.max(80, window.innerHeight - bottomOffset - 80);
+    }
+
+    /* Drawer open / close - keep user-selected height when reopening */
     function openDrawer() {
       drawer.classList.remove('translate-y-full');
       overlay.classList.remove('hidden');
       inputBar.classList.add('hidden');
       isOpen = true;
       document.body.style.overflow = 'hidden';
+      if (lastDrawerHeight > 0) {
+        drawer.style.height = lastDrawerHeight + 'px';
+      } else {
+        var maxH = getDrawerMaxHeight();
+        drawer.style.height = maxH + 'px';
+        lastDrawerHeight = maxH;
+      }
     }
     function closeDrawer() {
       drawer.classList.add('translate-y-full');
@@ -222,6 +222,15 @@
       document.body.style.overflow = '';
     }
 
+    /* Restore body overflow on unload/visibility so page never stays frozen */
+    function restoreBodyOverflow() {
+      if (isOpen) document.body.style.overflow = '';
+    }
+    window.addEventListener('beforeunload', restoreBodyOverflow);
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') restoreBodyOverflow();
+    });
+
     overlay.addEventListener('click', closeDrawer);
 
     /* Open drawer when user taps the collapsed bar area */
@@ -229,40 +238,59 @@
       if (!e.target.closest('button')) openDrawer();
     });
 
-    /* ------ Auto-grow textarea helper ------ */
+    /* â”€â”€ Auto-grow textarea helper â”€â”€ */
     function autoGrow(ta) {
       ta.style.height = 'auto';
       ta.style.height = Math.min(ta.scrollHeight, 144) + 'px';
     }
 
-    /* ------ Button visibility based on input content ------ */
+    /* â”€â”€ Button visibility based on input content â”€â”€ */
     function updateButtons(input, send, mic, add) {
-      const has = input.value.trim().length > 0;
-      send.classList.toggle('hidden', !has);
-      mic.classList.toggle('hidden', has);
-      add.classList.toggle('hidden', has);
+      if (!input) return;
+      var hasText = (input.value || '').trim().length > 0;
+      if (send) { if (hasText) send.classList.remove('hidden'); else send.classList.add('hidden'); }
+      if (mic) { if (hasText) mic.classList.add('hidden'); else mic.classList.remove('hidden'); }
+      if (add) { if (hasText) add.classList.add('hidden'); else add.classList.remove('hidden'); }
     }
 
     [inputDrawer, inputBar2].forEach(function (ta, i) {
       const send = i === 0 ? sendDrawer : sendBar;
       const mic  = i === 0 ? micDrawer  : micBar;
       const add  = i === 0 ? addDrawer  : addBar;
-      ta.addEventListener('input', function () { autoGrow(ta); updateButtons(ta, send, mic, add); });
+      if (!ta) return;
+      ta.addEventListener('input', function () {
+        autoGrow(ta);
+        updateButtons(ta, send, mic, add);
+        updateButtons(i === 0 ? inputBar2 : inputDrawer, i === 0 ? sendBar : sendDrawer, i === 0 ? micBar : micDrawer, i === 0 ? addBar : addDrawer);
+      });
       ta.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
           sendText(ta, send, mic, add, i === 1);
         }
       });
-      send.addEventListener('click', function () { sendText(ta, send, mic, add, i === 1); });
+      if (send) send.addEventListener('click', function () { sendText(ta, send, mic, add, i === 1); });
+      if (i === 0 && inputDrawer) {
+        inputDrawer.addEventListener('focus', function () {
+          if (isOpen && drawer) {
+            var h = drawer.getBoundingClientRect().height;
+            if (h > 0) lastDrawerHeight = h;
+            requestAnimationFrame(function () {
+              if (lastDrawerHeight > 0) drawer.style.height = lastDrawerHeight + 'px';
+            });
+          }
+        });
+      }
     });
+    updateButtons(inputDrawer, sendDrawer, micDrawer, addDrawer);
+    updateButtons(inputBar2, sendBar, micBar, addBar);
 
-    /* ------ Scroll to bottom ------ */
+    /* â”€â”€ Scroll to bottom â”€â”€ */
     function scrollBottom() {
       if (messages) requestAnimationFrame(function () { messages.scrollTop = messages.scrollHeight; });
     }
 
-    /* ------ Add ShAI reply bubble ------ */
+    /* â”€â”€ Add ShAI reply bubble â”€â”€ */
     function shaiReply(text) {
       if (!msgContainer) return;
       const div = document.createElement('div');
@@ -273,41 +301,42 @@
       scrollBottom();
     }
 
-    /* ------ Send text message ------ */
+    /* â”€â”€ Send text message â”€â”€ */
     function sendText(ta, send, mic, add, openAfter) {
       const text = ta.value.trim();
       if (!text) return;
       if (!msgContainer) return;
       if (openAfter) openDrawer();
+      const isExactBagPhrase = /exact\s*bag|find\s+(the\s+)?exact\s+bag/i.test(text);
+      const beforeLast = msgContainer.lastElementChild;
+      const prevWasUserImage = beforeLast && beforeLast.classList && beforeLast.classList.contains('flex') && beforeLast.classList.contains('justify-end') && beforeLast.querySelector && beforeLast.querySelector('img') && !beforeLast.querySelector('.voice-message-bubble');
+      if (isExactBagPhrase && !prevWasUserImage) {
+        window.__waitingForExactBagImage = true;
+      } else if (isExactBagPhrase && prevWasUserImage) {
+        window.__waitingForExactBagImage = false;
+      }
       const div = document.createElement('div');
       div.className = 'flex justify-end mb-4';
       div.innerHTML = '<div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%]"><p class="text-sm break-words whitespace-pre-wrap"></p></div>';
       div.querySelector('p').textContent = text;
       msgContainer.appendChild(div);
-      ta.value = ''; autoGrow(ta); updateButtons(ta, send, mic, add);
+      ta.value = ''; autoGrow(ta);
+      updateButtons(ta, send, mic, add);
+      updateButtons(inputDrawer, sendDrawer, micDrawer, addDrawer);
+      updateButtons(inputBar2, sendBar, micBar, addBar);
       scrollBottom();
-      if (window.ShaiFlow && typeof window.ShaiFlow.handleUserReply === 'function' && window.ShaiFlow.handleUserReply(text, msgContainer, shaiReply, scrollBottom)) return;
-      setTimeout(function () { shaiReply("Perfect! Let me help you find exactly what you're looking for."); }, 1000);
+      setTimeout(function () {
+        if (window.ShaiFlow && typeof window.ShaiFlow.handleUserReply === 'function' && window.ShaiFlow.handleUserReply(text, msgContainer, shaiReply, scrollBottom)) {
+          return;
+        }
+        shaiReply("Perfect! Let me help you find exactly what you're looking for.");
+      }, 1000);
     }
 
-    /* ------ Smart prompt chips ------ */
-    document.querySelectorAll('.shai-prompt').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        openDrawer();
-        if (!msgContainer) return;
-        const text = btn.textContent.trim();
-        const div = document.createElement('div');
-        div.className = 'flex justify-end mb-4';
-        div.innerHTML = '<div class="bg-[#939BFB] text-white rounded-2xl rounded-tr-md p-3 max-w-[80%]"><p class="text-sm break-words whitespace-pre-wrap"></p></div>';
-        div.querySelector('p').textContent = text;
-        msgContainer.appendChild(div);
-        scrollBottom();
-        if (window.ShaiFlow && typeof window.ShaiFlow.handleUserReply === 'function' && window.ShaiFlow.handleUserReply(text, msgContainer, shaiReply, scrollBottom)) return;
-        setTimeout(function () { shaiReply("Great choice! I'll find the best options for you right away."); }, 800);
-      });
-    });
+    /* â”€â”€ Smart prompt chips â”€â”€ */
+    /* Prompt chips removed - no click handler */
 
-    /* ------ Camera / file picker ------ */
+    /* â”€â”€ Camera / file picker â”€â”€ */
     function pickFile(openFirst) {
       if (openFirst) openDrawer();
       const input = document.createElement('input');
@@ -321,25 +350,33 @@
         div.className = 'flex justify-end mb-4';
         if (file.type.startsWith('image/')) {
           div.innerHTML = '<div class="rounded-2xl border border-[#939BFB] max-w-[60%] overflow-hidden shadow-sm"><img src="' + url + '" class="w-full h-auto"></div>';
+          msgContainer.appendChild(div);
+          scrollBottom();
+          var waitingForBag = window.__waitingForExactBagImage === true;
+          if (waitingForBag && window.ShaiFlow && typeof window.ShaiFlow.runExternalSearchScenario === 'function') {
+            window.__waitingForExactBagImage = false;
+            setTimeout(function () { window.ShaiFlow.runExternalSearchScenario(msgContainer, shaiReply, scrollBottom); }, 800);
+          } else {
+            var isHome = (typeof window.location !== 'undefined' && ((window.location.pathname || '').indexOf('Home') >= 0 || (window.location.href || '').indexOf('Home') >= 0));
+            if (isHome && window.ShaiFlow && typeof window.ShaiFlow.runAfterUpload === 'function') {
+              window.ShaiFlow.runAfterUpload(msgContainer, shaiReply, scrollBottom);
+            } else {
+              setTimeout(function () { shaiReply("I can see your image! Let me find similar products for you."); }, 1500);
+            }
+          }
         } else {
           div.innerHTML = '<div class="rounded-2xl border border-[#939BFB] max-w-[60%] overflow-hidden shadow-sm"><video src="' + url + '" controls class="w-full h-auto"></video></div>';
-        }
-        msgContainer.appendChild(div);
-        scrollBottom();
-        if (window.ShaiFlow && typeof window.ShaiFlow.runAfterUpload === 'function') {
-          setTimeout(function () { window.ShaiFlow.runAfterUpload(msgContainer, shaiReply, scrollBottom); }, 1500);
-        } else {
-          setTimeout(function () {
-            shaiReply(file.type.startsWith('image/') ? "I can see your image! Let me find similar products for you." : "Got your video! Let me analyze it and find matching products.");
-          }, 1500);
+          msgContainer.appendChild(div);
+          scrollBottom();
+          setTimeout(function () { shaiReply("Got your video! Let me analyze it and find matching products."); }, 1500);
         }
       };
       input.click();
     }
-    camDrawer.addEventListener('click', function () { pickFile(false); });
-    camBar.addEventListener('click', function () { pickFile(true); });
+    if (camDrawer) camDrawer.addEventListener('click', function () { pickFile(false); });
+    if (camBar) camBar.addEventListener('click', function () { pickFile(true); });
 
-    /* ------ Voice recording ------ */
+    /* â”€â”€ Voice recording â”€â”€ */
     function setupMic(btn) {
       btn.addEventListener('mousedown', startRec);
       btn.addEventListener('touchstart', startRec, { passive: false });
@@ -352,7 +389,8 @@
         if (startX - e.touches[0].clientX > 30) cancelRec.call(btn, e);
       });
     }
-    setupMic(micDrawer); setupMic(micBar);
+    if (micDrawer) setupMic(micDrawer);
+    if (micBar) setupMic(micBar);
 
     async function startRec(e) {
       e.preventDefault();
@@ -419,7 +457,11 @@
         div.querySelector('.duration-text').textContent = Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
       });
       msgContainer.appendChild(div); scrollBottom();
-      setTimeout(function () { shaiReply("Got your voice message! Let me find the best options for you."); }, 800);
+      if (window.ShaiFlow && typeof window.ShaiFlow.runVoiceBudgetScenario === 'function') {
+        setTimeout(function () { window.ShaiFlow.runVoiceBudgetScenario(msgContainer, shaiReply, scrollBottom); }, 800);
+      } else {
+        setTimeout(function () { shaiReply("Got your voice message! Let me find the best options for you."); }, 800);
+      }
     }
 
     window.shaiToggleAudio = function (btn, url) {
@@ -432,7 +474,7 @@
         btn.querySelector('svg').innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
         bars.forEach(function (b, i) { b.style.animation = 'shaiWave 1.1s ease-in-out infinite'; b.style.animationDelay = (i*0.08)+'s'; });
         audio.ontimeupdate = function () { var r=Math.ceil(audio.duration-audio.currentTime); dur.textContent=Math.floor(r/60)+':'+String(r%60).padStart(2,'0'); };
-        audio.onended = function () { btn.querySelector('svg').innerHTML='<path d="M8 5v14l11-7z"/>'; bars.forEach(function(b){b.style.animation='none';}); if (dur && !isNaN(audio.duration)) { var d = Math.ceil(audio.duration); dur.textContent = Math.floor(d/60) + ':' + String(d%60).padStart(2,'0'); } };
+        audio.onended = function () { btn.querySelector('svg').innerHTML='<path d="M8 5v14l11-7z"/>'; bars.forEach(function(b){b.style.animation='none';}); };
       } else {
         audio.pause();
         btn.querySelector('svg').innerHTML = '<path d="M8 5v14l11-7z"/>';
@@ -440,7 +482,7 @@
       }
     };
 
-    /* ------ Drag to resize ------ */
+    /* â”€â”€ Drag to resize â”€â”€ */
     dragZone.addEventListener('touchstart', function (e) {
       isDragging = true; dragStartY = e.touches[0].clientY;
       dragStartH = drawer.getBoundingClientRect().height;
@@ -454,13 +496,16 @@
       const maxH = window.innerHeight - bottomOffset - 80;
       const newH = Math.max(80, Math.min(maxH, dragStartH - (e.touches[0].clientY - dragStartY)));
       drawer.style.height = newH + 'px';
+      lastDrawerHeight = newH;
     }, { passive: false });
 
     function endDrag() {
       if (!isDragging) return;
       isDragging = false;
       drawer.style.transition = '';
-      const h = drawer.getBoundingClientRect().height / window.innerHeight * 100;
+      var currentH = drawer.getBoundingClientRect().height;
+      lastDrawerHeight = currentH;
+      const h = currentH / window.innerHeight * 100;
       if (h < 25) closeDrawer();
     }
     dragZone.addEventListener('touchend', endDrag, { passive: true });
@@ -469,13 +514,13 @@
     dragZone.addEventListener('mousedown', function (e) {
       isDragging = true; dragStartY = e.clientY; dragStartH = drawer.getBoundingClientRect().height;
       drawer.style.transition = 'none';
-      function mm(ev) { if (!isDragging) return; var maxH=window.innerHeight-(parseFloat(getComputedStyle(drawer).bottom)||64)-80; drawer.style.height=Math.max(80,Math.min(maxH,dragStartH-(ev.clientY-dragStartY)))+'px'; }
+      function mm(ev) { if (!isDragging) return; var maxH=getDrawerMaxHeight(); var newH=Math.max(80,Math.min(maxH,dragStartH-(ev.clientY-dragStartY))); drawer.style.height=newH+'px'; lastDrawerHeight=newH; }
       function mu() { document.removeEventListener('mousemove',mm); document.removeEventListener('mouseup',mu); endDrag(); }
       document.addEventListener('mousemove', mm);
       document.addEventListener('mouseup', mu);
     });
 
-    /* ------ Toast helper ------ */
+    /* â”€â”€ Toast helper â”€â”€ */
     function showToast(msg) {
       var t = document.createElement('div');
       t.style.cssText = 'position:fixed;bottom:120px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;z-index:9999;max-width:80vw;text-align:center';
@@ -484,7 +529,7 @@
       setTimeout(function () { t.remove(); }, 3500);
     }
 
-    /* ------ Inject wave animation keyframes ------ */
+    /* â”€â”€ Inject wave animation keyframes â”€â”€ */
 
     /* -- Add-friend panel -- */
     var friendPanel = document.getElementById('shai-friend-panel');
@@ -497,13 +542,13 @@
     var isFriendMode = false;
 
     window.__addFriendContacts = window.__addFriendContacts || [
-      { name: 'Alex Johnson', phone: '+1 (555) 123-4567', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg' },
+      { name: 'Alex Johnson', phone: '+1 (555) 123-4567', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-2.jpg' },
       { name: 'Maria Rodriguez', phone: '+1 (555) 987-6543', goshopme: false },
-      { name: 'David Kim', phone: '+1 (555) 456-7890', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg' },
+      { name: 'David Kim', phone: '+1 (555) 456-7890', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-3.jpg' },
       { name: 'Sarah Thompson', phone: '+1 (555) 234-5678', goshopme: false },
-      { name: 'Emma Wilson', phone: '+1 (555) 345-6789', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg' },
+      { name: 'Emma Wilson', phone: '+1 (555) 345-6789', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-5.jpg' },
       { name: 'Michael Brown', phone: '+1 (555) 678-9012', goshopme: false },
-      { name: 'Jennifer Lee', phone: '+1 (555) 789-0123', goshopme: true, avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg' }
+      { name: 'Jennifer Lee', phone: '+1 (555) 789-0123', goshopme: true, avatar: 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/avatars/avatar-6.jpg' }
     ];
 
     function getFriendInitials(name) {
@@ -538,11 +583,16 @@
             if (msgContainer) {
               var note = document.createElement('div');
               note.className = 'flex justify-center mb-4';
-              note.innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">' + firstName + ' has been added to chat</div>';
+              note.innerHTML = '<div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">' + firstName + ' has been added to the chat</div>';
               msgContainer.appendChild(note);
               scrollBottom();
             }
             hideFriendPanel();
+            if (window.ShaiFlow && typeof window.ShaiFlow.runAddFriendScenario === 'function') {
+              var friendFullName = (contact && contact.name) ? contact.name : firstName;
+              var friendAvatar = (contact && contact.avatar) ? contact.avatar : '';
+              window.ShaiFlow.runAddFriendScenario(msgContainer, friendFullName, shaiReply, scrollBottom, friendAvatar);
+            }
           } else {
             var shareData = { title: 'Join me on GoShopMe', text: "Hey! I'm using GoShopMe. It's faster, smarter and effortless - join me", url: 'https://app.goshopme.ai' };
             if (navigator.share) {
@@ -584,28 +634,33 @@
     if (addDrawer) addDrawer.addEventListener('click', showFriendPanel);
     if (addBar) addBar.addEventListener('click', function() { showFriendPanel(); });
 
-        /* -- Dock: set CSS custom property --shai-nav-h to the nav's actual pixel height -- */
+        /* -- Dock: set --shai-nav-h to nav height so drawer/input bar sit above bottom nav (nav stays z-50 on top) -- */
     (function() {
       var nav = document.getElementById('bottom-navigation') || document.getElementById('bottom-nav') ||
                 document.querySelector('nav[id$="-navigation"]') || document.querySelector('nav[id$="-nav"]');
-      if (!nav) return;
+      var dockDrawer = document.getElementById('chat-drawer');
+      var dockBar = document.getElementById('chat-input-bar');
+      var minBottom = 56;
 
       function applyDock() {
-        var navH = nav.getBoundingClientRect().height;
-        if (navH > 0) document.documentElement.style.setProperty('--shai-nav-h', navH + 'px');
+        var navH = nav ? nav.getBoundingClientRect().height : 0;
+        var bottomVal = Math.max(navH > 0 ? navH : 64, minBottom);
+        var bottomPx = bottomVal + 'px';
+        document.documentElement.style.setProperty('--shai-nav-h', bottomPx);
+        if (dockDrawer) { dockDrawer.style.setProperty('bottom', bottomPx, 'important'); }
+        if (dockBar) { dockBar.style.setProperty('bottom', bottomPx, 'important'); }
       }
 
-      /* ResizeObserver fires when nav gets its CSS (Tailwind CDN) applied */
-      if (window.ResizeObserver) {
-        var ro = new ResizeObserver(function() { applyDock(); });
-        ro.observe(nav);
-      }
-
-      /* Fallback timers */
       applyDock();
-      setTimeout(applyDock, 100);
-      setTimeout(applyDock, 500);
-      setTimeout(applyDock, 1500);
+      if (nav) {
+        if (window.ResizeObserver) {
+          var ro = new ResizeObserver(function() { applyDock(); });
+          ro.observe(nav);
+        }
+        setTimeout(applyDock, 0);
+        setTimeout(applyDock, 100);
+        setTimeout(applyDock, 400);
+      }
       window.addEventListener('load', applyDock);
       window.addEventListener('resize', applyDock);
     })();
@@ -617,15 +672,15 @@
     }
   }
 
-  /* ------ Run on DOM ready (load ShaiFlow first if needed) ------ */
-  function boot() {
+  /* â”€â”€ Run on DOM ready â”€â”€ */
+  function run() {
     inject();
     init();
   }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { ensureShaiFlow(boot); });
+    document.addEventListener('DOMContentLoaded', run);
   } else {
-    ensureShaiFlow(boot);
+    run();
   }
 
 })();
