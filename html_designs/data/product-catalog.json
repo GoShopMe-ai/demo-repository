@@ -2785,6 +2785,42 @@
       "sizes": [
         "One size"
       ]
+    },
+    {
+      "id": "external-dg-bb7844az000-handbag",
+      "productUrl": "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dwcb0daafc/images/zoom/BB7844AZ000_83028_0.jpg?sw=366&sh=504&sm=fit",
+      "originalProductUrl": "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dwcb0daafc/images/zoom/BB7844AZ000_83028_0.jpg?sw=366&sh=504&sm=fit",
+      "originalImageUrls": [
+        "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dwcb0daafc/images/zoom/BB7844AZ000_83028_0.jpg?sw=366&sh=504&sm=fit"
+      ],
+      "imageUrls": [
+        "https://www.dolcegabbana.com/dw/image/v2/BKDB_PRD/on/demandware.static/-/Sites-15/default/dwcb0daafc/images/zoom/BB7844AZ000_83028_0.jpg?sw=366&sh=504&sm=fit"
+      ],
+      "brand": "Dolce & Gabbana",
+      "name": "BB7844AZ000 handbag",
+      "price": "€ 1,700",
+      "description": "Premium external demo match. Structured Dolce & Gabbana handbag from Scenario 4 fallback.",
+      "sizes": [
+        "One size"
+      ]
+    },
+    {
+      "id": "external-dg-red-vittoria-calfskin-handbag",
+      "productUrl": "https://cdna.lystit.com/photos/dolcegabbana/3f6fbc13/dolce-gabbana-Red-Vittoria-Calfskin-Handbag.jpeg",
+      "originalProductUrl": "https://cdna.lystit.com/photos/dolcegabbana/3f6fbc13/dolce-gabbana-Red-Vittoria-Calfskin-Handbag.jpeg",
+      "originalImageUrls": [
+        "https://cdna.lystit.com/photos/dolcegabbana/3f6fbc13/dolce-gabbana-Red-Vittoria-Calfskin-Handbag.jpeg"
+      ],
+      "imageUrls": [
+        "https://cdna.lystit.com/photos/dolcegabbana/3f6fbc13/dolce-gabbana-Red-Vittoria-Calfskin-Handbag.jpeg"
+      ],
+      "brand": "Dolce & Gabbana",
+      "name": "Red Vittoria Calfskin Handbag",
+      "price": "€ 1,990",
+      "description": "Premium external demo match. Dolce & Gabbana Red Vittoria Calfskin Handbag used in Scenario 4 fallback.",
+      "sizes": [
+        "One size"
+      ]
     }
   ]
 }
