@@ -306,7 +306,7 @@
         name: 'Leopard Print A-Line Dress',
         brand: 'Shein',
         unitPrice: 20.77,
-        imgSrc: 'images/leopard-dress-hero.png',
+        imgSrc: 'https://cdn11.bigcommerce.com/s-mqq1i1xa2c/images/stencil/1280x1280/products/209712/5766729/20913_MIAL_1__37257.1732897199.jpg?c=1',
         details: ''
       };
 
@@ -619,7 +619,7 @@ addTypingIndicatorWithMessage(container, typingMsg, 50);
         brand: 'Shein',
         price: '$20.77',
         priceNum: 20.77,
-        image: 'images/leopard-dress-hero.png'
+        image: 'https://cdn11.bigcommerce.com/s-mqq1i1xa2c/images/stencil/1280x1280/products/209712/5766729/20913_MIAL_1__37257.1732897199.jpg?c=1'
       };
       var budgetSupporting = [
         { id: 'budget-aldo-scintilla-sandals', name: 'SCINTILLA Sandals', brand: 'Aldo', price: '$110.00', priceNum: 110, image: 'https://www.aldoshoes.co.za/wp-content/uploads/scintilla_red_600-002-033_main_sq_nt_1000x1000.jpg' },
