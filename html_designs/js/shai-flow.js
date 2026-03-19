@@ -230,6 +230,14 @@
 
     var context = null;
     try { context = window.__returnAssistContext || null; } catch (e) {}
+    if (context && context.item && (context.item.title || context.item.image)) {
+      return {
+        orderId: context.orderId || '#S12345',
+        title: context.item.title || 'Selected item',
+        meta: context.item.meta || 'Qty 1',
+        image: context.item.image || 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/e3f92e89da-91c7ebe70b64c417c52b.png'
+      };
+    }
     if (context && context.orderId) {
       var contextOrder = null;
       for (var c = 0; c < orders.length; c++) {

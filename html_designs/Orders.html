@@ -207,7 +207,10 @@
             html += '    <div class="flex flex-wrap gap-1.5 mt-3">';
             if (showReturn) {
                 var returnOrderIdSafe2 = (o.id || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-                html += '<button class="flex-1 min-w-[72px] py-1.5 px-2 border border-shine-primary text-shine-primary rounded-md text-xs font-medium" onclick="openReturnModal(\'' + returnOrderIdSafe2 + '\', 0)">Return</button>';
+                var returnItemTitleSafe = (item.title || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                var returnItemMetaSafe = (item.meta || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                var returnItemImageSafe = (item.image || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                html += '<button class="flex-1 min-w-[72px] py-1.5 px-2 border border-shine-primary text-shine-primary rounded-md text-xs font-medium" onclick="openReturnModal(\'' + returnOrderIdSafe2 + '\', 0, \'' + returnItemTitleSafe + '\', \'' + returnItemMetaSafe + '\', \'' + returnItemImageSafe + '\')">Return</button>';
             }
             if (showTrack) {
                 html += '<a href="Order_Tracking.html" class="flex-1 min-w-[72px] py-1.5 px-2 bg-shine-primary text-white rounded-md text-xs font-medium text-center">Track</a>';
@@ -342,7 +345,7 @@
                 </div>
                 
                 <div class="flex flex-wrap gap-1.5 mt-3">
-                    <button onclick="openReturnModal('#S04589', 0)" class="flex-1 min-w-[72px] py-1.5 px-2 border border-shine-primary text-shine-primary rounded-md text-xs font-medium">Return</button>
+                    <button onclick="openReturnModal('#S04589', 0, 'Summer Floral Dress', 'Size M • Qty 1', 'https://raw.githubusercontent.com/nora-todorova/GoShopMe-assets/main/assets/e3f92e89da-91c7ebe70b64c417c52b.png')" class="flex-1 min-w-[72px] py-1.5 px-2 border border-shine-primary text-shine-primary rounded-md text-xs font-medium">Return</button>
                     <button onclick="openReceiptDetails('#S04589')" class="flex-1 min-w-[72px] py-1.5 px-2 bg-gray-100 text-gray-700 rounded-md text-xs font-medium">Receipt</button>
                 </div>
             </div>
@@ -587,7 +590,7 @@
 
 <script src="js/add-friend-contacts.js"></script>
 <script src="js/chat-dock-nav.js"></script>
-<script src="js/shai-flow.js"></script>
+<script src="js/shai-flow.js?v=return-context-fix-2"></script>
 <script src="js/home-chat.js"></script>
 <script>
 (function() {
@@ -1031,11 +1034,16 @@ function openReturnDetails(orderId) {
         window.location.href = 'Return_Details.html';
     }
 }
-function openReturnModal(orderId, itemIndex) {
+function openReturnModal(orderId, itemIndex, itemTitle, itemMeta, itemImage) {
     try {
         window.__returnAssistContext = {
             orderId: orderId || '',
-            itemIndex: typeof itemIndex === 'number' ? itemIndex : 0
+            itemIndex: typeof itemIndex === 'number' ? itemIndex : 0,
+            item: {
+                title: itemTitle || '',
+                meta: itemMeta || '',
+                image: itemImage || ''
+            }
         };
     } catch (e) {}
     if (typeof window.__expandChatDrawer === 'function') {
